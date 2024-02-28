@@ -1,0 +1,35 @@
+<!--index.html-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://unpkg.com/vue@3.3/dist/vue.global.js">
+    </script>
+    <title>Basic application with Vue</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    app = Vue.createApp({ ... })
+    <script>
+        // Importa las funciones necesarias de Vue, como createApp y ref
+        const { createApp, ref } = Vue;
+        // Crea una aplicacion Vue
+        const app = createApp({
+            // La funcion setup es parte de la API de composicion
+            setup() {
+                // Define una variable reactiva llamada greeting con un valor inicial
+                'Hello world'
+                const greeting = ref('Hello world');
+                // Devuelve un objeto que contiene las variables que se haran accesibles en el componente
+                return {
+                    greeting
+                };
+            },
+        });
+        // Monta la aplicacion en el elemento HTML con el id 'app'
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
