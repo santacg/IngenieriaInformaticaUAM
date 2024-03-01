@@ -8,15 +8,16 @@
 
 #define PORT 8081
 #define SA struct sockaddr
-#define MAX_BUFFER 2048
+#define BUFFER_SIZE 2048
 
 int main(int argc, char *argv[]) {
   FILE *pf = NULL;
-  int socket_fd, bytes_read;
-  char buffer[MAX_BUFFER];
+  int socket_fd, bytes_to_send;
+  char buffer[BUFFER_SIZE];
   struct sockaddr_in servaddr;
 
   if (argc != 3) {
+    fprintf(stdout, "usage: <hostIP> <FileToSend>");
     return EXIT_FAILURE;
   }
 
@@ -41,17 +42,18 @@ int main(int argc, char *argv[]) {
 
   pf = fopen(argv[2], "r");
   if (pf == NULL) {
+    perror("Error opening file");
     return EXIT_FAILURE;
   }
 
   do {
-    bytes_read = fread(buffer, sizeof(buffer), 1, pf);
+    bytes_to_send = fread(buffer, BUFFER_SIZE, 1, pf);
     if (write(socket_fd, buffer, sizeof(buffer)) < 0) {
       perror("Error writing");
       return EXIT_FAILURE;
     }
-  } while (bytes_read != 0);
-
+  } while (bytes_to_send != 0);
+  
   fclose(pf);
   close(socket_fd);
 
