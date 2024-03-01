@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
+#include <pthread.h>
+#include <time.h>
 #include <unistd.h>
 
 #define PORT 8081
@@ -11,18 +14,27 @@
 #define BUFFER_SIZE 2048
 
 int main(int argc, char *argv[]) {
-  FILE *pf = NULL;
-  int socket_fd, bytes_to_send;
+  FILE *fp = NULL;
+  int i, j, fd, nchildren, nbytes;
+  pid_t pid;
   char buffer[BUFFER_SIZE];
+  char request[BUFFER_SIZE], reply[BUFFER_SIZE];
   struct sockaddr_in servaddr;
 
-  if (argc != 3) {
-    fprintf(stdout, "usage: <hostIP> <FileToSend>");
+  if (argc != 4) {
+    fprintf(stdout, "usage: <IPaddr> <nchildren> <FileToSend>");
     return EXIT_FAILURE;
   }
 
-  socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_fd < 0) {
+  nchildren = atoi(argv[2]);
+  fp = fopen(argv[3], "r");
+  if (fp == NULL) {
+    perror("Error opening file");
+    return EXIT_FAILURE;
+  }
+
+  fd = socket(AF_INET, SOCK_STREAM, 0);
+  if (fd < 0) {
     perror("Error opening socket");
     return EXIT_FAILURE;
   }
@@ -35,27 +47,37 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  if (connect(socket_fd, (SA *)&servaddr, sizeof(servaddr)) < 0) {
-    perror("Error connecting to sokcet");
-    return EXIT_FAILURE;
-  }
+  for (i = 0; i < nchildren; i++) {
+    pid = fork();
+    if (pid == 0) { /* Child */
+      if (connect(fd, (SA *)&servaddr, sizeof(servaddr)) < 0) {
+        perror("Error connecting to sokcet");
+        return EXIT_FAILURE;
+      }
+      while (!EOF) {
+        if (fread(request, sizeof(request), 1, fp) == -1) {
+          perror("Error reading from file");
+          return EXIT_FAILURE;
+        }
+      }
 
-  pf = fopen(argv[2], "r");
-  if (pf == NULL) {
-    perror("Error opening file");
-    return EXIT_FAILURE;
-  }
+      if (write(fd, request, strlen(request)) == -1) {
+        perror("Error writing request");
+        return EXIT_FAILURE;
+      }
 
-  do {
-    bytes_to_send = fread(buffer, BUFFER_SIZE, 1, pf);
-    if (write(socket_fd, buffer, sizeof(buffer)) < 0) {
-      perror("Error writing");
-      return EXIT_FAILURE;
+      if (read(fd, reply, sizeof(reply)) == -1) {
+        perror("Error reading reply");
+        return EXIT_FAILURE;
+      }
+      
+      close(fd);
+      return EXIT_SUCCESS;
     }
-  } while (bytes_to_send != 0);
-  
-  fclose(pf);
-  close(socket_fd);
+  }
+ 
+  waitpid(-1, NULL, 0);
+  fclose(fp);
 
   return EXIT_SUCCESS;
 }
