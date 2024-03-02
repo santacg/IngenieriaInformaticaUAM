@@ -5,9 +5,10 @@ import subprocess as proc
 import timeit
 import time
 import psutil as psu
+import statistics as st
 import pdb
 
-client = ["./client", "127.0.0.1", "bible.txt"]
+client = ["./client", "127.0.0.1", "nchildren",  "bible.txt"]
 server = ["./server"]
 
 setup = "server_process = proc.Popen(server)"
@@ -16,28 +17,22 @@ stmt = """
             client_process = proc.run(client)
        """
 
-def launch_clients(n):
-    client_process_list = []
-    for _ in range(n):
-        client_process = proc.Popen(client)
-        client_process_list.append(client_process)
-
-    for client_process in client_process_list:
-        client_process.wait()
+def launch_clients(i):
+    proc_client = ["./client", "127.0.0.1", str(i), "bible.txt"]
+    client_process = proc.Popen(proc_client)
+    client_process.wait()
 
 def measure_time(n):
     SETUP_CODE = """
 from __main__ import launch_clients
     """
-
-    TEST_CODE = """
-    """
-    time = timeit.timeit(f'launch_clients({n})', setup=SETUP_CODE, number=1)
-    return time
+    average_timings_list = []
+    average_timings_list.append(timeit.timeit(f'launch_clients({n})', setup=SETUP_CODE, number=5))
+    return st.mean(average_timings_list)
 
 server_process = proc.Popen(server)
 timings_list = []
-for i in range(1, 30):
+for i in range(50):
     time = measure_time(i)
     timings_list.append([i, time])
 proc.run(["pkill", "-f", "./server"])

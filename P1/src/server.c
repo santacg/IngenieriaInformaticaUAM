@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -34,11 +35,12 @@ int main(int argc, char *argv[]) {
   }
 
   fprintf(stdout, "Listening...\n");
-  if (listen(server_socket, 10) < 0) {
+  if (listen(server_socket, 50) < 0) {
     perror("Error in listen");
     return EXIT_FAILURE;
   }
-  
+ 
+  bzero(buffer, sizeof(buffer));
   for (;;) {
     struct sockaddr_in addr;
     socklen_t addr_len;
