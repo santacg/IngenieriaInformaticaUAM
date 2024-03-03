@@ -55,7 +55,8 @@ int main(int argc, char *argv[]) {
         perror("Error connecting to sokcet");
         return EXIT_FAILURE;
       }
-
+      
+      fseek(fp, 0, SEEK_SET);
       while (feof(fp) == 0) {
         fread(request, sizeof(request) - 1, 1, fp);
 
@@ -64,13 +65,14 @@ int main(int argc, char *argv[]) {
           return EXIT_FAILURE;
         }
       }
-
       /*
       if (read(fd, reply, sizeof(reply)) == -1) {
         perror("Error reading reply");
         return EXIT_FAILURE;
-      }*/
+      }
+      */
 
+      fprintf(stdout,"%s\n", reply);
       close(fd);
       return EXIT_SUCCESS;
     }
