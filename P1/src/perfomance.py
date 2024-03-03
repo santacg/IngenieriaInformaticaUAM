@@ -26,13 +26,13 @@ def measure_time(n):
     SETUP_CODE = """
 from __main__ import launch_clients
     """
-    average_timings_list = []
-    average_timings_list.append(timeit.timeit(f'launch_clients({n})', setup=SETUP_CODE, number=5))
-    return st.mean(average_timings_list)
+    timing = timeit.timeit(f'launch_clients({n})', setup=SETUP_CODE, number=1)
+    return timing
 
 server_process = proc.Popen(server)
+time.sleep(5)
 timings_list = []
-for i in range(50):
+for i in range(1, 201):
     time = measure_time(i)
     timings_list.append([i, time])
 proc.run(["pkill", "-f", "./server"])
