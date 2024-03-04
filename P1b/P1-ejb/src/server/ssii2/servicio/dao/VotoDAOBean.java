@@ -20,16 +20,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import jakarta.jws.WebMethod;
-import jakarta.jws.WebService;
 
 
 /**
  * @author jaime, daniel
  */
 
-@WebService
-public class VotoDAOWS extends DBTester {
+public class VotoDAOBean extends DBTester {
 
   private boolean debug = false;
 
@@ -77,7 +74,7 @@ public class VotoDAOWS extends DBTester {
   /**
    * Constructor de la clase
    */
-  public VotoDAOWS() {
+  public VotoDAOBean() {
     return;
   }
 
@@ -130,7 +127,7 @@ public class VotoDAOWS extends DBTester {
    *         en la tabla CENSO fue satisfactoria, false en caso contrario
    */
 
-  @WebMethod
+  
   public boolean compruebaCenso(CensoBean censo) {
     Connection con = null;
     Statement stmt = null;
@@ -209,7 +206,7 @@ public class VotoDAOWS extends DBTester {
    * @param voto
    * @return
    */
-  @WebMethod
+  
   public synchronized VotoBean registraVoto(VotoBean voto) {
     Connection con = null;
     Statement stmt = null;
@@ -462,12 +459,12 @@ public class VotoDAOWS extends DBTester {
    */
   /********************************************************/
 
-  @WebMethod
+  
   public boolean isPrepared() {
     return prepared;
   }
 
-  @WebMethod
+  
   public void setPrepared(boolean prepared) {
     this.prepared = prepared;
   }
@@ -478,7 +475,7 @@ public class VotoDAOWS extends DBTester {
    * @return the debug
    */
 
-  @WebMethod
+  
   public boolean isDebug() {
     return debug;
   }
@@ -487,19 +484,19 @@ public class VotoDAOWS extends DBTester {
    * @param debug the debug to set
    */
 
-  @WebMethod
+  
   public void setDebug(boolean debug) {
     this.debug = debug;
   }
 
   @Override
-  @WebMethod
+  
   public boolean isDirectConnection() {
     return super.isDirectConnection();
   }
 
   @Override
-  @WebMethod
+  
   public void setDirectConnection(boolean directConnection) {
     super.setDirectConnection(directConnection);
   }
