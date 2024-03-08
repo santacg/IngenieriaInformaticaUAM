@@ -12,6 +12,7 @@
           @actualizar-persona="actualizarPersona" />
       </div>
     </div>
+  </div>
 </template>
 <script>
 // Importacion del componente 'TablaPersonas' y el metodo 'ref' de Vue 3
