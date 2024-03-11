@@ -3,14 +3,16 @@ CFLAGS=-g -Wall
 LIBFLAGS=-pthread
 
 INCLUDES=
-OBJS=server.o client.o picohttpparser.o
-SRC=server.c client.c
+OBJS=server.o picohttpparser.o httpresponse.o 
+SRC=server.c client.c 
 
 EXE=server client
+SERVER= server
 
 all: clean $(EXE)
+server: $(SERVER)
 
-server: server.o picohttpparser.o
+server: $(OBJS)
 	$(CC) $(LIBFLAGS) $^ -o $@ 
 
 server.o: server.c
@@ -25,5 +27,8 @@ client.o: client.c
 picohttpparser.o: picohttpparser.c picohttpparser.h
 	$(CC) $(CFLAGS) -c $<
 
+httpresponse.o: httpresponse.c httpresponse.h
+	$(CC) $(CFLAGS) -c $<
+
 clean: 
-	rm -f $(OBJS) $(EXE)
+	rm -f $(OBJS) $(EXE) client.o
