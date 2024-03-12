@@ -94,9 +94,11 @@ void process_http_request(int connfd) {
 }
 
 void methodGet(int connfd, char *path, int minor_version, int response_code) {
-  int resource_fd;
-  char response[BUFFER_SIZE];
-  time_t tm = time(0);
+  int resource_fd, bytes_read = 0;
+  char response[BUFFER_SIZE], last_modified[LINE], date[LINE];
+  time_t t = time(NULL);
+  struct tm tm;
+  struct tm lm;
   struct stat file_stats;
 
   resource_fd = open(path + 1, O_RDONLY);
@@ -110,6 +112,13 @@ void methodGet(int connfd, char *path, int minor_version, int response_code) {
     }
   }
 
+  gmtime_r(&t, &tm);
+  strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", &tm);
+
+  gmtime_r(&file_stats.st_mtim.tv_sec, &lm);
+  strftime(last_modified, sizeof(last_modified), "%a, %d %b %Y %H:%M:%S GMT",
+           &lm);
+
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
           "Date: %s\r\n"
@@ -118,23 +127,27 @@ void methodGet(int connfd, char *path, int minor_version, int response_code) {
           "Content-Length: %ld\r\n"
           "Content-Type: %s\r\n"
           "\r\n",
-          minor_version, response_code, get_status_message(response_code),
-          ctime(&tm), ctime(&file_stats.st_mtim.tv_sec), file_stats.st_size,
-          get_mime_type(strchr(path, '.')));
+          minor_version, response_code, get_status_message(response_code), date,
+          last_modified, file_stats.st_size, get_mime_type(strchr(path, '.')));
 
   send(connfd, response, strlen(response), 0);
 
   bzero(response, BUFFER_SIZE);
-  while (read(resource_fd, response, BUFFER_SIZE) != 0) {
-    send(connfd, response, strlen(response), 0);
+  while ((bytes_read = read(resource_fd, response, BUFFER_SIZE)) > 0) {
+    send(connfd, response, bytes_read, 0);
   }
 
   return;
 }
 
-void methodPost(int connfd, char *request_body, char *path, int minor_version, int response_code) {
-  char response[BUFFER_SIZE];
-  time_t tm = time(0);
+void methodPost(int connfd, char *request_body, char *path, int minor_version,
+                int response_code) {
+  char response[BUFFER_SIZE], date[LINE];
+  time_t t = time(NULL);
+  struct tm tm;
+
+  gmtime_r(&t, &tm);
+  strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", &tm);
 
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
@@ -142,14 +155,18 @@ void methodPost(int connfd, char *request_body, char *path, int minor_version, i
           "Server: Carlos server\r\n"
           "\r\n",
           minor_version, response_code, get_status_message(response_code),
-          ctime(&tm));
+          date);
 
   send(connfd, response, strlen(response), 0);
 }
 
 void methodOptions(int connfd, int minor_version, int response_code) {
-  char response[BUFFER_SIZE];
-  time_t tm = time(0);
+  char response[BUFFER_SIZE], date[LINE];
+  time_t t = time(0);
+  struct tm tm;
+
+  gmtime_r(&t, &tm);
+  strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", &tm);
 
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
@@ -158,7 +175,7 @@ void methodOptions(int connfd, int minor_version, int response_code) {
           "Allow: GET, POST, OPTIONS\r\n"
           "\r\n",
           minor_version, response_code, get_status_message(response_code),
-          ctime(&tm));
+          date);
 
   send(connfd, response, strlen(response), 0);
 }
@@ -187,8 +204,6 @@ char *decode_url(const char *url) {
 
   return ret;
 }
-
-void process_bad_request(int connfd) { return; }
 
 const char *get_mime_type(char *path) {
   if (strcasecmp(path, ".html") == 0) {
