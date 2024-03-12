@@ -7,10 +7,8 @@ OBJS=server.o picohttpparser.o httpresponse.o
 SRC=server.c client.c 
 
 EXE=server client
-SERVER= server
 
 all: clean $(EXE)
-server: $(SERVER)
 
 server: $(OBJS)
 	$(CC) $(LIBFLAGS) $^ -o $@ 

@@ -1,4 +1,3 @@
-#include "picohttpparser.h"
 #include "httpresponse.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -14,10 +13,6 @@
 #include <unistd.h>
 
 #define PORT 8081
-#define BUFFER_SIZE 4096
-#define OK 200
-#define NOT_FOUND 404
-#define SERVER_ERR 500
 #define SA struct sockaddr
 
 void *handle_conn(void *arg) {
@@ -32,7 +27,6 @@ int main(int argc, char *argv[]) {
   long int conn_fd;
   pthread_t tid;
   struct sockaddr_in address;
-  char buffer[BUFFER_SIZE];
 
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
@@ -56,7 +50,6 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  bzero(buffer, sizeof(buffer));
   while (1) {
     conn_fd = accept(socket_fd, (SA *)NULL, NULL);
     if (conn_fd < 0) {
