@@ -1,4 +1,17 @@
-#include "httpresponse.h"
+/**
+ * @file server.c
+ * @brief Implementation of a basic HTTP server.
+ *
+ * This file contains the main function to initialize a socket, bind it to a
+ * specific port, and listen for incoming connections. Upon accepting a
+ * connection, it dispatches the handling of the connection to a separate
+ * thread. This allows the server to handle multiple requests simultaneously.
+ *
+ * @author Carlos García Santa Eduardo Junoy Ortega
+ * @date 12/03/2024
+ */
+
+#include "../includes/httpresponse.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -15,6 +28,18 @@
 #define PORT 8081
 #define SA struct sockaddr
 
+/**
+ * @brief Handles a new connection in a separate thread.
+ *
+ * This function is the thread routine to handle HTTP requests from clients. It
+ * detaches the thread to ensure that resources are freed upon completion,
+ * processes the HTTP request using the provided connection file descriptor, and
+ * then closes the connection.
+ *
+ * @param arg A pointer to the argument passed to the thread, which is the
+ *            connection file descriptor cast to a void pointer.
+ * @return Always returns NULL.
+ */
 void *handle_conn(void *arg) {
   pthread_detach(pthread_self());
   process_http_request((long int)arg);
@@ -22,6 +47,17 @@ void *handle_conn(void *arg) {
   return NULL;
 }
 
+/**
+ * @brief The main function to start the HTTP server.
+ *
+ * Initializes a socket, sets up the address structure, binds the socket to the
+ * specified port, listens for incoming connections, and dispatches each
+ * connection to a new thread for handling.
+ *
+ * @param argc The argument count.
+ * @param argv The argument vector.
+ * @return EXIT_SUCCESS on successful execution, EXIT_FAILURE on error.
+ */
 int main(int argc, char *argv[]) {
   int socket_fd;
   long int conn_fd;
@@ -33,6 +69,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   */
+
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
     perror("Error in socket");

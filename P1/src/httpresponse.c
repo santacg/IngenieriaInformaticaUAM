@@ -1,5 +1,15 @@
-#include "httpresponse.h"
-#include "picohttpparser.h"
+/**
+ * @file httpresponse.c
+ * @brief Implementation of functions to handle HTTP responses for a web server.
+ *        This includes generating responses for various HTTP methods such as
+ * GET, POST, and OPTIONS, executing server-side scripts, decoding URL-encoded
+ * strings, and determining MIME types based on file extensions.
+ * @author Carlos García Santa Eduardo Junoy Ortega
+ * @date 12/03/2024
+ */
+
+#include "../includes/httpresponse.h"
+#include "../includes/picohttpparser.h"
 #include <assert.h>
 #include <ctype.h>
 #include <fcntl.h>
@@ -22,29 +32,87 @@ typedef enum {
   BAD_REQUEST = 400,
   NOT_FOUND = 404,
   SVR_ERROR = 500,
-  METHOD_NOT_FOUND = 501,
+  METHOD_NOT_FOUND = 501
 } Http_status;
 
+/**
+ * @brief Retrieves the message string associated with an HTTP status code.
+ * @param status The HTTP status code.
+ * @return The message string associated with the status code.
+ */
 const char *get_status_message(Http_status status);
 
+/**
+ * @brief Determines the MIME type based on the file extension.
+ * @param path The path to the file.
+ * @return The MIME type string if recognized, NULL otherwise.
+ */
 const char *get_mime_type(char *path);
 
-char *get_pathension(char *path);
-
+/**
+ * @brief Generates and sends an HTTP response indicating an error.
+ * @param connfd The file descriptor for the connection.
+ * @param response_code The HTTP status code to be sent.
+ */
 void http_response_error(int connfd, int response_code);
 
+/**
+ * @brief Handles the GET method request.
+ * @param connfd The file descriptor for the connection.
+ * @param path The path requested by the GET method.
+ * @param minor_version The HTTP minor version.
+ */
 void methodGet(int connfd, char *path, int minor_version);
 
+/**
+ * @brief Handles the POST method request.
+ * @param connfd The file descriptor for the connection.
+ * @param request The body of the POST request.
+ * @param path The path requested by the POST method.
+ * @param minor_version The HTTP minor version.
+ */
 void methodPost(int connfd, char *request, char *path, int minor_version);
 
+/**
+ * @brief Handles the OPTIONS method request.
+ * @param connfd The file descriptor for the connection.
+ * @param minor_version The HTTP minor version.
+ * @param response_code The HTTP status code for the OPTIONS response.
+ */
 void methodOptions(int connfd, int minor_version, int response_code);
 
-void exe_script(int connfd, char *path, char *exe_path);
+/**
+ * @brief Executes a script based on the request path.
+ * @param connfd The file descriptor for the connection.
+ * @param path The script path to be executed.
+ * @param params The parameters to pass to the script.
+ */
+void exe_script(int connfd, char *path, char *params);
 
+/**
+ * @brief Decodes a URL-encoded string.
+ * @param url The URL-encoded string.
+ * @return The decoded string.
+ */
 char *decode_url(const char *url);
 
+/**
+ * @brief Processes an HTTP request.
+ * @param connfd The file descriptor for the connection.
+ */
+void process_http_request(int connfd);
+
+/**
+ * @brief Processes an HTTP request.
+ * @param connfd The file descriptor for the connection.
+ * @note This function reads the HTTP request from the connection, parses it to
+ * determine the request method, path, and HTTP version, and then dispatches it
+ * to the appropriate handler function based on the method. It handles parsing
+ * errors and unsupported methods by sending suitable HTTP error responses. This
+ * is the entry point for all incoming HTTP requests.
+ */
 void process_http_request(int connfd) {
-  int pret, minor_version, response_code = OK;
+  int pret, minor_version; 
   char buffer[BUFFER_SIZE];
   char *method, *path, *request_body;
   size_t buff_len = 0, prev_buff_len = 0, num_headers, method_len, path_len;
@@ -55,8 +123,7 @@ void process_http_request(int connfd) {
     nread = read(connfd, buffer + buff_len, BUFFER_SIZE - buff_len);
     if (nread <= 0) {
       perror("Error reading from scoket");
-      response_code = SVR_ERROR;
-      http_response_error(connfd, response_code);
+      http_response_error(connfd, SVR_ERROR);
       return;
     }
     prev_buff_len = buff_len;
@@ -70,16 +137,14 @@ void process_http_request(int connfd) {
       break;
     else if (pret == -1) {
       fprintf(stderr, "Error parsing http request");
-      response_code = BAD_REQUEST;
-      http_response_error(connfd, response_code);
+      http_response_error(connfd, BAD_REQUEST);
       return;
     }
 
     assert(pret == -2);
     if (buff_len == sizeof(buffer)) {
       fprintf(stderr, "HTTP request too long");
-      response_code = BAD_REQUEST;
-      http_response_error(connfd, response_code);
+      http_response_error(connfd, BAD_REQUEST);
       return;
     }
   }
@@ -101,43 +166,49 @@ void process_http_request(int connfd) {
   return;
 }
 
+/**
+ * @brief Handles the GET method request.
+ * @param connfd The file descriptor for the connection.
+ * @param path The path requested by the GET method.
+ * @param minor_version The HTTP minor version.
+ * @note This function processes GET requests by determining the resource
+ * requested, checking its availability, and sending it back to the client with
+ * appropriate HTTP headers. If the resource is not found, it sends a 404 Not
+ * Found response.
+ */
 void methodGet(int connfd, char *path, int minor_version) {
-  int resource_fd, bytes_read = 0, exe_path_len = 0, response_code = OK;
+  int resource_fd, bytes_read = 0, params_len = 0;
   char response[BUFFER_SIZE], last_modified[LINE], date[LINE];
-  char *exe_path = NULL;
+  char *params = NULL;
   time_t t = time(NULL);
   struct tm tm;
   struct tm lm;
   struct stat file_stats;
 
+  /* Check if it is a script, if correct execute script function */
   if (strchr(path, '?') != NULL) {
-    exe_path_len = strchr(path, '?') - path;
-    exe_path = (char *)malloc(sizeof(char) * exe_path_len);
-    if (!exe_path) {
-      response_code = SVR_ERROR;
-      http_response_error(connfd, response_code);
+    params_len = strchr(path, '?') - path;
+    params = (char *)malloc(sizeof(char) * params_len + 1);
+    if (!params) {
+      http_response_error(connfd, SVR_ERROR);
       return;
     }
-
-    strncpy(exe_path, path, exe_path_len);
-    resource_fd = open(exe_path + 1, O_RDONLY);
-    if (resource_fd == ERR) {
-      response_code = NOT_FOUND;
-      http_response_error(connfd, response_code);
-      return;
-    }
-  } else {
-    resource_fd = open(path + 1, O_RDONLY);
-    if (resource_fd == ERR) {
-      response_code = NOT_FOUND;
-      http_response_error(connfd, response_code);
+    params = strchr(path, '?');
+    if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
+        strncmp(strchr(path, '.'), ".py", 3) == 0) {
+      exe_script(connfd, path + 1, params + 1);
       return;
     }
   }
 
+  resource_fd = open(path + 1, O_RDONLY);
+  if (resource_fd == ERR) {
+    http_response_error(connfd, NOT_FOUND);
+    return;
+  }
+
   if (fstat(resource_fd, &file_stats) == ERR) {
-    response_code = SVR_ERROR;
-    http_response_error(connfd, response_code);
+    http_response_error(connfd, SVR_ERROR);
     return;
   }
 
@@ -156,56 +227,63 @@ void methodGet(int connfd, char *path, int minor_version) {
           "Content-Length: %ld\r\n"
           "Content-Type: %s\r\n"
           "\r\n",
-          minor_version, response_code, get_status_message(response_code), date,
-          last_modified, file_stats.st_size, get_mime_type(strchr(path, '.')));
+          minor_version, OK, get_status_message(OK), date, last_modified,
+          file_stats.st_size, get_mime_type(strchr(path, '.')));
 
   send(connfd, response, strlen(response), 0);
-
-  if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
-      strncmp(strchr(path, '.'), ".py", 3) == 0) {
-    exe_script(connfd, path + 1, exe_path + 1);
-    free(exe_path);
-    return;
-  }
-
   bzero(response, BUFFER_SIZE);
   while ((bytes_read = read(resource_fd, response, BUFFER_SIZE)) > 0) {
     send(connfd, response, bytes_read, 0);
   }
 
-  free(exe_path);
   return;
 }
 
+/**
+ * @brief Handles the POST method request.
+ * @param connfd The file descriptor for the connection.
+ * @param request The body of the POST request.
+ * @param path The path requested by the POST method.
+ * @param minor_version The HTTP minor version.
+ * @note This function processes POST requests by extracting data from the
+ * request body and handling it according to the application's logic. It can
+ * respond with various HTTP status codes based on the outcome of processing the
+ * request.
+ */
 void methodPost(int connfd, char *request_body, char *path, int minor_version) {
-  int response_code = OK, exe_path_len = 0, resource_fd;
   char response[BUFFER_SIZE], date[LINE];
-  char *exe_path;
   time_t t = time(NULL);
   struct tm tm;
 
   gmtime_r(&t, &tm);
   strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", &tm);
 
+  if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
+      strncmp(strchr(path, '.'), ".py", 3) == 0) {
+    exe_script(connfd, path + 1, request_body);
+    return;
+  }
+
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
           "Date: %s\r\n"
           "Server: Carlos server\r\n"
           "\r\n",
-          minor_version, response_code, get_status_message(response_code),
-          date);
-
-  if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
-      strncmp(strchr(path, '.'), ".py", 3) == 0) {
-    exe_script(connfd, request_body, path + 1);
-    free(exe_path);
-    return;
-  }
+          minor_version, OK, get_status_message(OK), date);
 
   send(connfd, response, strlen(response), 0);
   return;
 }
 
+/**
+ * @brief Handles the OPTIONS method request.
+ * @param connfd The file descriptor for the connection.
+ * @param minor_version The HTTP minor version.
+ * @param response_code The HTTP status code for the OPTIONS response.
+ * @note This function is used to communicate to the client which HTTP methods
+ * are supported by the server for a given URL resource. It's useful for CORS
+ *       preflight requests in web applications.
+ */
 void methodOptions(int connfd, int minor_version, int response_code) {
   char response[BUFFER_SIZE], date[LINE];
   time_t t = time(0);
@@ -245,22 +323,38 @@ void http_response_error(int connfd, int response_code) {
   send(connfd, response, strlen(response), 0);
   return;
 }
-void exe_script(int connfd, char *path, char *exe_path) {
+
+/**
+ * @brief Executes a script based on the request path.
+ * @param connfd The file descriptor for the connection.
+ * @param path The script path to be executed.
+ * @param params The parameters to pass to the script.
+ * @note This function allows the server to execute server-side scripts and
+ * return their output as a response to the client. It supports dynamic content
+ * generation.
+ */
+void exe_script(int connfd, char *path, char *params) {
+  int response_code = OK, resource_fd;
   FILE *fd = NULL;
-  char buffer[BUFFER_SIZE] = "\0", command[LINE];
+  char buffer[BUFFER_SIZE], response[BUFFER_SIZE], command[LINE], date[LINE],
+      last_modified[LINE];
   char *tok = NULL, *save, *decoded;
+  time_t t = time(0);
+  struct tm tm;
+  struct stat file_stats;
 
   if (strncmp(strchr(path, '.'), ".php", 4) == 0) {
     strcpy(command, "php ");
   } else if (strncmp(strchr(path, '.'), ".py", 3) == 0) {
     strcpy(command, "python3 ");
   } else {
+    http_response_error(connfd, BAD_REQUEST);
     return;
   }
 
-  strcat(command, exe_path);
-  path = strchr(path, '?');
-  tok = strtok_r(path + 1, "=", &save);
+  path = strtok(path, "?");
+  strcat(command, path);
+  tok = strtok_r(params, "=", &save);
   strcat(command, " ");
   strcat(command, tok);
   while (tok) {
@@ -273,26 +367,55 @@ void exe_script(int connfd, char *path, char *exe_path) {
 
   strcat(command, " < /dev/null");
   decoded = decode_url(command);
-  if (!decoded)
+  if (!decoded) {
+    http_response_error(connfd, BAD_REQUEST);
     return;
-
-  fd = popen(decoded, "r");
-  if (!fd)
-    return;
-
-  while (fgets(buffer, BUFFER_SIZE, fd) != NULL) {
-    if (strcmp(buffer, "\r\n") == 0) {
-      break;
-    }
-    send(connfd, buffer, strlen(buffer), 0);
-    memset(buffer, 0, BUFFER_SIZE);
   }
 
+  fd = popen(decoded, "r");
+  if (!fd) {
+    http_response_error(connfd, SVR_ERROR);
+    return;
+  }
+
+  resource_fd = fileno(fd);
+  while ((read(resource_fd, buffer, sizeof(buffer))) > 0) {
+    strcat(buffer, "\r\n");
+  }
+
+  if (fstat(resource_fd, &file_stats) == ERR) {
+    http_response_error(connfd, SVR_ERROR);
+    return;
+  }
+
+  gmtime_r(&t, &tm);
+  strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", &tm);
+
+  sprintf(response,
+          "HTTP/1.0 %d %s\r\n"
+          "Date: %s\r\n"
+          "Server: Carlos server\r\n"
+          "Last-Modified: %s\r\n"
+          "Content-Length: %ld\r\n"
+          "Content-Type: text/html\r\n"
+          "\r\n",
+          response_code, get_status_message(response_code), date, last_modified,
+          strlen(buffer));
+
+  send(connfd, response, strlen(response), 0);
+  send(connfd, buffer, strlen(buffer), 0);
   pclose(fd);
   free(decoded);
   return;
 }
 
+/**
+ * @brief Determines the MIME type based on the file extension.
+ * @param path The path to the file.
+ * @return The MIME type string if recognized, NULL otherwise.
+ * @note This function uses file extension to determine the MIME type for
+ *       common file types (e.g., .html, .css, .js).
+ */
 const char *get_mime_type(char *path) {
   if (strcasecmp(path, ".html") == 0) {
     return "text/html";
@@ -313,6 +436,13 @@ const char *get_mime_type(char *path) {
   }
 }
 
+/**
+ * @brief Retrieves the message string associated with an HTTP status code.
+ * @param status The HTTP status code.
+ * @return The message string associated with the status code.
+ * @note This function maps the enum Http_status values to their corresponding
+ *       message strings.
+ */
 const char *get_status_message(Http_status status) {
   switch (status) {
   case OK:
@@ -330,6 +460,14 @@ const char *get_status_message(Http_status status) {
   }
 }
 
+/**
+ * @brief Decodes a URL-encoded string.
+ * @param url The URL-encoded string.
+ * @return The decoded string.
+ * @note This function decodes percent-encoded characters in the URL, converting
+ *       them back to their original characters. It's essential for processing
+ *       URLs containing special characters.
+ */
 char *decode_url(const char *url) {
   char *ret = malloc(strlen(url) + 2);
 
