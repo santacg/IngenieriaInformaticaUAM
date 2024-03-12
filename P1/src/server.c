@@ -27,7 +27,12 @@ int main(int argc, char *argv[]) {
   long int conn_fd;
   pthread_t tid;
   struct sockaddr_in address;
-
+  /**
+  if (argc != 2) {
+    fprintf(stdout, "server usage: <port>");
+    return EXIT_FAILURE;
+  }
+  */
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
     perror("Error in socket");
