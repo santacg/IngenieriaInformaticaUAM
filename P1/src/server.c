@@ -34,7 +34,7 @@ int socket_fd;
 
 void termination_handler (int signum){
   close(socket_fd);
-  exit(0);
+  exit(EXIT_SUCCESS);
 }
 
 /**
@@ -54,7 +54,7 @@ void *handle_conn(void *arg) {
   svr_conn = *(struct server_connection *) arg;
   pthread_detach(pthread_self());
   process_http_request(svr_conn.connfd, svr_conn.server_root, svr_conn.server_signature);
-  close((long int)arg);
+  close(svr_conn.connfd);
   return NULL;
 }
 
@@ -120,6 +120,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   */
+
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
     perror("Error in socket");
@@ -151,8 +152,4 @@ int main(int argc, char *argv[]) {
     svr_conn.connfd = conn_fd;
     pthread_create(&tid, NULL, &handle_conn, (void *)&svr_conn);
   }
-
-  close(socket_fd);
-
-  return EXIT_SUCCESS;
 }
