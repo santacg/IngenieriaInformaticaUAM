@@ -112,14 +112,7 @@ int main(int argc, char *argv[]) {
     else {
 
     }
-  }
-  
-  /*
-  if (daemon(1, 0) == -1) {
-    perror("Error setting daemon");
-    return EXIT_FAILURE;
-  }
-  */
+  } 
 
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
@@ -140,6 +133,11 @@ int main(int argc, char *argv[]) {
   fprintf(stdout, "Listening...\n");
   if (listen(socket_fd, max_clients) < 0) {
     perror("Error in listen");
+    return EXIT_FAILURE;
+  }
+
+  if (daemon(1, 0) == -1) {
+    perror("Error setting daemon");
     return EXIT_FAILURE;
   }
 

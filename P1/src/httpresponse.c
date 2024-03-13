@@ -276,7 +276,7 @@ void methodPost(int connfd, char *request_body, char *path, int minor_version,
           "\r\n",
           minor_version, OK, get_status_message(OK), date, server_name);
 
-  send(connfd, response, BUFFER_SIZE, 0);
+  send(connfd, response, strlen(response), 0);
   return;
 }
 
@@ -307,7 +307,7 @@ void methodOptions(int connfd, int minor_version, int response_code,
           minor_version, response_code, get_status_message(response_code), date,
           server_name);
 
-  send(connfd, response, strlen(response) + 1, 0);
+  send(connfd, response, strlen(response), 0);
   return;
 }
 
@@ -321,12 +321,12 @@ void http_response_error(int connfd, int response_code, char *server_name) {
 
   sprintf(response,
           "HTTP/1.1 %d %s\r\n"
-          "Date: %s\r\n"
-          "Server: %s\r\n"
+          "Date:%s\r\n"
+          "Server:%s\r\n"
           "\r\n",
           response_code, get_status_message(response_code), date, server_name);
 
-  send(connfd, response, strlen(response) + 1, 0);
+  send(connfd, response, strlen(response), 0);
   return;
 }
 
@@ -454,13 +454,13 @@ const char *get_status_message(Http_status status) {
   case OK:
     return "OK";
   case BAD_REQUEST:
-    return "Bad request";
+    return "Bad Request";
   case NOT_FOUND:
-    return "Not found";
+    return "Not Found";
   case SVR_ERROR:
-    return "Server error";
+    return "Server Error";
   case METHOD_NOT_FOUND:
-    return "Method not found";
+    return "Method Not Found";
   default:
     return "Unknown status";
   }
