@@ -12,6 +12,7 @@
  */
 
 #include "../includes/httpresponse.h"
+#include "../includes/server.h"
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -23,10 +24,18 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <signal.h>
 #include <unistd.h>
 
-#define PORT 8081
+#define LINE 32
 #define SA struct sockaddr
+
+int socket_fd;
+
+void termination_handler (int signum){
+  close(socket_fd);
+  exit(0);
+}
 
 /**
  * @brief Handles a new connection in a separate thread.
@@ -41,8 +50,10 @@
  * @return Always returns NULL.
  */
 void *handle_conn(void *arg) {
+  struct server_connection svr_conn;
+  svr_conn = *(struct server_connection *) arg;
   pthread_detach(pthread_self());
-  process_http_request((long int)arg);
+  process_http_request(svr_conn.connfd, svr_conn.server_root, svr_conn.server_signature);
   close((long int)arg);
   return NULL;
 }
@@ -59,17 +70,56 @@ void *handle_conn(void *arg) {
  * @return EXIT_SUCCESS on successful execution, EXIT_FAILURE on error.
  */
 int main(int argc, char *argv[]) {
-  int socket_fd;
-  long int conn_fd;
+  FILE *config_file = NULL;
+  char line[LINE];
+  char *tok = NULL;
+  long int conn_fd, port, max_clients;
   pthread_t tid;
   struct sockaddr_in address;
-  /**
-  if (argc != 2) {
-    fprintf(stdout, "server usage: <port>");
+  struct sigaction new_action, old_action;
+  struct server_connection svr_conn;
+  
+  new_action.sa_handler = termination_handler;
+  sigemptyset(&new_action.sa_mask);
+  new_action.sa_flags = 0;
+
+  sigaction(SIGINT, NULL, &old_action);
+  if (old_action.sa_handler != SIG_IGN)
+    sigaction(SIGINT, &new_action, NULL);
+
+  config_file = fopen("server.conf", "r");
+  while (fgets(line, sizeof(line), config_file)) {
+    if (strncmp(line, "server_root", 11) == 0) {
+      strtok(line, "=");
+      tok = strtok(NULL, "\0");
+      strncpy(svr_conn.server_root, tok, strlen(tok));
+    }
+    else if (strncmp(line, "max_clients", 11) == 0) {
+      strtok(line, "=");
+      tok = strtok(NULL, "\0");
+      max_clients = atol(tok);
+    }
+    else if (strncmp(line, "listen_port", 11) == 0) {
+      strtok(line, "=");
+      tok = strtok(NULL, "\0");
+      port = atol(tok);
+    }
+    else if (strncmp(line, "server_signature", 16) == 0) {
+      strtok(line, "=");
+      tok = strtok(NULL, "\0");
+      strncpy(svr_conn.server_signature, tok, strlen(tok));
+    }
+    else {
+
+    }
+  }
+  
+  /*
+  if (daemon(1, 0) == -1) {
+    perror("Error setting daemon");
     return EXIT_FAILURE;
   }
   */
-
   socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (socket_fd < 0) {
     perror("Error in socket");
@@ -77,9 +127,9 @@ int main(int argc, char *argv[]) {
   }
 
   address.sin_family = AF_INET;
-  address.sin_port = htons(PORT);
+  address.sin_port = htons(port);
   address.sin_addr.s_addr = INADDR_ANY;
-  fprintf(stdout, "port: %d\n", PORT);
+  fprintf(stdout, "port: %ld\n", port);
 
   if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address))) {
     perror("Binding socket");
@@ -87,7 +137,7 @@ int main(int argc, char *argv[]) {
   }
 
   fprintf(stdout, "Listening...\n");
-  if (listen(socket_fd, 100) < 0) {
+  if (listen(socket_fd, max_clients) < 0) {
     perror("Error in listen");
     return EXIT_FAILURE;
   }
@@ -98,7 +148,8 @@ int main(int argc, char *argv[]) {
       perror("Error in receiving connection");
       return EXIT_FAILURE;
     }
-    pthread_create(&tid, NULL, &handle_conn, (void *)conn_fd);
+    svr_conn.connfd = conn_fd;
+    pthread_create(&tid, NULL, &handle_conn, (void *)&svr_conn);
   }
 
   close(socket_fd);

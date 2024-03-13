@@ -54,7 +54,7 @@ const char *get_mime_type(char *path);
  * @param connfd The file descriptor for the connection.
  * @param response_code The HTTP status code to be sent.
  */
-void http_response_error(int connfd, int response_code);
+void http_response_error(int connfd, int response_code, char *server_name);
 
 /**
  * @brief Handles the GET method request.
@@ -62,7 +62,7 @@ void http_response_error(int connfd, int response_code);
  * @param path The path requested by the GET method.
  * @param minor_version The HTTP minor version.
  */
-void methodGet(int connfd, char *path, int minor_version);
+void methodGet(int connfd, char *path, int minor_version, char *server_name);
 
 /**
  * @brief Handles the POST method request.
@@ -71,7 +71,8 @@ void methodGet(int connfd, char *path, int minor_version);
  * @param path The path requested by the POST method.
  * @param minor_version The HTTP minor version.
  */
-void methodPost(int connfd, char *request, char *path, int minor_version);
+void methodPost(int connfd, char *request, char *path, int minor_version,
+                char *server_name);
 
 /**
  * @brief Handles the OPTIONS method request.
@@ -79,7 +80,8 @@ void methodPost(int connfd, char *request, char *path, int minor_version);
  * @param minor_version The HTTP minor version.
  * @param response_code The HTTP status code for the OPTIONS response.
  */
-void methodOptions(int connfd, int minor_version, int response_code);
+void methodOptions(int connfd, int minor_version, int response_code,
+                   char *server_name);
 
 /**
  * @brief Executes a script based on the request path.
@@ -87,7 +89,7 @@ void methodOptions(int connfd, int minor_version, int response_code);
  * @param path The script path to be executed.
  * @param params The parameters to pass to the script.
  */
-void exe_script(int connfd, char *path, char *params);
+void exe_script(int connfd, char *path, char *params, char *server_name);
 
 /**
  * @brief Decodes a URL-encoded string.
@@ -100,7 +102,7 @@ char *decode_url(const char *url);
  * @brief Processes an HTTP request.
  * @param connfd The file descriptor for the connection.
  */
-void process_http_request(int connfd);
+void process_http_request(int connfd, char *server_name, char *server_root);
 
 /**
  * @brief Processes an HTTP request.
@@ -111,9 +113,9 @@ void process_http_request(int connfd);
  * errors and unsupported methods by sending suitable HTTP error responses. This
  * is the entry point for all incoming HTTP requests.
  */
-void process_http_request(int connfd) {
-  int pret, minor_version; 
-  char buffer[BUFFER_SIZE];
+void process_http_request(int connfd, char *server_root, char *server_name) {
+  int pret, minor_version;
+  char buffer[BUFFER_SIZE], abs_path[LINE];
   char *method, *path, *request_body;
   size_t buff_len = 0, prev_buff_len = 0, num_headers, method_len, path_len;
   ssize_t nread = 0;
@@ -123,7 +125,7 @@ void process_http_request(int connfd) {
     nread = read(connfd, buffer + buff_len, BUFFER_SIZE - buff_len);
     if (nread <= 0) {
       perror("Error reading from scoket");
-      http_response_error(connfd, SVR_ERROR);
+      http_response_error(connfd, SVR_ERROR, server_name);
       return;
     }
     prev_buff_len = buff_len;
@@ -137,14 +139,14 @@ void process_http_request(int connfd) {
       break;
     else if (pret == -1) {
       fprintf(stderr, "Error parsing http request");
-      http_response_error(connfd, BAD_REQUEST);
+      http_response_error(connfd, BAD_REQUEST, server_name);
       return;
     }
 
     assert(pret == -2);
     if (buff_len == sizeof(buffer)) {
       fprintf(stderr, "HTTP request too long");
-      http_response_error(connfd, BAD_REQUEST);
+      http_response_error(connfd, BAD_REQUEST, server_name);
       return;
     }
   }
@@ -152,15 +154,17 @@ void process_http_request(int connfd) {
   request_body = strstr(buffer, "\r\n\r\n");
   method[method_len] = '\0';
   path[path_len] = '\0';
+  strtok(server_root, "\n");
+  sprintf(abs_path, "%s%s", server_root + 1, path + 1);
 
   if (strcmp(method, "GET") == 0) {
-    methodGet(connfd, path, minor_version);
+    methodGet(connfd, abs_path, minor_version, server_name);
   } else if (strcmp(method, "POST") == 0) {
-    methodPost(connfd, request_body + 4, path, minor_version);
+    methodPost(connfd, request_body + 4, abs_path, minor_version, server_name);
   } else if (strcmp(method, "OPTIONS") == 0) {
-    methodOptions(connfd, minor_version, OK);
+    methodOptions(connfd, minor_version, OK, server_name);
   } else {
-    methodOptions(connfd, minor_version, METHOD_NOT_FOUND);
+    methodOptions(connfd, minor_version, METHOD_NOT_FOUND, server_name);
   }
 
   return;
@@ -176,7 +180,7 @@ void process_http_request(int connfd) {
  * appropriate HTTP headers. If the resource is not found, it sends a 404 Not
  * Found response.
  */
-void methodGet(int connfd, char *path, int minor_version) {
+void methodGet(int connfd, char *path, int minor_version, char *server_name) {
   int resource_fd, bytes_read = 0, params_len = 0;
   char response[BUFFER_SIZE], last_modified[LINE], date[LINE];
   char *params = NULL;
@@ -190,25 +194,25 @@ void methodGet(int connfd, char *path, int minor_version) {
     params_len = strchr(path, '?') - path;
     params = (char *)malloc(sizeof(char) * params_len + 1);
     if (!params) {
-      http_response_error(connfd, SVR_ERROR);
+      http_response_error(connfd, SVR_ERROR, server_name);
       return;
     }
     params = strchr(path, '?');
     if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
         strncmp(strchr(path, '.'), ".py", 3) == 0) {
-      exe_script(connfd, path + 1, params + 1);
+      exe_script(connfd, path + 1, params + 1, server_name);
       return;
     }
   }
 
   resource_fd = open(path + 1, O_RDONLY);
   if (resource_fd == ERR) {
-    http_response_error(connfd, NOT_FOUND);
+    http_response_error(connfd, NOT_FOUND, server_name);
     return;
   }
 
   if (fstat(resource_fd, &file_stats) == ERR) {
-    http_response_error(connfd, SVR_ERROR);
+    http_response_error(connfd, SVR_ERROR, server_name);
     return;
   }
 
@@ -222,13 +226,13 @@ void methodGet(int connfd, char *path, int minor_version) {
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
           "Date: %s\r\n"
-          "Server: Carlos server\r\n"
+          "Server: %s\r\n"
           "Last-Modified: %s\r\n"
           "Content-Length: %ld\r\n"
           "Content-Type: %s\r\n"
           "\r\n",
-          minor_version, OK, get_status_message(OK), date, last_modified,
-          file_stats.st_size, get_mime_type(strchr(path, '.')));
+          minor_version, OK, get_status_message(OK), date, server_name,
+          last_modified, file_stats.st_size, get_mime_type(strchr(path, '.')));
 
   send(connfd, response, strlen(response), 0);
   bzero(response, BUFFER_SIZE);
@@ -250,7 +254,8 @@ void methodGet(int connfd, char *path, int minor_version) {
  * respond with various HTTP status codes based on the outcome of processing the
  * request.
  */
-void methodPost(int connfd, char *request_body, char *path, int minor_version) {
+void methodPost(int connfd, char *request_body, char *path, int minor_version,
+                char *server_name) {
   char response[BUFFER_SIZE], date[LINE];
   time_t t = time(NULL);
   struct tm tm;
@@ -260,18 +265,18 @@ void methodPost(int connfd, char *request_body, char *path, int minor_version) {
 
   if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
       strncmp(strchr(path, '.'), ".py", 3) == 0) {
-    exe_script(connfd, path + 1, request_body);
+    exe_script(connfd, path + 1, request_body, server_name);
     return;
   }
 
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
           "Date: %s\r\n"
-          "Server: Carlos server\r\n"
+          "Server: %s\r\n"
           "\r\n",
-          minor_version, OK, get_status_message(OK), date);
+          minor_version, OK, get_status_message(OK), date, server_name);
 
-  send(connfd, response, strlen(response), 0);
+  send(connfd, response, BUFFER_SIZE, 0);
   return;
 }
 
@@ -284,7 +289,8 @@ void methodPost(int connfd, char *request_body, char *path, int minor_version) {
  * are supported by the server for a given URL resource. It's useful for CORS
  *       preflight requests in web applications.
  */
-void methodOptions(int connfd, int minor_version, int response_code) {
+void methodOptions(int connfd, int minor_version, int response_code,
+                   char *server_name) {
   char response[BUFFER_SIZE], date[LINE];
   time_t t = time(0);
   struct tm tm;
@@ -295,17 +301,17 @@ void methodOptions(int connfd, int minor_version, int response_code) {
   sprintf(response,
           "HTTP/1.%d %d %s\r\n"
           "Date: %s\r\n"
-          "Server: Carlos server\r\n"
+          "Server: %s\r\n"
           "Allow: GET, POST, OPTIONS\r\n"
           "\r\n",
-          minor_version, response_code, get_status_message(response_code),
-          date);
+          minor_version, response_code, get_status_message(response_code), date,
+          server_name);
 
-  send(connfd, response, strlen(response), 0);
+  send(connfd, response, strlen(response) + 1, 0);
   return;
 }
 
-void http_response_error(int connfd, int response_code) {
+void http_response_error(int connfd, int response_code, char *server_name) {
   char response[BUFFER_SIZE], date[LINE];
   time_t t = time(0);
   struct tm tm;
@@ -316,11 +322,11 @@ void http_response_error(int connfd, int response_code) {
   sprintf(response,
           "HTTP/1.1 %d %s\r\n"
           "Date: %s\r\n"
-          "Server: Carlos server\r\n"
+          "Server: %s\r\n"
           "\r\n",
-          response_code, get_status_message(response_code), date);
+          response_code, get_status_message(response_code), date, server_name);
 
-  send(connfd, response, strlen(response), 0);
+  send(connfd, response, strlen(response) + 1, 0);
   return;
 }
 
@@ -333,7 +339,7 @@ void http_response_error(int connfd, int response_code) {
  * return their output as a response to the client. It supports dynamic content
  * generation.
  */
-void exe_script(int connfd, char *path, char *params) {
+void exe_script(int connfd, char *path, char *params, char *server_name) {
   int response_code = OK, resource_fd;
   FILE *fd = NULL;
   char buffer[BUFFER_SIZE], response[BUFFER_SIZE], command[LINE], date[LINE],
@@ -348,7 +354,7 @@ void exe_script(int connfd, char *path, char *params) {
   } else if (strncmp(strchr(path, '.'), ".py", 3) == 0) {
     strcpy(command, "python3 ");
   } else {
-    http_response_error(connfd, BAD_REQUEST);
+    http_response_error(connfd, BAD_REQUEST, server_name);
     return;
   }
 
@@ -368,13 +374,13 @@ void exe_script(int connfd, char *path, char *params) {
   strcat(command, " < /dev/null");
   decoded = decode_url(command);
   if (!decoded) {
-    http_response_error(connfd, BAD_REQUEST);
+    http_response_error(connfd, BAD_REQUEST, server_name);
     return;
   }
 
   fd = popen(decoded, "r");
   if (!fd) {
-    http_response_error(connfd, SVR_ERROR);
+    http_response_error(connfd, SVR_ERROR, server_name);
     return;
   }
 
@@ -384,7 +390,7 @@ void exe_script(int connfd, char *path, char *params) {
   }
 
   if (fstat(resource_fd, &file_stats) == ERR) {
-    http_response_error(connfd, SVR_ERROR);
+    http_response_error(connfd, SVR_ERROR, server_name);
     return;
   }
 
@@ -394,13 +400,13 @@ void exe_script(int connfd, char *path, char *params) {
   sprintf(response,
           "HTTP/1.0 %d %s\r\n"
           "Date: %s\r\n"
-          "Server: Carlos server\r\n"
+          "Server: %s\r\n"
           "Last-Modified: %s\r\n"
           "Content-Length: %ld\r\n"
           "Content-Type: text/html\r\n"
           "\r\n",
-          response_code, get_status_message(response_code), date, last_modified,
-          strlen(buffer));
+          response_code, get_status_message(response_code), date, server_name,
+          last_modified, strlen(buffer));
 
   send(connfd, response, strlen(response), 0);
   send(connfd, buffer, strlen(buffer), 0);
