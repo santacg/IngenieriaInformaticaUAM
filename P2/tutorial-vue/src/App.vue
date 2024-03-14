@@ -18,13 +18,13 @@
   </div>
 </template>
 <script>
-// Importacion del componente 'TablaPersonas' y el metodo 'ref' de Vue 3
+
 import TablaPersonas from "@/components/TablaPersonas.vue";
 import FormularioPersona from "@/components/FormularioPersona.vue";
 import { useCounterStore } from '@/stores/counter';
-const myVar = import.meta.env.VITE_DJANGOURL;
-
 import { ref, onMounted } from "vue";
+
+const myVar = import.meta.env.VITE_DJANGOURL;
 // Exportacion del componente principal
 export default {
   // Nombre del componente principal
@@ -100,7 +100,7 @@ export default {
       store,
     };
   },
-}; //revisar corchetes
+};
 </script>
 
 <style>
