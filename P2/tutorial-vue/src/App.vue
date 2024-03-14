@@ -1,5 +1,8 @@
 <template>
-  <div id="app" class="container">
+  <div
+    id="app"
+    class="container"
+  >
     <div class="row">
       <div class="col-md-12">
         <h1>Personas</h1>
@@ -8,8 +11,11 @@
     <div class="row">
       <div class="col-md-12">
         <formulario-persona @add-persona="agregarPersona" />
-        <tabla-personas :personas="personas" @delete-persona="eliminarPersona"
-          @actualizar-persona="actualizarPersona" />
+        <tabla-personas
+          :personas="personas"
+          @delete-persona="eliminarPersona"
+          @actualizar-persona="actualizarPersona"
+        />
       </div>
     </div>
   </div>
