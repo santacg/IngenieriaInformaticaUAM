@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "cypress": "^13.3.3",
+    "pinia": "^2.1.7",
     "vue": "^3.2.38"
   },
   "devDependencies": {

@@ -10,3 +10,4 @@ class PersonaViewSet(viewsets.ModelViewSet):
     serializer_class = PersonaSerializer
 
 
+

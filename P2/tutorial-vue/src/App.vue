@@ -13,11 +13,16 @@
       </div>
     </div>
   </div>
+  <div>
+    <p>Count is {{ store.count }}</p>
+  </div>
 </template>
 <script>
 // Importacion del componente 'TablaPersonas' y el metodo 'ref' de Vue 3
 import TablaPersonas from "@/components/TablaPersonas.vue";
 import FormularioPersona from "@/components/FormularioPersona.vue";
+import { useCounterStore } from '@/stores/counter';
+const myVar = import.meta.env.VITE_DJANGOURL;
 
 import { ref, onMounted } from "vue";
 // Exportacion del componente principal
@@ -33,10 +38,11 @@ export default {
   setup() {
     // Declaracion de una variable reactiva "personas" usando "ref"
     const personas = ref([]);
+    const store = useCounterStore();
     const listadoPersonas = async () => {
       // Metodo para obtener un listado de personas
       try {
-        const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/');
+        const response = await fetch('http://127.0.0.1:8001/api/v1/');
         personas.value = await response.json();
       } catch (error) {
         console.error(error);
@@ -44,13 +50,14 @@ export default {
     };
     const agregarPersona = async (persona) => {
       try {
-        const response = await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/', {
+        const response = await fetch('http://127.0.0.1:8001/api/v1/', {
           method: 'POST',
           body: JSON.stringify(persona),
           headers: { 'Content-type': 'application/json; charset=UTF-8' },
         });
         const personaCreada = await response.json();
         personas.value = [...personas.value, personaCreada];
+        store.increment();
       } catch (error) {
         console.error(error);
       }
@@ -73,7 +80,7 @@ export default {
     const eliminarPersona = async (persona_id) => {
       // Metodo para eliminar una persona
       try {
-        await fetch('https://my-json-server.typicode.com/rmarabini/people/personas/' + persona_id + '/', {
+        await fetch('http://127.0.0.1:8001/api/v1/' + persona_id + '/', {
           method: "DELETE"
         });
         personas.value = personas.value.filter(u => u.id !== persona_id);
@@ -90,6 +97,7 @@ export default {
       agregarPersona,
       eliminarPersona,
       actualizarPersona,
+      store,
     };
   },
 }; //revisar corchetes
