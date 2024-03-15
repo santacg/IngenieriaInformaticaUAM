@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import dj_database_url 
 from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
@@ -90,7 +90,11 @@ WSGI_APPLICATION = 'persona.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# Add these at the top of your settings.py
+from os import getenv
+from dotenv import load_dotenv
 
+# Replace the DATABASES section of your settings.py with this
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
@@ -105,7 +109,9 @@ DATABASES = {
   }
 }
 
-
+NEON_URL = 'postgresql://psi_db_owner:uwHrPA9fgx1c@ep-plain-haze-a2ozai95.eu-central-1.aws.neon.tech/psi_db?sslmode=require'
+db_from_env = dj_database_url.config(default=NEON_URL, conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

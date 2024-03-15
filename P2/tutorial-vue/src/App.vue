@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="app"
-    class="container"
-  >
+  <div id="app" class="container">
     <div class="row">
       <div class="col-md-12">
         <h1>Personas</h1>
@@ -11,11 +8,8 @@
     <div class="row">
       <div class="col-md-12">
         <formulario-persona @add-persona="agregarPersona" />
-        <tabla-personas
-          :personas="personas"
-          @delete-persona="eliminarPersona"
-          @actualizar-persona="actualizarPersona"
-        />
+        <tabla-personas :personas="personas" @delete-persona="eliminarPersona"
+          @actualizar-persona="actualizarPersona" />
       </div>
     </div>
   </div>
@@ -30,7 +24,6 @@ import FormularioPersona from "@/components/FormularioPersona.vue";
 import { useCounterStore } from '@/stores/counter';
 import { ref, onMounted } from "vue";
 
-const myVar = import.meta.env.VITE_DJANGOURL;
 // Exportacion del componente principal
 export default {
   // Nombre del componente principal
@@ -45,10 +38,14 @@ export default {
     // Declaracion de una variable reactiva "personas" usando "ref"
     const personas = ref([]);
     const store = useCounterStore();
+    const myVar = import.meta.env.VITE_DJANGOURL;
+
     const listadoPersonas = async () => {
       // Metodo para obtener un listado de personas
       try {
-        const response = await fetch('http://127.0.0.1:8001/api/v1/');
+        const response = await fetch(
+          myVar,
+        );
         personas.value = await response.json();
       } catch (error) {
         console.error(error);
@@ -56,7 +53,7 @@ export default {
     };
     const agregarPersona = async (persona) => {
       try {
-        const response = await fetch('http://127.0.0.1:8001/api/v1/', {
+        const response = await fetch(myVar, {
           method: 'POST',
           body: JSON.stringify(persona),
           headers: { 'Content-type': 'application/json; charset=UTF-8' },
@@ -71,7 +68,8 @@ export default {
     const actualizarPersona = async (id, personaActualizada) => {
       // Metodo para actualizar una persona
       try {
-        const response = await fetch('https://my-json-server.tcom/rmarabini/people/personas/' + personaActualizada.id + '/', {
+        const response = await fetch(
+          myVar + personaActualizada.id + '/', {
           method: 'PUT',
           body: JSON.stringify(personaActualizada),
           headers: { 'Content-type': 'application/json; charset=UTF -8' },
@@ -86,7 +84,8 @@ export default {
     const eliminarPersona = async (persona_id) => {
       // Metodo para eliminar una persona
       try {
-        await fetch('http://127.0.0.1:8001/api/v1/' + persona_id + '/', {
+        await fetch(
+          myVar + persona_id + '/', {
           method: "DELETE"
         });
         personas.value = personas.value.filter(u => u.id !== persona_id);
@@ -110,8 +109,7 @@ export default {
 </script>
 
 <style>
-/* Estilos globales para todos los elementos button en la aplicacion
-↪→ */
+/* Estilos globales para todos los elementos button en la aplicacion */
 button {
   background: #009435;
   border: 1px solid #009435;

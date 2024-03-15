@@ -56,7 +56,7 @@ context('Add persona', () => {
    it('Add persona KO 6', () => {
     cy.get('[data-cy=name]').type("Paco")
     cy.get('[data-cy=surname]').type("Land")
-    cy.get('[data-cy=email]').type("paco@land")
+    cy.get('[data-cy=email]').type("@land")
     cy.get('[data-cy=add-button]').click()   
     cy.get('div.alert-danger').should("not.exist")
     cy.get('div.alert-success').should("not.exist")
