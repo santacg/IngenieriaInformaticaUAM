@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class Persona(models.Model):
@@ -10,4 +11,7 @@ class Persona(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        return self.nombre
+    
+    def get_absolute_url(self):
+        return reverse('persona', args=[str(self.id)])

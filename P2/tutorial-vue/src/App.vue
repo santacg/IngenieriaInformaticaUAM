@@ -46,13 +46,15 @@ export default {
         const response = await fetch(
           myVar,
         );
-        personas.value = await response.json();
+        var value = await response.json();
+        personas.value = value;
       } catch (error) {
         console.error(error);
       }
     };
     const agregarPersona = async (persona) => {
       try {
+        var json = JSON.stringify(persona);
         const response = await fetch(myVar, {
           method: 'POST',
           body: JSON.stringify(persona),
@@ -69,7 +71,7 @@ export default {
       // Metodo para actualizar una persona
       try {
         const response = await fetch(
-          myVar + personaActualizada.id + '/', {
+          myVar + personaActualizada.id + "/", {
           method: 'PUT',
           body: JSON.stringify(personaActualizada),
           headers: { 'Content-type': 'application/json; charset=UTF -8' },
@@ -85,7 +87,7 @@ export default {
       // Metodo para eliminar una persona
       try {
         await fetch(
-          myVar + persona_id + '/', {
+          myVar + persona_id + "/", {
           method: "DELETE"
         });
         personas.value = personas.value.filter(u => u.id !== persona_id);

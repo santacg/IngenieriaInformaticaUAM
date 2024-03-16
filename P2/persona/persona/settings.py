@@ -1,3 +1,4 @@
+
 """
 Django settings for persona project.
 
@@ -9,11 +10,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import dj_database_url 
-from pathlib import Path
-from os import getenv
-from dotenv import load_dotenv
 
+from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,18 +53,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware', 
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5173',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ],
-}
 
 ROOT_URLCONF = 'persona.urls'
 
@@ -90,28 +84,15 @@ WSGI_APPLICATION = 'persona.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+
 # Add these at the top of your settings.py
 from os import getenv
 from dotenv import load_dotenv
 
 # Replace the DATABASES section of your settings.py with this
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': getenv('PGDATABASE'),
-    'USER': getenv('PGUSER'),
-    'PASSWORD': getenv('PGPASSWORD'),
-    'HOST': getenv('PGHOST'),
-    'PORT': getenv('PGPORT', 5432),
-    'OPTIONS': {
-      'sslmode': 'require',
-    },
-  }
-}
 
-NEON_URL = 'postgresql://psi_db_owner:uwHrPA9fgx1c@ep-plain-haze-a2ozai95.eu-central-1.aws.neon.tech/psi_db?sslmode=require'
-db_from_env = dj_database_url.config(default=NEON_URL, conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -130,6 +111,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Replace the DATABASES section of your settings.py with this
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': getenv('PGDATABASE'),
+    'USER': getenv('PGUSER'),
+    'PASSWORD': getenv('PGPASSWORD'),
+    'HOST': getenv('PGHOST'),
+    'PORT': getenv('PGPORT', 5432),
+    'OPTIONS': {
+      'sslmode': 'require',
+    },
+  }
+}
+
+
+NEON_URL = 'postgresql://psi_db_owner:uwHrPA9fgx1c@ep-plain-haze-a2ozai95.eu-central-1.aws.neon.tech/psi_db?sslmode=require'
+db_from_env = dj_database_url.config(default=NEON_URL, conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
