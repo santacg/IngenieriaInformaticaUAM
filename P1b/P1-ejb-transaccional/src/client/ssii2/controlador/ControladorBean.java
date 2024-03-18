@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.ejb.EJB;
 import ssii2.servicio.dao.VotoDAORemote;
+import jakarta.ejb.EJBException;
 
 //
 /*
@@ -120,6 +121,9 @@ public class ControladorBean implements Serializable {
       }
 
       return "respuesta";
+    } catch (EJBException e) {
+      e.printStackTrace();
+      return "error"; 
     } catch (Exception e) {
       e.printStackTrace();
       return "Error";

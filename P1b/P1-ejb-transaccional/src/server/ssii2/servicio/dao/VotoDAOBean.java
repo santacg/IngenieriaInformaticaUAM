@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.EJBException;
 import ssii2.servicio.dao.VotoDAORemote;
 
 /**
@@ -53,6 +54,12 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    * para uso con prepared statement
    * Hay que convertir las consultas de getQryXXX()
    */
+
+  private static final String SELECT_VOTOS_RESTANTES_QRY = "select numeroVotosRestantes from censo " +
+      "where numeroDNI=?";
+  private static final String UPDATE_VOTOS_RESTANTES_QRY = "update censo set numeroVotosRestantes=? " +
+      "where numeroDNI=?";
+
   /* private static final String ... */
   /**************************************************/
   private static final String SELECT_CENSO_QRY = "select * from censo " +
@@ -231,6 +238,26 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
 
       // Obtener conexion
       con = getConnection();
+
+      pstmt = con.prepareStatement(SELECT_VOTOS_RESTANTES_QRY);
+      pstmt.setString(1, voto.getCenso().getNumeroDNI());
+      rs = pstmt.executeQuery();
+
+      int numeroVotosRestantes = 0;
+      if (rs.next()) {
+        numeroVotosRestantes = rs.getInt("numeroVotosRestantes");
+      }
+
+      if (numeroVotosRestantes <= 0) {
+        return null;
+      }
+
+      numeroVotosRestantes--;
+
+      pstmt = con.prepareStatement(UPDATE_VOTOS_RESTANTES_QRY);
+      pstmt.setInt(1, numeroVotosRestantes);
+      pstmt.setString(2, voto.getCenso().getNumeroDNI());
+      pstmt.executeUpdate();
 
       // Insertar en la base de datos el voto
 
@@ -489,10 +516,12 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
     this.debug = debug;
   }
 
+  @Override
   public boolean isDirectConnection() {
     return super.isDirectConnection();
   }
 
+  @Override
   public void setDirectConnection(boolean directConnection) {
     super.setDirectConnection(directConnection);
   }
