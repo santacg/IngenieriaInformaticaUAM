@@ -1,5 +1,7 @@
 package Obra;
 
+import java.util.ArrayList;
+
 public abstract class Obra {
     private String ID;
     private String nombre;
@@ -8,9 +10,11 @@ public abstract class Obra {
     private Boolean externa;
     private Double cuantiaSeguro;
     private String numeroSeguro;
+    private ArrayList<Autor> autor;
+    private Estado estado;
 
     public Obra(String ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro) {
+            String numeroSeguro, Estado estado) {
         this.ID = ID;
         this.nombre = nombre;
         this.anio = anio;
@@ -18,6 +22,8 @@ public abstract class Obra {
         this.externa = externa;
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
+        this.autor =  new ArrayList<Autor>();
+        this.estado = estado;
     }
     
     public String getID() {
@@ -48,6 +54,10 @@ public abstract class Obra {
         return numeroSeguro;
     }
 
+    public ArrayList<Autor> getAutor() {
+        return autor;
+    }
+
     public void setID(String ID) {
         this.ID = ID;
     }  
@@ -74,6 +84,33 @@ public abstract class Obra {
 
     public void setNumeroSeguro(String numeroSeguro) {
         this.numeroSeguro = numeroSeguro;
+    }
+
+    public void setAutor(ArrayList<Autor> autor) {
+        this.autor = autor;
     } 
 
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void retirarObra() {
+        this.estado = Estado.RETIRADA; 
+    }
+
+    public void prestarObra() {
+        this.estado = Estado.PRESTADA; 
+    }
+
+    public void almecenarObra() {
+        this.estado = Estado.ALMACENADA; 
+    }
+
+    public void exponerObra() {
+        this.estado = Estado.EXPUESTA;
+    }
+
+    public void restaurarObra() {
+        this.estado = Estado.RESTAURACION;
+    }
 }

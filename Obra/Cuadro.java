@@ -6,9 +6,9 @@ public class Cuadro extends ObraNoDigital {
 
     public Cuadro(String id, String nombre, Integer anio, String descripcion, boolean externa, Double cuantiaSeguro,
             Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima, Double humedadMaxima,
-            Double humedadMinima, String numeroSeguro, String tecnica) {
+            Double humedadMinima, String numeroSeguro, String tecnica, Estado estado) {
         super(id, nombre, anio, descripcion, externa, cuantiaSeguro, alto, ancho, temperaturaMaxima, temperaturaMinima,
-                humedadMaxima, humedadMinima, numeroSeguro);
+                humedadMaxima, humedadMinima, numeroSeguro, estado);
 
 
         this.tecnica = tecnica;

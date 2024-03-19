@@ -5,8 +5,8 @@ public class Audiovisual extends Obra{
     private String idioma;
     
     public Audiovisual(String ID, String nombre, Integer anio, String descripcion, Boolean externa,
-            Double cuantiaSeguro, String numeroSeguro, Integer duracion, String idioma) {
-        super(ID, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro);
+            Double cuantiaSeguro, String numeroSeguro, Integer duracion, String idioma, Estado estado) {
+        super(ID, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
         this.duracion = duracion;
         this.idioma = idioma;
     }

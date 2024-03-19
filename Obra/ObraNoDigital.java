@@ -10,8 +10,8 @@ public abstract class ObraNoDigital extends Obra {
 
     public ObraNoDigital(String id, String nombre, Integer anio, String descripcion, boolean externa,
             Double cuantiaSeguro, Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima,
-            Double humedadMaxima, Double humedadMinima, String numeroSeguro) {
-        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro);
+            Double humedadMaxima, Double humedadMinima, String numeroSeguro, Estado estado) {
+        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
         this.alto = alto;
         this.ancho = ancho;
         this.rangoHumedad = new HashMap<>();

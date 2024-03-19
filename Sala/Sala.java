@@ -1,0 +1,100 @@
+package Sala;
+
+public class Sala {
+    private String ID;
+    private String nombre;
+    private Integer aforo;
+    private Double humedad;
+    private Double temperatura;
+    private Boolean climatizador;
+    private Integer tomasElectricidad;
+    private Double ancho;
+    private Double largo;
+
+    public Sala(String iD, String nombre, Integer aforo, Double humedad, Double temperatura, Boolean climatizador,
+            Integer tomasElectricidad, Double ancho, Double largo) {
+        ID = iD;
+        this.nombre = nombre;
+        this.aforo = aforo;
+        this.humedad = humedad;
+        this.temperatura = temperatura;
+        this.climatizador = climatizador;
+        this.tomasElectricidad = tomasElectricidad;
+        this.ancho = ancho;
+        this.largo = largo;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String iD) {
+        ID = iD;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getAforo() {
+        return aforo;
+    }
+
+    public void setAforo(Integer aforo) {
+        this.aforo = aforo;
+    }
+
+    public Double getHumedad() {
+        return humedad;
+    }
+
+    public void setHumedad(Double humedad) {
+        this.humedad = humedad;
+    }
+
+    public Double getTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(Double temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    public Boolean getClimatizador() {
+        return climatizador;
+    }
+
+    public void setClimatizador(Boolean climatizador) {
+        this.climatizador = climatizador;
+    }
+
+    public Integer getTomasElectricidad() {
+        return tomasElectricidad;
+    }
+
+    public void setTomasElectricidad(Integer tomasElectricidad) {
+        this.tomasElectricidad = tomasElectricidad;
+    }
+
+    public Double getAncho() {
+        return ancho;
+    }
+
+    public void setAncho(Double ancho) {
+        this.ancho = ancho;
+    }
+
+    public Double getLargo() {
+        return largo;
+    }
+
+    public void setLargo(Double largo) {
+        this.largo = largo;
+    }
+
+
+}
