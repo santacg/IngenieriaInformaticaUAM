@@ -1,9 +1,9 @@
-package P3.Ingrediente;
+package Ingrediente;
 
 public enum Alergeno {
     GLUTEN("Gluten"),
     LACTOSA("Lactosa"),
-    HUEVOS("Huevos"),
+    HUEVO("Huevos"),
     FRUTOS_SECOS("Furutos secos");
 
     private final String tipoAlergeno;

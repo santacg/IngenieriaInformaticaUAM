@@ -1,3 +1,8 @@
+import Ingrediente.Alergeno;
+import Ingrediente.Ingrediente;
+import Ingrediente.TipoIngrediente;
+import Info.InfoNutricionalPeso;
+import Info.InfoNutricionalUnidad;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

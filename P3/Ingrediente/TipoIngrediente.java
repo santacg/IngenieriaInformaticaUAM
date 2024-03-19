@@ -1,9 +1,9 @@
-package P3.Ingrediente;
+package Ingrediente;
 
 public enum TipoIngrediente {
      CARNE("Carne"),
      PESCADO("Pescado"),
-     VERDURA_FRUTA("Frutas y Verduras"),
+     FRUTA_VERDURA("Frutas y Verduras"),
      LEGUMBRE("Legumbre"),
      CEREAL("Cereal"),
      HUEVO("Huevo"),

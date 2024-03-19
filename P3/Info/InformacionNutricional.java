@@ -1,4 +1,4 @@
-package P3.Info;
+package Info;
 
 public abstract class InformacionNutricional {
 
@@ -16,6 +16,20 @@ public abstract class InformacionNutricional {
         this.fibra = fibra;
         this.sodio = sodio;
     }
+
+    public InformacionNutricional(Double calorias, double hidratos, double grasasTotales, double grasasSaturadas,
+            double proteinas, double azucar, double fibra, double sodio) {
+        this.calorias = calorias;
+        this.hidratos = hidratos;
+        this.grasasTotales = grasasTotales;
+        this.grasasSaturadas = grasasSaturadas;
+        this.proteinas = proteinas;
+        this.azucar = azucar;
+        this.fibra = fibra;
+        this.sodio = sodio;
+    }
+
+
 
     public double getCalorias() {
         return calorias;

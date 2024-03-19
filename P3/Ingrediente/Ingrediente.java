@@ -1,14 +1,16 @@
-package P3.Ingrediente;
+package Ingrediente;
 
-import java.util.*;
-import P3.Info.InformacionNutricional;
-import P3.Ingrediente.*;
+import java.util.Arrays;
+import java.util.List;
+
+import Info.InfoNutricionalPeso;
+import Info.InformacionNutricional;
 
 public class Ingrediente {
     private String name;
     private String tipo;
     private InformacionNutricional info;
-    private String alergenos;
+    private List<Alergeno> alergenos;
 
     public Ingrediente(String name, TipoIngrediente tipo, InformacionNutricional info) {
         this.name = name;
@@ -22,7 +24,6 @@ public class Ingrediente {
         this.info = info;
     }
 
-
     public String getName() {
         return name;
     }
@@ -32,10 +33,10 @@ public class Ingrediente {
     }
 
     public InformacionNutricional getInfo() {
-        return info; 
+        return info;
     }
-    
-    public String getAlergeno() {
+
+    public List<Alergeno> getAlergeno() {
         return alergenos;
     }
 
@@ -47,11 +48,15 @@ public class Ingrediente {
         this.tipo = tipo;
     }
 
-    public String tieneAlergenos(String alergeno) {
-        this.alergenos;
+    public Ingrediente tieneAlergenos(Alergeno... newAlergenos) {
+        this.alergenos = Arrays.asList(newAlergenos);
+        return this;
     }
 
     public String toString() {
-        return "[" + this.tipo + "] " + this.name + " INFORMACION NUTRICIONAL DEL PLATO -> " + this.info.toString() + this.tieneAlergenos(null);
+        String infoNutricional = this.info instanceof InfoNutricionalPeso ? "INFORMACION NUTRICIONAL POR 100 g"
+                : "INFORMACION NUTRICIONAL POR UNIDAD";
+        return "[" + this.tipo + "] " + this.name + " " + infoNutricional + " -> " + this.info.toString();
     }
+
 }
