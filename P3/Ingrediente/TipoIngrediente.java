@@ -3,7 +3,7 @@ package Ingrediente;
 public enum TipoIngrediente {
      CARNE("Carne"),
      PESCADO("Pescado"),
-     FRUTA_VERDURA("Frutas y Verduras"),
+     FRUTA_VERDURA("Frutas y verduras"),
      LEGUMBRE("Legumbre"),
      CEREAL("Cereal"),
      HUEVO("Huevo"),

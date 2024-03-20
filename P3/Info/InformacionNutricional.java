@@ -4,8 +4,7 @@ public abstract class InformacionNutricional {
 
     private double calorias, hidratos, grasasTotales, grasasSaturadas, proteinas, azucar, fibra, sodio;
 
-
-    public InformacionNutricional(Integer calorias, double hidratos, double grasasTotales, double grasasSaturadas,
+    public InformacionNutricional(double calorias, double hidratos, double grasasTotales, double grasasSaturadas,
             double proteinas, double azucar, double fibra, double sodio) {
         this.calorias = calorias;
         this.hidratos = hidratos;
@@ -16,20 +15,6 @@ public abstract class InformacionNutricional {
         this.fibra = fibra;
         this.sodio = sodio;
     }
-
-    public InformacionNutricional(Double calorias, double hidratos, double grasasTotales, double grasasSaturadas,
-            double proteinas, double azucar, double fibra, double sodio) {
-        this.calorias = calorias;
-        this.hidratos = hidratos;
-        this.grasasTotales = grasasTotales;
-        this.grasasSaturadas = grasasSaturadas;
-        this.proteinas = proteinas;
-        this.azucar = azucar;
-        this.fibra = fibra;
-        this.sodio = sodio;
-    }
-
-
 
     public double getCalorias() {
         return calorias;
@@ -94,9 +79,10 @@ public abstract class InformacionNutricional {
     public void setSodio(double sodio) {
         this.sodio = sodio;
     }
-     
+
     public String toString() {
-        return "Valor energetico: " + this.calorias + " kcal, Hidratos de carbono: " + this.hidratos + " g, Grasas: " + this.grasasTotales + "g, Saturadas: " + this.grasasSaturadas + "g, Proteinas: " + this.proteinas + "g, Azucares: " + this.azucar + "g, Fibra: " + this.fibra + "g, Sodio: " + this.sodio
-        + " mg.";
+        return String.format(
+                "Valor energetico: %.2f kcal, Hidratos de carbono: %.2f g, Grasas: %.2f g, Saturadas: %.2f g, Proteinas: %.2f g, Azucares: %.2f g, Fibra: %.2f g, Sodio: %.2f mg.",
+                calorias, hidratos, grasasTotales, grasasSaturadas, proteinas, azucar, fibra, sodio);
     }
 }

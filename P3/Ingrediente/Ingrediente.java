@@ -1,5 +1,6 @@
 package Ingrediente;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,25 +8,25 @@ import Info.InfoNutricionalPeso;
 import Info.InformacionNutricional;
 
 public class Ingrediente {
-    private String name;
+    private String nombre;
     private String tipo;
     private InformacionNutricional info;
-    private List<Alergeno> alergenos;
+    private List<Alergeno> alergenos = new ArrayList<>();
 
-    public Ingrediente(String name, TipoIngrediente tipo, InformacionNutricional info) {
-        this.name = name;
+    public Ingrediente(String nombre, TipoIngrediente tipo, InformacionNutricional info) {
+        this.nombre = nombre;
         this.info = info;
         this.tipo = tipo.getTipoIngrediente();
     }
 
-    public Ingrediente(String name, String tipo, InformacionNutricional info) {
-        this.name = name;
+    public Ingrediente(String nombre, String tipo, InformacionNutricional info) {
+        this.nombre = nombre;
         this.tipo = tipo;
         this.info = info;
     }
 
-    public String getName() {
-        return name;
+    public String getNombre() {
+        return nombre;
     }
 
     public String getTipo() {
@@ -40,8 +41,8 @@ public class Ingrediente {
         return alergenos;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String name) {
+        this.nombre = name;
     }
 
     public void setTipo(String tipo) {
@@ -49,14 +50,22 @@ public class Ingrediente {
     }
 
     public Ingrediente tieneAlergenos(Alergeno... newAlergenos) {
-        this.alergenos = Arrays.asList(newAlergenos);
+        this.alergenos.addAll(Arrays.asList(newAlergenos));
         return this;
     }
 
     public String toString() {
         String infoNutricional = this.info instanceof InfoNutricionalPeso ? "INFORMACION NUTRICIONAL POR 100 g"
                 : "INFORMACION NUTRICIONAL POR UNIDAD";
-        return "[" + this.tipo + "] " + this.name + " " + infoNutricional + " -> " + this.info.toString();
+        String result = "[" + this.tipo + "] " + this.nombre + ": " + infoNutricional + " -> " + this.info.toString();
+        if (!alergenos.isEmpty()) {
+            result += " CONTIENE ";
+            for (Alergeno alergeno : alergenos) {
+                result += alergeno.getTipoAlergeno().toLowerCase() + ", ";
+            }
+            result = result.substring(0, result.length() - 2); // Remover la última coma y espacio
+        }
+        return result;
     }
 
 }
