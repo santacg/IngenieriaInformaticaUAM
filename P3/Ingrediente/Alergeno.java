@@ -15,4 +15,5 @@ public enum Alergeno {
     public String getTipoAlergeno() {
         return tipoAlergeno;
     }
+
 }

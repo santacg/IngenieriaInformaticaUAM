@@ -1,6 +1,6 @@
 package Info;
 
-public abstract class InformacionNutricional {
+public class InformacionNutricional {
 
     private double calorias, hidratos, grasasTotales, grasasSaturadas, proteinas, azucar, fibra, sodio;
 
@@ -80,9 +80,56 @@ public abstract class InformacionNutricional {
         this.sodio = sodio;
     }
 
+    public void addCalorias(Double calorias) {
+        this.calorias += calorias;
+    }
+
+    public void addHidratos(double hidratos) {
+        this.hidratos += hidratos;
+    }
+
+    public void addGrasasTotales(double grasasTotales) {
+        this.grasasTotales += grasasTotales;
+    }
+
+    public void addGrasasSaturadas(double grasasSaturadas) {
+        this.grasasSaturadas += grasasSaturadas;
+    }
+
+    public void addProteinas(double proteinas) {
+        this.proteinas += proteinas;
+    }
+
+    public void addAzucar(double azucar) {
+        this.azucar += azucar;
+    }
+
+    public void addFibra(double fibra) {
+        this.fibra += fibra;
+    }
+
+    public void addSodio(double sodio) {
+        this.sodio += sodio;
+    }
+
+    public InformacionNutricional addInformacionNutricional(InformacionNutricional info) {
+        this.calorias += info.getCalorias();
+        this.hidratos += info.getHidratos();
+        this.grasasTotales += info.getGrasasTotales(); 
+        this.grasasSaturadas += info.getGrasasSaturadas();
+        this.proteinas += info.getProteinas();
+        this.azucar += info.getAzucar();
+        this.fibra += info.getFibra();
+        this.sodio += info.getSodio();
+        return this;
+    }
+
+    
     public String toString() {
         return String.format(
                 "Valor energetico: %.2f kcal, Hidratos de carbono: %.2f g, Grasas: %.2f g, Saturadas: %.2f g, Proteinas: %.2f g, Azucares: %.2f g, Fibra: %.2f g, Sodio: %.2f mg.",
                 calorias, hidratos, grasasTotales, grasasSaturadas, proteinas, azucar, fibra, sodio);
     }
+
+
 }

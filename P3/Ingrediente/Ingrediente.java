@@ -12,6 +12,15 @@ public class Ingrediente {
     private String tipo;
     private InformacionNutricional info;
     private List<Alergeno> alergenos = new ArrayList<>();
+    private double cantidad;
+
+    public double getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(double cantidad) {
+        this.cantidad = cantidad;
+    }
 
     public Ingrediente(String nombre, TipoIngrediente tipo, InformacionNutricional info) {
         this.nombre = nombre;
@@ -52,6 +61,22 @@ public class Ingrediente {
     public Ingrediente tieneAlergenos(Alergeno... newAlergenos) {
         this.alergenos.addAll(Arrays.asList(newAlergenos));
         return this;
+    }
+
+    public InformacionNutricional getInformacionNutricionalIngrediente() {
+        return info;
+    }
+
+    public InformacionNutricional getInformacionNutricionalPorCantidad(double cantidad) {
+        cantidad =  this.info instanceof InfoNutricionalPeso ? cantidad / 100 : cantidad;
+        return new InformacionNutricional(this.info.getCalorias() * cantidad,
+            this.info.getHidratos() * cantidad,
+            this.info.getGrasasTotales() * cantidad, 
+            this.info.getGrasasSaturadas() * cantidad,
+            this.info.getProteinas() * cantidad,
+            this.info.getAzucar() * cantidad,
+            this.info.getFibra() * cantidad,
+            this.info.getSodio() * cantidad);
     }
 
     public String toString() {
