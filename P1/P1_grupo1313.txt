@@ -1,0 +1,9 @@
+G:1313
+P:08
+
+Integrates: Carlos García Santa
+	    Joaquín Abad Díaz
+
+-Para el ejercicio 1, se observa que efectivamente el set de instrucciones descrito está soportado en el uniciclo provisto.
+-En el ejercicio 2 se ha optado por usar el algoritmo Bubble sort y ordenar una lista sin sobreescribirla.
+-En el ejercicio 3 se ha cambiado en la simulación instrucciones.txt y datos.txt por las instrucciones y datos del código de prueba proporcionado para la P1 programa_test.asm
