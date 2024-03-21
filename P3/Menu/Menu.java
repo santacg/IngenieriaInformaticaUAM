@@ -9,6 +9,8 @@ import Ingrediente.Alergeno;
 /**
  * La clase Menu representa un menú que contiene una lista de platos y su
  * información nutricional.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz 
  */
 public class Menu {
     private static int count = 0;
@@ -71,7 +73,7 @@ public class Menu {
         StringBuilder sb = new StringBuilder();
         sb.append("Menu ");
         sb.append(numeroMenu);
-        sb.append(": [");
+        sb.append(" [");
         for (Plato platos : platos) {
             sb.append(platos.getNombre());
             sb.append(", ");
@@ -92,6 +94,11 @@ public class Menu {
         return sb.toString();
     }
 
+    /**
+     * Devuelve una representación en formato de cadena del menú.
+     * 
+     * @return La representación en formato de cadena del menú.
+     */
     public String toFile() {
         StringBuilder sb = new StringBuilder();
         sb.append("MENU;");

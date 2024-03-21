@@ -1,3 +1,4 @@
+package Tester;
 import Ingrediente.Alergeno;
 import Ingrediente.Ingrediente;
 import Ingrediente.TipoIngrediente;

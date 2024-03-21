@@ -2,6 +2,8 @@ package Ingrediente;
 
 /**
  * Enumeración que representa los posibles alérgenos de un ingrediente.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public enum Alergeno {
     GLUTEN("Gluten"),

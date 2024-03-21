@@ -6,6 +6,8 @@ package Info;
  * Contiene los valores de calorías, hidratos de carbono, grasas totales, grasas
  * saturadas,
  * proteínas, azúcar, fibra y sodio.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class InformacionNutricional {
 

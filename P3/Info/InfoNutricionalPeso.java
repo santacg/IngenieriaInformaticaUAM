@@ -7,6 +7,8 @@ package Info;
  * 
  * Esta clase hereda de la clase InformacionNutricional y agrega el atributo
  * peso.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class InfoNutricionalPeso extends InformacionNutricional {
     private double peso;

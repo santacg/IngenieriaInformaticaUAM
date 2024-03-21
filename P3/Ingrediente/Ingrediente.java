@@ -8,20 +8,22 @@ import Info.InformacionNutricional;
 
 /**
  * La clase Ingrediente representa un ingrediente utilizado en una receta.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class Ingrediente {
     private String nombre;
     private String tipo;
     private InformacionNutricional info;
     private HashSet<Alergeno> alergenos = new HashSet<>();
-    private double cantidad;
+    private Integer cantidad;
 
     /**
      * Obtiene la cantidad del ingrediente.
      * 
      * @return La cantidad del ingrediente.
      */
-    public double getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
@@ -30,7 +32,7 @@ public class Ingrediente {
      * 
      * @param cantidad La cantidad del ingrediente.
      */
-    public void setCantidad(double cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -173,6 +175,12 @@ public class Ingrediente {
         return result;
     }
 
+    /**
+     * Devuelve una representación en forma de cadena formateada del ingrediente
+     * para escribir en un archivo.
+     *
+     * @return la representación en forma de cadena formateada del ingrediente
+     */
     public String toFile() {
         String tipoIngrediente = this.info instanceof InfoNutricionalPeso ? "INGREDIENTE_PESO" : "INGREDIENTE_UNIDAD";
         String gluten = alergenos.contains(Alergeno.GLUTEN) ? "S" : "N";

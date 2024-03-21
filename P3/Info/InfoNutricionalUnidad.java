@@ -4,6 +4,8 @@ package Info;
  * Esta clase representa la información nutricional de una unidad de un
  * alimento.
  * Hereda de la clase InformacionNutricional.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class InfoNutricionalUnidad extends InformacionNutricional {
 

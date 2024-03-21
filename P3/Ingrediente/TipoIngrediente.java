@@ -2,6 +2,8 @@ package Ingrediente;
 
 /**
  * Enumeración que representa los diferentes tipos de ingredientes.
+ * 
+ * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public enum TipoIngrediente {
     CARNE("Carne"),
