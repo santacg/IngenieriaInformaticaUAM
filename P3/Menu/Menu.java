@@ -1,60 +1,109 @@
 package Menu;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 
 import Plato.Plato;
 import Info.InformacionNutricional;
 import Ingrediente.Alergeno;
 
+/**
+ * La clase Menu representa un menú que contiene una lista de platos y su
+ * información nutricional.
+ */
 public class Menu {
+    private static int count = 0;
+    private int numeroMenu;
+    private HashSet<Plato> platos = new HashSet<>();
+    private HashSet<Alergeno> alergenos = new HashSet<>();
+    private InformacionNutricional informacionNutricional = new InformacionNutricional(0, 0, 0, 0, 0, 0, 0, 0);
 
-    private List<Plato> platos = new ArrayList<>();
-    private List<Alergeno> alergenos;
-    private InformacionNutricional informacionNutricional;
-
-
+    /**
+     * Crea un nuevo objeto Menu con los platos especificados.
+     * 
+     * @param platos Los platos que formarán parte del menú.
+     */
     public Menu(Plato... platos) {
+        numeroMenu = ++count;
         for (Plato plato : platos) {
             this.platos.add(plato);
-            this.alergenos.add(plato.getAlergeno());
+            this.alergenos.addAll(plato.getAlergeno());
         }
-        this.calcularInfoNutricional();
+        informacionNutricional = calcularInfoNutricional();
     }
 
-    public List<Plato> getPlatos() {
+    /**
+     * Obtiene la lista de platos del menú.
+     * 
+     * @return La lista de platos del menú.
+     */
+    public HashSet<Plato> getPlatos() {
         return platos;
     }
 
-    public List<Alergeno> getAlergeno() {
+    /**
+     * Obtiene los alérgenos presentes en el menú.
+     * 
+     * @return Los alérgenos presentes en el menú.
+     */
+    public HashSet<Alergeno> getAlergeno() {
         return alergenos;
     }
 
-    public void calcularInfoNutricional(){
-        for (Plato plato: platos) {
-            informacionNutricional.addInformacionNutricional(plato.getInfo());
+    /**
+     * Calcula la información nutricional total del menú.
+     * 
+     * @return La información nutricional total del menú.
+     */
+    public InformacionNutricional calcularInfoNutricional() {
+        InformacionNutricional info = new InformacionNutricional(0, 0, 0, 0, 0, 0, 0, 0);
+        for (Plato plato : platos) {
+            info.addInformacionNutricional(plato.getInformacionNutricional());
         }
+        return info;
     }
 
+    /**
+     * Devuelve una representación en forma de cadena del menú.
+     * 
+     * @return La representación en forma de cadena del menú.
+     */
     public String toString() {
-        String platosStr, result;
-        InformacionNutricional info = this.informacionNutricional;
-        for (Plato plato: platos) {
-            platosStr += plato;
-            platosStr += ", ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Menu ");
+        sb.append(numeroMenu);
+        sb.append(": [");
+        for (Plato platos : platos) {
+            sb.append(platos.getNombre());
+            sb.append(", ");
         }
-        platosStr = platosStr.substring(0, platosStr.length() - 2); // Remover la última coma y espacio
-        result = "[" + platosStr + "]: " + "INFORMACION NUTRICIONAL DEL MENU -> " + info.toString();
-        if (!alergenos.isEmpty()) {
-            result += " CONTIENE ";
-            for (Alergeno alergeno : alergenos) {
-                result += alergeno.getTipoAlergeno().toLowerCase() + ", ";
-            }
-            result = result.substring(0, result.length() - 2); // Remover la última coma y espacio
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        sb.append("]: INFORMACION NUTRICIONAL DEL MENU -> ");
+        sb.append(informacionNutricional.toString());
+        sb.append(" CONTIENE ");
+        for (Alergeno alergeno : alergenos) {
+            sb.append(alergeno.getTipoAlergeno());
+            sb.append(", ");
+        }
+        if (sb.length() > 0) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        return sb.toString();
+    }
+
+    public String toFile() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("MENU;");
+        for (Plato plato : platos) {
+            sb.append(plato.getNombre());
+            sb.append(";");
+        }
+
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);;
         }
         
-
-        return result; 
+        return sb.toString();
     }
 }

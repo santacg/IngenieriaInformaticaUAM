@@ -1,30 +1,22 @@
 package Plato;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-
 import Info.InformacionNutricional;
 import Ingrediente.Alergeno;
 import Ingrediente.Ingrediente;
 
-/**
- * The `Plato` class represents a dish or a plate in a menu.
- * It contains information about the name, ingredients, nutritional information,
- * and allergens of the dish.
- */
 public class Plato {
     private String nombre;
     private HashSet<Ingrediente> ingredientes;
     private HashSet<Plato> plato;
     private InformacionNutricional informacionNutricional;
-    private List<Alergeno> alergenos;
+    private HashSet<Alergeno> alergenos;
 
     public Plato(String nombre) {
         this.nombre = nombre;
         this.ingredientes = new HashSet<>();
         this.plato = new HashSet<>();
-        this.alergenos = new ArrayList<>();
+        this.alergenos = new HashSet<>();
         this.informacionNutricional = new InformacionNutricional(0, 0, 0, 0, 0, 0, 0, 0);
     }
 
@@ -41,6 +33,7 @@ public class Plato {
 
     public void addPlato(Plato plato) {
         this.ingredientes.addAll(plato.getIngredientes());
+        this.informacionNutricional.addInformacionNutricional(plato.informacionNutricional);
     }
 
     public String getNombre() {
@@ -55,11 +48,15 @@ public class Plato {
         return ingredientes;
     }
 
+    public InformacionNutricional getInformacionNutricional() {
+        return informacionNutricional;
+    }
+
     public HashSet<Plato> getPlato() {
         return plato;
     }
 
-    public List<Alergeno> getAlergeno() {
+    public HashSet<Alergeno> getAlergeno() {
         return alergenos;
     }
 
@@ -91,13 +88,32 @@ public class Plato {
         sb.append(" CONTIENE ");
         for (Ingrediente ingrediente : ingredientes) {
             for (Alergeno alergeno : ingrediente.getAlergeno()) {
-                    sb.append(alergeno.getTipoAlergeno());
-                    sb.append(", ");
+                sb.append(alergeno.getTipoAlergeno());
+                sb.append(", ");
             }
         }
         if (sb.length() > 0) {
             sb.setLength(sb.length() - 2);
         }
+        return sb.toString();
+    }
+
+    public String toFile() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("PLATO;");
+        sb.append(nombre);
+        sb.append(";INGREDIENTE ");
+        for (Ingrediente ingrediente : ingredientes) {
+            sb.append(ingrediente.getNombre());
+            sb.append(":");
+            sb.append(ingrediente.getCantidad());
+            sb.append(";");
+        }
+
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+
         return sb.toString();
     }
 

@@ -1,22 +1,35 @@
 package Ingrediente;
 
+/**
+ * Enumeración que representa los diferentes tipos de ingredientes.
+ */
 public enum TipoIngrediente {
-     CARNE("Carne"),
-     PESCADO("Pescado"),
-     FRUTA_VERDURA("Frutas y verduras"),
-     LEGUMBRE("Legumbre"),
-     CEREAL("Cereal"),
-     HUEVO("Huevo"),
-     LACTEO("Lacteo"),
-     OTROS("Otros");
+    CARNE("Carne"),
+    PESCADO("Pescado"),
+    FRUTA_VERDURA("Frutas y verduras"),
+    LEGUMBRE("Legumbre"),
+    CEREAL("Cereal"),
+    HUEVO("Huevo"),
+    LACTEO("Lacteo"),
+    OTROS("Otros");
 
-     private final String tipoIngrediente;
+    private final String tipoIngrediente;
 
-     private TipoIngrediente(String tipoIngrediente) {
-         this.tipoIngrediente = tipoIngrediente;
-     }
+    /**
+     * Constructor de la enumeración TipoIngrediente.
+     * 
+     * @param tipoIngrediente el tipo de ingrediente.
+     */
+    private TipoIngrediente(String tipoIngrediente) {
+        this.tipoIngrediente = tipoIngrediente;
+    }
 
-     public String getTipoIngrediente() {
-         return tipoIngrediente;
-     }
+    /**
+     * Obtiene el tipo de ingrediente.
+     * 
+     * @return el tipo de ingrediente.
+     */
+    public String getTipoIngrediente() {
+        return tipoIngrediente;
+    }
 }
