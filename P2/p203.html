@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>p203 API documentation</title>
+<meta name="description" content="Module for graph operations including Kruskal&#39;s algorithm and TSP algorithims implementations" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>p203</code></h1>
+</header>
+<section id="section-intro">
+<p>Module for graph operations including Kruskal's algorithm and TSP algorithims implementations</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Module for graph operations including Kruskal&#39;s algorithm and TSP algorithims implementations&#34;&#34;&#34;
+import queue
+from queue import PriorityQueue
+from typing import List, Tuple
+import random
+import time
+import itertools
+import numpy as np
+
+
+def init_cd(n: int) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Initialize an array with all elements set to -1.
+
+    Parameters:
+    - n (int): The size of the array.
+
+    Returns:
+        np.ndarray: An array of size &#39;n&#39; with all elements initialized to -1.
+    &#34;&#34;&#34;
+    # use numpy function to fill array with -1 and n elements
+    return np.full(n, -1)
+
+
+def find(ind: int, p_cd: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Find the representative element of a set in a disjoint-set data structure.
+
+    Parameters:
+    - ind (int): The index of the element to find its representative.
+    - p_cd (np.ndarray): The parent array of the disjoint-set structure.
+
+    Returns:
+        int: The index of the representative of the set that &#39;ind&#39; belongs to.
+    &#34;&#34;&#34;
+    if p_cd[ind] &lt; 0:
+        return ind
+    p_cd[ind] = find(p_cd[ind], p_cd)
+    return p_cd[ind]
+
+
+def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Perform the union operation on two sets in a disjoint-set data structure.
+
+    Parameters:
+    - rep_1 (int): The representative of the first set.
+    - rep_2 (int): The representative of the second set.
+    - p_cd (np.ndarray): The parent array of the disjoint-set structure.
+
+    Returns:
+        int: The representative of the merged set.
+    &#34;&#34;&#34;
+    rep_1 = find(rep_1, p_cd)
+    rep_2 = find(rep_2, p_cd)
+
+    if rep_1 == rep_2:
+        return rep_1
+
+    # Union by rank
+    if -p_cd[rep_1] &lt; -p_cd[rep_2]:  # if rep1 rank is less than rep_2
+        p_cd[rep_1] = rep_2
+    elif -p_cd[rep_1] &gt; -p_cd[rep_2]:  # if rep1 rank is bigger than rep_2
+        p_cd[rep_2] = rep_1
+    else:
+        p_cd[rep_2] = rep_1
+        p_cd[rep_1] -= 1  # Increment rank if equal
+
+    return find(rep_1, p_cd)  # Return rep
+
+
+def create_pq(n: int, l_g: List) -&gt; queue.PriorityQueue:
+    &#34;&#34;&#34;
+    Create a priority queue from a list of edges.
+
+    Parameters:
+    - n (int): The number of vertices.
+    - l_g (List): A list of edges where each edge 
+    is represented as a tuple (vertex1, vertex2, weight).
+
+    Returns:
+        queue.PriorityQueue: A priority queue containing the edges, ordered by weight.
+    &#34;&#34;&#34;
+    pq = PriorityQueue()
+
+    if n &lt;= 1:
+        return pq  # Return the empty queue if there are 1 or fewer vertices
+
+    # Loop through all edges and add them to the priority queue
+    for edge in l_g:
+        u, v, w = edge
+        # Put the edge in the queue with weight as the priority
+        pq.put((w, (u, v)))
+    return pq
+
+
+def kruskal(n: int, l_g: List) -&gt; Tuple[int, List]:
+    &#34;&#34;&#34;
+    Implement Kruskal&#39;s algorithm to find the Minimum Spanning Tree (MST) of a graph.
+
+    Parameters:
+    - n (int): The number of vertices in the graph.
+    - l_g (List): A list of edges in the graph,
+    where each edge is a tuple (vertex1, vertex2, weight).
+
+    Returns:
+        Tuple[int, List]: A tuple containing the number of vertices of the MST and a list of edges in the MST.
+    &#34;&#34;&#34;
+    ds = init_cd(n)  # Initialize the disjoint set
+    pq = create_pq(n, l_g)  # Create a priority queue from the list of edges
+    l_t = []  # List to store the edges of the Minimum Spanning Tree (MST)
+
+    # Process the queue until it&#39;s empty
+    while not pq.empty():
+        w, item = pq.get()  # Get the edge with the lowest weight
+        u, v = item
+        u_rep = find(u, ds)  # Find the representative of u
+        v_rep = find(v, ds)  # Find the representative of v
+
+        # If u and v are in different sets, add the edge to the MST
+        if u_rep != v_rep:
+            l_t.append((u, v, w))
+            union(u_rep, v_rep, ds)  # Merge the sets of u and v
+
+    # Return the MST if it has n-1 edges
+    if len(l_t) == n - 1:
+        return (n, l_t)
+
+    return None  # Return None if MST is not found
+
+
+def kruskal2(n: int, l_g: List) -&gt; Tuple[int, List, float]:
+    &#34;&#34;&#34;
+    Repeatedly executes the greedy TSP algorithm, starting from each city.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The circuit with the shortest length found.
+    &#34;&#34;&#34;
+    ds = init_cd(n)
+    pq = create_pq(n, l_g)
+    l_t = []
+    disjoint_set_time = 0  # Variable to track time spent on disjoint set operations
+
+    while not pq.empty():
+        w, item = pq.get()
+        u, v = item
+        start_time = time.time()  # Start timing
+        u_rep = find(u, ds)
+        v_rep = find(v, ds)
+        disjoint_set_time += time.time() - start_time  # Add time spent on find operation
+
+        if u_rep != v_rep:
+            start_time = time.time()  # Start timing
+            union(u_rep, v_rep, ds)
+            # Add time spent on union operation
+            disjoint_set_time += time.time() - start_time
+            l_t.append((u, v, w))
+
+    # Return the MST and the time spent if the MST is complete
+    if len(l_t) == n - 1:
+        return (n, l_t, disjoint_set_time)
+
+    return None
+
+
+def complete_graph(n_nodes: int, max_weight=50) -&gt; Tuple[int, List]:
+    &#34;&#34;&#34;
+    Generates a complete graph with a given number of nodes and a max weight which is the limit random value that a weight can have.
+
+    Parameters:
+    - n_nodes (int): The number of nodes in the graph.
+    - max_weight (int): Max random weight.
+
+    Returns:
+        Tuple[int, List]: A tuple containing the number of nodes of the graph and a list of the weights and pair of connected vertices in the graph.
+    &#34;&#34;&#34;
+    l_g = []
+    # Loop through all pairs of nodes to generate edges
+    for u in range(n_nodes):
+        for v in range(u + 1, n_nodes):
+            w = random.randint(1, max_weight)
+            l_g.append((u, v, w))
+    return n_nodes, l_g  # Return the number of nodes and the list of edges
+
+
+def time_kruskal(n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int) -&gt; List:
+    &#34;&#34;&#34;
+    Measures the execution time of Kruskal&#39;s algorithm for various graph sizes.
+
+    Parameters:
+    - n_graphs (int): Number of graphs to generate for each size.
+    - n_nodes_ini (int): Initial number of nodes in the graphs.
+    - n_nodes_fin (int): Final number of nodes in the graphs.
+    - step (int): Increment in the number of nodes between consecutive graphs.
+
+    Returns:
+        List: A list of execution times for each graph size.
+    &#34;&#34;&#34;
+    times = []
+
+    # Loop over a range of graph sizes
+    for n_nodes in range(n_nodes_ini, n_nodes_fin + 1, step):
+        graph_times = []
+        # Generate and process multiple graphs for each size
+        for _ in range(n_graphs):
+            n_nodes, l_g = complete_graph(n_nodes)
+            clk_start = time.time()  # Start time
+            kruskal(n_nodes, l_g)
+            clk_stop = time.time()  # Stop time
+            # Calculate elapsed time
+            graph_times.append((clk_stop - clk_start))
+
+        # Append the average time for this graph size
+        times.append((n_nodes, sum(graph_times) / n_graphs))
+
+    return times  # Return the average times for each graph size
+
+
+def time_kruskal_2(
+    n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int
+) -&gt; List:
+    &#34;&#34;&#34;
+    Measures the execution time of an alternative version of Kruskal&#39;s algorithm for various graph sizes.
+
+    Parameters:
+    - n_graphs (int): Number of graphs to generate for each size.
+    - n_nodes_ini (int): Initial number of nodes in the graphs.
+    - n_nodes_fin (int): Final number of nodes in the graphs.
+    - step (int): Increment in the number of nodes between consecutive graphs.
+
+    Returns:
+        List: A list of execution times for each graph size.
+    &#34;&#34;&#34;
+    times = []
+    # Iterate over a range of graph sizes
+    for n_nodes in range(n_nodes_ini, n_nodes_fin + 1, step):
+        graph_times = []
+
+        for _ in range(n_graphs):
+            n_nodes, l_g = complete_graph(n_nodes)
+            # Run Kruskal&#39;s algorithm and get time
+            _, _, time = kruskal2(n_nodes, l_g)
+            graph_times.append(time)  # Collect execution time
+
+        times.append((n_nodes, sum(graph_times) / n_graphs))
+
+    return times  # Return the average times for each graph size
+
+
+def dist_matrix(n_nodes: int, weight_max=10) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Generates a symmetric matrix representing random distances between nodes.
+
+    The diagonal elements are set to 0 as the distance from a node to itself is zero.
+
+    Parameters:
+    - n_nodes (int): The number of nodes (cities).
+    - w_max (int, optional): The maximum weight (distance) between two nodes. Defaults to 10.
+
+    Returns:
+        np.ndarray: A symmetric matrix of distances between nodes.
+    &#34;&#34;&#34;
+    # Create a random matrix with weights between 1 and w_max inclusive
+    m = np.random.randint(1, weight_max + 1, (n_nodes, n_nodes))
+    # Make the matrix symmetric by averaging it with its transpose
+    m = (m + m.T) // 2
+    # Set the diagonal to 0, as the distance from a node to itself is zero
+    np.fill_diagonal(m, 0)
+    return m
+
+
+def greedy_tsp(dist_m: np.ndarray, node_ini=0) -&gt; List:
+    &#34;&#34;&#34;
+    Constructs a circuit for the Traveling Salesman Problem using a greedy approach.
+
+    This function selects the nearest unvisited city at each step.
+
+    Parameters:
+    - dist_m (np.ndarray): A square matrix where dist_m[i, j] is the distance from city i to city j.
+    - node_ini (int): Initial city to start the circuit.
+
+    Returns:
+        List: An array representing the order of cities visited in the circuit.
+    &#34;&#34;&#34;
+    # Get the number of cities from the dimensions of the distance matrix
+    num_cities = dist_m.shape[0]
+
+    # Start the circuit with the specified starting city
+    circuit = [node_ini]
+
+    # Continue until all cities are included in the circuit
+    while len(circuit) &lt; num_cities:
+        # Get the last visited city in the circuit
+        current_city = circuit[-1]
+
+        # Sort the remaining cities based on their distance to the current city.
+        # np.argsort returns the indices of the cities sorted by distance.
+        options = np.argsort(dist_m[current_city])
+
+        # Iterate over the sorted cities to find the nearest unvisited one
+        for city in options:
+            # Check if the city is already in the circuit
+            if city not in circuit:
+                # If the city is not in the circuit, add it and break out of the loop
+                circuit.append(city)
+                break
+
+    # At the end, return to the initial city to complete the circuit
+    return circuit + [node_ini]
+
+
+def repeated_greedy_tsp(dist_m: np.ndarray) -&gt; List[int]:
+    &#34;&#34;&#34;
+    Repeatedly executes the greedy TSP algorithm, starting from each city.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The circuit with the shortest length found.
+    &#34;&#34;&#34;
+    num_cities = dist_m.shape[0]
+    best_circuit = None  # Initialize the best circuit found
+    best_length = float(&#34;inf&#34;)
+
+    # Iterate over all cities to start the greedy circuit
+    for start_city in range(num_cities):
+        # Generate a greedy circuit from each city
+        circuit = greedy_tsp(dist_m, start_city)
+        circuit_length = sum(  # Calculate the length of the circuit
+            dist_m[circuit[i], circuit[i + 1]] for i in range(len(circuit) - 1)
+        )
+
+        # Update the best circuit and length if a shorter one is found
+        if circuit_length &lt; best_length:
+            best_length = circuit_length
+            best_circuit = circuit
+
+    return best_circuit  # Return the shortest circuit found
+
+
+def exhaustive_tsp(dist_m: np.ndarray) -&gt; List[int]:
+    &#34;&#34;&#34;
+    Solves the TSP exhaustively by testing all possible permutations.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The shortest possible circuit.
+    &#34;&#34;&#34;
+    num_cities = dist_m.shape[0]
+    best_circuit = None
+    best_length = float(&#34;inf&#34;)
+
+    # Iterating over all permutations of the cities
+    for circuit in itertools.permutations(range(num_cities)):
+        # Add the start city at the end to complete the loop
+        circuit = circuit + (circuit[0],)
+        circuit_length = sum(
+            dist_m[circuit[i], circuit[i + 1]] for i in range(len(circuit) - 1)
+        )
+
+        # Update the best circuit if this one is shorter
+        if circuit_length &lt; best_length:
+            best_length = circuit_length
+            best_circuit = circuit
+
+    return list(best_circuit)
+
+
+def len_circuit(circuit: List, dist_m: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Calculates the total length of a given circuit in the TSP.
+
+    Parameters:
+    - circuit (List): List of cities in the order of the circuit.
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        int: The total length of the circuit.
+    &#34;&#34;&#34;
+    total_length = 0
+    # Iterate over pairs of consecutive cities
+    for i in range(len(circuit) - 1):
+        # Add distance between them
+        total_length += dist_m[circuit[i], circuit[i + 1]]
+    return total_length</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="p203.complete_graph"><code class="name flex">
+<span>def <span class="ident">complete_graph</span></span>(<span>n_nodes: int, max_weight=50) ‑> Tuple[int, List]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a complete graph with a given number of nodes and a max weight which is the limit random value that a weight can have.</p>
+<p>Parameters:
+- n_nodes (int): The number of nodes in the graph.
+- max_weight (int): Max random weight.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Tuple[int, List]</code></dt>
+<dd>A tuple containing the number of nodes of the graph and a list of the weights and pair of connected vertices in the graph.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def complete_graph(n_nodes: int, max_weight=50) -&gt; Tuple[int, List]:
+    &#34;&#34;&#34;
+    Generates a complete graph with a given number of nodes and a max weight which is the limit random value that a weight can have.
+
+    Parameters:
+    - n_nodes (int): The number of nodes in the graph.
+    - max_weight (int): Max random weight.
+
+    Returns:
+        Tuple[int, List]: A tuple containing the number of nodes of the graph and a list of the weights and pair of connected vertices in the graph.
+    &#34;&#34;&#34;
+    l_g = []
+    # Loop through all pairs of nodes to generate edges
+    for u in range(n_nodes):
+        for v in range(u + 1, n_nodes):
+            w = random.randint(1, max_weight)
+            l_g.append((u, v, w))
+    return n_nodes, l_g  # Return the number of nodes and the list of edges</code></pre>
+</details>
+</dd>
+<dt id="p203.create_pq"><code class="name flex">
+<span>def <span class="ident">create_pq</span></span>(<span>n: int, l_g: List) ‑> queue.PriorityQueue</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a priority queue from a list of edges.</p>
+<p>Parameters:
+- n (int): The number of vertices.
+- l_g (List): A list of edges where each edge
+is represented as a tuple (vertex1, vertex2, weight).</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>queue.PriorityQueue</code></dt>
+<dd>A priority queue containing the edges, ordered by weight.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_pq(n: int, l_g: List) -&gt; queue.PriorityQueue:
+    &#34;&#34;&#34;
+    Create a priority queue from a list of edges.
+
+    Parameters:
+    - n (int): The number of vertices.
+    - l_g (List): A list of edges where each edge 
+    is represented as a tuple (vertex1, vertex2, weight).
+
+    Returns:
+        queue.PriorityQueue: A priority queue containing the edges, ordered by weight.
+    &#34;&#34;&#34;
+    pq = PriorityQueue()
+
+    if n &lt;= 1:
+        return pq  # Return the empty queue if there are 1 or fewer vertices
+
+    # Loop through all edges and add them to the priority queue
+    for edge in l_g:
+        u, v, w = edge
+        # Put the edge in the queue with weight as the priority
+        pq.put((w, (u, v)))
+    return pq</code></pre>
+</details>
+</dd>
+<dt id="p203.dist_matrix"><code class="name flex">
+<span>def <span class="ident">dist_matrix</span></span>(<span>n_nodes: int, weight_max=10) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a symmetric matrix representing random distances between nodes.</p>
+<p>The diagonal elements are set to 0 as the distance from a node to itself is zero.</p>
+<p>Parameters:
+- n_nodes (int): The number of nodes (cities).
+- w_max (int, optional): The maximum weight (distance) between two nodes. Defaults to 10.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>A symmetric matrix of distances between nodes.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dist_matrix(n_nodes: int, weight_max=10) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Generates a symmetric matrix representing random distances between nodes.
+
+    The diagonal elements are set to 0 as the distance from a node to itself is zero.
+
+    Parameters:
+    - n_nodes (int): The number of nodes (cities).
+    - w_max (int, optional): The maximum weight (distance) between two nodes. Defaults to 10.
+
+    Returns:
+        np.ndarray: A symmetric matrix of distances between nodes.
+    &#34;&#34;&#34;
+    # Create a random matrix with weights between 1 and w_max inclusive
+    m = np.random.randint(1, weight_max + 1, (n_nodes, n_nodes))
+    # Make the matrix symmetric by averaging it with its transpose
+    m = (m + m.T) // 2
+    # Set the diagonal to 0, as the distance from a node to itself is zero
+    np.fill_diagonal(m, 0)
+    return m</code></pre>
+</details>
+</dd>
+<dt id="p203.exhaustive_tsp"><code class="name flex">
+<span>def <span class="ident">exhaustive_tsp</span></span>(<span>dist_m: numpy.ndarray) ‑> List[int]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Solves the TSP exhaustively by testing all possible permutations.</p>
+<p>Parameters:
+- dist_m (np.ndarray): Distance matrix between cities.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[int]</code></dt>
+<dd>The shortest possible circuit.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def exhaustive_tsp(dist_m: np.ndarray) -&gt; List[int]:
+    &#34;&#34;&#34;
+    Solves the TSP exhaustively by testing all possible permutations.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The shortest possible circuit.
+    &#34;&#34;&#34;
+    num_cities = dist_m.shape[0]
+    best_circuit = None
+    best_length = float(&#34;inf&#34;)
+
+    # Iterating over all permutations of the cities
+    for circuit in itertools.permutations(range(num_cities)):
+        # Add the start city at the end to complete the loop
+        circuit = circuit + (circuit[0],)
+        circuit_length = sum(
+            dist_m[circuit[i], circuit[i + 1]] for i in range(len(circuit) - 1)
+        )
+
+        # Update the best circuit if this one is shorter
+        if circuit_length &lt; best_length:
+            best_length = circuit_length
+            best_circuit = circuit
+
+    return list(best_circuit)</code></pre>
+</details>
+</dd>
+<dt id="p203.find"><code class="name flex">
+<span>def <span class="ident">find</span></span>(<span>ind: int, p_cd: numpy.ndarray) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find the representative element of a set in a disjoint-set data structure.</p>
+<p>Parameters:
+- ind (int): The index of the element to find its representative.
+- p_cd (np.ndarray): The parent array of the disjoint-set structure.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The index of the representative of the set that 'ind' belongs to.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find(ind: int, p_cd: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Find the representative element of a set in a disjoint-set data structure.
+
+    Parameters:
+    - ind (int): The index of the element to find its representative.
+    - p_cd (np.ndarray): The parent array of the disjoint-set structure.
+
+    Returns:
+        int: The index of the representative of the set that &#39;ind&#39; belongs to.
+    &#34;&#34;&#34;
+    if p_cd[ind] &lt; 0:
+        return ind
+    p_cd[ind] = find(p_cd[ind], p_cd)
+    return p_cd[ind]</code></pre>
+</details>
+</dd>
+<dt id="p203.greedy_tsp"><code class="name flex">
+<span>def <span class="ident">greedy_tsp</span></span>(<span>dist_m: numpy.ndarray, node_ini=0) ‑> List</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Constructs a circuit for the Traveling Salesman Problem using a greedy approach.</p>
+<p>This function selects the nearest unvisited city at each step.</p>
+<p>Parameters:
+- dist_m (np.ndarray): A square matrix where dist_m[i, j] is the distance from city i to city j.
+- node_ini (int): Initial city to start the circuit.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>An array representing the order of cities visited in the circuit.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def greedy_tsp(dist_m: np.ndarray, node_ini=0) -&gt; List:
+    &#34;&#34;&#34;
+    Constructs a circuit for the Traveling Salesman Problem using a greedy approach.
+
+    This function selects the nearest unvisited city at each step.
+
+    Parameters:
+    - dist_m (np.ndarray): A square matrix where dist_m[i, j] is the distance from city i to city j.
+    - node_ini (int): Initial city to start the circuit.
+
+    Returns:
+        List: An array representing the order of cities visited in the circuit.
+    &#34;&#34;&#34;
+    # Get the number of cities from the dimensions of the distance matrix
+    num_cities = dist_m.shape[0]
+
+    # Start the circuit with the specified starting city
+    circuit = [node_ini]
+
+    # Continue until all cities are included in the circuit
+    while len(circuit) &lt; num_cities:
+        # Get the last visited city in the circuit
+        current_city = circuit[-1]
+
+        # Sort the remaining cities based on their distance to the current city.
+        # np.argsort returns the indices of the cities sorted by distance.
+        options = np.argsort(dist_m[current_city])
+
+        # Iterate over the sorted cities to find the nearest unvisited one
+        for city in options:
+            # Check if the city is already in the circuit
+            if city not in circuit:
+                # If the city is not in the circuit, add it and break out of the loop
+                circuit.append(city)
+                break
+
+    # At the end, return to the initial city to complete the circuit
+    return circuit + [node_ini]</code></pre>
+</details>
+</dd>
+<dt id="p203.init_cd"><code class="name flex">
+<span>def <span class="ident">init_cd</span></span>(<span>n: int) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize an array with all elements set to -1.</p>
+<p>Parameters:
+- n (int): The size of the array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>An array of size 'n' with all elements initialized to -1.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_cd(n: int) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Initialize an array with all elements set to -1.
+
+    Parameters:
+    - n (int): The size of the array.
+
+    Returns:
+        np.ndarray: An array of size &#39;n&#39; with all elements initialized to -1.
+    &#34;&#34;&#34;
+    # use numpy function to fill array with -1 and n elements
+    return np.full(n, -1)</code></pre>
+</details>
+</dd>
+<dt id="p203.kruskal"><code class="name flex">
+<span>def <span class="ident">kruskal</span></span>(<span>n: int, l_g: List) ‑> Tuple[int, List]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implement Kruskal's algorithm to find the Minimum Spanning Tree (MST) of a graph.</p>
+<p>Parameters:
+- n (int): The number of vertices in the graph.
+- l_g (List): A list of edges in the graph,
+where each edge is a tuple (vertex1, vertex2, weight).</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Tuple[int, List]</code></dt>
+<dd>A tuple containing the number of vertices of the MST and a list of edges in the MST.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kruskal(n: int, l_g: List) -&gt; Tuple[int, List]:
+    &#34;&#34;&#34;
+    Implement Kruskal&#39;s algorithm to find the Minimum Spanning Tree (MST) of a graph.
+
+    Parameters:
+    - n (int): The number of vertices in the graph.
+    - l_g (List): A list of edges in the graph,
+    where each edge is a tuple (vertex1, vertex2, weight).
+
+    Returns:
+        Tuple[int, List]: A tuple containing the number of vertices of the MST and a list of edges in the MST.
+    &#34;&#34;&#34;
+    ds = init_cd(n)  # Initialize the disjoint set
+    pq = create_pq(n, l_g)  # Create a priority queue from the list of edges
+    l_t = []  # List to store the edges of the Minimum Spanning Tree (MST)
+
+    # Process the queue until it&#39;s empty
+    while not pq.empty():
+        w, item = pq.get()  # Get the edge with the lowest weight
+        u, v = item
+        u_rep = find(u, ds)  # Find the representative of u
+        v_rep = find(v, ds)  # Find the representative of v
+
+        # If u and v are in different sets, add the edge to the MST
+        if u_rep != v_rep:
+            l_t.append((u, v, w))
+            union(u_rep, v_rep, ds)  # Merge the sets of u and v
+
+    # Return the MST if it has n-1 edges
+    if len(l_t) == n - 1:
+        return (n, l_t)
+
+    return None  # Return None if MST is not found</code></pre>
+</details>
+</dd>
+<dt id="p203.kruskal2"><code class="name flex">
+<span>def <span class="ident">kruskal2</span></span>(<span>n: int, l_g: List) ‑> Tuple[int, List, float]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Repeatedly executes the greedy TSP algorithm, starting from each city.</p>
+<p>Parameters:
+- dist_m (np.ndarray): Distance matrix between cities.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[int]</code></dt>
+<dd>The circuit with the shortest length found.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def kruskal2(n: int, l_g: List) -&gt; Tuple[int, List, float]:
+    &#34;&#34;&#34;
+    Repeatedly executes the greedy TSP algorithm, starting from each city.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The circuit with the shortest length found.
+    &#34;&#34;&#34;
+    ds = init_cd(n)
+    pq = create_pq(n, l_g)
+    l_t = []
+    disjoint_set_time = 0  # Variable to track time spent on disjoint set operations
+
+    while not pq.empty():
+        w, item = pq.get()
+        u, v = item
+        start_time = time.time()  # Start timing
+        u_rep = find(u, ds)
+        v_rep = find(v, ds)
+        disjoint_set_time += time.time() - start_time  # Add time spent on find operation
+
+        if u_rep != v_rep:
+            start_time = time.time()  # Start timing
+            union(u_rep, v_rep, ds)
+            # Add time spent on union operation
+            disjoint_set_time += time.time() - start_time
+            l_t.append((u, v, w))
+
+    # Return the MST and the time spent if the MST is complete
+    if len(l_t) == n - 1:
+        return (n, l_t, disjoint_set_time)
+
+    return None</code></pre>
+</details>
+</dd>
+<dt id="p203.len_circuit"><code class="name flex">
+<span>def <span class="ident">len_circuit</span></span>(<span>circuit: List, dist_m: numpy.ndarray) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates the total length of a given circuit in the TSP.</p>
+<p>Parameters:
+- circuit (List): List of cities in the order of the circuit.
+- dist_m (np.ndarray): Distance matrix between cities.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The total length of the circuit.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def len_circuit(circuit: List, dist_m: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Calculates the total length of a given circuit in the TSP.
+
+    Parameters:
+    - circuit (List): List of cities in the order of the circuit.
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        int: The total length of the circuit.
+    &#34;&#34;&#34;
+    total_length = 0
+    # Iterate over pairs of consecutive cities
+    for i in range(len(circuit) - 1):
+        # Add distance between them
+        total_length += dist_m[circuit[i], circuit[i + 1]]
+    return total_length</code></pre>
+</details>
+</dd>
+<dt id="p203.repeated_greedy_tsp"><code class="name flex">
+<span>def <span class="ident">repeated_greedy_tsp</span></span>(<span>dist_m: numpy.ndarray) ‑> List[int]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Repeatedly executes the greedy TSP algorithm, starting from each city.</p>
+<p>Parameters:
+- dist_m (np.ndarray): Distance matrix between cities.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[int]</code></dt>
+<dd>The circuit with the shortest length found.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def repeated_greedy_tsp(dist_m: np.ndarray) -&gt; List[int]:
+    &#34;&#34;&#34;
+    Repeatedly executes the greedy TSP algorithm, starting from each city.
+
+    Parameters:
+    - dist_m (np.ndarray): Distance matrix between cities.
+
+    Returns:
+        List[int]: The circuit with the shortest length found.
+    &#34;&#34;&#34;
+    num_cities = dist_m.shape[0]
+    best_circuit = None  # Initialize the best circuit found
+    best_length = float(&#34;inf&#34;)
+
+    # Iterate over all cities to start the greedy circuit
+    for start_city in range(num_cities):
+        # Generate a greedy circuit from each city
+        circuit = greedy_tsp(dist_m, start_city)
+        circuit_length = sum(  # Calculate the length of the circuit
+            dist_m[circuit[i], circuit[i + 1]] for i in range(len(circuit) - 1)
+        )
+
+        # Update the best circuit and length if a shorter one is found
+        if circuit_length &lt; best_length:
+            best_length = circuit_length
+            best_circuit = circuit
+
+    return best_circuit  # Return the shortest circuit found</code></pre>
+</details>
+</dd>
+<dt id="p203.time_kruskal"><code class="name flex">
+<span>def <span class="ident">time_kruskal</span></span>(<span>n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int) ‑> List</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Measures the execution time of Kruskal's algorithm for various graph sizes.</p>
+<p>Parameters:
+- n_graphs (int): Number of graphs to generate for each size.
+- n_nodes_ini (int): Initial number of nodes in the graphs.
+- n_nodes_fin (int): Final number of nodes in the graphs.
+- step (int): Increment in the number of nodes between consecutive graphs.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>A list of execution times for each graph size.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def time_kruskal(n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int) -&gt; List:
+    &#34;&#34;&#34;
+    Measures the execution time of Kruskal&#39;s algorithm for various graph sizes.
+
+    Parameters:
+    - n_graphs (int): Number of graphs to generate for each size.
+    - n_nodes_ini (int): Initial number of nodes in the graphs.
+    - n_nodes_fin (int): Final number of nodes in the graphs.
+    - step (int): Increment in the number of nodes between consecutive graphs.
+
+    Returns:
+        List: A list of execution times for each graph size.
+    &#34;&#34;&#34;
+    times = []
+
+    # Loop over a range of graph sizes
+    for n_nodes in range(n_nodes_ini, n_nodes_fin + 1, step):
+        graph_times = []
+        # Generate and process multiple graphs for each size
+        for _ in range(n_graphs):
+            n_nodes, l_g = complete_graph(n_nodes)
+            clk_start = time.time()  # Start time
+            kruskal(n_nodes, l_g)
+            clk_stop = time.time()  # Stop time
+            # Calculate elapsed time
+            graph_times.append((clk_stop - clk_start))
+
+        # Append the average time for this graph size
+        times.append((n_nodes, sum(graph_times) / n_graphs))
+
+    return times  # Return the average times for each graph size</code></pre>
+</details>
+</dd>
+<dt id="p203.time_kruskal_2"><code class="name flex">
+<span>def <span class="ident">time_kruskal_2</span></span>(<span>n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int) ‑> List</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Measures the execution time of an alternative version of Kruskal's algorithm for various graph sizes.</p>
+<p>Parameters:
+- n_graphs (int): Number of graphs to generate for each size.
+- n_nodes_ini (int): Initial number of nodes in the graphs.
+- n_nodes_fin (int): Final number of nodes in the graphs.
+- step (int): Increment in the number of nodes between consecutive graphs.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code></dt>
+<dd>A list of execution times for each graph size.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def time_kruskal_2(
+    n_graphs: int, n_nodes_ini: int, n_nodes_fin: int, step: int
+) -&gt; List:
+    &#34;&#34;&#34;
+    Measures the execution time of an alternative version of Kruskal&#39;s algorithm for various graph sizes.
+
+    Parameters:
+    - n_graphs (int): Number of graphs to generate for each size.
+    - n_nodes_ini (int): Initial number of nodes in the graphs.
+    - n_nodes_fin (int): Final number of nodes in the graphs.
+    - step (int): Increment in the number of nodes between consecutive graphs.
+
+    Returns:
+        List: A list of execution times for each graph size.
+    &#34;&#34;&#34;
+    times = []
+    # Iterate over a range of graph sizes
+    for n_nodes in range(n_nodes_ini, n_nodes_fin + 1, step):
+        graph_times = []
+
+        for _ in range(n_graphs):
+            n_nodes, l_g = complete_graph(n_nodes)
+            # Run Kruskal&#39;s algorithm and get time
+            _, _, time = kruskal2(n_nodes, l_g)
+            graph_times.append(time)  # Collect execution time
+
+        times.append((n_nodes, sum(graph_times) / n_graphs))
+
+    return times  # Return the average times for each graph size</code></pre>
+</details>
+</dd>
+<dt id="p203.union"><code class="name flex">
+<span>def <span class="ident">union</span></span>(<span>rep_1: int, rep_2: int, p_cd: numpy.ndarray) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Perform the union operation on two sets in a disjoint-set data structure.</p>
+<p>Parameters:
+- rep_1 (int): The representative of the first set.
+- rep_2 (int): The representative of the second set.
+- p_cd (np.ndarray): The parent array of the disjoint-set structure.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The representative of the merged set.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -&gt; int:
+    &#34;&#34;&#34;
+    Perform the union operation on two sets in a disjoint-set data structure.
+
+    Parameters:
+    - rep_1 (int): The representative of the first set.
+    - rep_2 (int): The representative of the second set.
+    - p_cd (np.ndarray): The parent array of the disjoint-set structure.
+
+    Returns:
+        int: The representative of the merged set.
+    &#34;&#34;&#34;
+    rep_1 = find(rep_1, p_cd)
+    rep_2 = find(rep_2, p_cd)
+
+    if rep_1 == rep_2:
+        return rep_1
+
+    # Union by rank
+    if -p_cd[rep_1] &lt; -p_cd[rep_2]:  # if rep1 rank is less than rep_2
+        p_cd[rep_1] = rep_2
+    elif -p_cd[rep_1] &gt; -p_cd[rep_2]:  # if rep1 rank is bigger than rep_2
+        p_cd[rep_2] = rep_1
+    else:
+        p_cd[rep_2] = rep_1
+        p_cd[rep_1] -= 1  # Increment rank if equal
+
+    return find(rep_1, p_cd)  # Return rep</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="p203.complete_graph" href="#p203.complete_graph">complete_graph</a></code></li>
+<li><code><a title="p203.create_pq" href="#p203.create_pq">create_pq</a></code></li>
+<li><code><a title="p203.dist_matrix" href="#p203.dist_matrix">dist_matrix</a></code></li>
+<li><code><a title="p203.exhaustive_tsp" href="#p203.exhaustive_tsp">exhaustive_tsp</a></code></li>
+<li><code><a title="p203.find" href="#p203.find">find</a></code></li>
+<li><code><a title="p203.greedy_tsp" href="#p203.greedy_tsp">greedy_tsp</a></code></li>
+<li><code><a title="p203.init_cd" href="#p203.init_cd">init_cd</a></code></li>
+<li><code><a title="p203.kruskal" href="#p203.kruskal">kruskal</a></code></li>
+<li><code><a title="p203.kruskal2" href="#p203.kruskal2">kruskal2</a></code></li>
+<li><code><a title="p203.len_circuit" href="#p203.len_circuit">len_circuit</a></code></li>
+<li><code><a title="p203.repeated_greedy_tsp" href="#p203.repeated_greedy_tsp">repeated_greedy_tsp</a></code></li>
+<li><code><a title="p203.time_kruskal" href="#p203.time_kruskal">time_kruskal</a></code></li>
+<li><code><a title="p203.time_kruskal_2" href="#p203.time_kruskal_2">time_kruskal_2</a></code></li>
+<li><code><a title="p203.union" href="#p203.union">union</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
