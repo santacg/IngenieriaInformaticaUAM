@@ -1,6 +1,5 @@
 package Exposicion;
 
-
 public class Exposicion {
     private Integer ID;
     private String nombre;
@@ -9,18 +8,16 @@ public class Exposicion {
     private String descripcion;
     private Double benificios;
     private Boolean publicada;
-    private Boolean cerradaTemporalmente;
+    private EstadoExposicion estado;
 
     public Exposicion(Integer iD, String nombre, String fechaInicio, String fechaFin, String descripcion,
-            Double benificios, Boolean publicada, Boolean cerradaTemporalmente) {
-        ID = iD;
+            Double benificios, Boolean publicada) { 
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.descripcion = descripcion;
         this.benificios = benificios;
         this.publicada = publicada;
-        this.cerradaTemporalmente = cerradaTemporalmente;
     }
 
     public Integer getID() {
@@ -79,13 +76,11 @@ public class Exposicion {
         this.publicada = publicada;
     }
 
-    public Boolean getCerradaTemporalmente() {
-        return cerradaTemporalmente;
+    public void setEstado(EstadoExposicion estado) {
+        this.estado = estado;
     }
 
-    public void setCerradaTemporalmente(Boolean cerradaTemporalmente) {
-        this.cerradaTemporalmente = cerradaTemporalmente;
+    public EstadoExposicion getEstado() {
+        return this.estado;
     }
-
-
 }
