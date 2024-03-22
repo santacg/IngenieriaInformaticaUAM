@@ -11,7 +11,7 @@ ORG 256				;Define el origen de la dirección de inicio en 256 (100h).
 INICIO: JMP MAIN
 
 ; Variables globales
-VECTOR_INFO db 13, 10, "Eduardo Junoy Ortega", 13, 10, "Instrucciones:", 13, 10, "-Escribe /I para instalar el driver // Escribe /D para desinstalar", 13, 10, '$' ;Contiene información del autor y las instrucciones. 
+VECTOR_INFO db 13, 10, "Carlos Garcia Santa", 13, 10, "Instrucciones:", 13, 10, "-Escribe /I para instalar el driver // Escribe /D para desinstalar", 13, 10, '$' ;Contiene información del autor y las instrucciones. 
 VECTOR_55I db 13, 10, "VECTOR_55 instalado", '$' 
 VECTOR_55D db 13, 10, "VECTOR_55 no instalado", '$' ;Contienen mensajes sobre el estado del vector de interrupción 55h
 POLIBIO_STR db 'ABCDEFGHIKLMNOPQRSTUVWXYZ', '$'
