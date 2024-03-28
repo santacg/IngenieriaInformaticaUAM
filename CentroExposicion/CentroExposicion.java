@@ -2,8 +2,14 @@ package CentroExposicion;
 
 import java.time.LocalTime;
 import Sala.SalaCompuesta;
+
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+
+import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
+import Exposicion.TipoExpo;
 import Obra.Obra; 
 
 public class CentroExposicion {
@@ -24,8 +30,8 @@ public class CentroExposicion {
     private Set<Descuento> descuentos;
 
     public CentroExposicion(Integer iD, String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
-            String contraseniaEmpleado, String contraseniaGestor, Integer sancion, Set<SalaCompuesta> salaCompuesta, Set<Exposicion> exposiciones,
-            Set<Sorteo> sorteos, Set<Obra> obras, Set<Empleado> empleados, Gestor gestor) {
+            String contraseniaEmpleado, String contraseniaGestor, Integer sancion, Set<SalaCompuesta> salaCompuesta,
+            Set<Empleado> empleados, Gestor gestor) {
         ID = iD;
         this.salaCompuesta = salaCompuesta;
         this.nombre = nombre;
@@ -35,9 +41,6 @@ public class CentroExposicion {
         this.contraseniaEmpleado = contraseniaEmpleado;
         this.contraseniaGestor = contraseniaGestor;
         this.sancion = sancion;
-        this.exposiciones = exposiciones;
-        this.sorteos = sorteos;
-        this.obras = obras;
         this.empleados = empleados;
         this.gestor = gestor;
     }
@@ -126,6 +129,46 @@ public class CentroExposicion {
         return exposiciones;
     }
 
+    public Set<Exposicion> getExposicionesPorFecha(Date fechaInicio, Date fechaFinal) {
+        Set<Exposicion> exposicionesPorFecha = new HashSet<>();
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getFechaInicio().after(fechaInicio) && exposicion.getFechaFin().before(fechaFinal)) {
+                exposicionesPorFecha.add(exposicion);
+            }
+        }
+        return exposicionesPorFecha;
+    }
+
+    public Set<Exposicion> getExposicionesTemporales() {
+        Set<Exposicion> exposicionesTemporales = new HashSet<>();
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getTipo().equals(TipoExpo.TEMPORAL)) {
+                exposicionesTemporales.add(exposicion);
+            }
+        }
+        return exposicionesTemporales;
+    }
+
+    public Set<Exposicion> getExposicionesPermanentes() {
+        Set<Exposicion> exposicionesPermanentes = new HashSet<>();
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getTipo().equals(TipoExpo.PERMANENTE)) {
+                exposicionesPermanentes.add(exposicion);
+            }
+        }
+        return exposicionesPermanentes;
+    }
+
+    public Set<Exposicion> getExposicionesPublicadas() {
+        Set<Exposicion> exposicionesPublicadas = new HashSet<>();
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+                exposicionesPublicadas.add(exposicion);
+            }
+        }
+        return exposicionesPublicadas;
+    }
+
     public void setExposiciones(Set<Exposicion> exposiciones) {
         this.exposiciones = exposiciones;
     }
@@ -137,6 +180,10 @@ public class CentroExposicion {
     public void removeExposicion(Exposicion exposicion) {
         this.exposiciones.remove(exposicion);
     }   
+
+    public void removeAllExposiciones() {
+        this.exposiciones.clear();
+    }
 
     public Set<Sorteo> getSorteos() {
         return sorteos;
@@ -154,6 +201,10 @@ public class CentroExposicion {
         this.sorteos.remove(sorteo);
     }
 
+    public void removeAllSorteos() {
+        this.sorteos.clear();
+    }
+
     public Set<Obra> getObras() {
         return obras;
     }
@@ -168,6 +219,10 @@ public class CentroExposicion {
 
     public void removeObra(Obra obra) {
         this.obras.remove(obra);
+    }
+
+    public void removeAllObras() {
+        this.obras.clear();
     }
 
     public Set<Empleado> getEmpleados() {
@@ -209,4 +264,9 @@ public class CentroExposicion {
     public void removeDescuento(Descuento descuento) {
         this.descuentos.remove(descuento);
     }   
+
+    public void removeAllDescuentos() {
+        this.descuentos.clear();
+    }
+
 }

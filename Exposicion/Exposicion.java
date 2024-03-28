@@ -1,17 +1,17 @@
 package Exposicion;
 
 import Sala.SalaExposicion;
+import java.util.Date;
 import java.util.Set;
 import CentroExposicion.Descuento;
 
 public class Exposicion {
     private Integer ID;
     private String nombre;
-    private String fechaInicio;
-    private String fechaFin;
+    private Date fechaInicio;
+    private Date fechaFin;
     private String descripcion;
     private Double benificios;
-    private Boolean publicada;
     private EstadoExposicion estado;
     private Set<SalaExposicion> salas;
     private Set<Hora> horario;
@@ -19,17 +19,18 @@ public class Exposicion {
     private Estadisticas estadisticas;
     private TipoExpo tipo;
 
-    public Exposicion(Integer iD, String nombre, String fechaInicio, String fechaFin, String descripcion,
-        Double benificios, Boolean publicada, Set<SalaExposicion> salas, Estadisticas estadisticas, TipoExpo tipo) { 
+    public Exposicion(Integer iD, String nombre, Date fechaInicio, Date fechaFin, String descripcion,
+        Double benificios, Set<SalaExposicion> salas, Estadisticas estadisticas, 
+        TipoExpo tipo, EstadoExposicion estado) { 
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.descripcion = descripcion;
         this.benificios = benificios;
-        this.publicada = publicada;
         this.salas = salas;
         this.estadisticas = estadisticas;
         this.tipo = tipo;
+        this.estado = estado;
     }
 
     public Integer getID() {
@@ -48,19 +49,19 @@ public class Exposicion {
         this.nombre = nombre;
     }
 
-    public String getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaFin() {
+    public Date getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(String fechaFin) {
+    public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
 
@@ -80,36 +81,25 @@ public class Exposicion {
         this.benificios = benificios;
     }
 
-    public Boolean getPublicada() {
-        return publicada;
-    }
-
-    public void setPublicada(Boolean publicada) {
-        this.publicada = publicada;
-    }
-
     public void setEstado(EstadoExposicion estado) {
         this.estado = estado;
     }
 
     public void expoCrear() {
         this.estado = EstadoExposicion.EN_CREACION;
-        this.publicada = false;
     }
 
     public void expoPublicar() {
         this.estado = EstadoExposicion.PUBLICADA;
-        this.publicada = true;
     }
 
     public void expoCancelar() {
         this.estado = EstadoExposicion.CANCELADA;
-        this.publicada = false;
     }
 
-    public void expoProrrogar() {
+    public void expoProrrogar(Date fechaFin) {
         this.estado = EstadoExposicion.PRORROGADA;
-        this.publicada = false;
+        this.fechaFin = fechaFin;
     }
 
     public EstadoExposicion getEstado() {
@@ -186,6 +176,10 @@ public class Exposicion {
 
     public void removeDescuento(Descuento descuento) {
         this.descuentos.remove(descuento);
+    }
+
+    public void removeAllDescuentos() {
+        this.descuentos.clear();
     }
 
 }
