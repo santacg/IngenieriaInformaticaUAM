@@ -21,6 +21,7 @@ public class CentroExposicion {
     private Set<Obra> obras;
     private Set<Empleado> empleados;
     private Gestor gestor;
+    private Set<Descuento> descuentos;
 
     public CentroExposicion(Integer iD, String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
             String contraseniaEmpleado, String contraseniaGestor, Integer sancion, Set<SalaCompuesta> salaCompuesta, Set<Exposicion> exposiciones,
@@ -192,4 +193,20 @@ public class CentroExposicion {
     public void setGestor(Gestor gestor) {
         this.gestor = gestor;
     }
+
+    public Set<Descuento> getDescuentos() {
+        return descuentos;
+    }
+
+    public void setDescuentos(Set<Descuento> descuentos) {
+        this.descuentos = descuentos;
+    }
+
+    public void addDescuento(Descuento descuento) {
+        this.descuentos.add(descuento);
+    }
+
+    public void removeDescuento(Descuento descuento) {
+        this.descuentos.remove(descuento);
+    }   
 }

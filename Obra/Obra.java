@@ -1,6 +1,6 @@
 package Obra;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 public abstract class Obra {
     private String ID;
@@ -10,7 +10,7 @@ public abstract class Obra {
     private Boolean externa;
     private Double cuantiaSeguro;
     private String numeroSeguro;
-    private ArrayList<Autor> autor;
+    private Set<Autor> autores;
     private Estado estado;
 
     public Obra(String ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
@@ -22,7 +22,6 @@ public abstract class Obra {
         this.externa = externa;
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
-        this.autor =  new ArrayList<Autor>();
         this.estado = estado;
     }
     
@@ -54,8 +53,8 @@ public abstract class Obra {
         return numeroSeguro;
     }
 
-    public ArrayList<Autor> getAutor() {
-        return autor;
+    public Set<Autor> getAutor() {
+        return autores;
     }
 
     public void setID(String ID) {
@@ -86,8 +85,8 @@ public abstract class Obra {
         this.numeroSeguro = numeroSeguro;
     }
 
-    public void setAutor(ArrayList<Autor> autor) {
-        this.autor = autor;
+    public void setAutor(Set<Autor> autor) {
+        this.autores = autor;
     } 
 
     public Estado getEstado() {
@@ -112,5 +111,13 @@ public abstract class Obra {
 
     public void restaurarObra() {
         this.estado = Estado.RESTAURACION;
+    }
+
+    public void addAutor(Autor autor) {
+        this.autores.add(autor);
+    }
+
+    public void removeAuotr(Autor autor) {
+        this.autores.remove(autor);
     }
 }
