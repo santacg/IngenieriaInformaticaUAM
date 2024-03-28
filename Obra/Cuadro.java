@@ -1,17 +1,14 @@
 package Obra;
 
-import java.util.Set;
-
 public class Cuadro extends ObraNoDigital {
 
     private String tecnica;
 
-    public Cuadro(String id, String nombre, Integer anio, String descripcion, boolean externa, Double cuantiaSeguro,
+    public Cuadro(Integer id, String nombre, Integer anio, String descripcion, boolean externa, Double cuantiaSeguro,
             Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima, Double humedadMaxima,
-            Double humedadMinima, String numeroSeguro, String tecnica, Estado estado, Set<Autor> autores) {
+            Double humedadMinima, String numeroSeguro, String tecnica, Estado estado) {
         super(id, nombre, anio, descripcion, externa, cuantiaSeguro, alto, ancho, temperaturaMaxima, temperaturaMinima,
-                humedadMaxima, humedadMinima, numeroSeguro, estado, autores);
-
+                humedadMaxima, humedadMinima, numeroSeguro, estado);
 
         this.tecnica = tecnica;
     }

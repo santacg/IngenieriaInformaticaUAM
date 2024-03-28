@@ -1,14 +1,12 @@
 package Obra;
 
-import java.util.Set;
-
 public class Audiovisual extends Obra{
     private Integer duracion;
     private String idioma;
     
-    public Audiovisual(String ID, String nombre, Integer anio, String descripcion, Boolean externa,
-            Double cuantiaSeguro, String numeroSeguro, Integer duracion, String idioma, Estado estado, Set<Autor> autores) {
-        super(ID, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado, autores);
+    public Audiovisual(Integer ID, String nombre, Integer anio, String descripcion, Boolean externa,
+            Double cuantiaSeguro, String numeroSeguro, Integer duracion, String idioma, Estado estado) {
+        super(ID, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
         this.duracion = duracion;
         this.idioma = idioma;
     }

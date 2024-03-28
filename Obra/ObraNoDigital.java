@@ -1,7 +1,6 @@
 package Obra;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 
 public abstract class ObraNoDigital extends Obra {
@@ -9,10 +8,10 @@ public abstract class ObraNoDigital extends Obra {
     private Map<Double, Double> rangoTemperatura;
     private Map<Double, Double> rangoHumedad;
 
-    public ObraNoDigital(String id, String nombre, Integer anio, String descripcion, boolean externa,
+    public ObraNoDigital(Integer id, String nombre, Integer anio, String descripcion, boolean externa,
             Double cuantiaSeguro, Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima,
-            Double humedadMaxima, Double humedadMinima, String numeroSeguro, Estado estado, Set<Autor> autores) {
-        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado, autores);
+            Double humedadMaxima, Double humedadMinima, String numeroSeguro, Estado estado) {
+        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
         this.alto = alto;
         this.ancho = ancho;
         this.rangoHumedad = new HashMap<>();

@@ -1,15 +1,16 @@
 package Obra;
 
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+import java.time.LocalDate;
 
 public class Autor {
     private String nombre;
-    private Date fechaNacimiento;
-    private Date fechaFallecimiento;
+    private LocalDate fechaNacimiento;
+    private LocalDate fechaFallecimiento;
     private String lugarNacimiento;
     private String lugarFallecimiento;
-    private Set<Obra> obras;
+    private Set<Obra> obras = new HashSet<>();
 
     public Set<Obra> getObras() {
         return obras;
@@ -27,14 +28,13 @@ public class Autor {
         this.obras.remove(obra);
     }
 
-    public Autor(String nombre, Date fechaNacimiento, Date fechaFallecimiento, String lugarNacimiento,
-            String lugarFallecimiento, Set<Obra> obras) {
+    public Autor(String nombre, LocalDate fechaNacimiento, LocalDate fechaFallecimiento, String lugarNacimiento,
+            String lugarFallecimiento) {
                 this.nombre = nombre;
                 this.fechaNacimiento =  fechaNacimiento;
                 this.fechaFallecimiento = fechaFallecimiento;
                 this.lugarNacimiento = lugarNacimiento;
                 this.lugarFallecimiento = lugarFallecimiento;
-                this.obras = obras;
     }
 
     public String getNombre() {
@@ -45,19 +45,19 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Date getFechaFallecimiento() {
+    public LocalDate getFechaFallecimiento() {
         return fechaFallecimiento;
     }
 
-    public void setFechaFallecimiento(Date fechaFallecimiento) {
+    public void setFechaFallecimiento(LocalDate fechaFallecimiento) {
         this.fechaFallecimiento = fechaFallecimiento;
     }
 

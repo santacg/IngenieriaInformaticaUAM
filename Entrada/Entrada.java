@@ -1,12 +1,12 @@
-package Entradas;
+package Entrada;
 
 import TarjetaDeCredito.TarjetaDeCredito;
 
-public class Entradas {
+public class Entrada {
     private Integer nEntrada;
     private TarjetaDeCredito tarjetaDeCredito;
    
-    public Entradas(Integer nEntrada, TarjetaDeCredito tarjetaDeCredito) {
+    public Entrada(Integer nEntrada, TarjetaDeCredito tarjetaDeCredito) {
         this.nEntrada = nEntrada;
         this.tarjetaDeCredito = tarjetaDeCredito;
     }

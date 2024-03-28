@@ -1,20 +1,21 @@
 package Obra;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Obra {
-    private String ID;
+    private Integer ID;
     private String nombre;
     private Integer anio;
     private String descripcion;
     private Boolean externa;
     private Double cuantiaSeguro;
     private String numeroSeguro;
-    private Set<Autor> autores;
+    private Set<Autor> autores = new HashSet<>();
     private Estado estado;
 
-    public Obra(String ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro, Estado estado, Set<Autor> autores) {
+    public Obra(Integer ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
+            String numeroSeguro, Estado estado) {
         this.ID = ID;
         this.nombre = nombre;
         this.anio = anio;
@@ -23,10 +24,9 @@ public abstract class Obra {
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
         this.estado = estado;
-        this.autores = autores;
     }
     
-    public String getID() {
+    public Integer getID() {
         return ID;
     }
     
@@ -58,7 +58,7 @@ public abstract class Obra {
         return autores;
     }
 
-    public void setID(String ID) {
+    public void setID(Integer ID) {
         this.ID = ID;
     }  
 
