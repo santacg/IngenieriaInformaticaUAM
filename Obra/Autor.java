@@ -28,12 +28,13 @@ public class Autor {
     }
 
     public Autor(String nombre, Date fechaNacimiento, Date fechaFallecimiento, String lugarNacimiento,
-            String lugarFallecimiento) {
+            String lugarFallecimiento, Set<Obra> obras) {
                 this.nombre = nombre;
                 this.fechaNacimiento =  fechaNacimiento;
                 this.fechaFallecimiento = fechaFallecimiento;
                 this.lugarNacimiento = lugarNacimiento;
                 this.lugarFallecimiento = lugarFallecimiento;
+                this.obras = obras;
     }
 
     public String getNombre() {

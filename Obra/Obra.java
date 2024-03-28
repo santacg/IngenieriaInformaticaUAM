@@ -14,7 +14,7 @@ public abstract class Obra {
     private Estado estado;
 
     public Obra(String ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro, Estado estado) {
+            String numeroSeguro, Estado estado, Set<Autor> autores) {
         this.ID = ID;
         this.nombre = nombre;
         this.anio = anio;
@@ -23,6 +23,7 @@ public abstract class Obra {
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
         this.estado = estado;
+        this.autores = autores;
     }
     
     public String getID() {
@@ -53,7 +54,7 @@ public abstract class Obra {
         return numeroSeguro;
     }
 
-    public Set<Autor> getAutor() {
+    public Set<Autor> getAutores() {
         return autores;
     }
 
@@ -85,12 +86,16 @@ public abstract class Obra {
         this.numeroSeguro = numeroSeguro;
     }
 
-    public void setAutor(Set<Autor> autor) {
+    public void setAutores(Set<Autor> autor) {
         this.autores = autor;
     } 
 
     public Estado getEstado() {
         return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     public void retirarObra() {
@@ -117,7 +122,7 @@ public abstract class Obra {
         this.autores.add(autor);
     }
 
-    public void removeAuotr(Autor autor) {
+    public void removeAuotor(Autor autor) {
         this.autores.remove(autor);
     }
 }
