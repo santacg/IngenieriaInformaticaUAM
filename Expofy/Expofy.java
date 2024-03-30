@@ -1,25 +1,27 @@
 package Expofy;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import CentroExposicion.CentroExposicion;  
 
 public class Expofy {
     private static Expofy instance;
+    private Set<CentroExposicion> centroExposicion = new HashSet<CentroExposicion>();
+    private List<Notificacion> notificaciones = new ArrayList<Notificacion>();
+    private Set<ClienteRegistrado> clientesRegistrados = new HashSet<ClienteRegistrado>();
+
     public static Expofy getInstance() {
         if (instance == null) {
             instance = new Expofy();
         }
         return instance;
     }
+
     public static void setInstance(Expofy instance) {
         Expofy.instance = instance;
     }
-    private Set<CentroExposicion> centroExposicion;
-
-    private List<Notificacion> notificaciones;
-
-    private Set<ClienteRegistrado> clientesRegistrados;
 
     public Set<CentroExposicion> getCentroExposicion() {
         return centroExposicion;
@@ -67,6 +69,11 @@ public class Expofy {
 
     public void removeClienteRegistrado(ClienteRegistrado clienteRegistrado) {
         this.clientesRegistrados.remove(clienteRegistrado);
+    }
+
+    public String toString() {
+        return "Expofy [centroExposicion=" + centroExposicion + ", notificaciones=" + notificaciones.toString()
+                + ", clientesRegistrados=" + clientesRegistrados.toString() + "]";
     }
 
 }

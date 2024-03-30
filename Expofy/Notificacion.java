@@ -37,4 +37,8 @@ public class Notificacion {
         this.fecha = fecha;
     }
 
+    public String toString() {
+        return "Notificacion [mensaje=" + mensaje + ", fecha=" + fecha + ", leida=" + leida + "]";
+    }
+
 }

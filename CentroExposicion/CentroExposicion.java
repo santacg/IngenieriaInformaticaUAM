@@ -30,7 +30,7 @@ public class CentroExposicion {
     private Set<Descuento> descuentos;
 
     public CentroExposicion(Integer iD, String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
-            String contraseniaEmpleado, String contraseniaGestor, Integer sancion, Set<SalaCompuesta> salaCompuesta,
+            String contraseniaEmpleado, String contraseniaGestor, Set<SalaCompuesta> salaCompuesta,
             Set<Empleado> empleados, Gestor gestor) {
         ID = iD;
         this.salaCompuesta = salaCompuesta;
@@ -40,7 +40,6 @@ public class CentroExposicion {
         this.localizacion = localizacion;
         this.contraseniaEmpleado = contraseniaEmpleado;
         this.contraseniaGestor = contraseniaGestor;
-        this.sancion = sancion;
         this.empleados = empleados;
         this.gestor = gestor;
     }
@@ -267,6 +266,14 @@ public class CentroExposicion {
 
     public void removeAllDescuentos() {
         this.descuentos.clear();
+    }
+
+    public String toString() {
+        return "CentroExposicion [ID=" + ID + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre="
+                + horaCierre + ", localizacion=" + localizacion + ", contraseniaEmpleado=" + contraseniaEmpleado
+                + ", contraseniaGestor=" + contraseniaGestor + ", sancion=" + sancion + ", salaCompuesta="
+                + salaCompuesta + ", exposiciones=" + exposiciones + ", sorteos=" + sorteos + ", obras=" + obras
+                + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
     }
 
 }

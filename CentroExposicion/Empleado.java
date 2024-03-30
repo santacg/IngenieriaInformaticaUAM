@@ -78,4 +78,11 @@ public class Empleado extends Usuario{
         this.direccion = direccion;
     }
 
+    @Override
+    public String toString() {
+        return "Empleado [nombre=" + nombre + ", numSS=" + numSS + ", numCuenta=" + numCuenta + ", permisoVenta="
+                + permisoVenta + ", permisoControl=" + permisoControl + ", permisoMensajes=" + permisoMensajes
+                + ", direccion=" + direccion + "]";
+    }
+
 }

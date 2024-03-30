@@ -59,4 +59,9 @@ public class ClienteRegistrado extends Usuario {
         this.sancionadoHasta = sancionadoHasta;
     }
 
+    public String toString() {
+        return "ClienteRegistrado [publicidad=" + publicidad + ", contrasenia=" + contrasenia + ", sancionado="
+                + sancionado + ", ultimaCompra=" + ultimaCompra + ", sancionadoHasta=" + sancionadoHasta + "]";
+    }
+
 }
