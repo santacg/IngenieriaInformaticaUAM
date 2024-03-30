@@ -371,7 +371,6 @@ void exe_script(int connfd, char *path, char *params, char *server_name) {
     strcat(command, tok);
   }
 
-  strcat(command, " < /dev/null");
   decoded = decode_url(command);
   if (!decoded) {
     http_response_error(connfd, BAD_REQUEST, server_name);
