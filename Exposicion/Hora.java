@@ -1,17 +1,18 @@
 package Exposicion;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import Entrada.Entrada;
 
 public class Hora {
-    private Date fecha;
+    private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private Integer nEntradas;
     private Double precio;
-    private Set<Entrada> entradas;
+    private Set<Entrada> entradas = new HashSet<>();
 
     public Set<Entrada> getEntradas() {
         return entradas;
@@ -34,19 +35,22 @@ public class Hora {
         this.entradas.clear();
     }
 
-    public Hora(Date fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas, Double precio) {
+    public Hora(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas, Double precio) {
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.nEntradas = nEntradas;
         this.precio = precio;
+        for (int i = 0; i < nEntradas; i++) {
+            this.entradas.add(new Entrada(i));
+        }
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

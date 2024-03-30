@@ -1,9 +1,9 @@
 package CentroExposicion;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import Sala.SalaCompuesta;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -129,10 +129,10 @@ public class CentroExposicion {
         return exposiciones;
     }
 
-    public Set<Exposicion> getExposicionesPorFecha(Date fechaInicio, Date fechaFinal) {
+    public Set<Exposicion> getExposicionesPorFecha(LocalDate fechaInicio, LocalDate fechaFinal) {
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
         for (Exposicion exposicion : exposiciones) {
-            if (exposicion.getFechaInicio().after(fechaInicio) && exposicion.getFechaFin().before(fechaFinal)) {
+            if (exposicion.getFechaInicio().isAfter(fechaInicio) && exposicion.getFechaFin().isBefore(fechaFinal)) {
                 exposicionesPorFecha.add(exposicion);
             }
         }

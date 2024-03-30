@@ -1,13 +1,13 @@
 package TarjetaDeCredito;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TarjetaDeCredito {
     private String numero;
-    private Date fechaCaducidad;
+    private LocalDate fechaCaducidad;
     private int CVV;
 
-    public TarjetaDeCredito(String numero, Date fechaCaducidad, int CVV) {
+    public TarjetaDeCredito(String numero, LocalDate fechaCaducidad, int CVV) {
         this.numero = numero;
         this.fechaCaducidad = fechaCaducidad;
         this.CVV = CVV;
@@ -21,11 +21,11 @@ public class TarjetaDeCredito {
         this.numero = numero;
     }
 
-    public Date getFechaCaducidad() {
+    public LocalDate getFechaCaducidad() {
         return fechaCaducidad;
     }
 
-    public void setFechaCaducidad(Date fechaCaducidad) {
+    public void setFechaCaducidad(LocalDate fechaCaducidad) {
         this.fechaCaducidad = fechaCaducidad;
     }
 

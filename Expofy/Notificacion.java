@@ -1,14 +1,15 @@
 package Expofy;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Notificacion {
     private String mensaje;
-    private Date fecha;
+    private LocalDate fecha;
     private boolean leida;
 
-    public Notificacion(String mensaje) {
+    public Notificacion(String mensaje, LocalDate fecha) {
         this.mensaje = mensaje;
+        this.fecha = fecha;
         this.leida = false;
     }
 
@@ -28,11 +29,11 @@ public class Notificacion {
         this.mensaje = mensaje;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 

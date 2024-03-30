@@ -1,16 +1,16 @@
 package Expofy;
 
-import java.util.Date;
+import java.time.LocalDate;
 import Usuario.Usuario;
 
 public class ClienteRegistrado extends Usuario {
     private Boolean publicidad;
     private String contrasenia;
     private Boolean sancionado;
-    private Date ultimaCompra;
-    private Date sancionadoHasta;
+    private LocalDate ultimaCompra;
+    private LocalDate sancionadoHasta;
 
-    public ClienteRegistrado(String NIF, Boolean publicidad, String contrasenia, Boolean sancionado, Date ultimaCompra, Date sancionadoHasta) {
+    public ClienteRegistrado(String NIF, Boolean publicidad, String contrasenia, Boolean sancionado, LocalDate ultimaCompra, LocalDate sancionadoHasta) {
         super(NIF);
         this.publicidad = publicidad;
         this.contrasenia = contrasenia;
@@ -43,19 +43,19 @@ public class ClienteRegistrado extends Usuario {
         this.sancionado = sancionado;
     }
 
-    public Date getUltimaCompra() {
+    public LocalDate getUltimaCompra() {
         return ultimaCompra;
     }
 
-    public void setUltimaCompra(Date ultimaCompra) {
+    public void setUltimaCompra(LocalDate ultimaCompra) {
         this.ultimaCompra = ultimaCompra;
     }
 
-    public Date getSancionadoHasta() {
+    public LocalDate getSancionadoHasta() {
         return sancionadoHasta;
     }
 
-    public void setSancionadoHasta(Date sancionadoHasta) {
+    public void setSancionadoHasta(LocalDate sancionadoHasta) {
         this.sancionadoHasta = sancionadoHasta;
     }
 

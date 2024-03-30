@@ -6,16 +6,20 @@ import CentroExposicion.CentroExposicion;
 
 public class Expofy {
     private static Expofy instance;
-    private Set<CentroExposicion> centroExposicion;
-    private List<Notificacion> notificaciones;
-    private Set<ClienteRegistrado> clientesRegistrados;
-
     public static Expofy getInstance() {
         if (instance == null) {
             instance = new Expofy();
         }
         return instance;
     }
+    public static void setInstance(Expofy instance) {
+        Expofy.instance = instance;
+    }
+    private Set<CentroExposicion> centroExposicion;
+
+    private List<Notificacion> notificaciones;
+
+    private Set<ClienteRegistrado> clientesRegistrados;
 
     public Set<CentroExposicion> getCentroExposicion() {
         return centroExposicion;

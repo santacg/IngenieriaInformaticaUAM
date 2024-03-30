@@ -1,15 +1,17 @@
 package Exposicion;
 
 import Sala.SalaExposicion;
-import java.util.Date;
+
+import java.time.LocalDate;
 import java.util.Set;
 import CentroExposicion.Descuento;
 
 public class Exposicion {
+    private static Integer IDcount;
     private Integer ID;
     private String nombre;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private String descripcion;
     private Double benificios;
     private EstadoExposicion estado;
@@ -19,26 +21,19 @@ public class Exposicion {
     private Estadisticas estadisticas;
     private TipoExpo tipo;
 
-    public Exposicion(Integer iD, String nombre, Date fechaInicio, Date fechaFin, String descripcion,
-        Double benificios, Set<SalaExposicion> salas, Estadisticas estadisticas, 
-        TipoExpo tipo, EstadoExposicion estado) { 
+    public Exposicion(Integer iD, String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
+        Set<SalaExposicion> salas, TipoExpo tipo) { 
+        this.ID = ++IDcount;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.descripcion = descripcion;
-        this.benificios = benificios;
         this.salas = salas;
-        this.estadisticas = estadisticas;
         this.tipo = tipo;
-        this.estado = estado;
     }
 
     public Integer getID() {
         return ID;
-    }
-
-    public void setID(Integer iD) {
-        ID = iD;
     }
 
     public String getNombre() {
@@ -49,19 +44,19 @@ public class Exposicion {
         this.nombre = nombre;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 
@@ -97,7 +92,7 @@ public class Exposicion {
         this.estado = EstadoExposicion.CANCELADA;
     }
 
-    public void expoProrrogar(Date fechaFin) {
+    public void expoProrrogar(LocalDate fechaFin) {
         this.estado = EstadoExposicion.PRORROGADA;
         this.fechaFin = fechaFin;
     }
@@ -180,6 +175,10 @@ public class Exposicion {
 
     public void removeAllDescuentos() {
         this.descuentos.clear();
+    }
+
+    public static Integer getIDcount() {
+        return IDcount;
     }
 
 }
