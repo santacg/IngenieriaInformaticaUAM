@@ -11,6 +11,15 @@ import Exposicion.Exposicion;
 import Exposicion.TipoExpo;
 import Obra.Obra; 
 
+/**
+ * Clase CentroExposicion.
+ * Esta clase ofrece funcionalidades para manejar las salas, exposiciones,
+ * obras, empleados, y descuentos dentro del centro de exposición.
+ *
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ *
+ */
+
 public class CentroExposicion {
     private Integer ID;
     private static Integer IDcount = 0;
@@ -29,7 +38,21 @@ public class CentroExposicion {
     private Set<Sala> salas = new HashSet<>();
     private Gestor gestor;
 
-    public CentroExposicion(String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
+    /**
+     * Constructor de un centro de exposición con los parámetros proporcionados.
+     *
+     * @param nombre                el nombre del centro de exposición
+     * @param horaApertura          la hora de apertura del centro
+     * @param horaCierre            la hora de cierre del centro
+     * @param localizacion          la ubicación del centro
+     * @param contraseniaEmpleado   la contraseña para los empleados del centro
+     * @param contraseniaGestor     la contraseña para el gestor del centro
+     * @param empleados             el conjunto inicial de empleados
+     * @param gestor                el gestor del centro
+     * @param salas                 el conjunto inicial de salas
+     */
+    public CentroExposicion(String nombre, LocalTime horaApertura,
+            LocalTime horaCierre, String localizacion,
             String contraseniaEmpleado, String contraseniaGestor, 
             Set<Empleado> empleados, Gestor gestor, Set<Sala> salas) {
         this.ID = IDcount++;
@@ -43,7 +66,9 @@ public class CentroExposicion {
         this.gestor = gestor;
         this.salas = salas;
     }
-
+    /**
+     * Getters y setters que facilitan la gestión de un centro de exposicion.
+     */
     public Integer getID() {
         return ID;
     }
@@ -111,19 +136,35 @@ public class CentroExposicion {
     public void setSalas(Set<Sala> salas) {
         this.salas = salas;
     }
-
+    /**
+     * Añade una sala a un centro de exposiciones.     *
+     * @param sala la sala a añadir
+     */
     public void addSala(Sala sala) {
         this.salas.add(sala);
     }
-
+    /**
+     * Elimina  una sala de un centro de exposiciones.     *
+     * @param sala la sala a eliminar
+     */
     public void removeSala(Sala sala) {
         this.salas.remove(sala);
-    }
+    }    
+    /**
+     * Obtiene las exposiciones disponibles en el centro.
 
+     * @return un conjunto de las exposiciones disponibles
+     */
     public Set<Exposicion> getExposiciones() {
         return exposiciones;
     }
-
+    /**
+     * Obtiene las exposiciones disponibles en el centro por un rango de fechas.
+     *
+     * @param fechaInicio la fecha de inicio
+     * @param fechaFinal  la fecha de fin
+     * @return un conjunto de exposiciones disponibles en el rango de fechas dado
+     */
     public Set<Exposicion> getExposicionesPorFecha(LocalDate fechaInicio, LocalDate fechaFinal) {
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
         for (Exposicion exposicion : exposiciones) {
@@ -133,7 +174,11 @@ public class CentroExposicion {
         }
         return exposicionesPorFecha;
     }
+    /**
+     * Obtiene las exposiciones temporales del centro.
 
+     * @return un conjunto de las exposiciones de tipo temporal
+     */
     public Set<Exposicion> getExposicionesTemporales() {
         Set<Exposicion> exposicionesTemporales = new HashSet<>();
         for (Exposicion exposicion : exposiciones) {
@@ -143,7 +188,11 @@ public class CentroExposicion {
         }
         return exposicionesTemporales;
     }
+    /**
+     * Obtiene las exposiciones permanentes del centro.
 
+     * @return un conjunto de las exposiciones de tipo permanente
+     */
     public Set<Exposicion> getExposicionesPermanentes() {
         Set<Exposicion> exposicionesPermanentes = new HashSet<>();
         for (Exposicion exposicion : exposiciones) {
