@@ -18,7 +18,7 @@ class AutorTest {
         obras = new HashSet<>();
         autor = new Autor("Leonardo da Vinci", LocalDate.of(1452, 4, 15), LocalDate.of(1519, 5, 2),
                 "Vinci", "Amboise");
-        Cuadro obra1 = new Cuadro(1, "Mona Lisa", 1503, "Retrato de Lisa Gherardini", false, 1000000.0, 77.0, 53.0,
+        Cuadro obra1 = new Cuadro("Mona Lisa", 1503, "Retrato de Lisa Gherardini", false, 1000000.0, 77.0, 53.0,
                 25.0, 18.0, 60.0, 40.0, "123456789", "Olio sobre lienzo", Estado.EXPUESTA);
         obras.add(obra1);
         autor.addObra(obra1);
@@ -87,9 +87,9 @@ class AutorTest {
     @Test
     public void testSetObras() {
         Set<Obra> newObras = new HashSet<>();
-        Cuadro obra2 = new Cuadro(2, "el Guernica", 1937, "Pintura de Pablo Picasso", false, 1000000.0, 349.3, 776.6,
+        Cuadro obra2 = new Cuadro("el Guernica", 1937, "Pintura de Pablo Picasso", false, 1000000.0, 349.3, 776.6,
                 25.0, 18.0, 60.0, 40.0, "123456789", "Olio sobre lienzo", Estado.EXPUESTA);
-        Cuadro obra3 = new Cuadro(3, "La persistencia de la memoria", 1931, "Pintura de Salvador Dalí", false, 1000000.0,
+        Cuadro obra3 = new Cuadro("La persistencia de la memoria", 1931, "Pintura de Salvador Dalí", false, 1000000.0,
                 24.1, 33.0, 25.0, 18.0, 60.0, 40.0, "123456789", "Olio sobre lienzo", Estado.EXPUESTA);
         newObras.add(obra2);
         newObras.add(obra3);
@@ -99,7 +99,7 @@ class AutorTest {
 
     @Test
     public void testAddObra() {
-        Cuadro newObra = new Cuadro(4, "La noche estrellada", 1889, "Pintura de Vincent van Gogh", false, 1000000.0,
+        Cuadro newObra = new Cuadro("La noche estrellada", 1889, "Pintura de Vincent van Gogh", false, 1000000.0,
                 73.7, 92.1, 25.0, 18.0, 60.0, 40.0, "123456789", "Olio sobre lienzo", Estado.EXPUESTA);
         autor.addObra(newObra);
         assertTrue(autor.getObras().contains(newObra));
@@ -107,7 +107,7 @@ class AutorTest {
 
     @Test
     public void testRemoveObra() {
-        Cuadro obraToRemove = new Cuadro(5, "El grito", 1893, "Pintura de Edvard Munch", false, 1000000.0, 91.0, 73.5,
+        Cuadro obraToRemove = new Cuadro("El grito", 1893, "Pintura de Edvard Munch", false, 1000000.0, 91.0, 73.5,
                 25.0, 18.0, 60.0, 40.0, "123456789", "Olio sobre lienzo", Estado.EXPUESTA);
         autor.removeObra(obraToRemove);
         assertFalse(autor.getObras().contains(obraToRemove));

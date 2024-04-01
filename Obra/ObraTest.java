@@ -16,7 +16,7 @@ public class ObraTest {
 
     @BeforeEach
     public void setUp() {
-        Cuadro cuadro = new Cuadro(1, "Mona Lisa", 1503, "Famous painting", false, 1000000.0, 77.0, 53.0, 25.0, 18.0, 60.0, 40.0, "12345", "Olio sobre lienzo", Estado.EXPUESTA);
+        Cuadro cuadro = new Cuadro("Mona Lisa", 1503, "Famous painting", false, 1000000.0, 77.0, 53.0, 25.0, 18.0, 60.0, 40.0, "12345", "Olio sobre lienzo", Estado.EXPUESTA);
         obra = cuadro;
     }
 

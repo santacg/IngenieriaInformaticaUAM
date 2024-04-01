@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 public abstract class ObraNoDigital extends Obra {
     private Double alto, ancho, largo;
-    private Map<Double, Double> rangoTemperatura;
-    private Map<Double, Double> rangoHumedad;
+    private Map<Integer, Integer> rangoTemperatura;
+    private Map<Integer, Integer> rangoHumedad;
 
-    public ObraNoDigital(Integer id, String nombre, Integer anio, String descripcion, boolean externa,
-            Double cuantiaSeguro, Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima,
-            Double humedadMaxima, Double humedadMinima, String numeroSeguro, Estado estado) {
-        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
+    public ObraNoDigital(String nombre, Integer anio, String descripcion, Boolean externa,
+            Double cuantiaSeguro, String numeroSeguro, Estado estado, Double alto, Double ancho, Integer temperaturaMaxima,  Integer temperaturaMinima,
+            Integer humedadMaxima, Integer humedadMinima) {
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
         this.alto = alto;
         this.ancho = ancho;
         this.rangoHumedad = new HashMap<>();
@@ -33,11 +33,11 @@ public abstract class ObraNoDigital extends Obra {
         return this.largo;
     }
 
-    public Map<Double, Double> getRangoTemperatura() {
+    public Map<Integer, Integer> getRangoTemperatura() {
         return rangoTemperatura;
     }
 
-    public Map<Double, Double> getRangoHumedad() {
+    public Map<Integer, Integer> getRangoHumedad() {
         return rangoHumedad;
     }
 
@@ -53,11 +53,11 @@ public abstract class ObraNoDigital extends Obra {
         this.largo = largo;
     }
 
-    public void setRangoTemperatura(Map<Double, Double> rangoTemperatura) {
+    public void setRangoTemperatura(Map<Integer, Integer> rangoTemperatura) {
         this.rangoTemperatura = rangoTemperatura;
     }
 
-    public void setRangoHumedad(Map<Double, Double> rangoHumedad) {
+    public void setRangoHumedad(Map<Integer, Integer> rangoHumedad) {
         this.rangoHumedad = rangoHumedad;
     }
 }

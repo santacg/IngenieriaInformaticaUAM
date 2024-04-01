@@ -5,6 +5,7 @@ import java.util.Set;
 
 public abstract class Obra {
     private Integer ID;
+    private Integer IDcount;
     private String nombre;
     private Integer anio;
     private String descripcion;
@@ -14,9 +15,9 @@ public abstract class Obra {
     private Set<Autor> autores = new HashSet<>();
     private Estado estado;
 
-    public Obra(Integer ID, String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
+    public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
             String numeroSeguro, Estado estado) {
-        this.ID = ID;
+        this.ID = IDcount++;
         this.nombre = nombre;
         this.anio = anio;
         this.descripcion = descripcion;

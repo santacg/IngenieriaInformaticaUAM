@@ -33,6 +33,11 @@ public class MainTest {
     ClienteRegistrado clienteRegistrado = new ClienteRegistrado("123456789", false, "123", false, LocalDate.now(), LocalDate.now());
     expofy.addClienteRegistrado(clienteRegistrado);
 
+    Exposicion exposicion = new Exposicion(1, "Expo1", LocalDate.now(), LocalDate.now(), "Expo1", null, TipoExpo.PERMANENTE);
+    centroExposicion.addExposicion(exposicion);
+
+    
+
     System.out.println(expofy.toString());
    }
 }

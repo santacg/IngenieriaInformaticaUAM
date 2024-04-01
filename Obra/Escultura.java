@@ -3,10 +3,10 @@ package Obra;
 public class Escultura extends ObraNoDigital {
     private String material;
 
-    public Escultura(Integer id, String nombre, Integer anio, String descripcion, boolean externa, Double cuantiaSeguro,
-            Double alto, Double ancho, Double temperaturaMaxima, Double temperaturaMinima, Double humedadMaxima,
-            Double humedadMinima, String numeroSeguro, String material, Estado estado) {
-        super(id, nombre, anio, descripcion, externa, cuantiaSeguro, alto, ancho, temperaturaMaxima, temperaturaMinima,
+    public Escultura(String nombre, Integer anio, String descripcion, Boolean externa,
+            Double cuantiaSeguro, String numeroSeguro, Estado estado, Double alto, Double ancho, Integer temperaturaMaxima,  Integer temperaturaMinima,
+            Integer humedadMaxima, Integer humedadMinima, String material) {
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, alto, ancho, temperaturaMaxima, temperaturaMinima,
                 humedadMaxima, humedadMinima, numeroSeguro, estado);
         this.material = material;
     }
