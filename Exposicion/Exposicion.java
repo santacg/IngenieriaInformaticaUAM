@@ -180,5 +180,4 @@ public class Exposicion {
     public static Integer getIDcount() {
         return IDcount;
     }
-
 }
