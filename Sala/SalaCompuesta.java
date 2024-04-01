@@ -1,11 +1,33 @@
 package Sala;
 
-public class SalaCompuesta extends Sala {
+import java.util.Set;
 
-    public SalaCompuesta(String iD, String nombre, Integer aforo, Double humedad, Double temperatura,
-            Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo, Sala[] salas) {
-        super(iD, nombre, aforo, humedad, temperatura, climatizador, tomasElectricidad, ancho, largo);
+public class SalaCompuesta extends Sala {
+    private Set<Sala> salas;
+
+    public SalaCompuesta(String nombre, Integer aforo, Double humedad, Double temperatura,
+            Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo) {
+        super(nombre, aforo, humedad, temperatura, climatizador, tomasElectricidad, ancho, largo);
 
     }
-    
+
+    public Set<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(Set<Sala> salas) {
+        this.salas = salas;
+    }
+
+    public void addSala(Sala sala) {
+        this.salas.add(sala);
+    }
+
+    public void removeSala(Sala sala) {
+        this.salas.remove(sala);
+    }
+
+    public void removeAllSalas() {
+        this.salas.clear();
+    }
 }

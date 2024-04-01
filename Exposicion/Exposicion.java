@@ -7,7 +7,7 @@ import java.util.Set;
 import CentroExposicion.Descuento;
 
 public class Exposicion {
-    private static Integer IDcount;
+    private static Integer IDcount = 0;
     private Integer ID;
     private String nombre;
     private LocalDate fechaInicio;
@@ -21,7 +21,7 @@ public class Exposicion {
     private Estadisticas estadisticas;
     private TipoExpo tipo;
 
-    public Exposicion(Integer iD, String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
+    public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
         Set<SalaExposicion> salas, TipoExpo tipo) { 
         this.ID = ++IDcount;
         this.nombre = nombre;
@@ -179,5 +179,12 @@ public class Exposicion {
 
     public static Integer getIDcount() {
         return IDcount;
+    }
+
+    public String toString() {
+        return "Exposicion [ID=" + ID + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
+                + ", descripcion=" + descripcion + ", benificios=" + benificios + ", estado=" + estado + ", salas="
+                + salas + ", horario=" + horario + ", descuentos=" + descuentos + ", estadisticas=" + estadisticas
+                + ", tipo=" + tipo + "]";
     }
 }

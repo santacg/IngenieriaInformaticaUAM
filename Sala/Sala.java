@@ -1,7 +1,8 @@
 package Sala;
 
-public class Sala {
-    private String ID;
+public abstract class Sala {
+    private Integer ID;
+    private static Integer IDcount = 0; 
     private String nombre;
     private Integer aforo;
     private Double humedad;
@@ -11,9 +12,9 @@ public class Sala {
     private Double ancho;
     private Double largo;
 
-    public Sala(String iD, String nombre, Integer aforo, Double humedad, Double temperatura, Boolean climatizador,
+    public Sala(String nombre, Integer aforo, Double humedad, Double temperatura, Boolean climatizador,
             Integer tomasElectricidad, Double ancho, Double largo) {
-        ID = iD;
+        this.ID = IDcount++;
         this.nombre = nombre;
         this.aforo = aforo;
         this.humedad = humedad;
@@ -24,12 +25,8 @@ public class Sala {
         this.largo = largo;
     }
 
-    public String getID() {
+    public Integer getID() {
         return ID;
-    }
-
-    public void setID(String iD) {
-        ID = iD;
     }
 
     public String getNombre() {
@@ -96,5 +93,9 @@ public class Sala {
         this.largo = largo;
     }
 
-
+    public String toString() {
+        return "Sala [ID=" + ID + ", nombre=" + nombre + ", aforo=" + aforo + ", humedad=" + humedad + ", temperatura="
+                + temperatura + ", climatizador=" + climatizador + ", tomasElectricidad=" + tomasElectricidad
+                + ", ancho=" + ancho + ", largo=" + largo + "]";
+    }
 }

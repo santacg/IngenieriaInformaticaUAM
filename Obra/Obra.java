@@ -5,7 +5,7 @@ import java.util.Set;
 
 public abstract class Obra {
     private Integer ID;
-    private Integer IDcount;
+    private static Integer IDcount = 0;
     private String nombre;
     private Integer anio;
     private String descripcion;
@@ -125,5 +125,11 @@ public abstract class Obra {
 
     public void removeAuotor(Autor autor) {
         this.autores.remove(autor);
+    }
+
+    public String toString() {
+        return "Obra [ID=" + ID + ", nombre=" + nombre + ", anio=" + anio + ", descripcion=" + descripcion
+                + ", externa=" + externa + ", cuantiaSeguro=" + cuantiaSeguro + ", numeroSeguro=" + numeroSeguro
+                + ", autores=" + autores + ", estado=" + estado + "]";
     }
 }

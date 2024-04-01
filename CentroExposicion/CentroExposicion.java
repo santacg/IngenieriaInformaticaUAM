@@ -2,11 +2,10 @@ package CentroExposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import Sala.SalaCompuesta;
 
+import Sala.Sala;
 import java.util.HashSet;
 import java.util.Set;
-
 import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
 import Exposicion.TipoExpo;
@@ -14,6 +13,7 @@ import Obra.Obra;
 
 public class CentroExposicion {
     private Integer ID;
+    private static Integer IDcount = 0;
     private String nombre;
     private LocalTime horaApertura;
     private LocalTime horaCierre;
@@ -21,19 +21,18 @@ public class CentroExposicion {
     private String contraseniaEmpleado;
     private String contraseniaGestor;
     private Integer sancion;
-    private Set<SalaCompuesta> salaCompuesta;
-    private Set<Exposicion> exposiciones;
+    private Set<Exposicion> exposiciones = new HashSet<>();
     private Set<Sorteo> sorteos;
     private Set<Obra> obras;
     private Set<Empleado> empleados;
-    private Gestor gestor;
     private Set<Descuento> descuentos;
+    private Set<Sala> salas = new HashSet<>();
+    private Gestor gestor;
 
-    public CentroExposicion(Integer iD, String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
-            String contraseniaEmpleado, String contraseniaGestor, Set<SalaCompuesta> salaCompuesta,
-            Set<Empleado> empleados, Gestor gestor) {
-        ID = iD;
-        this.salaCompuesta = salaCompuesta;
+    public CentroExposicion(String nombre, LocalTime horaApertura, LocalTime horaCierre, String localizacion,
+            String contraseniaEmpleado, String contraseniaGestor, 
+            Set<Empleado> empleados, Gestor gestor, Set<Sala> salas) {
+        this.ID = IDcount++;
         this.nombre = nombre;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
@@ -42,14 +41,11 @@ public class CentroExposicion {
         this.contraseniaGestor = contraseniaGestor;
         this.empleados = empleados;
         this.gestor = gestor;
+        this.salas = salas;
     }
 
     public Integer getID() {
         return ID;
-    }
-
-    public void setID(Integer iD) {
-        ID = iD;
     }
 
     public String getNombre() {
@@ -108,20 +104,20 @@ public class CentroExposicion {
         this.sancion = sancion;
     }
 
-    public Set<SalaCompuesta> getSalaCompuesta() {
-        return salaCompuesta;
+    public Set<Sala> getSalas() {
+        return salas;
     }
 
-    public void setSalaCompuesta(Set<SalaCompuesta> salaCompuesta) {
-        this.salaCompuesta = salaCompuesta;
+    public void setSalas(Set<Sala> salas) {
+        this.salas = salas;
     }
 
-    public void addSalaCompuesta(SalaCompuesta salaCompuesta) {
-        this.salaCompuesta.add(salaCompuesta);
+    public void addSala(Sala sala) {
+        this.salas.add(sala);
     }
-     
-    public void removeSalaCompuesta(SalaCompuesta salaCompuesta) {
-        this.salaCompuesta.remove(salaCompuesta);
+
+    public void removeSala(Sala sala) {
+        this.salas.remove(sala);
     }
 
     public Set<Exposicion> getExposiciones() {
@@ -271,8 +267,8 @@ public class CentroExposicion {
     public String toString() {
         return "CentroExposicion [ID=" + ID + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre="
                 + horaCierre + ", localizacion=" + localizacion + ", contraseniaEmpleado=" + contraseniaEmpleado
-                + ", contraseniaGestor=" + contraseniaGestor + ", sancion=" + sancion + ", salaCompuesta="
-                + salaCompuesta + ", exposiciones=" + exposiciones + ", sorteos=" + sorteos + ", obras=" + obras
+                + ", contraseniaGestor=" + contraseniaGestor + ", sancion=" + sancion + ", salas="
+                + salas.toString() + ", exposiciones=" + exposiciones.toString() + ", sorteos=" + sorteos + ", obras=" + obras
                 + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
     }
 
