@@ -9,30 +9,9 @@ package Exposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class Estadisticas {
-   private Integer ticketsVendidos;
-   private Double ingresosTotales;
+   private static Integer ticketsVendidos;
+   private static Double ingresosTotales;
 
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (getClass() != obj.getClass())
-         return false;
-      Estadisticas other = (Estadisticas) obj;
-      if (ticketsVendidos == null) {
-         if (other.ticketsVendidos != null)
-            return false;
-      } else if (!ticketsVendidos.equals(other.ticketsVendidos))
-         return false;
-      if (ingresosTotales == null) {
-         if (other.ingresosTotales != null)
-            return false;
-      } else if (!ingresosTotales.equals(other.ingresosTotales))
-         return false;
-      return true;
-   }
 
    /**
     * Constructor de la clase Estadísticas.
@@ -41,8 +20,8 @@ public class Estadisticas {
     * @param ingresosTotales Ingresos totales generados.
     */
    public Estadisticas(Integer ticketsVendidos, Double ingresosTotales) {
-      this.ticketsVendidos = ticketsVendidos;
-      this.ingresosTotales = ingresosTotales;
+      ticketsVendidos = 0;
+      ingresosTotales = (double) 0;
    }
 
    /**
@@ -55,15 +34,6 @@ public class Estadisticas {
    }
 
    /**
-    * Establece el número de tickets vendidos.
-    * 
-    * @param ticketsVendidos El nuevo número de tickets vendidos.
-    */
-   public void setTicketsVendidos(Integer ticketsVendidos) {
-      this.ticketsVendidos = ticketsVendidos;
-   }
-
-   /**
     * Obtiene los ingresos totales generados.
     * 
     * @return Los ingresos totales.
@@ -72,13 +42,12 @@ public class Estadisticas {
       return ingresosTotales;
    }
 
-   /**
-    * Establece los ingresos totales generados.
-    * 
-    * @param ingresosTotales Los nuevos ingresos totales.
-    */
-   public void setIngresosTotales(Double ingresosTotales) {
-      this.ingresosTotales = ingresosTotales;
+   public void incrementarTicketsVendidos() {
+      ticketsVendidos++;
+   }
+
+   public void incrementarIngresosTotales(Double precio) {
+      ingresosTotales += precio;
    }
 
 }

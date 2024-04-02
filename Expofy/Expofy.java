@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 import CentroExposicion.CentroExposicion;
+import Entrada.Entrada;
+import Exposicion.Estadisticas;
+import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
 import Exposicion.Hora;
 import TarjetaDeCredito.TarjetaDeCredito;
@@ -83,7 +86,7 @@ public class Expofy {
     public void setNotificaciones(List<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
     }
-
+    public void getDescDia()
     /**
      * Obtiene el conjunto de clientes registrados en Expofy.
      * 
@@ -257,7 +260,7 @@ public class Expofy {
      * @return true si la compra es exitosa, false en caso contrario.
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
-            Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito) {
+            Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String codigo) {
         Boolean horaDisponible = false;
         // Verificaciones varias: cliente logueado, fecha y hora dentro del rango, y
         // número de entradas válido.
@@ -268,6 +271,16 @@ public class Expofy {
 
         if (fecha.isBefore(exposicion.getFechaInicio()) || fecha.isAfter(exposicion.getFechaFin())) {
             System.out.println("La fecha no está dentro del rango de la exposición");
+            return false;
+        }
+
+        if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA) || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+            System.out.println("La exposición no está disponible");
+            return false;
+        }
+
+        if (!fecha.equals(hora.getFecha())) {
+            System.out.println("La fecha no coincide con la fecha de la hora");
             return false;
         }
 
@@ -286,6 +299,22 @@ public class Expofy {
         if (nEntradas <= 0) {
             System.out.println("El número de entradas no puede ser menor o igual a 0");
             return false;
+        }
+
+        if (nEntradas >= hora.getnEntradas()) {
+            System.out.println("No hay suficientes entradas disponibles");
+            return false;
+        }
+
+        Estadisticas estadisticas = exposicion.getEstadisticas();
+        int i;
+        for (i = 0; i < nEntradas; i++) {
+            Entrada entrada = new Entrada();
+            entrada.addClienteRegistrado(clienteRegistrado);
+            entrada.setTarjetaDeCredito(tarjetaDeCredito);
+            hora.entradaVendida();
+            estadisticas.incrementarTicketsVendidos();
+            estadisticas.incrementarIngresosTotales(hora.getPrecio());
         }
 
         return true;

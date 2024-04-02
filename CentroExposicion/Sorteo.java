@@ -1,7 +1,6 @@
 package CentroExposicion;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Random;
 import Exposicion.Exposicion;
 import Inscripcion.Inscripcion;
@@ -24,7 +23,7 @@ import Expofy.Notificacion;
  *
  */
 public abstract class Sorteo {
-    private Date fechaSorteo;
+    private LocalDate fechaSorteo;
     private int n_entradas;
     private Exposicion exposicion;
     private Set<Inscripcion> inscripciones;
@@ -35,7 +34,7 @@ public abstract class Sorteo {
      * @param fechaSorteo La fecha del sorteo
      * @param exposicion  La exposición relacionada con el sorteo
      */
-    public Sorteo(Date fechaSorteo, Exposicion exposicion) {
+    public Sorteo(LocalDate fechaSorteo, Exposicion exposicion) {
         this.fechaSorteo = fechaSorteo;
         this.exposicion = exposicion;
         this.inscripciones = new HashSet<Inscripcion>();
@@ -46,7 +45,7 @@ public abstract class Sorteo {
      * 
      * @return la fecha en la que se realizará el sorteo.
      */
-    public Date getFechaSorteo() {
+    public LocalDate getFechaSorteo() {
         return fechaSorteo;
     }
 
@@ -55,7 +54,7 @@ public abstract class Sorteo {
      * 
      * @param fechaSorteo la nueva fecha para el sorteo.
      */
-    public void setFechaSorteo(Date fechaSorteo) {
+    public void setFechaSorteo(LocalDate fechaSorteo) {
         this.fechaSorteo = fechaSorteo;
     }
 
@@ -169,23 +168,25 @@ public abstract class Sorteo {
         Inscripcion insc_ganadora;
         ClienteRegistrado ganador;
         Notificacion notificacion;
-        String codigo, mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \"" + exposicion.getNombre() +
-                                "\" ha sido elegida, canjea los siguientes códigos al comprar tus etradas para que estas te salgan ¡GRATIS!: ";
+        String codigo, mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \""
+                + exposicion.getNombre() +
+                "\" ha sido elegida, canjea los siguientes códigos al comprar tus etradas para que estas te salgan ¡GRATIS!: ";
         for (i = inscripciones.size(); n_entradas != 0 && i != 0; i--) {
 
             insc_ganadora = getRandomInscripcion(inscripciones);
             ganador = insc_ganadora.getCliente();
-            for (j = 0; j < insc_ganadora.getnEntradas() && n_entradas >= insc_ganadora.getnEntradas(); j++) {
-                codigo = generadorCodigo();
-                insc_ganadora.addCodigo(codigo);
-                mensaje = mensaje + codigo + " ";
-                n_entradas--;
+            if (insc_ganadora.getnEntradas() <= n_entradas) {
+                for (j = 0; j < insc_ganadora.getnEntradas(); j++) {
+                    codigo = generadorCodigo();
+                    insc_ganadora.addCodigo(codigo);
+                    mensaje = mensaje + codigo + " ";
+                    n_entradas--;
+                }
+                notificacion = new Notificacion(mensaje, LocalDate.now());
+                ganador.addNotificacion(notificacion);
             }
-            notificacion = new Notificacion(mensaje, LocalDate.now());
-            ganador.addNotificacion(notificacion);
-                
         }
     }
 
-    public abstract Date getFechaLimite(); 
+    public abstract LocalDate getFechaLimite();
 }

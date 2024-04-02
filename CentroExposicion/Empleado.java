@@ -48,7 +48,40 @@ public class Empleado extends Usuario {
     }
 
     /**
+     * Cambia los permisos de un empleado.
+     * 
+     * Este método actualiza los permisos de venta, control y envío de mensajes del
+     * empleado.
+     *
+     * @param pVenta    indica si el empleado tiene permiso de venta.
+     * @param pControl  indica si el empleado tiene permiso de control.
+     * @param pMensajes indica si el empleado tiene permiso de enviar mensajes.
+     */
+    public void cambiarPermisos(Boolean pVenta, Boolean pControl, Boolean pMensajes) {
+        this.permisoVenta = pVenta;
+        this.permisoControl = pControl;
+        this.permisoMensajes = pMensajes;
+    }
+
+    /**
+     * Actualiza los datos personales del empleado.
+     * 
+     * Este método permite al empleado modificar su número de seguridad social, el
+     * número de cuenta bancaria y la dirección del empleado.
+     *
+     * @param numSS     El nuevo número de seguridad social del empleado.
+     * @param numCuenta El nuevo número de cuenta bancaria del empleado.
+     * @param direccion La nueva dirección del empleado.
+     */
+    public void modificarDatos(String numSS, String numCuenta, String direccion) {
+        this.numSS = numSS;
+        this.numCuenta = numCuenta;
+        this.direccion = direccion;
+    }
+
+    /**
      * Retorna el nombre actual.
+     * 
      * @return nombre actual.
      */
     public String getNombre() {
@@ -57,6 +90,7 @@ public class Empleado extends Usuario {
 
     /**
      * Actualiza el nombre.
+     * 
      * @param nombre nuevo nombre.
      */
     public void setNombre(String nombre) {
@@ -65,6 +99,7 @@ public class Empleado extends Usuario {
 
     /**
      * Obtiene el número de Seguridad Social.
+     * 
      * @return número de Seguridad Social.
      */
     public String getNumSS() {
@@ -73,6 +108,7 @@ public class Empleado extends Usuario {
 
     /**
      * Establece el número de Seguridad Social.
+     * 
      * @param numSS nuevo número de Seguridad Social.
      */
     public void setNumSS(String numSS) {
@@ -81,6 +117,7 @@ public class Empleado extends Usuario {
 
     /**
      * Retorna el número de cuenta bancaria.
+     * 
      * @return número de cuenta bancaria.
      */
     public String getNumCuenta() {
@@ -89,6 +126,7 @@ public class Empleado extends Usuario {
 
     /**
      * Asigna un nuevo número de cuenta bancaria.
+     * 
      * @param numCuenta nuevo número de cuenta.
      */
     public void setNumCuenta(String numCuenta) {
@@ -97,6 +135,7 @@ public class Empleado extends Usuario {
 
     /**
      * Verifica si tiene permiso de venta.
+     * 
      * @return true si tiene permiso, false en caso contrario.
      */
     public Boolean getPermisoVenta() {
@@ -105,6 +144,7 @@ public class Empleado extends Usuario {
 
     /**
      * Otorga o revoca el permiso de venta.
+     * 
      * @param permisoVenta true para otorgar, false para revocar.
      */
     public void setPermisoVenta(Boolean permisoVenta) {
@@ -113,6 +153,7 @@ public class Empleado extends Usuario {
 
     /**
      * Verifica si tiene permiso de control de inventario.
+     * 
      * @return true si tiene permiso, false en caso contrario.
      */
     public Boolean getPermisoControl() {
@@ -121,6 +162,7 @@ public class Empleado extends Usuario {
 
     /**
      * Otorga o revoca el permiso de control de inventario.
+     * 
      * @param permisoControl true para otorgar, false para revocar.
      */
     public void setPermisoControl(Boolean permisoControl) {
@@ -129,6 +171,7 @@ public class Empleado extends Usuario {
 
     /**
      * Verifica si tiene permiso para enviar mensajes.
+     * 
      * @return true si tiene permiso, false en caso contrario.
      */
     public Boolean getPermisoMensajes() {
@@ -137,6 +180,7 @@ public class Empleado extends Usuario {
 
     /**
      * Otorga o revoca el permiso para enviar mensajes.
+     * 
      * @param permisoMensajes true para otorgar, false para revocar.
      */
     public void setPermisoMensajes(Boolean permisoMensajes) {
@@ -145,6 +189,7 @@ public class Empleado extends Usuario {
 
     /**
      * Obtiene la dirección actual.
+     * 
      * @return dirección actual.
      */
     public String getDireccion() {
@@ -153,6 +198,7 @@ public class Empleado extends Usuario {
 
     /**
      * Actualiza la dirección.
+     * 
      * @param direccion nueva dirección.
      */
     public void setDireccion(String direccion) {

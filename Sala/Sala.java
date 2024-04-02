@@ -106,70 +106,155 @@ public abstract class Sala {
         this.largo = largo;
     }
 
+        /**
+     * Obtiene el ID de la sala.
+     * 
+     * @return El ID de la sala.
+     */
     public Integer getID() {
         return ID;
     }
 
+    /**
+     * Obtiene el nombre de la sala.
+     * 
+     * @return El nombre de la sala.
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Establece el nombre de la sala.
+     * 
+     * @param nombre El nuevo nombre para la sala.
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene el aforo de la sala.
+     * 
+     * @return El aforo de la sala.
+     */
     public Integer getAforo() {
         return aforo;
     }
 
+    /**
+     * Establece el aforo de la sala.
+     * 
+     * @param aforo El nuevo aforo para la sala.
+     */
     public void setAforo(Integer aforo) {
         this.aforo = aforo;
     }
 
+    /**
+     * Obtiene el nivel de humedad de la sala.
+     * 
+     * @return El nivel de humedad en la sala.
+     */
     public Integer getHumedad() {
         return humedad;
     }
 
+    /**
+     * Establece el nivel de humedad en la sala.
+     * 
+     * @param humedad El nuevo nivel de humedad para la sala.
+     */
     public void setHumedad(Integer humedad) {
         this.humedad = humedad;
     }
 
+    /**
+     * Obtiene la temperatura de la sala.
+     * 
+     * @return La temperatura en la sala.
+     */
     public Integer getTemperatura() {
         return temperatura;
     }
 
+    /**
+     * Establece la temperatura en la sala.
+     * 
+     * @param temperatura La nueva temperatura para la sala.
+     */
     public void setTemperatura(Integer temperatura) {
         this.temperatura = temperatura;
     }
 
+    /**
+     * Obtiene el estado del climatizador de la sala.
+     * 
+     * @return Verdadero si la sala tiene climatizador, falso de lo contrario.
+     */
     public Boolean getClimatizador() {
         return climatizador;
     }
 
+    /**
+     * Establece el estado del climatizador en la sala.
+     * 
+     * @param climatizador Verdadero para indicar que la sala tiene climatizador, falso de lo contrario.
+     */
     public void setClimatizador(Boolean climatizador) {
         this.climatizador = climatizador;
     }
 
+    /**
+     * Obtiene el número de tomas de electricidad disponibles en la sala.
+     * 
+     * @return El número de tomas de electricidad.
+     */
     public Integer getTomasElectricidad() {
         return tomasElectricidad;
     }
 
+    /**
+     * Establece el número de tomas de electricidad en la sala.
+     * 
+     * @param tomasElectricidad El nuevo número de tomas de electricidad para la sala.
+     */
     public void setTomasElectricidad(Integer tomasElectricidad) {
         this.tomasElectricidad = tomasElectricidad;
     }
 
+    /**
+     * Obtiene el ancho de la sala.
+     * 
+     * @return El ancho de la sala.
+     */
     public Double getAncho() {
         return ancho;
     }
 
+    /**
+     * Establece el ancho de la sala.
+     * 
+     * @param ancho El nuevo ancho para la sala.
+     */
     public void setAncho(Double ancho) {
         this.ancho = ancho;
     }
 
+    /**
+     * Obtiene el largo de la sala.
+     * 
+     * @return El largo de la sala.
+     */
     public Double getLargo() {
         return largo;
     }
 
+    /**
+     * Establece el largo de la sala.
+     * 
+     * @param largo El nuevo largo para la sala.
+     */
     public void setLargo(Double largo) {
         this.largo = largo;
     }

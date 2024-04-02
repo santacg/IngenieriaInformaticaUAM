@@ -24,6 +24,17 @@ public abstract class Obra {
     private Set<Autor> autores = new HashSet<>();
     private Estado estado;
 
+    /**
+     * Comprueba si este objeto {@code Obra} es igual a otro objeto.
+     * Este método devuelve {@code true} solo si el objeto proporcionado es una
+     * instancia de {@code Obra} y todos los atributos mencionados son iguales
+     * en ambos objetos.
+     * 
+     * @param obj el objeto con el que se compara esta {@code Obra} para la
+     *            igualdad.
+     * @return {@code true} si el objeto proporcionado es igual a esta obra;
+     *         {@code false} en caso contrario.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

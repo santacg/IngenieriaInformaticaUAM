@@ -39,7 +39,18 @@ public class CentroExposicion {
     private Set<Descuento> descuentos = new HashSet<>();
     private Set<Sala> salas = new HashSet<>();
     private Gestor gestor;
-
+/**
+ * Comprueba si este {@code CentroExposicion} es igual a otro objeto.
+ * Dos {@code CentroExposicion} son considerados iguales si todas sus propiedades relevantes son iguales.
+ * Esto incluye el nombre, hora de apertura, hora de cierre, localización, contraseñas de empleado y gestor,
+ * sanción, y las colecciones de exposiciones, sorteos, obras, empleados, descuentos, salas, y el gestor.
+ * La comparación de las colecciones (exposiciones, sorteos, obras, empleados, descuentos, y salas) se realiza
+ * a nivel de contenido, lo que significa que todos los elementos de cada colección deben ser iguales
+ * entre los dos objetos de {@code CentroExposicion} para que se consideren iguales en su totalidad.
+ *
+ * @param obj el objeto con el que se compara este {@code CentroExposicion}
+ * @return {@code true} si este objeto es igual al objeto argumento; {@code false} en caso contrario.
+ */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

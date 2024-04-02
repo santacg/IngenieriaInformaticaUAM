@@ -18,6 +18,7 @@ public class Hora {
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private Integer nEntradas;
+    private static Integer countEntradas;
     private Double precio;
     private Set<Entrada> entradas = new HashSet<>();
 
@@ -31,21 +32,17 @@ public class Hora {
     }
 
     /**
-     * Establece el conjunto de entradas para este horario.
-     * 
-     * @param entradas El conjunto de entradas a establecer.
-     */
-    public void setEntradas(Set<Entrada> entradas) {
-        this.entradas = entradas;
-    }
-
-    /**
      * Añade una entrada al conjunto de entradas para este horario.
      * 
      * @param entrada La entrada a añadir.
      */
     public void addEntrada(Entrada entrada) {
+        if (countEntradas + 1 > nEntradas) {
+            System.out.println("No se pueden añadir más entradas");
+            return;
+        }
         this.entradas.add(entrada);
+        countEntradas++;
     }
 
     /**
@@ -55,6 +52,7 @@ public class Hora {
      */
     public void removeEntrada(Entrada entrada) {
         this.entradas.remove(entrada);
+        countEntradas--;
     }
 
     /**
@@ -62,7 +60,7 @@ public class Hora {
      * reinicia el contador de entradas disponibles.
      */
     public void removeAllEntradas() {
-        this.nEntradas = 0;
+        countEntradas = 0;
         this.entradas.clear();
     }
 
@@ -81,9 +79,7 @@ public class Hora {
         this.horaFin = horaFin;
         this.nEntradas = nEntradas;
         this.precio = precio;
-        for (int i = 0; i < nEntradas; i++) {
-            this.entradas.add(new Entrada(i));
-        }
+        countEntradas = 0;
     }
 
     /**
@@ -149,13 +145,8 @@ public class Hora {
         return nEntradas;
     }
 
-    /**
-     * Establece el número de entradas disponibles para la actividad.
-     * 
-     * @param nEntradas El nuevo número de entradas disponibles.
-     */
-    public void setnEntradas(Integer nEntradas) {
-        this.nEntradas = nEntradas;
+    public void entradaVendida() {
+        countEntradas--;
     }
 
     /**
@@ -207,21 +198,6 @@ public class Hora {
             if (other.horaFin != null)
                 return false;
         } else if (!horaFin.equals(other.horaFin))
-            return false;
-        if (nEntradas == null) {
-            if (other.nEntradas != null)
-                return false;
-        } else if (!nEntradas.equals(other.nEntradas))
-            return false;
-        if (precio == null) {
-            if (other.precio != null)
-                return false;
-        } else if (!precio.equals(other.precio))
-            return false;
-        if (entradas == null) {
-            if (other.entradas != null)
-                return false;
-        } else if (!entradas.equals(other.entradas))
             return false;
         return true;
     }

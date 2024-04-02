@@ -1,6 +1,8 @@
 package CentroExposicion;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import Exposicion.Exposicion;
 
 /**
@@ -12,8 +14,8 @@ import Exposicion.Exposicion;
  *
  */
 public class SorteoDiaHora extends Sorteo {
-    private String dia;
-    private String hora;
+    private LocalDate dia;
+    private LocalTime hora;
 
     /**
      * Constructor de un sorteo para un día y una hora especificados.
@@ -23,19 +25,18 @@ public class SorteoDiaHora extends Sorteo {
      * @param dia         El día específico en que se realizará el sorteo
      * @param hora        La hora específica a la que se realizará el sorteo
      */
-    public SorteoDiaHora(Exposicion exposicion, Date fechaSorteo, String dia, String hora) {
+    public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, LocalDate dia, LocalTime hora) {
         super(fechaSorteo, exposicion);
         this.dia = dia;
         this.hora = hora;
     }
-
 
     /**
      * Retorna el día asignado.
      * 
      * @return El día establecido para el evento o actividad.
      */
-    public String getDia() {
+    public LocalDate getDia() {
         return dia;
     }
 
@@ -44,7 +45,7 @@ public class SorteoDiaHora extends Sorteo {
      * 
      * @return La hora establecida para el evento o actividad.
      */
-    public String getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
@@ -53,7 +54,7 @@ public class SorteoDiaHora extends Sorteo {
      * 
      * @param dia El nuevo día a establecer.
      */
-    public void setDia(String dia) {
+    public void setDia(LocalDate dia) {
         this.dia = dia;
     }
 
@@ -62,8 +63,12 @@ public class SorteoDiaHora extends Sorteo {
      * 
      * @param hora La nueva hora a establecer.
      */
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
+    }
+
+    public LocalDate getFechaLimite() {
+        return dia;
     }
 
 }

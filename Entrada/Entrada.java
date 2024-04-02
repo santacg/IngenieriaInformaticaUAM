@@ -14,6 +14,7 @@ import TarjetaDeCredito.TarjetaDeCredito;
  */
 public class Entrada {
     private Integer IDEntrada;
+    private static Integer IDcount = 0;
     private ClienteRegistrado clienteRegistrado;
     private TarjetaDeCredito tarjetaDeCredito;
 
@@ -22,8 +23,8 @@ public class Entrada {
      * 
      * @param IDEntrada Identificador único de la entrada.
      */
-    public Entrada(Integer IDEntrada) {
-        this.IDEntrada = IDEntrada;
+    public Entrada() {
+        this.IDEntrada = IDcount++;
     }
 
     /**
@@ -62,7 +63,7 @@ public class Entrada {
      * Asigna un cliente registrado.
      * @param clienteRegistrado Cliente a asignar.
      */
-    public void setClienteRegistrado(ClienteRegistrado clienteRegistrado) {
+    public void addClienteRegistrado(ClienteRegistrado clienteRegistrado) {
         this.clienteRegistrado = clienteRegistrado;
     }
 

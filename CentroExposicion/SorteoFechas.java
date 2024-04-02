@@ -1,6 +1,6 @@
 package CentroExposicion;
 
-import java.util.Date;
+import java.time.LocalDate;
 import Exposicion.Exposicion;
 
 /**
@@ -12,8 +12,8 @@ import Exposicion.Exposicion;
  *
  */
 public class SorteoFechas extends Sorteo {
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
     /**
      * Constructor de un sorteo entre unas fechas especificadas.
@@ -23,7 +23,7 @@ public class SorteoFechas extends Sorteo {
      * @param fechaInicio La fecha de inicio
      * @param fechaFin    La fecha de fin
      */
-    public SorteoFechas(Exposicion exposicion, Date fechaSorteo, Date fechaInicio, Date fechaFin) {
+    public SorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, LocalDate fechaInicio, LocalDate fechaFin) {
         super(fechaSorteo, exposicion);
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -33,7 +33,7 @@ public class SorteoFechas extends Sorteo {
      * Obtiene la fecha de inicio.
      * @return La fecha de inicio.
      */
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
@@ -41,7 +41,7 @@ public class SorteoFechas extends Sorteo {
      * Establece una nueva fecha de inicio.
      * @param fechaInicio La nueva fecha de inicio.
      */
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
@@ -49,7 +49,7 @@ public class SorteoFechas extends Sorteo {
      * Obtiene la fecha de fin.
      * @return La fecha de fin.
      */
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
@@ -57,11 +57,11 @@ public class SorteoFechas extends Sorteo {
      * Establece una nueva fecha de fin.
      * @param fechaFin La nueva fecha de fin.
      */
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 
-    public Date getFechaLimite() {
+    public LocalDate getFechaLimite() {
         return fechaFin;
     } 
 

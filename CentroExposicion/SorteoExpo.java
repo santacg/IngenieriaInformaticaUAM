@@ -1,6 +1,6 @@
 package CentroExposicion;
 
-import java.util.Date;
+import java.time.LocalDate;
 import Exposicion.Exposicion;
 
 /**
@@ -21,7 +21,7 @@ public class SorteoExpo extends Sorteo {
      * @param fechaSorteo  La fecha en la que se realizará el sorteo
      * @param vigenciaExpo La vigencia de la exposición
      */
-    public SorteoExpo(Exposicion exposicion, Date fechaSorteo, Boolean vigenciaExpo) {
+    public SorteoExpo(Exposicion exposicion, LocalDate fechaSorteo, Boolean vigenciaExpo) {
         super(fechaSorteo, exposicion);
         this.vigenciaExpo = vigenciaExpo;
     }
@@ -45,6 +45,8 @@ public class SorteoExpo extends Sorteo {
     public void setVigenciaExpo(Boolean vigenciaExpo) {
         this.vigenciaExpo = vigenciaExpo;
     }
-
+    public LocalDate getFechaLimite() {
+        return getExposicion().getFechaFin();
+    }
 
 }
