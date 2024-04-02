@@ -54,32 +54,10 @@ public abstract class Obra {
                 return false;
         } else if (!anio.equals(other.anio))
             return false;
-        if (descripcion == null) {
-            if (other.descripcion != null)
-                return false;
-        } else if (!descripcion.equals(other.descripcion))
-            return false;
-        if (externa == null) {
-            if (other.externa != null)
-                return false;
-        } else if (!externa.equals(other.externa))
-            return false;
-        if (cuantiaSeguro == null) {
-            if (other.cuantiaSeguro != null)
-                return false;
-        } else if (!cuantiaSeguro.equals(other.cuantiaSeguro))
-            return false;
-        if (numeroSeguro == null) {
-            if (other.numeroSeguro != null)
-                return false;
-        } else if (!numeroSeguro.equals(other.numeroSeguro))
-            return false;
         if (autores == null) {
             if (other.autores != null)
                 return false;
         } else if (!autores.equals(other.autores))
-            return false;
-        if (estado != other.estado)
             return false;
         return true;
     }

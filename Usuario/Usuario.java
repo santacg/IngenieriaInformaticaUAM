@@ -1,5 +1,6 @@
 package Usuario;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import Expofy.Notificacion;
@@ -13,9 +14,27 @@ import Expofy.Notificacion;
  */
 public abstract class Usuario {
     private String NIF;
-    private Set<Notificacion> notificaciones;
+    private Set<Notificacion> notificaciones = new HashSet<>();
     private Boolean loged = false;
-/**
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Usuario other = (Usuario) obj;
+        if (NIF == null) {
+            if (other.NIF != null)
+                return false;
+        } else if (!NIF.equals(other.NIF))
+            return false;
+        return true;
+    }
+
+    /**
      * Constructor para crear un nuevo usuario.
      *
      * @param NIF El Número de Identificación Fiscal del usuario.
@@ -30,12 +49,10 @@ public abstract class Usuario {
      * @param obj El objeto con el que se compara.
      * @return true si son iguales, false en caso contrario.
      */
-    @Override
-    public boolean equals(Object obj) {
-        // Implementación omitida para brevedad
-    }
 
-    /**
+
+
+    /** 
      * Obtiene el NIF del usuario.
      *
      * @return El NIF del usuario.

@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import Sala.Sala;
-import Sala.SalaExposicion;
 
 import java.util.HashSet;
 import java.util.Set;
 import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
+import Exposicion.SalaExposicion;
 import Exposicion.TipoExpo;
 import Obra.Obra;
 
@@ -41,9 +41,6 @@ public class CentroExposicion {
     private Gestor gestor;
 /**
  * Comprueba si este {@code CentroExposicion} es igual a otro objeto.
- * Dos {@code CentroExposicion} son considerados iguales si todas sus propiedades relevantes son iguales.
- * Esto incluye el nombre, hora de apertura, hora de cierre, localización, contraseñas de empleado y gestor,
- * sanción, y las colecciones de exposiciones, sorteos, obras, empleados, descuentos, salas, y el gestor.
  * La comparación de las colecciones (exposiciones, sorteos, obras, empleados, descuentos, y salas) se realiza
  * a nivel de contenido, lo que significa que todos los elementos de cada colección deben ser iguales
  * entre los dos objetos de {@code CentroExposicion} para que se consideren iguales en su totalidad.
@@ -65,70 +62,10 @@ public class CentroExposicion {
                 return false;
         } else if (!nombre.equals(other.nombre))
             return false;
-        if (horaApertura == null) {
-            if (other.horaApertura != null)
-                return false;
-        } else if (!horaApertura.equals(other.horaApertura))
-            return false;
-        if (horaCierre == null) {
-            if (other.horaCierre != null)
-                return false;
-        } else if (!horaCierre.equals(other.horaCierre))
-            return false;
         if (localizacion == null) {
             if (other.localizacion != null)
                 return false;
         } else if (!localizacion.equals(other.localizacion))
-            return false;
-        if (contraseniaEmpleado == null) {
-            if (other.contraseniaEmpleado != null)
-                return false;
-        } else if (!contraseniaEmpleado.equals(other.contraseniaEmpleado))
-            return false;
-        if (contraseniaGestor == null) {
-            if (other.contraseniaGestor != null)
-                return false;
-        } else if (!contraseniaGestor.equals(other.contraseniaGestor))
-            return false;
-        if (sancion == null) {
-            if (other.sancion != null)
-                return false;
-        } else if (!sancion.equals(other.sancion))
-            return false;
-        if (exposiciones == null) {
-            if (other.exposiciones != null)
-                return false;
-        } else if (!exposiciones.equals(other.exposiciones))
-            return false;
-        if (sorteos == null) {
-            if (other.sorteos != null)
-                return false;
-        } else if (!sorteos.equals(other.sorteos))
-            return false;
-        if (obras == null) {
-            if (other.obras != null)
-                return false;
-        } else if (!obras.equals(other.obras))
-            return false;
-        if (empleados == null) {
-            if (other.empleados != null)
-                return false;
-        } else if (!empleados.equals(other.empleados))
-            return false;
-        if (descuentos == null) {
-            if (other.descuentos != null)
-                return false;
-        } else if (!descuentos.equals(other.descuentos))
-            return false;
-        if (salas == null) {
-            if (other.salas != null)
-                return false;
-        } else if (!salas.equals(other.salas))
-            return false;
-        if (gestor == null) {
-            if (other.gestor != null)
-                return false;
-        } else if (!gestor.equals(other.gestor))
             return false;
         return true;
     }

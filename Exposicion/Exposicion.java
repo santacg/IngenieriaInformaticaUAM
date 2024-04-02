@@ -1,7 +1,5 @@
 package Exposicion;
 
-import Sala.SalaExposicion;
-
 import java.time.LocalDate;
 import java.util.Set;
 import CentroExposicion.Descuento;

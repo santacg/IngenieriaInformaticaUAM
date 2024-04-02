@@ -44,16 +44,11 @@ public class MainTest {
 
             // Salas
             Set<Sala> salas = new HashSet<>();
-            Sala sala1 = new SalaCompuesta("Sala1", 100, 50, 25, true, 10, 10.0, 10.0);
-
-            SalaCompuesta sala2 = new SalaCompuesta("Sala2", 50, 30, 20, true, 4, 25.0, 30.0);
-
-            Sala subsala1 = new SalaCompuesta("subsala1", 25, 30, 20, true, 2, 12.5, 15.0);
-            Sala subsala2 = new SalaCompuesta("subsala2", 25, 30, 20, true, 2, 12.5, 15.0);
-            sala2.addSala(subsala1);
-            sala2.addSala(subsala2);
-
+            Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
+            sala1.addSubsala();
             salas.add(sala1);
+
+            Sala sala2 = new Sala("Sala2", 100, 50, 25, true, 10, 15.0, 20.0);
             salas.add(sala2);
 
             // Centro

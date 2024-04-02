@@ -23,23 +23,6 @@ public class ClienteRegistrado extends Usuario {
     private LocalDate ultimaCompra;
     private LocalDate sancionadoHasta;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ClienteRegistrado other = (ClienteRegistrado) obj;
-        if (contrasenia == null) {
-            if (other.contrasenia != null)
-                return false;
-        } else if (!contrasenia.equals(other.contrasenia))
-            return false;
-        return true;
-    }
-
     /**
      * Constructor para crear un nuevo cliente registrado.
      * 

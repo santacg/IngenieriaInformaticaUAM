@@ -1,5 +1,8 @@
 package Sala;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase Sala.
  * Es una clase abstracta que representa una sala con características
@@ -8,9 +11,7 @@ package Sala;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public abstract class Sala {
-    private Integer ID;
-    private static Integer IDcount = 0;
+public class Sala {
     private String nombre;
     private Integer aforo;
     private Integer humedad;
@@ -19,66 +20,8 @@ public abstract class Sala {
     private Integer tomasElectricidad;
     private Double ancho;
     private Double largo;
-
-    /**
-     * Verifica si esta Sala es igual a otro objeto.
-     * La igualdad se basa en la comparación de todas las propiedades de la sala.
-     *
-     * @param obj El objeto con el que comparar esta Sala.
-     * @return true si el objeto proporcionado es una Sala con las mismas
-     *         propiedades; de lo contrario, false.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Sala other = (Sala) obj;
-        if (nombre == null) {
-            if (other.nombre != null)
-                return false;
-        } else if (!nombre.equals(other.nombre))
-            return false;
-        if (aforo == null) {
-            if (other.aforo != null)
-                return false;
-        } else if (!aforo.equals(other.aforo))
-            return false;
-        if (humedad == null) {
-            if (other.humedad != null)
-                return false;
-        } else if (!humedad.equals(other.humedad))
-            return false;
-        if (temperatura == null) {
-            if (other.temperatura != null)
-                return false;
-        } else if (!temperatura.equals(other.temperatura))
-            return false;
-        if (climatizador == null) {
-            if (other.climatizador != null)
-                return false;
-        } else if (!climatizador.equals(other.climatizador))
-            return false;
-        if (tomasElectricidad == null) {
-            if (other.tomasElectricidad != null)
-                return false;
-        } else if (!tomasElectricidad.equals(other.tomasElectricidad))
-            return false;
-        if (ancho == null) {
-            if (other.ancho != null)
-                return false;
-        } else if (!ancho.equals(other.ancho))
-            return false;
-        if (largo == null) {
-            if (other.largo != null)
-                return false;
-        } else if (!largo.equals(other.largo))
-            return false;
-        return true;
-    }
+    private List<Sala> subsalas = new ArrayList<>();
+    private Sala salaPadre = null;
 
     /**
      * Constructor que inicializa una nueva sala con sus propiedades específicas.
@@ -95,7 +38,6 @@ public abstract class Sala {
      */
     public Sala(String nombre, Integer aforo, Integer humedad, Integer temperatura, Boolean climatizador,
             Integer tomasElectricidad, Double ancho, Double largo) {
-        this.ID = IDcount++;
         this.nombre = nombre;
         this.aforo = aforo;
         this.humedad = humedad;
@@ -104,15 +46,6 @@ public abstract class Sala {
         this.tomasElectricidad = tomasElectricidad;
         this.ancho = ancho;
         this.largo = largo;
-    }
-
-        /**
-     * Obtiene el ID de la sala.
-     * 
-     * @return El ID de la sala.
-     */
-    public Integer getID() {
-        return ID;
     }
 
     /**
@@ -259,14 +192,39 @@ public abstract class Sala {
         this.largo = largo;
     }
 
+    public void addSubsala() {
+        int numSubsalas = subsalas.size();
+        Sala subsala1 = new Sala(nombre + " subsala" + (numSubsalas + 1), aforo/2, humedad, temperatura, climatizador,
+                tomasElectricidad/2, ancho/2, largo);
+        Sala subsala2 = new Sala(nombre + " subsala" + (numSubsalas + 2), aforo/2, humedad, temperatura, climatizador,
+                tomasElectricidad/2, ancho/2, largo);
+        this.subsalas.add(subsala1);
+        this.subsalas.add(subsala2);
+    }
+
+    public void removeSubsala() {
+        if (subsalas.size() > 0) {
+            subsalas.remove(subsalas.size() - 1);
+            subsalas.remove(subsalas.size() - 1);
+        }
+    }
+
+    public List<Sala> getSubsalas() {
+        return subsalas;
+    }
+
+    public Sala getSalaPadre() {
+        return salaPadre;
+    }
+
     /**
      * Genera una representación en cadena de la sala y sus propiedades.
      *
      * @return Una cadena que representa los detalles de la sala.
      */
     public String toString() {
-        return "Sala [ID=" + ID + ", nombre=" + nombre + ", aforo=" + aforo + ", humedad=" + humedad + ", temperatura="
-                + temperatura + ", climatizador=" + climatizador + ", tomasElectricidad=" + tomasElectricidad
-                + ", ancho=" + ancho + ", largo=" + largo + "]";
+        return "Sala [nombre=" + nombre + ", aforo=" + aforo + ", humedad=" + humedad + ", temperatura=" + temperatura
+                + ", climatizador=" + climatizador + ", tomasElectricidad=" + tomasElectricidad + ", ancho=" + ancho
+                + ", largo=" + largo + ", subsalas=" + subsalas + ", salaPadre=" + salaPadre + "]";
     }
 }

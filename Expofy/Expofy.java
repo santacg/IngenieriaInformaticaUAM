@@ -86,7 +86,7 @@ public class Expofy {
     public void setNotificaciones(List<Notificacion> notificaciones) {
         this.notificaciones = notificaciones;
     }
-    public void getDescDia()
+
     /**
      * Obtiene el conjunto de clientes registrados en Expofy.
      * 

@@ -63,11 +63,6 @@ public class Autor {
                 return false;
         } else if (!lugarFallecimiento.equals(other.lugarFallecimiento))
             return false;
-        if (obras == null) {
-            if (other.obras != null)
-                return false;
-        } else if (!obras.equals(other.obras))
-            return false;
         return true;
     }
 

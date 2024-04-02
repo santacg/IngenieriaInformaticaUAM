@@ -1,8 +1,9 @@
-package Sala;
+package Exposicion;
 
 import java.util.HashSet;
 import java.util.Set;
 import Obra.Obra;
+import Sala.Sala;
 
 /**
  * Clase SalaExposicion.
@@ -39,7 +40,12 @@ public class SalaExposicion {
      * @param sala La nueva sala física.
      */
     public void setSala(Sala sala) {
-        this.sala = sala;
+        if (sala.getSubsalas().isEmpty()) {
+            this.sala = sala;
+        }
+        else {
+            System.out.println("La sala no puede tener sub-salas.");
+        }
     }
 
     /**
