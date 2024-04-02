@@ -77,4 +77,9 @@ public class Autor {
         this.lugarFallecimiento = lugarFallecimiento;
     }
 
+    public String toString() {
+        return "Autor [nombre=" + nombre + ", fechaNacimiento=" + fechaNacimiento + ", fechaFallecimiento="
+                + fechaFallecimiento + ", lugarNacimiento=" + lugarNacimiento + ", lugarFallecimiento="
+                + lugarFallecimiento + ", obras=" + obras + "]";
+    }
 }

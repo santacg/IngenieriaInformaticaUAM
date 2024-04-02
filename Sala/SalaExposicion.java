@@ -4,12 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 import Obra.Obra;
 
-public class SalaExposicion extends Sala {
+public class SalaExposicion {
+    private Sala sala;
     private Set<Obra> obras = new HashSet<>();
 
-    public SalaExposicion(String nombre, Integer aforo, Double humedad, Double temperatura,
-            Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo) {
-        super(nombre, aforo, humedad, temperatura, climatizador, tomasElectricidad, ancho, largo);
+    public SalaExposicion(Sala sala) {
+        this.sala = sala;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 
     public Set<Obra> getObras() {
@@ -32,9 +40,7 @@ public class SalaExposicion extends Sala {
         this.obras.clear();
     }
 
-    @Override
     public String toString() {
-        return "SalaExposicion [obras=" + obras.toString() + "]";
+        return "SalaExposicion [sala=" + sala + ", obras=" + obras + "]";
     }
-
 }
