@@ -28,7 +28,6 @@ public class Escultura extends ObraNoDigital {
      * @param externa           Indica si la obra es externa
      * @param cuantiaSeguro     El valor asegurado de la escultura.
      * @param numeroSeguro      El número de póliza de seguro asociado
-     * @param estado            El estado actual de la escultura
      * @param alto              La altura de la escultura en metros.
      * @param ancho             El ancho de la escultura en metros.
      * @param profundidad       La profundidad de la escultura en metros.
@@ -39,10 +38,10 @@ public class Escultura extends ObraNoDigital {
      * @param material          El material del que está hecha la escultura.
      */
     public Escultura(String nombre, Integer anio, String descripcion, Boolean externa,
-            Double cuantiaSeguro, String numeroSeguro, Estado estado, Double alto, Double ancho, Double profundidad,
+            Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho, Double profundidad,
             Integer temperaturaMaxima, Integer temperaturaMinima,
             Integer humedadMaxima, Integer humedadMinima, String material) {
-        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado, alto, ancho, temperaturaMaxima,
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, alto, ancho, temperaturaMaxima,
                 temperaturaMinima,
                 humedadMaxima, humedadMinima);
         this.material = material;

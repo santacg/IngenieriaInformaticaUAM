@@ -14,7 +14,6 @@ import TarjetaDeCredito.TarjetaDeCredito;
  */
 public class Entrada {
     private Integer IDEntrada;
-    private Integer nEntradas;
     private ClienteRegistrado clienteRegistrado;
     private TarjetaDeCredito tarjetaDeCredito;
 
@@ -28,37 +27,59 @@ public class Entrada {
     }
 
     /**
-     * Getters y setters que facilitan la gestión de una entrada.
+     * Retorna el ID de la entrada.
+     * @return ID de la entrada.
      */
     public Integer getIDEntrada() {
         return IDEntrada;
     }
 
+    /**
+     * Obtiene la tarjeta de crédito asociada.
+     * @return Tarjeta de crédito asociada.
+     */
     public TarjetaDeCredito getTarjetaDeCredito() {
         return tarjetaDeCredito;
     }
 
+    /**
+     * Asigna una tarjeta de crédito.
+     * @param tarjetaDeCredito Tarjeta de crédito a asignar.
+     */
     public void setTarjetaDeCredito(TarjetaDeCredito tarjetaDeCredito) {
         this.tarjetaDeCredito = tarjetaDeCredito;
     }
 
-    public Integer getnEntradas() {
-        return nEntradas;
-    }
-
-    public void setnEntradas(Integer nEntradas) {
-        if (nEntradas <= 0) {
-            System.out.println("El número de entradas no puede ser menor o igual a 0");
-        }
-        this.nEntradas = nEntradas;
-    }
-
+    /**
+     * Obtiene el cliente registrado.
+     * @return Cliente registrado.
+     */
     public ClienteRegistrado getClienteRegistrado() {
         return clienteRegistrado;
     }
 
+    /**
+     * Asigna un cliente registrado.
+     * @param clienteRegistrado Cliente a asignar.
+     */
     public void setClienteRegistrado(ClienteRegistrado clienteRegistrado) {
         this.clienteRegistrado = clienteRegistrado;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Entrada other = (Entrada) obj;
+        if (IDEntrada == null) {
+            if (other.IDEntrada != null)
+                return false;
+        } else if (!IDEntrada.equals(other.IDEntrada))
+            return false;
+        return true;
+    }
 }

@@ -10,7 +10,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
-
+/**
+ * Clase HoraTest.
+ * Esta clase contiene pruebas unitarias que validan la funcionalidad de los
+ * métodos de la clase {@link Notificacion}.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 class HoraTest {
     private Hora hora;
 

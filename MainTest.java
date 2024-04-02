@@ -3,7 +3,6 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.text.AbstractDocument.LeafElement;
 
 import CentroExposicion.*;
 import Entrada.Entrada;
@@ -27,11 +26,8 @@ public class MainTest {
       // Centro1
 
       // Empleados
-      Set<Empleado> empleados = new HashSet<>();
       Empleado empleado1 = new Empleado("12345", "Jesus", "789", "456", true, true, true, "Mordor");
       Empleado empleado2 = new Empleado("789456", "Miguel", "456", "789", false, false, false, "Rivendell");
-      empleados.add(empleado1);
-      empleados.add(empleado2);
 
       // Gestor
       Gestor gestor = new Gestor("456123");
@@ -50,9 +46,11 @@ public class MainTest {
       salas.add(sala1);
       salas.add(sala2);
 
-
+      // Centro
       CentroExposicion centroExposicion = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0), LocalTime.of(21, 0, 0), "Madrid",
-            "123", "456", empleados, gestor, salas);
+            "123", "456", gestor, salas);
+      centroExposicion.addEmpleado(empleado1);
+      centroExposicion.addEmpleado(empleado2);
       expofy.addCentroExposicion(centroExposicion);
 
       // Clientes
@@ -64,12 +62,17 @@ public class MainTest {
       expofy.enviarNotificacionAll("Bienvenidos a expofy");
 
       // Configuramos exposiciones
-      // Elegimos sala física del centro como sala para la exposición
-      System.out.println(centroExposicion.getSalas());
+      Set<SalaExposicion> salasExposicion1 = new HashSet<>();
+      Set<SalaExposicion> salasExposicion2 = new HashSet<>();
 
+      SalaExposicion salaExposicion1 = new SalaExposicion(sala1);
+      SalaExposicion salaExposicion2 = new SalaExposicion(sala2);
+      salasExposicion1.add(salaExposicion1);
+      salasExposicion2.add(salaExposicion2);
+      Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1), "Expo1", salasExposicion1, TipoExpo.PERMANENTE);
+      Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2023, 2, 2), LocalDate.of(2024, 2, 2), "Expo2", salasExposicion2, TipoExpo.TEMPORAL);
       
-      SalaExposicion salaExposicion = new SalaExposicion(sala1);
-      salasExposicion.add(salaExposicion);
+      // Añadimos obras a una de las exposiciones 
       Cuadro cuadro = new Cuadro(
             "El Guernica", 
             1937, 
@@ -77,7 +80,6 @@ public class MainTest {
             false, 
             2000000.0, 
             "123456789", 
-            Estado.ALMACENADA,
             349.3,
             776.6, 
             25,
@@ -85,13 +87,16 @@ public class MainTest {
             60, 
             40, 
             "Óleo" 
-      );
-      salaExposicion.addObra(cuadro);
-      Exposicion exposicion = new Exposicion("Expo1", LocalDate.now(), LocalDate.now(), "Expo1", salasExposicion,
-            TipoExpo.PERMANENTE);
-      centroExposicion.addExposicion(exposicion);
+      ); 
+      salaExposicion1.addObra(cuadro);
 
-      LectorCSVObras.leerObras(salaExposicion);
+      // Leemos obras de un archivo y lo añadimos a una sala de una de las exposiciones
+      LectorCSVObras.leerObras(salaExposicion2);
+
+      // Añadimos las exposiciones al centro
+      centroExposicion.addExposicion(exposicion1);
+      centroExposicion.addExposicion(exposicion2);
+
       System.out.println(expofy.toString());
    }
 }

@@ -25,7 +25,6 @@ public class Fotografia extends ObraNoDigital {
      * @param externa           indica si la obra es externa.
      * @param cuantiaSeguro     el valor asegurado de la fotografía.
      * @param numeroSeguro      el número de póliza de seguro de la fotografía.
-     * @param estado            el estado actual de la obra.
      * @param alto              el alto de la fotografía.
      * @param ancho             el ancho de la fotografía.
      * @param temperaturaMaxima la temperatura máxima para la conservación
@@ -35,11 +34,11 @@ public class Fotografia extends ObraNoDigital {
      * @param color             si la fotografía es en color o en blanco y negro.
      */
     public Fotografia(String nombre, Integer anio, String descripcion, Boolean externa,
-            Double cuantiaSeguro, String numeroSeguro, Estado estado, Double alto, Double ancho,
+            Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,
             Integer temperaturaMaxima, Integer temperaturaMinima,
             Integer humedadMaxima, Integer humedadMinima, Boolean color) {
         super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro,
-                estado, alto, ancho, temperaturaMaxima, temperaturaMinima,
+                alto, ancho, temperaturaMaxima, temperaturaMinima,
                 humedadMaxima, humedadMinima);
 
         this.color = color;

@@ -24,6 +24,55 @@ public abstract class Obra {
     private Set<Autor> autores = new HashSet<>();
     private Estado estado;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Obra other = (Obra) obj;
+        if (nombre == null) {
+            if (other.nombre != null)
+                return false;
+        } else if (!nombre.equals(other.nombre))
+            return false;
+        if (anio == null) {
+            if (other.anio != null)
+                return false;
+        } else if (!anio.equals(other.anio))
+            return false;
+        if (descripcion == null) {
+            if (other.descripcion != null)
+                return false;
+        } else if (!descripcion.equals(other.descripcion))
+            return false;
+        if (externa == null) {
+            if (other.externa != null)
+                return false;
+        } else if (!externa.equals(other.externa))
+            return false;
+        if (cuantiaSeguro == null) {
+            if (other.cuantiaSeguro != null)
+                return false;
+        } else if (!cuantiaSeguro.equals(other.cuantiaSeguro))
+            return false;
+        if (numeroSeguro == null) {
+            if (other.numeroSeguro != null)
+                return false;
+        } else if (!numeroSeguro.equals(other.numeroSeguro))
+            return false;
+        if (autores == null) {
+            if (other.autores != null)
+                return false;
+        } else if (!autores.equals(other.autores))
+            return false;
+        if (estado != other.estado)
+            return false;
+        return true;
+    }
+
     /**
      * Crea una nueva instancia de una obra de arte con los parámetros
      * especificados.
@@ -37,7 +86,7 @@ public abstract class Obra {
      * @param estado        El estado inicial de la obra.
      */
     public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro, Estado estado) {
+            String numeroSeguro) {
         this.ID = IDcount++;
         this.nombre = nombre;
         this.anio = anio;
@@ -45,82 +94,160 @@ public abstract class Obra {
         this.externa = externa;
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
-        this.estado = estado;
+        this.estado = Estado.ALMACENADA;
     }
 
     /**
-     * Getters y setters que facilitan la gestión de una obra.
+     * Obtiene el ID de la entidad.
+     * 
+     * @return El ID como Integer.
      */
     public Integer getID() {
         return ID;
     }
 
+    /**
+     * Obtiene el nombre de la entidad.
+     * 
+     * @return El nombre como String.
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Obtiene el año asociado a la entidad.
+     * 
+     * @return El año como Integer.
+     */
     public Integer getAnio() {
         return anio;
     }
 
+    /**
+     * Obtiene la descripción de la entidad.
+     * 
+     * @return La descripción como String.
+     */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     * Indica si la entidad es externa.
+     * 
+     * @return Verdadero si es externa, falso de lo contrario.
+     */
     public Boolean getExterna() {
         return externa;
     }
 
+    /**
+     * Obtiene la cuantía del seguro asociada a la entidad.
+     * 
+     * @return La cuantía del seguro como Double.
+     */
     public Double getCuantiaSeguro() {
         return cuantiaSeguro;
     }
 
+    /**
+     * Obtiene el número de seguro asociado a la entidad.
+     * 
+     * @return El número de seguro como String.
+     */
     public String getNumeroSeguro() {
         return numeroSeguro;
     }
 
+    /**
+     * Obtiene el conjunto de autores asociados a la entidad.
+     * 
+     * @return El conjunto de autores como Set<Autor>.
+     */
     public Set<Autor> getAutores() {
         return autores;
     }
 
+    /**
+     * Establece el ID de la entidad.
+     * 
+     * @param ID El ID a establecer.
+     */
     public void setID(Integer ID) {
         this.ID = ID;
     }
 
+    /**
+     * Establece el nombre de la entidad.
+     * 
+     * @param nombre El nombre a establecer.
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Establece el año asociado a la entidad.
+     * 
+     * @param anio El año a establecer.
+     */
     public void setAnio(Integer anio) {
         this.anio = anio;
     }
 
+    /**
+     * Establece la descripción de la entidad.
+     * 
+     * @param descripcion La descripción a establecer.
+     */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
+    /**
+     * Establece si la entidad es externa.
+     * 
+     * @param externa Verdadero si es externa, falso de lo contrario.
+     */
     public void setExterna(Boolean externa) {
         this.externa = externa;
     }
 
+    /**
+     * Establece la cuantía del seguro asociada a la entidad.
+     * 
+     * @param cuantiaSeguro La cuantía del seguro a establecer.
+     */
     public void setCuantiaSeguro(Double cuantiaSeguro) {
         this.cuantiaSeguro = cuantiaSeguro;
     }
 
+    /**
+     * Establece el número de seguro asociado a la entidad.
+     * 
+     * @param numeroSeguro El número de seguro a establecer.
+     */
     public void setNumeroSeguro(String numeroSeguro) {
         this.numeroSeguro = numeroSeguro;
     }
 
-    public void setAutores(Set<Autor> autor) {
-        this.autores = autor;
+    /**
+     * Establece el conjunto de autores asociados a la entidad.
+     * 
+     * @param autores El conjunto de autores a establecer.
+     */
+    public void setAutores(Set<Autor> autores) {
+        this.autores = autores;
     }
 
+    /**
+     * Obtiene el estado actual de la entidad.
+     * 
+     * @return El estado como Estado.
+     */
     public Estado getEstado() {
         return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
     }
 
     /**
@@ -138,7 +265,7 @@ public abstract class Obra {
             System.out.println("No se puede prestar una obra externa");
             return;
         }
-        this.estado = Estado.PRESTADA; 
+        this.estado = Estado.PRESTADA;
     }
 
     /**

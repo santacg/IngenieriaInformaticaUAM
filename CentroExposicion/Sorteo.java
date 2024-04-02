@@ -6,6 +6,7 @@ import java.util.Random;
 import Exposicion.Exposicion;
 import Inscripcion.Inscripcion;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import Expofy.ClienteRegistrado;
@@ -14,12 +15,10 @@ import Expofy.Notificacion;
 /**
  * Clase Sorteo.
  * Esta clase abstracta gestiona la información básica de un sorteo, incluyendo
- * la fecha del sorteo,
- * la exposición relacionada, los códigos generados para los ganadores, y las
- * inscripciones de los participantes.
+ * la fecha del sorteo, la exposición relacionada, los códigos generados para
+ * los ganadores, y las inscripciones de los participantes.
  * Proporciona funcionalidades para manipular estos datos, como añadir o remover
- * códigos,
- * y añadir inscripciones, así como realizar el sorteo en sí.
+ * códigos,y añadir inscripciones, así como realizar el sorteo en sí.
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
@@ -28,7 +27,6 @@ public abstract class Sorteo {
     private Date fechaSorteo;
     private int n_entradas;
     private Exposicion exposicion;
-    private Set<String> codigos;
     private Set<Inscripcion> inscripciones;
 
     /**
@@ -40,55 +38,61 @@ public abstract class Sorteo {
     public Sorteo(Date fechaSorteo, Exposicion exposicion) {
         this.fechaSorteo = fechaSorteo;
         this.exposicion = exposicion;
+        this.inscripciones = new HashSet<Inscripcion>();
     }
 
+    /**
+     * Obtiene la fecha del sorteo.
+     * 
+     * @return la fecha en la que se realizará el sorteo.
+     */
     public Date getFechaSorteo() {
         return fechaSorteo;
     }
 
+    /**
+     * Establece la fecha del sorteo.
+     * 
+     * @param fechaSorteo la nueva fecha para el sorteo.
+     */
     public void setFechaSorteo(Date fechaSorteo) {
         this.fechaSorteo = fechaSorteo;
     }
 
+    /**
+     * Retorna el número de entradas disponibles para el sorteo.
+     * 
+     * @return el número de entradas.
+     */
     public int getN_entradas() {
         return n_entradas;
     }
 
+    /**
+     * Establece el número de entradas disponibles para el sorteo.
+     * 
+     * @param n_entradas el nuevo número de entradas.
+     */
     public void setN_entradas(int n_entradas) {
         this.n_entradas = n_entradas;
     }
 
+    /**
+     * Obtiene la exposición asociada al sorteo.
+     * 
+     * @return la exposición vinculada al sorteo.
+     */
     public Exposicion getExposicion() {
         return exposicion;
     }
 
+    /**
+     * Vincula una exposición al sorteo.
+     * 
+     * @param exposicion la exposición a vincular.
+     */
     public void setExposicion(Exposicion exposicion) {
         this.exposicion = exposicion;
-    }
-
-    public Set<String> getCodigos() {
-        return codigos;
-    }
-
-    /**
-     * Añade un código a un sorteo
-     * 
-     * @param codigo el código a añadir
-     */
-    public void addCodigo(String codigo) {
-        if (codigo.length() != 4) {
-            return;
-        }
-        codigos.add(codigo);
-    }
-
-    /**
-     * Elimina un código de un sorteo
-     * 
-     * @param codigo el código a eliminar
-     */
-    public void removeCodigo(String codigo) {
-        codigos.remove(codigo);
     }
 
     /**
@@ -165,22 +169,23 @@ public abstract class Sorteo {
         Inscripcion insc_ganadora;
         ClienteRegistrado ganador;
         Notificacion notificacion;
-        String codigo, mensaje;
+        String codigo, mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \"" + exposicion.getNombre() +
+                                "\" ha sido elegida, canjea los siguientes códigos al comprar tus etradas para que estas te salgan ¡GRATIS!: ";
         for (i = inscripciones.size(); n_entradas != 0 && i != 0; i--) {
+
             insc_ganadora = getRandomInscripcion(inscripciones);
             ganador = insc_ganadora.getCliente();
             for (j = 0; j < insc_ganadora.getnEntradas() && n_entradas >= insc_ganadora.getnEntradas(); j++) {
                 codigo = generadorCodigo();
-                this.addCodigo(codigo);
-                mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \"" +
-                        exposicion.getNombre() +
-                        "\" ha sido elegida, canjea el siguiente código al comprar tu etrada para que esta te salga ¡GRATIS!: "
-                        +
-                        codigo;
-                notificacion = new Notificacion(mensaje, LocalDate.now());
-                ganador.addNotificacion(notificacion);
+                insc_ganadora.addCodigo(codigo);
+                mensaje = mensaje + codigo + " ";
                 n_entradas--;
             }
+            notificacion = new Notificacion(mensaje, LocalDate.now());
+            ganador.addNotificacion(notificacion);
+                
         }
     }
+
+    public abstract Date getFechaLimite(); 
 }

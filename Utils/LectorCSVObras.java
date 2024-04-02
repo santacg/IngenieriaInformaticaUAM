@@ -61,12 +61,12 @@ public class LectorCSVObras {
                 switch (tipo.toLowerCase()) {
                     case "cuadro":
                         obra = new Cuadro(titulo, anio, descripcion, externa, cuantiaSeguro, numeroSeguro,
-                                Estado.ALMACENADA, alto, ancho, temperaturaMax, temperaturaMin, humedadMax, humedadMin,
+                                alto, ancho, temperaturaMax, temperaturaMin, humedadMax, humedadMin,
                                 fields[8]);
                         break;
                     case "escultura":
                         obra = new Escultura(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, Estado.ALMACENADA, alto, ancho, Double.parseDouble(fields[15]), temperaturaMax,
+                                numeroSeguro, alto, ancho, Double.parseDouble(fields[15]), temperaturaMax,
                                 temperaturaMin,
                                 humedadMax, humedadMin, fields[9]);
                         break;
@@ -78,17 +78,18 @@ public class LectorCSVObras {
                             color = false;
                         }
                         obra = new Fotografia(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, Estado.ALMACENADA, alto, ancho, temperaturaMax, temperaturaMin,
+                                numeroSeguro, alto, ancho, temperaturaMax, temperaturaMin,
                                 humedadMax, humedadMin, color);
                         break;
                     case "audiovisual":
                         obra = new Audiovisual(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, Estado.ALMACENADA, fields[11], fields[12]);
+                                numeroSeguro, fields[11], fields[12]);
                         break;
                     default:
                         break;
                 }
                 obra.addAutor(autor);
+                obra.exponerObra();
                 obras.add(obra);
             }
             sala.setObras(obras);

@@ -34,10 +34,10 @@ public class Cuadro extends ObraNoDigital {
      * @param tecnica           La técnica utilizada para crear el cuadro.
      */
     public Cuadro(String nombre, Integer anio, String descripcion, Boolean externa,
-            Double cuantiaSeguro, String numeroSeguro, Estado estado, Double alto, Double ancho,
+            Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,
             Integer temperaturaMaxima, Integer temperaturaMinima,
             Integer humedadMaxima, Integer humedadMinima, String tecnica) {
-        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado, alto, ancho, temperaturaMaxima,
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, alto, ancho, temperaturaMaxima,
                 temperaturaMinima,
                 humedadMaxima, humedadMinima);
 

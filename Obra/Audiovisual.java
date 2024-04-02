@@ -29,27 +29,44 @@ public class Audiovisual extends Obra {
      * @param idioma        El idioma principal de la obra audiovisual.
      */
     public Audiovisual(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro, Estado estado, String duracion, String idioma) {
-        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, estado);
+            String numeroSeguro, String duracion, String idioma) {
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro);
         this.duracion = duracion;
         this.idioma = idioma;
     }
 
     /**
-     * Getters y setters de las obras audiovisuales.
+     * Retorna la duración del contenido.
+     * 
+     * @return Duración como cadena.
      */
     public String getDuracion() {
         return duracion;
     }
 
+    /**
+     * Define la duración del contenido.
+     * 
+     * @param duracion Duración del contenido.
+     */
     public void setDuracion(String duracion) {
         this.duracion = duracion;
     }
 
+    /**
+     * Obtiene el idioma del contenido.
+     * 
+     * @return Idioma del contenido.
+     */
     public String getIdioma() {
         return idioma;
     }
 
+    /**
+     * Establece el idioma del contenido.
+     * 
+     * @param idioma Idioma del contenido.
+     */
     public void setIdioma(String idioma) {
         this.idioma = idioma;
     }

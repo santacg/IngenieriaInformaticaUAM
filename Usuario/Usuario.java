@@ -9,6 +9,23 @@ public abstract class Usuario {
     private Set<Notificacion> notificaciones;
     private Boolean loged = false;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Usuario other = (Usuario) obj;
+        if (NIF == null) {
+            if (other.NIF != null)
+                return false;
+        } else if (!NIF.equals(other.NIF))
+            return false;
+        return true;
+    }
+
     public Usuario(String NIF) {
         this.NIF = NIF;
     }

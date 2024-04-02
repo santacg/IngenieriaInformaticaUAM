@@ -29,23 +29,41 @@ public class SorteoDiaHora extends Sorteo {
         this.hora = hora;
     }
 
+
     /**
-     * Getters y setters que facilitan la gestión de un sorteo
-     * a un día y una hora concretos.
+     * Retorna el día asignado.
+     * 
+     * @return El día establecido para el evento o actividad.
      */
     public String getDia() {
         return dia;
     }
 
+    /**
+     * Retorna la hora asignada.
+     * 
+     * @return La hora establecida para el evento o actividad.
+     */
     public String getHora() {
         return hora;
     }
 
+    /**
+     * Establece el día para el evento o actividad.
+     * 
+     * @param dia El nuevo día a establecer.
+     */
     public void setDia(String dia) {
         this.dia = dia;
     }
 
+    /**
+     * Establece la hora para el evento o actividad.
+     * 
+     * @param hora La nueva hora a establecer.
+     */
     public void setHora(String hora) {
         this.hora = hora;
     }
+
 }

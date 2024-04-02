@@ -6,58 +6,86 @@ import java.util.Set;
 
 import Usuario.Usuario;
 
+/**
+ * Clase Notificacion.
+ * Esta clase proporciona funcionalidades al envío de notificaciones en Expofy.
+ *
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class Notificacion {
     private String mensaje;
     private LocalDate fecha;
     private boolean leida;
-    private Set<Usuario> usuarios = new HashSet<>();
 
+    /**
+     * Constructor para crear una nueva notificación.
+     * 
+     * @param mensaje El mensaje de la notificación.
+     * @param fecha   La fecha en que se crea la notificación.
+     */
     public Notificacion(String mensaje, LocalDate fecha) {
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.leida = false;
     }
 
+    /**
+     * Obtiene el mensaje de la notificación.
+     * 
+     * @return El mensaje.
+     */
     public String getMensaje() {
         return mensaje;
     }
 
+    /**
+     * Indica si la notificación ha sido leída.
+     * 
+     * @return true si ha sido leída, false en caso contrario.
+     */
     public boolean isLeida() {
         return leida;
     }
 
-    public void setLeida() {
-        this.leida = true;
+    /**
+     * Establece el estado de la notificación en cuanto a su lectura.
+     * 
+     * @param leida true si ha sido leída, false en caso contrario.
+     */
+    public void setLeida(Boolean leida) {
+        this.leida = leida;
     }
 
+    /**
+     * Establece o actualiza el mensaje de la notificación.
+     * 
+     * @param mensaje El nuevo mensaje de la notificación.
+     */
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
+    /**
+     * Establece o actualiza la fecha en que se creó la notificación.
+     * 
+     * @param fecha La nueva fecha.
+     */
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+    /**
+     * Obtiene la fecha en que se creó la notificación.
+     * 
+     * @return La fecha.
+     */
     public LocalDate getFecha() {
         return fecha;
     }
 
-    public Set<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsarios(Set<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public void addUsuario(Usuario usuario) {
-        this.usuarios.add(usuario);
-    }
-
-    public void removeUsuario(Usuario usuario) {
-        this.usuarios.remove(usuario);
-    }   
-
-    public void removeAllUsuarios() {
-        this.usuarios.clear();
-    }
-
+    /**
+     * Genera una representación en cadena de la notificación.
+     * 
+     * @return La representación en cadena de la notificación.
+     */
     public String toString() {
         return "Notificacion [mensaje=" + mensaje + ", fecha=" + fecha + ", leida=" + leida + "]";
     }

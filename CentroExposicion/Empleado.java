@@ -48,60 +48,113 @@ public class Empleado extends Usuario {
     }
 
     /**
-     * Getters y setters que facilitan la gestión de un centro de exposicion.
+     * Retorna el nombre actual.
+     * @return nombre actual.
      */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Actualiza el nombre.
+     * @param nombre nuevo nombre.
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene el número de Seguridad Social.
+     * @return número de Seguridad Social.
+     */
     public String getNumSS() {
         return numSS;
     }
 
+    /**
+     * Establece el número de Seguridad Social.
+     * @param numSS nuevo número de Seguridad Social.
+     */
     public void setNumSS(String numSS) {
         this.numSS = numSS;
     }
 
+    /**
+     * Retorna el número de cuenta bancaria.
+     * @return número de cuenta bancaria.
+     */
     public String getNumCuenta() {
         return numCuenta;
     }
 
+    /**
+     * Asigna un nuevo número de cuenta bancaria.
+     * @param numCuenta nuevo número de cuenta.
+     */
     public void setNumCuenta(String numCuenta) {
         this.numCuenta = numCuenta;
     }
 
+    /**
+     * Verifica si tiene permiso de venta.
+     * @return true si tiene permiso, false en caso contrario.
+     */
     public Boolean getPermisoVenta() {
         return permisoVenta;
     }
 
+    /**
+     * Otorga o revoca el permiso de venta.
+     * @param permisoVenta true para otorgar, false para revocar.
+     */
     public void setPermisoVenta(Boolean permisoVenta) {
         this.permisoVenta = permisoVenta;
     }
 
+    /**
+     * Verifica si tiene permiso de control de inventario.
+     * @return true si tiene permiso, false en caso contrario.
+     */
     public Boolean getPermisoControl() {
         return permisoControl;
     }
 
+    /**
+     * Otorga o revoca el permiso de control de inventario.
+     * @param permisoControl true para otorgar, false para revocar.
+     */
     public void setPermisoControl(Boolean permisoControl) {
         this.permisoControl = permisoControl;
     }
 
+    /**
+     * Verifica si tiene permiso para enviar mensajes.
+     * @return true si tiene permiso, false en caso contrario.
+     */
     public Boolean getPermisoMensajes() {
         return permisoMensajes;
     }
 
+    /**
+     * Otorga o revoca el permiso para enviar mensajes.
+     * @param permisoMensajes true para otorgar, false para revocar.
+     */
     public void setPermisoMensajes(Boolean permisoMensajes) {
         this.permisoMensajes = permisoMensajes;
     }
 
+    /**
+     * Obtiene la dirección actual.
+     * @return dirección actual.
+     */
     public String getDireccion() {
         return direccion;
     }
 
+    /**
+     * Actualiza la dirección.
+     * @param direccion nueva dirección.
+     */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }

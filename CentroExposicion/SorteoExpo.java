@@ -27,14 +27,24 @@ public class SorteoExpo extends Sorteo {
     }
 
     /**
-     * Getters y setters de VigenciaExpo
+     * Obtiene el estado de vigencia de la exposición.
+     * Este método devuelve un valor booleano que indica si la exposición está actualmente vigente.
+     * 
+     * @return {@code true} si la exposición está vigente, {@code false} en caso contrario.
      */
     public Boolean getVigenciaExpo() {
         return vigenciaExpo;
     }
 
+    /**
+     * Establece el estado de vigencia de la exposición.
+     * Este método permite definir si una exposición debe considerarse vigente o no.
+     * 
+     * @param vigenciaExpo {@code true} para marcar la exposición como vigente, {@code false} para indicar que no lo está.
+     */
     public void setVigenciaExpo(Boolean vigenciaExpo) {
         this.vigenciaExpo = vigenciaExpo;
     }
+
 
 }

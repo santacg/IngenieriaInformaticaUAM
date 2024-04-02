@@ -30,22 +30,39 @@ public class SorteoFechas extends Sorteo {
     }
 
     /**
-     * Getters y setters que facilitan la gestión de un sorteo
-     * entre dos fechas.
+     * Obtiene la fecha de inicio.
+     * @return La fecha de inicio.
      */
     public Date getFechaInicio() {
         return fechaInicio;
     }
 
+    /**
+     * Establece una nueva fecha de inicio.
+     * @param fechaInicio La nueva fecha de inicio.
+     */
     public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
+    /**
+     * Obtiene la fecha de fin.
+     * @return La fecha de fin.
+     */
     public Date getFechaFin() {
         return fechaFin;
     }
 
+    /**
+     * Establece una nueva fecha de fin.
+     * @param fechaFin La nueva fecha de fin.
+     */
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
+
+    public Date getFechaLimite() {
+        return fechaFin;
+    } 
+
 }

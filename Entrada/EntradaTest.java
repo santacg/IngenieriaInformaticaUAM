@@ -14,6 +14,8 @@ import TarjetaDeCredito.TarjetaDeCredito;
  * Clase EntradaTest.
  * Esta clase contiene pruebas unitarias que validan la funcionalidad de los
  * métodos de la clase {@link Entrada}.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 
 public class EntradaTest {

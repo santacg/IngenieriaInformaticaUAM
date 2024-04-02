@@ -25,20 +25,33 @@ public abstract class Descuento {
     }
 
     /**
-     * Getters y setters que facilitan la gestión de descuentos.
+     * Obtiene el valor del descuento aplicable.
+     * @return El porcentaje de descuento como double.
      */
     public Double getDescuento() {
         return descuento;
     }
 
+    /**
+     * Establece un nuevo valor para el descuento.
+     * @param descuento El nuevo porcentaje de descuento a aplicar.
+     */
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
     }
 
+    /**
+     * Retorna la cantidad de items o unidades.
+     * @return La cantidad actual como entero.
+     */
     public Integer getcantidad() {
         return cantidad;
     }
 
+    /**
+     * Asigna un nuevo valor a la cantidad de items o unidades.
+     * @param cantidad La nueva cantidad a establecer.
+     */
     public void setcantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
