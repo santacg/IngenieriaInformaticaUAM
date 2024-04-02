@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
  * Clase InscripcionTest.
  * Esta clase contiene pruebas unitarias que validan la funcionalidad de los
  * métodos de la clase {@link Inscripcion}.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ * 
  */
 public class InscripcionTest {
     private Inscripcion inscripcion;
