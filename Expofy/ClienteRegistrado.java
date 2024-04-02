@@ -1,6 +1,9 @@
 package Expofy;
 
 import java.time.LocalDate;
+
+import CentroExposicion.Sorteo;
+import Inscripcion.Inscripcion;
 import Usuario.Usuario;
 
 public class ClienteRegistrado extends Usuario {
@@ -57,6 +60,14 @@ public class ClienteRegistrado extends Usuario {
 
     public void setSancionadoHasta(LocalDate sancionadoHasta) {
         this.sancionadoHasta = sancionadoHasta;
+    }
+
+    public boolean inscribirse(Sorteo sorteo, int n_entradas) {
+        if (sancionadoHasta.isAfter(LocalDate.now())) {
+            return false;
+        }
+        sorteo.addInscripcion(new Inscripcion(n_entradas, this));
+        return true;
     }
 
     public String toString() {

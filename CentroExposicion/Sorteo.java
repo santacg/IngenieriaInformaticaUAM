@@ -62,7 +62,11 @@ public abstract class Sorteo {
         codigos.remove(codigo);
     }
 
-    public static <Inscripcion> Inscripcion getRandomInscripcion(Set<Inscripcion> set) {
+    public void addInscripcion(Inscripcion inscripcion){
+        inscripciones.add(inscripcion);
+    }
+
+    public static Inscripcion getRandomInscripcion(Set<Inscripcion> set) {
         if (set == null || set.isEmpty()) {
             throw new IllegalArgumentException("The Set cannot be empty.");
         }
@@ -107,14 +111,18 @@ public abstract class Sorteo {
         Inscripcion insc_ganadora;
         ClienteRegistrado ganador;
         Notificacion notificacion;
-        String codigo;
+        String codigo, mensaje;
         for (i = inscripciones.size(); n_entradas != 0 && i != 0; i--) {
             insc_ganadora = getRandomInscripcion(inscripciones);
             ganador = insc_ganadora.getCliente();
             for (j = 0; j < insc_ganadora.getnEntradas() && n_entradas >= insc_ganadora.getnEntradas(); j++) {
                 codigo = generadorCodigo();
                 this.addCodigo(codigo);
-                notificacion = new Notificacion(codigo, LocalDate.now());
+                mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \"" + 
+                exposicion.getNombre() + 
+                "\" ha sido elegida, canjea el siguiente código al comprar tu etrada para que esta te salga ¡GRATIS!: " + 
+                codigo;
+                notificacion = new Notificacion(mensaje, LocalDate.now());
                 ganador.addNotificacion(notificacion);
                 n_entradas--;
             }
