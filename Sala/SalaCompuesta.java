@@ -5,7 +5,7 @@ import java.util.Set;
 public class SalaCompuesta extends Sala {
     private Set<Sala> salas;
 
-    public SalaCompuesta(String nombre, Integer aforo, Double humedad, Double temperatura,
+    public SalaCompuesta(String nombre, Integer aforo, Integer humedad, Integer temperatura,
             Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo) {
         super(nombre, aforo, humedad, temperatura, climatizador, tomasElectricidad, ancho, largo);
 

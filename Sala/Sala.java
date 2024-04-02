@@ -5,14 +5,14 @@ public abstract class Sala {
     private static Integer IDcount = 0; 
     private String nombre;
     private Integer aforo;
-    private Double humedad;
-    private Double temperatura;
+    private Integer humedad;
+    private Integer temperatura;
     private Boolean climatizador;
     private Integer tomasElectricidad;
     private Double ancho;
     private Double largo;
 
-    public Sala(String nombre, Integer aforo, Double humedad, Double temperatura, Boolean climatizador,
+    public Sala(String nombre, Integer aforo, Integer humedad, Integer temperatura, Boolean climatizador,
             Integer tomasElectricidad, Double ancho, Double largo) {
         this.ID = IDcount++;
         this.nombre = nombre;
@@ -45,19 +45,19 @@ public abstract class Sala {
         this.aforo = aforo;
     }
 
-    public Double getHumedad() {
+    public Integer getHumedad() {
         return humedad;
     }
 
-    public void setHumedad(Double humedad) {
+    public void setHumedad(Integer humedad) {
         this.humedad = humedad;
     }
 
-    public Double getTemperatura() {
+    public Integer getTemperatura() {
         return temperatura;
     }
 
-    public void setTemperatura(Double temperatura) {
+    public void setTemperatura(Integer temperatura) {
         this.temperatura = temperatura;
     }
 

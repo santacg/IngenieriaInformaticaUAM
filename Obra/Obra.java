@@ -104,6 +104,10 @@ public abstract class Obra {
     }
 
     public void prestarObra() {
+        if (this.externa == true) {
+            System.out.println("No se puede prestar una obra externa");
+            return;
+        }
         this.estado = Estado.PRESTADA; 
     }
 

@@ -7,6 +7,7 @@ import Expofy.Notificacion;
 public abstract class Usuario {    
     private String NIF;
     private Set<Notificacion> notificaciones;
+    private Boolean loged = false;
 
     public Usuario(String NIF) {
         this.NIF = NIF;
@@ -30,5 +31,25 @@ public abstract class Usuario {
 
     public void addNotificacion(Notificacion notificacion) {
         notificaciones.add(notificacion);
+    }
+
+    public void removeNotificacion(Notificacion notificacion) {
+        notificaciones.remove(notificacion);
+    }
+
+    public void removeAllNotificaciones() {
+        notificaciones.clear();
+    }
+
+    public Boolean isLoged() {
+        return loged;
+    }
+
+    public void logIn() {
+        this.loged = true;
+    }
+
+    public void logOut() {
+        this.loged = false;
     }
 }

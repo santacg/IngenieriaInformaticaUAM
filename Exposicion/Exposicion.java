@@ -177,10 +177,6 @@ public class Exposicion {
         this.descuentos.clear();
     }
 
-    public static Integer getIDcount() {
-        return IDcount;
-    }
-
     public String toString() {
         return "Exposicion [ID=" + ID + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
                 + ", descripcion=" + descripcion + ", benificios=" + benificios + ", estado=" + estado + ", salas="

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import Sala.Sala;
+import Sala.SalaExposicion;
+
 import java.util.HashSet;
 import java.util.Set;
 import Exposicion.EstadoExposicion;
@@ -403,4 +405,10 @@ public class CentroExposicion {
                 + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
     }
 
+    public void crearExposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion, TipoExpo tipo, Set<Sala> salas) {
+        Set<SalaExposicion> salasExposicion = new HashSet<>();
+        for (Sala s: salas) {
+            
+        }
+    }
 }

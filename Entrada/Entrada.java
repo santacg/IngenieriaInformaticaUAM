@@ -31,7 +31,7 @@ public class Entrada {
 
     public void setnEntradas(Integer nEntradas) {
         if (nEntradas <= 0) {
-            throw new IllegalArgumentException("El número de entradas no puede ser menor o igual a 0");
+            System.out.println("El número de entradas no puede ser menor o igual a 0");
         }
         this.nEntradas = nEntradas;
     }
