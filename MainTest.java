@@ -42,7 +42,7 @@ public class MainTest {
       expofy.addClienteRegistrado(clienteRegistrado);
 
       Set<SalaExposicion> salasExposicion = new HashSet<>();
-      SalaExposicion salaExposicion = new SalaExposicion("SalaExpo1", 100, 50.0, 25.0, true, 10, 10.0, 10.0);
+      SalaExposicion salaExposicion = new SalaExposicion(sala);
       salasExposicion.add(salaExposicion);
       Cuadro cuadro = new Cuadro(
             "El Guernica", 

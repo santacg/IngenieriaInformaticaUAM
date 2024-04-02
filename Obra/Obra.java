@@ -130,6 +130,6 @@ public abstract class Obra {
     public String toString() {
         return "Obra [ID=" + ID + ", nombre=" + nombre + ", anio=" + anio + ", descripcion=" + descripcion
                 + ", externa=" + externa + ", cuantiaSeguro=" + cuantiaSeguro + ", numeroSeguro=" + numeroSeguro
-                + ", autores=" + autores + ", estado=" + estado + "]";
+                + ", autores=" + autores.toString() + ", estado=" + estado + "]";
     }
 }
