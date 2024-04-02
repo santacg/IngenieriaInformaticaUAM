@@ -3,16 +3,33 @@ package Entrada;
 import Expofy.ClienteRegistrado;
 import TarjetaDeCredito.TarjetaDeCredito;
 
+/**
+ * Clase Entrada.
+ * Esta clase representa una entrada adquirida por un cliente en el sistema
+ * Expofy. Cada entrada está vinculada a un cliente registrado y puede estar
+ * asociada a una tarjeta de crédito utilizada para la compra.
+ *
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ *
+ */
 public class Entrada {
     private Integer IDEntrada;
     private Integer nEntradas;
     private ClienteRegistrado clienteRegistrado;
     private TarjetaDeCredito tarjetaDeCredito;
-   
+
+    /**
+     * Constructor para crear una entrada con un identificador específico.
+     * 
+     * @param IDEntrada Identificador único de la entrada.
+     */
     public Entrada(Integer IDEntrada) {
         this.IDEntrada = IDEntrada;
     }
 
+    /**
+     * Getters y setters que facilitan la gestión de una entrada.
+     */
     public Integer getIDEntrada() {
         return IDEntrada;
     }
