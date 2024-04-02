@@ -2,8 +2,8 @@ package CentroExposicion;
 
 /**
  * Clase DescuentoMes.
- * Esta clase hereda de Descuento y aplica funcionalidades para manejar los
- * descuentos para un determinado mes dentro de la aplicación
+ * Esta clase hereda de {@link Descuento} y aplica funcionalidades para manejar
+ * los descuentos para un determinado mes dentro de la aplicación
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
