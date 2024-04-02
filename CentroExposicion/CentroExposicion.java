@@ -9,7 +9,7 @@ import java.util.Set;
 import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
 import Exposicion.TipoExpo;
-import Obra.Obra; 
+import Obra.Obra;
 
 /**
  * Clase CentroExposicion.
@@ -41,19 +41,19 @@ public class CentroExposicion {
     /**
      * Constructor de un centro de exposición con los parámetros proporcionados.
      *
-     * @param nombre                el nombre del centro de exposición
-     * @param horaApertura          la hora de apertura del centro
-     * @param horaCierre            la hora de cierre del centro
-     * @param localizacion          la ubicación del centro
-     * @param contraseniaEmpleado   la contraseña para los empleados del centro
-     * @param contraseniaGestor     la contraseña para el gestor del centro
-     * @param empleados             el conjunto inicial de empleados
-     * @param gestor                el gestor del centro
-     * @param salas                 el conjunto inicial de salas
+     * @param nombre              el nombre del centro de exposición
+     * @param horaApertura        la hora de apertura del centro
+     * @param horaCierre          la hora de cierre del centro
+     * @param localizacion        la ubicación del centro
+     * @param contraseniaEmpleado la contraseña para los empleados del centro
+     * @param contraseniaGestor   la contraseña para el gestor del centro
+     * @param empleados           el conjunto inicial de empleados
+     * @param gestor              el gestor del centro
+     * @param salas               el conjunto inicial de salas
      */
     public CentroExposicion(String nombre, LocalTime horaApertura,
             LocalTime horaCierre, String localizacion,
-            String contraseniaEmpleado, String contraseniaGestor, 
+            String contraseniaEmpleado, String contraseniaGestor,
             Set<Empleado> empleados, Gestor gestor, Set<Sala> salas) {
         this.ID = IDcount++;
         this.nombre = nombre;
@@ -66,6 +66,7 @@ public class CentroExposicion {
         this.gestor = gestor;
         this.salas = salas;
     }
+
     /**
      * Getters y setters que facilitan la gestión de un centro de exposicion.
      */
@@ -136,28 +137,34 @@ public class CentroExposicion {
     public void setSalas(Set<Sala> salas) {
         this.salas = salas;
     }
+
     /**
-     * Añade una sala a un centro de exposiciones.     *
+     * Añade una sala a un centro de exposiciones.
+     * 
      * @param sala la sala a añadir
      */
     public void addSala(Sala sala) {
         this.salas.add(sala);
     }
+
     /**
-     * Elimina  una sala de un centro de exposiciones.     *
+     * Elimina una sala de un centro de exposiciones.
+     * 
      * @param sala la sala a eliminar
      */
     public void removeSala(Sala sala) {
         this.salas.remove(sala);
-    }    
-    /**
-     * Obtiene las exposiciones disponibles en el centro.
+    }
 
-     * @return un conjunto de las exposiciones disponibles
+    /**
+     * Obtiene las exposiciones totales en el centro.
+     * 
+     * @return un conjunto de las exposiciones totales
      */
     public Set<Exposicion> getExposiciones() {
         return exposiciones;
     }
+
     /**
      * Obtiene las exposiciones disponibles en el centro por un rango de fechas.
      *
@@ -174,9 +181,10 @@ public class CentroExposicion {
         }
         return exposicionesPorFecha;
     }
+
     /**
      * Obtiene las exposiciones temporales del centro.
-
+     * 
      * @return un conjunto de las exposiciones de tipo temporal
      */
     public Set<Exposicion> getExposicionesTemporales() {
@@ -188,9 +196,10 @@ public class CentroExposicion {
         }
         return exposicionesTemporales;
     }
+
     /**
      * Obtiene las exposiciones permanentes del centro.
-
+     * 
      * @return un conjunto de las exposiciones de tipo permanente
      */
     public Set<Exposicion> getExposicionesPermanentes() {
@@ -203,6 +212,11 @@ public class CentroExposicion {
         return exposicionesPermanentes;
     }
 
+    /**
+     * Obtiene las exposiciones publicadas del centro.
+     * 
+     * @return un conjunto de las exposiciones en estado publicada
+     */
     public Set<Exposicion> getExposicionesPublicadas() {
         Set<Exposicion> exposicionesPublicadas = new HashSet<>();
         for (Exposicion exposicion : exposiciones) {
@@ -217,14 +231,27 @@ public class CentroExposicion {
         this.exposiciones = exposiciones;
     }
 
+    /**
+     * Añade una exposicion a un centro de exposiciones.
+     * 
+     * @param exposicion la sala a añadir
+     */
     public void addExposicion(Exposicion exposicion) {
         this.exposiciones.add(exposicion);
     }
 
+    /**
+     * Elimina una exposicion determinada de un centro de exposiciones.
+     * 
+     * @param exposicion la sala a eliminar
+     */
     public void removeExposicion(Exposicion exposicion) {
         this.exposiciones.remove(exposicion);
-    }   
+    }
 
+    /**
+     * Elimina todas las exposiciones de un centro de exposiciones.
+     */
     public void removeAllExposiciones() {
         this.exposiciones.clear();
     }
@@ -235,16 +262,29 @@ public class CentroExposicion {
 
     public void setSorteos(Set<Sorteo> sorteos) {
         this.sorteos = sorteos;
-    } 
+    }
 
+    /**
+     * Añade un sorteo determinado a un centro de exposiciones.
+     * 
+     * @param sorteo el sorteo a añadir
+     */
     public void addSorteo(Sorteo sorteo) {
         this.sorteos.add(sorteo);
     }
 
+    /**
+     * Elimina un sorteo determinado de un centro de exposiciones.
+     * 
+     * @param sorteo el sorteo a eliminar
+     */
     public void removeSorteo(Sorteo sorteo) {
         this.sorteos.remove(sorteo);
     }
 
+    /**
+     * Elimina todos los sorteos de un centro de exposiciones.
+     */
     public void removeAllSorteos() {
         this.sorteos.clear();
     }
@@ -257,30 +297,53 @@ public class CentroExposicion {
         this.obras = obras;
     }
 
+    /**
+     * Añade una obra determinada a un centro de exposiciones.
+     * 
+     * @param obra la obra a añadir
+     */
     public void addObra(Obra obra) {
         this.obras.add(obra);
-    } 
+    }
 
+    /**
+     * Elimina una obra determinada de un centro de exposiciones.
+     * 
+     * @param obra la obra a eliminar
+     */
     public void removeObra(Obra obra) {
         this.obras.remove(obra);
     }
 
+    /**
+     * Elimina todas las obras de un centro de exposiciones.
+     */
     public void removeAllObras() {
         this.obras.clear();
     }
 
     public Set<Empleado> getEmpleados() {
         return empleados;
-    } 
+    }
 
     public void setEmpleados(Set<Empleado> empleados) {
         this.empleados = empleados;
     }
 
+    /**
+     * Añade un empleado determinado a un centro de exposiciones.
+     * 
+     * @param empleado el empleado a añadir
+     */
     public void addEmpleado(Empleado empleado) {
         this.empleados.add(empleado);
     }
 
+    /**
+     * Elimina un empleado determinado de un centro de exposiciones.
+     * 
+     * @param empleado el empleado a eliminar
+     */
     public void removeEmpleado(Empleado empleado) {
         this.empleados.remove(empleado);
     }
@@ -301,23 +364,42 @@ public class CentroExposicion {
         this.descuentos = descuentos;
     }
 
+    /**
+     * Añade un descuento determinado a un centro de exposiciones.
+     * 
+     * @param descuento el descuento a añadir
+     */
     public void addDescuento(Descuento descuento) {
         this.descuentos.add(descuento);
     }
 
+    /**
+     * Elimina un descuento determinado de un centro de exposiciones.
+     * 
+     * @param empleado el empleado a eliminar
+     */
     public void removeDescuento(Descuento descuento) {
         this.descuentos.remove(descuento);
-    }   
+    }
 
+    /**
+     * Elimina todos los desceuntos de un centro de exposiciones.
+     */
     public void removeAllDescuentos() {
         this.descuentos.clear();
     }
 
+    /**
+     * Crea una cadena que representa un centro de exposición.
+     * 
+     * @return La cadena de representación del centro de exposición
+     */
     public String toString() {
         return "CentroExposicion [ID=" + ID + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre="
                 + horaCierre + ", localizacion=" + localizacion + ", contraseniaEmpleado=" + contraseniaEmpleado
                 + ", contraseniaGestor=" + contraseniaGestor + ", sancion=" + sancion + ", salas="
-                + salas.toString() + ", exposiciones=" + exposiciones.toString() + ", sorteos=" + sorteos + ", obras=" + obras
+                + salas.toString() + ", exposiciones=" + exposiciones.toString() + ", sorteos=" + sorteos + ", obras="
+                + obras
                 + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
     }
 

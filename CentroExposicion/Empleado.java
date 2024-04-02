@@ -2,7 +2,15 @@ package CentroExposicion;
 
 import Usuario.Usuario;
 
-public class Empleado extends Usuario{
+/**
+ * Clase Empleado.
+ * Esta clase ofrece funcionalidades para manejar las salas, exposiciones,
+ * obras, empleados, y descuentos dentro del centro de exposición.
+ *
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ *
+ */
+public class Empleado extends Usuario {
     private String nombre;
     private String numSS;
     private String numCuenta;
@@ -10,8 +18,9 @@ public class Empleado extends Usuario{
     private Boolean permisoControl;
     private Boolean permisoMensajes;
     private String direccion;
-    
-    public Empleado(String NIF, String nombre, String numSS, String numCuenta, Boolean permisoVenta, Boolean permisoControl, Boolean permisoMensajes, String direccion) {
+
+    public Empleado(String NIF, String nombre, String numSS, String numCuenta, Boolean permisoVenta,
+            Boolean permisoControl, Boolean permisoMensajes, String direccion) {
         super(NIF);
         this.nombre = nombre;
         this.numSS = numSS;

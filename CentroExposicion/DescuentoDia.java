@@ -1,7 +1,20 @@
 package CentroExposicion;
 
-public class DescuentoDia extends Descuento{
-    
+/**
+ * Clase DescuentoDia.
+ * Esta clase hereda de Descuento y aplica funcionalidades para manejar los
+ * descuentos para un determinado día dentro de la aplicación
+ *
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ *
+ */
+public class DescuentoDia extends Descuento {
+    /**
+     * Referencia al constructor de la superclase descuento.
+     *
+     * @param descuento el porcentaje de descuento
+     * @param cantidad  la cantidad a descontar
+     */
     public DescuentoDia(Double descuento, Integer cantidad) {
         super(descuento, cantidad);
     }
