@@ -29,6 +29,26 @@ public class LectorCSVObras {
                 Double cuantiaSeguro = Double.parseDouble(fields[6]);
                 String numeroSeguro = fields[7];
 
+                Double ancho = null;
+                Double alto = null;
+                if (fields.length >= 15 && !fields[13].isEmpty() && !fields[14].isEmpty()) {
+                    ancho = Double.parseDouble(fields[13]);
+                    alto = Double.parseDouble(fields[14]);
+                }
+
+                Integer temperaturaMin = null;
+                Integer temperaturaMax = null;
+                Integer humedadMin = null;
+                Integer humedadMax = null;
+                if (fields.length >= 18 && !fields[16].isEmpty() && !fields[17].isEmpty()) {
+                    String[] temperatura = fields[16].split("--");
+                    temperaturaMin = Integer.parseInt(temperatura[0]);
+                    temperaturaMax = Integer.parseInt(temperatura[1]);
+                    String[] humedad = fields[17].split("--");
+                    humedadMin = Integer.parseInt(humedad[0]);
+                    humedadMax = Integer.parseInt(humedad[1]);
+                }
+
                 Boolean externa;
                 if (origen.toLowerCase().equals("externa")) {
                     externa = true;
@@ -43,9 +63,10 @@ public class LectorCSVObras {
                         obra = new Cuadro(titulo, anio, descripcion, externa, cuantiaSeguro, numeroSeguro,
                                 Estado.ALMACENADA, alto, ancho, temperaturaMax, temperaturaMin, humedadMax, humedadMin,
                                 fields[8]);
+                        break;
                     case "escultura":
                         obra = new Escultura(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, Estado.ALMACENADA, alto, ancho, profundidad, temperaturaMax,
+                                numeroSeguro, Estado.ALMACENADA, alto, ancho, Double.parseDouble(fields[15]), temperaturaMax,
                                 temperaturaMin,
                                 humedadMax, humedadMin, fields[9]);
                         break;
@@ -62,7 +83,7 @@ public class LectorCSVObras {
                         break;
                     case "audiovisual":
                         obra = new Audiovisual(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, Estado.ALMACENADA, Integer.parseInt(fields[11]), fields[12]);
+                                numeroSeguro, Estado.ALMACENADA, fields[11], fields[12]);
                         break;
                     default:
                         break;
