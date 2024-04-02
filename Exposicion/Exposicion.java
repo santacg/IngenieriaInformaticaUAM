@@ -408,40 +408,6 @@ public class Exposicion {
                 return false;
         } else if (!fechaFin.equals(other.fechaFin))
             return false;
-        if (descripcion == null) {
-            if (other.descripcion != null)
-                return false;
-        } else if (!descripcion.equals(other.descripcion))
-            return false;
-        if (benificios == null) {
-            if (other.benificios != null)
-                return false;
-        } else if (!benificios.equals(other.benificios))
-            return false;
-        if (estado != other.estado)
-            return false;
-        if (salas == null) {
-            if (other.salas != null)
-                return false;
-        } else if (!salas.equals(other.salas))
-            return false;
-        if (horario == null) {
-            if (other.horario != null)
-                return false;
-        } else if (!horario.equals(other.horario))
-            return false;
-        if (descuentos == null) {
-            if (other.descuentos != null)
-                return false;
-        } else if (!descuentos.equals(other.descuentos))
-            return false;
-        if (estadisticas == null) {
-            if (other.estadisticas != null)
-                return false;
-        } else if (!estadisticas.equals(other.estadisticas))
-            return false;
-        if (tipo != other.tipo)
-            return false;
         return true;
     }
 
