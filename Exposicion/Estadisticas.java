@@ -1,5 +1,7 @@
 package Exposicion;
 
+import java.io.Serializable;
+
 /**
  * Clase Estadisticas.
  * Esta clase representa las estadísticas de una exposición.
@@ -8,10 +10,9 @@ package Exposicion;
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Estadisticas {
+public class Estadisticas implements Serializable {
    private static Integer ticketsVendidos;
    private static Double ingresosTotales;
-
 
    /**
     * Constructor de la clase Estadísticas.
@@ -42,10 +43,18 @@ public class Estadisticas {
       return ingresosTotales;
    }
 
+   /**
+    * Incrementa en uno el contador de tickets vendidos.
+    */
    public void incrementarTicketsVendidos() {
       ticketsVendidos++;
    }
 
+   /**
+    * Aumenta los ingresos totales por la venta de tickets.
+    *
+    * @param precio El precio del ticket vendido
+    */
    public void incrementarIngresosTotales(Double precio) {
       ingresosTotales += precio;
    }

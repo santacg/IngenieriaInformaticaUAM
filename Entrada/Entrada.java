@@ -3,6 +3,7 @@ package Entrada;
 import Expofy.ClienteRegistrado;
 import TarjetaDeCredito.TarjetaDeCredito;
 import java.io.Serializable;
+
 /**
  * Clase Entrada.
  * Esta clase representa una entrada adquirida por un cliente en el sistema
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Entrada implements Serializable{
+public class Entrada implements Serializable {
     private Integer IDEntrada;
     private static Integer IDcount = 0;
     private ClienteRegistrado clienteRegistrado;
@@ -29,6 +30,7 @@ public class Entrada implements Serializable{
 
     /**
      * Retorna el ID de la entrada.
+     * 
      * @return ID de la entrada.
      */
     public Integer getIDEntrada() {
@@ -37,6 +39,7 @@ public class Entrada implements Serializable{
 
     /**
      * Obtiene la tarjeta de crédito asociada.
+     * 
      * @return Tarjeta de crédito asociada.
      */
     public TarjetaDeCredito getTarjetaDeCredito() {
@@ -45,6 +48,7 @@ public class Entrada implements Serializable{
 
     /**
      * Asigna una tarjeta de crédito.
+     * 
      * @param tarjetaDeCredito Tarjeta de crédito a asignar.
      */
     public void setTarjetaDeCredito(TarjetaDeCredito tarjetaDeCredito) {
@@ -53,6 +57,7 @@ public class Entrada implements Serializable{
 
     /**
      * Obtiene el cliente registrado.
+     * 
      * @return Cliente registrado.
      */
     public ClienteRegistrado getClienteRegistrado() {
@@ -61,12 +66,21 @@ public class Entrada implements Serializable{
 
     /**
      * Asigna un cliente registrado.
+     * 
      * @param clienteRegistrado Cliente a asignar.
      */
     public void addClienteRegistrado(ClienteRegistrado clienteRegistrado) {
         this.clienteRegistrado = clienteRegistrado;
     }
 
+    /**
+     * Comprueba si este objeto de entrada es igual a otro objeto de su misma clase.
+     * Dos objetos se consideran iguales si tienen el mismo IDEntrada
+     *
+     * @param obj el objeto con el que se va a comparar.
+     * @return {@code true} si este objeto es igual al objeto argumento;
+     *         {@code false} en caso contrario.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -83,4 +97,16 @@ public class Entrada implements Serializable{
             return false;
         return true;
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Entrada Details:\n");
+        sb.append("ID Entrada: ").append(IDEntrada).append("\n");
+        sb.append("Cliente Registrado: ").append(clienteRegistrado).append("\n");
+        sb.append("Tarjeta de Crédito: ").append(tarjetaDeCredito).append("\n");
+
+        return sb.toString();
+    }
+
 }

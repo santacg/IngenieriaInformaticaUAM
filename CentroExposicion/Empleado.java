@@ -1,7 +1,7 @@
 package CentroExposicion;
 
 import Usuario.Usuario;
-import java.io.Serializable;
+
 /**
  * Clase Empleado.
  * Representa un empleado dentro del sistema de gestión de usuarios.
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Empleado extends Usuario implements Serializable{
+public class Empleado extends Usuario {
     private String nombre;
     private String numSS;
     private String numCuenta;
@@ -212,9 +212,18 @@ public class Empleado extends Usuario implements Serializable{
      */
     @Override
     public String toString() {
-        return "Empleado [nombre=" + nombre + ", numSS=" + numSS + ", numCuenta=" + numCuenta + ", permisoVenta="
-                + permisoVenta + ", permisoControl=" + permisoControl + ", permisoMensajes=" + permisoMensajes
-                + ", direccion=" + direccion + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Empleado Details:\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Número de Seguridad Social: ").append(numSS).append("\n");
+        sb.append("Número de Cuenta: ").append(numCuenta).append("\n");
+        sb.append("Permiso de Venta: ").append(permisoVenta).append("\n");
+        sb.append("Permiso de Control: ").append(permisoControl).append("\n");
+        sb.append("Permiso de Mensajes: ").append(permisoMensajes).append("\n");
+        sb.append("Dirección: ").append(direccion).append("\n");
+
+        return sb.toString();
     }
 
 }

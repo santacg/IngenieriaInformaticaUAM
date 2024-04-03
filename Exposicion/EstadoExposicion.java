@@ -10,6 +10,7 @@ package Exposicion;
  * {@link #PUBLICADA}: La exposición se encuentra publicada.
  * {@link #CANCELADA}: La exposición se cancela.
  * {@link #PRORROGADA}: La exposición se prorroga.
+ * {@link #CERRADATEMPORALMENTE}: La exposición se cierra temporalmente.
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
@@ -18,4 +19,5 @@ public enum EstadoExposicion {
    PUBLICADA,
    CANCELADA,
    PRORROGADA,
+   CERRADATEMPORALMENTE,
 }

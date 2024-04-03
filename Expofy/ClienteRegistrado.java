@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import CentroExposicion.Sorteo;
 import Inscripcion.Inscripcion;
 import Usuario.Usuario;
-import java.io.Serializable;
 
 /**
  * Clase ClienteRegistrado
@@ -17,7 +16,7 @@ import java.io.Serializable;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class ClienteRegistrado extends Usuario implements Serializable{
+public class ClienteRegistrado extends Usuario {
     private Boolean publicidad;
     private String contrasenia;
     private Boolean sancionado;
@@ -167,8 +166,15 @@ public class ClienteRegistrado extends Usuario implements Serializable{
      * 
      * @return Cadena de texto con los detalles del cliente registrado.
      */
+    @Override
     public String toString() {
-        return "ClienteRegistrado [publicidad=" + publicidad + ", contrasenia=" + contrasenia + ", sancionado="
-                + sancionado + ", ultimaCompra=" + ultimaCompra + ", sancionadoHasta=" + sancionadoHasta + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Cliente Registrado:\n");
+        sb.append("Publicidad: ").append(publicidad).append("\n");
+        sb.append("Contraseña: ").append(contrasenia).append("\n");
+        sb.append("Sancionado: ").append(sancionado).append("\n");
+        sb.append("Última Compra: ").append(ultimaCompra).append("\n");
+        sb.append("Sancionado Hasta: ").append(sancionadoHasta).append("\n");
+        return sb.toString();
     }
 }

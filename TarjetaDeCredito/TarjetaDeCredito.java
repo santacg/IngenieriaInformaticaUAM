@@ -1,13 +1,14 @@
 package TarjetaDeCredito;
 
 import java.time.LocalDate;
+import java.io.Serializable;
 /**
  * Clase TarjetaDeCredito.
  * Es una clase que representa la tarjeta de credito para realizar la compra de entradas.
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class TarjetaDeCredito {
+public class TarjetaDeCredito implements Serializable{
     private String numero;
     private LocalDate fechaCaducidad;
     private int CVV;

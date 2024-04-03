@@ -8,9 +8,10 @@ package CentroExposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-import java.io.Serializable;
 
-public class DescuentoMes extends Descuento implements Serializable{
+import java.time.LocalDate;
+
+public class DescuentoMes extends Descuento{
     /**
      * Referencia al constructor de la superclase descuento.
      *
@@ -19,5 +20,17 @@ public class DescuentoMes extends Descuento implements Serializable{
      */
     public DescuentoMes(Double descuento, Integer cantidad) {
         super(descuento, cantidad);
+    }
+
+    /**
+     * Determina si un descuento es aplicable respecto a una fecha
+     * @param cantidad La nueva cantidad a establecer.
+     * @return boolean true si es aplicable, false si no
+     */
+    public boolean validezDescuento(LocalDate fecha){
+        if (fecha.plusMonths(this.getcantidad()).isAfter(LocalDate.now())) {
+            return true;
+        }
+        return false;
     }
 }

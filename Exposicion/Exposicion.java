@@ -2,7 +2,9 @@ package Exposicion;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.io.Serializable;
 import CentroExposicion.Descuento;
+import Obra.Obra;
 
 /**
  * Clase Exposición.
@@ -11,7 +13,7 @@ import CentroExposicion.Descuento;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Exposicion {
+public class Exposicion implements Serializable {
     private static Integer IDcount = 0;
     private Integer ID;
     private String nombre;
@@ -50,6 +52,7 @@ public class Exposicion {
         this.salas = salas;
         this.tipo = tipo;
         this.precio = precio;
+        this.estado = EstadoExposicion.EN_CREACION;
     }
 
     /**
@@ -210,6 +213,18 @@ public class Exposicion {
     }
 
     /**
+     * Cierra temporalmente la exposición.
+     */
+    public void expoCerrarTemporalmente() {
+        this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
+        for (SalaExposicion sala: salas) {
+            for (Obra obra: sala.getObras()) {
+                obra.almecenarObra();
+            }
+        }
+    }
+
+    /**
      * Devuelve el estado actual de la exposición.
      * 
      * @return El estado de la exposición.
@@ -251,6 +266,9 @@ public class Exposicion {
      * @param sala La sala a eliminar.
      */
     public void removeSala(SalaExposicion sala) {
+        for (Obra obra: sala.getObras()) {
+            obra.almecenarObra();
+        }
         this.salas.remove(sala);
     }
 
@@ -338,6 +356,7 @@ public class Exposicion {
      */
     public void expoPermanente() {
         this.tipo = TipoExpo.PERMANENTE;
+        this.fechaFin = null;
     }
 
     /**
@@ -365,10 +384,23 @@ public class Exposicion {
      * @return Una cadena que representa la exposición.
      */
     public String toString() {
-        return "Exposicion [ID=" + ID + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
-                + ", descripcion=" + descripcion + ", benificios=" + benificios + ", estado=" + estado + ", salas="
-                + salas + ", horario=" + horario + ", descuentos=" + descuento + ", estadisticas=" + estadisticas
-                + ", tipo=" + tipo + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Exposicion Details:\n");
+        sb.append("ID: ").append(ID).append("\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Fecha de Inicio: ").append(fechaInicio).append("\n");
+        sb.append("Fecha de Fin: ").append(fechaFin).append("\n");
+        sb.append("Descripción: ").append(descripcion).append("\n");
+        sb.append("Beneficios: ").append(benificios).append("\n");
+        sb.append("Estado: ").append(estado).append("\n");
+        sb.append("Salas: ").append(salas).append("\n");
+        sb.append("Horario: ").append(horario).append("\n");
+        sb.append("Descuentos: ").append(descuento).append("\n");
+        sb.append("Estadísticas: ").append(estadisticas).append("\n");
+        sb.append("Tipo: ").append(tipo).append("\n");
+
+        return sb.toString();
     }
 
     /**

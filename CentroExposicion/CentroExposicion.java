@@ -4,14 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import Sala.Sala;
+import Expofy.*;
+import java.io.File;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import Exposicion.EstadoExposicion;
-import Exposicion.Exposicion;
-import Exposicion.SalaExposicion;
-import Exposicion.TipoExpo;
+
+import Exposicion.*;
 import Obra.Obra;
 
 /**
@@ -23,7 +24,7 @@ import Obra.Obra;
  *
  */
 
-public class CentroExposicion implements Serializable{
+public class CentroExposicion implements Serializable {
     private Integer ID;
     private static Integer IDcount = 0;
     private String nombre;
@@ -42,15 +43,11 @@ public class CentroExposicion implements Serializable{
     private Gestor gestor;
 
     /**
-     * Comprueba si este {@code CentroExposicion} es igual a otro objeto.
-     * La comparación de las colecciones (exposiciones, sorteos, obras, empleados,
-     * descuentos, y salas) se realiza
-     * a nivel de contenido, lo que significa que todos los elementos de cada
-     * colección deben ser iguales
-     * entre los dos objetos de {@code CentroExposicion} para que se consideren
-     * iguales en su totalidad.
+     * Comprueba si este centro de exposición es igual a otro objeto.
+     * Todos los elementos de cada colección deben ser iguales entre los dos objetos
+     * de {@code CentroExposicion} para que se consideren iguales en su totalidad.
      *
-     * @param obj el objeto con el que se compara este {@code CentroExposicion}
+     * @param obj el objeto con el que se compara
      * @return {@code true} si este objeto es igual al objeto argumento;
      *         {@code false} en caso contrario.
      */
@@ -122,15 +119,6 @@ public class CentroExposicion implements Serializable{
     }
 
     /**
-     * Asigna un nuevo nombre a la entidad.
-     * 
-     * @param nombre El nuevo nombre a asignar.
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
      * Devuelve la hora de apertura.
      * 
      * @return La hora de apertura en formato de uso horario.
@@ -145,6 +133,11 @@ public class CentroExposicion implements Serializable{
      * @param horaApertura La hora de apertura a establecer.
      */
     public void setHoraApertura(LocalTime horaApertura) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes cambiar la hora de apertura si no eres el gestor");
+            return;
+        }
+
         this.horaApertura = horaApertura;
     }
 
@@ -163,6 +156,11 @@ public class CentroExposicion implements Serializable{
      * @param horaCierre La hora de cierre a establecer.
      */
     public void setHoraCierre(LocalTime horaCierre) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes cambiar la hora de cierre si no eres el gestor");
+            return;
+        }
+
         this.horaCierre = horaCierre;
     }
 
@@ -176,20 +174,16 @@ public class CentroExposicion implements Serializable{
     }
 
     /**
-     * Define una nueva localización para la entidad.
-     * 
-     * @param localizacion La nueva localización a asignar.
-     */
-    public void setLocalizacion(String localizacion) {
-        this.localizacion = localizacion;
-    }
-
-    /**
      * Accede a la contraseña de empleado.
      * 
      * @return La contraseña de empleado.
      */
     public String getContraseniaEmpleado() {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes acceder a la contraseña de empleado si no eres el gestor");
+            return null;
+        }
+
         return contraseniaEmpleado;
     }
 
@@ -199,6 +193,11 @@ public class CentroExposicion implements Serializable{
      * @param contraseniaEmpleado La nueva contraseña a asignar.
      */
     public void setContraseniaEmpleado(String contraseniaEmpleado) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes cambiar la contraseña de empleado si no eres el gestor");
+            return;
+        }
+
         this.contraseniaEmpleado = contraseniaEmpleado;
     }
 
@@ -208,16 +207,12 @@ public class CentroExposicion implements Serializable{
      * @return La contraseña de gestor.
      */
     public String getContraseniaGestor() {
-        return contraseniaGestor;
-    }
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes acceder a la contraseña de gestor si no eres el gestor");
+            return null;
+        }
 
-    /**
-     * Asigna una nueva contraseña para el gestor.
-     * 
-     * @param contraseniaGestor La nueva contraseña a establecer.
-     */
-    public void setContraseniaGestor(String contraseniaGestor) {
-        this.contraseniaGestor = contraseniaGestor;
+        return contraseniaGestor;
     }
 
     /**
@@ -253,6 +248,11 @@ public class CentroExposicion implements Serializable{
      * @param salas El conjunto de salas a asignar.
      */
     public void setSalas(Set<Sala> salas) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir salas si no eres el gestor");
+            return;
+        }
+
         this.salas = salas;
     }
 
@@ -262,6 +262,11 @@ public class CentroExposicion implements Serializable{
      * @param sala la sala a añadir
      */
     public void addSala(Sala sala) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir salas si no eres el gestor");
+            return;
+        }
+
         this.salas.add(sala);
     }
 
@@ -271,6 +276,19 @@ public class CentroExposicion implements Serializable{
      * @param sala la sala a eliminar
      */
     public void removeSala(Sala sala) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes eliminar salas si no eres el gestor");
+            return;
+        }
+
+        for (Exposicion exposicion : exposiciones) {
+            for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                if (salaExpo.getSala().equals(sala)) {
+                    System.out.println("No se puede eliminar una sala que está siendo utilizada por una exposición");
+                    return;
+                }
+            }
+        }
         this.salas.remove(sala);
     }
 
@@ -284,6 +302,26 @@ public class CentroExposicion implements Serializable{
     }
 
     /**
+     * Obtiene un conjunto de exposiciones que están actualmente publicadas o
+     * prorrogadas filtrando todas las exposiciones disponibles y retornando solo
+     * aquellas cuyo estado es {@link EstadoExposicion#PUBLICADA} o
+     * {@link EstadoExposicion#PRORROGADA}.
+     *
+     * @return Un {@code Set<Exposicion>} que contiene todas las exposiciones en
+     *         estado Publicada o Prorrogada.
+     */
+    public Set<Exposicion> getExposicionesPublicadas() {
+        Set<Exposicion> exposicionesPublicadas = new HashSet<>();
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
+                    || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)) {
+                exposicionesPublicadas.add(exposicion);
+            }
+        }
+        return exposicionesPublicadas;
+    }
+
+    /**
      * Obtiene las exposiciones disponibles en el centro por un rango de fechas.
      *
      * @param fechaInicio la fecha de inicio
@@ -292,10 +330,8 @@ public class CentroExposicion implements Serializable{
      */
     public Set<Exposicion> getExposicionesPorFecha(LocalDate fechaInicio, LocalDate fechaFinal) {
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
-        for (Exposicion exposicion : exposiciones) {
-            if (exposicion.getFechaInicio().isAfter(fechaInicio) && exposicion.getFechaFin().isBefore(fechaFinal)
-                    && (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                            || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA))) {
+        for (Exposicion exposicion : getExposicionesPublicadas()) {
+            if (exposicion.getFechaInicio().isAfter(fechaInicio) && exposicion.getFechaFin().isBefore(fechaFinal)) {
                 exposicionesPorFecha.add(exposicion);
             }
         }
@@ -309,10 +345,8 @@ public class CentroExposicion implements Serializable{
      */
     public Set<Exposicion> getExposicionesTemporales() {
         Set<Exposicion> exposicionesTemporales = new HashSet<>();
-        for (Exposicion exposicion : exposiciones) {
-            if (exposicion.getTipo().equals(TipoExpo.TEMPORAL)
-                    && (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                            || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA))) {
+        for (Exposicion exposicion : getExposicionesPublicadas()) {
+            if (exposicion.getTipo().equals(TipoExpo.TEMPORAL)) {
                 exposicionesTemporales.add(exposicion);
             }
         }
@@ -326,10 +360,8 @@ public class CentroExposicion implements Serializable{
      */
     public Set<Exposicion> getExposicionesPermanentes() {
         Set<Exposicion> exposicionesPermanentes = new HashSet<>();
-        for (Exposicion exposicion : exposiciones) {
-            if (exposicion.getTipo().equals(TipoExpo.PERMANENTE)
-                    && (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                            || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA))) {
+        for (Exposicion exposicion : getExposicionesPublicadas()) {
+            if (exposicion.getTipo().equals(TipoExpo.PERMANENTE)) {
                 exposicionesPermanentes.add(exposicion);
             }
         }
@@ -338,15 +370,12 @@ public class CentroExposicion implements Serializable{
 
     public Set<Exposicion> getExposicionesPorTipoObra(Class<? extends Obra> tipoObra) {
         Set<Exposicion> exposicionesPorTipoObra = new HashSet<>();
-        for (Exposicion exposicion : exposiciones) {
-            if (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                    || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)) {
-                for (SalaExposicion salaExpo : exposicion.getSalas()) {
-                    for (Obra obra : salaExpo.getObras()) {
-                        if (tipoObra.isInstance(obra)) {
-                            exposicionesPorTipoObra.add(exposicion);
-                            break;
-                        }
+        for (Exposicion exposicion : getExposicionesPublicadas()) {
+            for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                for (Obra obra : salaExpo.getObras()) {
+                    if (tipoObra.isInstance(obra)) {
+                        exposicionesPorTipoObra.add(exposicion);
+                        break;
                     }
                 }
             }
@@ -360,6 +389,10 @@ public class CentroExposicion implements Serializable{
      * @param exposicion la sala a añadir
      */
     public void addExposicion(Exposicion exposicion) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir exposiciones si no eres el gestor");
+            return;
+        }
         this.exposiciones.add(exposicion);
     }
 
@@ -369,21 +402,39 @@ public class CentroExposicion implements Serializable{
      * @param exposicion la sala a eliminar
      */
     public void removeExposicion(Exposicion exposicion) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes eliminar exposiciones si no eres el gestor");
+            return;
+        }
+
+        if (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA) || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)) {
+            System.out.println("No se puede eliminar una exposición publicada o prorrogada");
+            return;
+        }
+
         this.exposiciones.remove(exposicion);
     }
 
     /**
-     * Elimina todas las exposiciones de un centro de exposiciones.
+     * Retorna el conjunto de sorteos relacionados al centro.
+     * 
+     * @return Un conjunto de sorteos.
      */
-    public void removeAllExposiciones() {
-        this.exposiciones.clear();
-    }
-
     public Set<Sorteo> getSorteos() {
         return sorteos;
     }
 
+    /**
+     * Establece el los sorteos del centro.
+     * 
+     * @param sorteos Los sorteos a asignar.
+     */
     public void setSorteos(Set<Sorteo> sorteos) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir sorteos si no eres el gestor");
+            return;
+        }
+
         this.sorteos = sorteos;
     }
 
@@ -393,6 +444,11 @@ public class CentroExposicion implements Serializable{
      * @param sorteo el sorteo a añadir
      */
     public void addSorteo(Sorteo sorteo) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir sorteos si no eres el gestor");
+            return;
+        }
+
         this.sorteos.add(sorteo);
     }
 
@@ -402,16 +458,21 @@ public class CentroExposicion implements Serializable{
      * @param sorteo el sorteo a eliminar
      */
     public void removeSorteo(Sorteo sorteo) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes eliminar sorteos si no eres el gestor");
+            return;
+        }
+
         this.sorteos.remove(sorteo);
     }
 
-    /**
-     * Elimina todos los sorteos de un centro de exposiciones.
-     */
-    public void removeAllSorteos() {
-        this.sorteos.clear();
-    }
 
+    /**
+     * Obtiene los sorteos que están activos hasta la fecha actual.
+     * Un sorteo se considera activo si su fecha de sorteo es hoy o ha pasado.
+     *
+     * @return Un conjunto de sorteosactivos.
+     */
     public Set<Sorteo> getSorteosActivos() {
         Set<Sorteo> sorteosActivos = new HashSet<>();
         for (Sorteo sorteo : sorteos) {
@@ -422,11 +483,27 @@ public class CentroExposicion implements Serializable{
         return sorteosActivos;
     }
 
+    /**
+     * Obtiene todas las obras gestionadas por el centro de exposición.
+     *
+     * @return Un conjunto de obras.
+     */
     public Set<Obra> getObras() {
         return obras;
     }
 
+    /**
+     * Establece el conjunto de obras gestionadas por el centro de exposición.
+     *
+     * @param obras el conjunto de obras a establecer.
+     */
+
     public void setObras(Set<Obra> obras) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir obras si no eres el gestor");
+            return;
+        }
+        
         this.obras = obras;
     }
 
@@ -436,7 +513,17 @@ public class CentroExposicion implements Serializable{
      * @param obra la obra a añadir
      */
     public void addObra(Obra obra) {
-        this.obras.add(obra);
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir obras si no eres el gestor");
+            return;
+        }
+
+        if (this.obras.add(obra) == false) {
+            System.out.println("La obra ya está en el centro de exposiciones");
+        }
+        else {
+            obra.almecenarObra();
+        }
     }
 
     /**
@@ -445,21 +532,34 @@ public class CentroExposicion implements Serializable{
      * @param obra la obra a eliminar
      */
     public void removeObra(Obra obra) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes eliminar obras si no eres el gestor");
+            return;
+        }
+
         this.obras.remove(obra);
     }
 
     /**
-     * Elimina todas las obras de un centro de exposiciones.
+     * Obtiene todos los empleados del centro de exposición.
+     *
+     * @return Un conjunto de empleados.
      */
-    public void removeAllObras() {
-        this.obras.clear();
-    }
-
     public Set<Empleado> getEmpleados() {
         return empleados;
     }
 
+    /**
+     * Establece el conjunto de empleados del centro de exposición.
+     *
+     * @param empleados el conjunto de empleados a establecer.
+     */
     public void setEmpleados(Set<Empleado> empleados) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir empleados si no eres el gestor");
+            return;
+        }
+
         this.empleados = empleados;
     }
 
@@ -469,6 +569,10 @@ public class CentroExposicion implements Serializable{
      * @param empleado el empleado a añadir
      */
     public void addEmpleado(Empleado empleado) {
+        if (gestor.isLoged()) {
+            System.out.println("No puedes añadir empleados si no eres el gestor");
+            return;
+        }
         this.empleados.add(empleado);
     }
 
@@ -478,22 +582,84 @@ public class CentroExposicion implements Serializable{
      * @param empleado el empleado a eliminar
      */
     public void removeEmpleado(Empleado empleado) {
+        if (gestor.isLoged()) {
+            System.out.println("No puedes eliminar empleados si no eres el gestor");
+            return;
+        }
+
         this.empleados.remove(empleado);
     }
 
+    /**
+     * Cambia la temperatura de una sala.
+     * 
+     * @param empleado el empleado que cambia la temperatura de la sala
+     * @param temperatura la temperatura a la que se quiere cambiar
+     * @param sala la sala a la que se le quiere cambiar la temperatura
+     * 
+     */
+    public void setSalaTemperatura(Sala sala, Integer temperatura, Empleado empleado) {
+        if (empleado.getPermisoControl() == false) {
+            System.out.println("No tienes permiso para controlar la temperatura de la sala");
+            return;
+        }
+        sala.setTemperatura(temperatura);
+    }
+
+    /**
+    * Cambia la humedad de una sala.
+    * 
+    * @param empleado el empleado que cambia la humedad de la sala
+    * @param humedad la humedad a la que se quiere cambiar
+    * @param sala la sala a la que se le quiere cambiar la humedad
+    * 
+    */
+    public void setSalaHumedad(Sala sala, Integer humedad, Empleado empleado) {
+        if (empleado.getPermisoControl() == false) {
+            System.out.println("No tienes permiso para controlar la humedad de la sala");
+            return;
+        }
+        sala.setHumedad(humedad);
+    }
+
+    /**
+     * Obtiene el gestor del centro de exposición.
+     *
+     * @return El {@link Gestor} del centro.
+     */
     public Gestor getGestor() {
         return gestor;
     }
 
+    /**
+     * Establece el gestor del centro de exposición.
+     *
+     * @param gestor el gestor a establecer.
+     */
     public void setGestor(Gestor gestor) {
         this.gestor = gestor;
     }
 
+    /**
+     * Obtiene los descuentos disponibles en el centro de exposición.
+     *
+     * @return Un conjunto de {@link Descuento}.
+     */
     public Set<Descuento> getDescuentos() {
         return descuentos;
     }
 
+    /**
+     * Establece los descuentos disponibles en el centro de exposición.
+     *
+     * @param descuentos el conjunto de descuentos a establecer.
+     */
     public void setDescuentos(Set<Descuento> descuentos) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir descuentos si no eres el gestor");
+            return;
+        }
+
         this.descuentos = descuentos;
     }
 
@@ -503,6 +669,11 @@ public class CentroExposicion implements Serializable{
      * @param descuento el descuento a añadir
      */
     public void addDescuento(Descuento descuento) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes añadir descuentos si no eres el gestor");
+            return;
+        }
+
         this.descuentos.add(descuento);
     }
 
@@ -512,16 +683,24 @@ public class CentroExposicion implements Serializable{
      * @param empleado el empleado a eliminar
      */
     public void removeDescuento(Descuento descuento) {
+        if (gestor.isLoged() == false) {
+            System.out.println("No puedes eliminar descuentos si no eres el gestor");
+            return;
+        }
+
         this.descuentos.remove(descuento);
     }
 
-    /**
-     * Elimina todos los desceuntos de un centro de exposiciones.
-     */
-    public void removeAllDescuentos() {
-        this.descuentos.clear();
-    }
 
+    /**
+     * Permite el login de un empleado al sistema, verificando su NIF, número de
+     * seguridad social y contraseña.
+     *
+     * @param NIF         El NIF del empleado.
+     * @param numSS       El número de seguridad social del empleado.
+     * @param contrasenia La contraseña de acceso.
+     * @return true si el login es exitoso, false en caso contrario.
+     */
     public Boolean loginEmpleado(String NIF, String numSS, String contrasenia) {
         for (Empleado e : empleados) {
             if (e.getNIF().equals(NIF) && e.getNumSS().equals(numSS) && contrasenia.equals(contraseniaEmpleado)) {
@@ -532,6 +711,76 @@ public class CentroExposicion implements Serializable{
         return false;
     }
 
+    public boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas) {
+        LocalDate fecha = LocalDate.now();
+        Boolean horaDisponible = false;
+
+        // Verifica si la fecha de la visita está dentro del rango de fechas de la
+        // exposición.
+        if (fecha.isBefore(exposicion.getFechaInicio()) || fecha.isAfter(exposicion.getFechaFin())) {
+            System.out.println("La fecha no está dentro del rango de la exposición");
+            return false;
+        }
+
+        // Verifica el estado de la exposición, solo procede si está Prorrogada o
+        // Publicada.
+        if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)
+                || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+            System.out.println("La exposición no está disponible");
+            return false;
+        }
+
+        // Asegura que la fecha y la hora de la visita coincidan.
+        if (!fecha.equals(hora.getFecha())) {
+            System.out.println("La fecha no coincide con la fecha de la hora");
+            return false;
+        }
+
+        // Verifica la disponibilidad de la hora elegida dentro del horario de la
+        // exposición.
+        for (Hora h : exposicion.getHorario()) {
+            if (hora.equals(h)) {
+                horaDisponible = true;
+                break;
+            }
+        }
+
+        if (horaDisponible == false) {
+            System.out.println("La hora no está dentro del rango de la exposición");
+            return false;
+        }
+
+        if (nEntradas <= 0) {
+            System.out.println("El número de entradas no puede ser menor o igual a 0");
+            return false;
+        }
+
+        // Verifica la disponibilidad de entradas para la hora seleccionada.
+        if (nEntradas >= hora.getCountEntradas() || nEntradas > hora.getCountEntradas()) {
+            System.out.println("No hay suficientes entradas disponibles");
+            return false;
+        }
+
+        // Procede con la compra, actualizando las estadísticas y asignando entradas.
+        Estadisticas estadisticas = exposicion.getEstadisticas();
+        int i;
+        for (i = 0; i < nEntradas; i++) {
+            hora.entradaVendida();
+            estadisticas.incrementarTicketsVendidos();
+            estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
+        }
+        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, hora), "." + File.separator + "tmp");
+        return true;
+    }
+    
+
+    /**
+     * Permite el login del gestor al sistema, verificando su NIF y contraseña.
+     *
+     * @param NIF         El NIF del gestor.
+     * @param contrasenia La contraseña del gestor.
+     * @return true si el login es exitoso, false en caso contrario.
+     */
     public Boolean loginGestor(String NIF, String contrasenia) {
         if (gestor.getNIF().equals(NIF) && contrasenia.equals(contraseniaGestor)) {
             gestor.logIn();
@@ -546,11 +795,25 @@ public class CentroExposicion implements Serializable{
      * @return La cadena de representación del centro de exposición
      */
     public String toString() {
-        return "CentroExposicion [ID=" + ID + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre="
-                + horaCierre + ", localizacion=" + localizacion + ", contraseniaEmpleado=" + contraseniaEmpleado
-                + ", contraseniaGestor=" + contraseniaGestor + ", sancion=" + sancion + ", salas="
-                + salas.toString() + ", exposiciones=" + exposiciones.toString() + ", sorteos=" + sorteos + ", obras="
-                + obras
-                + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("CentroExposicion Details:\n");
+        sb.append("ID: ").append(ID).append("\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Hora de Apertura: ").append(horaApertura).append("\n");
+        sb.append("Hora de Cierre: ").append(horaCierre).append("\n");
+        sb.append("Localización: ").append(localizacion).append("\n");
+        sb.append("Contraseña Empleado: ").append(contraseniaEmpleado).append("\n");
+        sb.append("Contraseña Gestor: ").append(contraseniaGestor).append("\n");
+        sb.append("Sanción: ").append(sancion).append("\n");
+        sb.append("Salas: ").append(salas).append("\n");
+        sb.append("Exposiciones: ").append(exposiciones).append("\n");
+        sb.append("Sorteos: ").append(sorteos).append("\n");
+        sb.append("Obras: ").append(obras).append("\n");
+        sb.append("Empleados: ").append(empleados).append("\n");
+        sb.append("Gestor: ").append(gestor).append("\n");
+        sb.append("Descuentos: ").append(descuentos).append("\n");
+
+        return sb.toString();
     }
 }

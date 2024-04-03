@@ -2,6 +2,7 @@ package Obra;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Clase Obra.
@@ -12,7 +13,7 @@ import java.util.Set;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public abstract class Obra {
+public abstract class Obra implements Serializable {
     private Integer ID;
     private static Integer IDcount = 0;
     private String nombre;
@@ -303,8 +304,19 @@ public abstract class Obra {
      * @return Una cadena que representa la obra.
      */
     public String toString() {
-        return "Obra [ID=" + ID + ", nombre=" + nombre + ", anio=" + anio + ", descripcion=" + descripcion
-                + ", externa=" + externa + ", cuantiaSeguro=" + cuantiaSeguro + ", numeroSeguro=" + numeroSeguro
-                + ", autores=" + autores.toString() + ", estado=" + estado + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Detalles obra:\n");
+        sb.append("ID: ").append(ID).append("\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Año: ").append(anio).append("\n");
+        sb.append("Descripción: ").append(descripcion).append("\n");
+        sb.append("Externa: ").append(externa).append("\n");
+        sb.append("Cuantía Seguro: ").append(cuantiaSeguro).append("\n");
+        sb.append("Número Seguro: ").append(numeroSeguro).append("\n");
+        sb.append("Autores: ").append(autores).append("\n");
+        sb.append("Estado: ").append(estado).append("\n");
+
+        return sb.toString();
     }
 }

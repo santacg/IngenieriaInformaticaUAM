@@ -1,15 +1,15 @@
 package Expofy;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.io.Serializable;
+
 /**
  * Clase Notificacion.
  * Esta clase proporciona funcionalidades al envío de notificaciones en Expofy.
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Notificacion implements Serializable{
+public class Notificacion implements Serializable {
     private String mensaje;
     private LocalDate fecha;
     private boolean leida;
@@ -61,6 +61,7 @@ public class Notificacion implements Serializable{
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
     /**
      * Establece o actualiza la fecha en que se creó la notificación.
      * 
@@ -69,6 +70,7 @@ public class Notificacion implements Serializable{
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
+
     /**
      * Obtiene la fecha en que se creó la notificación.
      * 
@@ -84,7 +86,11 @@ public class Notificacion implements Serializable{
      * @return La representación en cadena de la notificación.
      */
     public String toString() {
-        return "Notificacion [mensaje=" + mensaje + ", fecha=" + fecha + ", leida=" + leida + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Notificación:\n");
+        sb.append("Mensaje: ").append(mensaje).append("\n");
+        sb.append("Fecha: ").append(fecha).append("\n");
+        sb.append("Leída: ").append(leida).append("\n");
+        return sb.toString();
     }
-
 }

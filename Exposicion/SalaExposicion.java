@@ -2,7 +2,10 @@ package Exposicion;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
+
 import Obra.Obra;
+import Obra.ObraNoDigital;
 import Sala.Sala;
 
 /**
@@ -12,7 +15,7 @@ import Sala.Sala;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class SalaExposicion {
+public class SalaExposicion implements Serializable {
     private Sala sala;
     private Set<Obra> obras = new HashSet<>();
 
@@ -40,12 +43,7 @@ public class SalaExposicion {
      * @param sala La nueva sala física.
      */
     public void setSala(Sala sala) {
-        if (sala.getSubsalas().isEmpty()) {
-            this.sala = sala;
-        }
-        else {
-            System.out.println("La sala no puede tener sub-salas.");
-        }
+        this.sala = sala; 
     }
 
     /**
@@ -72,8 +70,16 @@ public class SalaExposicion {
      * 
      * @param obra La obra de arte a añadir.
      */
-    public void addObra(Obra obra) {
+    public Boolean addObra(Obra obra) {
+        if (obra instanceof ObraNoDigital) {
+            if (sala.getClimatizador() == false) {
+                System.out.println("No se puede añadir una obra no digital a una sala sin climatizador");
+                return false;
+            }
+        }
+        obra.exponerObra();
         this.obras.add(obra);
+        return true;
     }
 
     /**
@@ -84,14 +90,7 @@ public class SalaExposicion {
      */
     public void removeObra(Obra obra) {
         this.obras.remove(obra);
-    }
-
-    /**
-     * Elimina todas las obras de arte del conjunto de obras contenidas en esta sala
-     * de exposición.
-     */
-    public void removeAllObras() {
-        this.obras.clear();
+        obra.almecenarObra();
     }
 
     /**
@@ -100,8 +99,13 @@ public class SalaExposicion {
      * 
      * @return Una representación en cadena de la SalaExposicion.
      */
-    @Override
     public String toString() {
-        return "SalaExposicion [sala=" + sala + ", obras=" + obras + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("SalaExposicion Details:\n");
+        sb.append("Sala: ").append(sala.getNombre()).append("\n");
+        sb.append("Obras: ").append(obras).append("\n");
+
+        return sb.toString();
     }
 }

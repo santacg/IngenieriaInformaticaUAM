@@ -58,5 +58,10 @@ public abstract class Descuento implements Serializable{
         this.cantidad = cantidad;
     }
 
+    /**
+     * Determina si un descuento es aplicable respecto a una fecha
+     * @param cantidad La nueva cantidad a establecer.
+     * @return boolean true si es aplicable, false si no
+     */
     public abstract boolean validezDescuento(LocalDate fecha);
 }

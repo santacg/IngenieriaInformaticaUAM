@@ -2,7 +2,7 @@ package Usuario;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import java.io.Serializable;
 import Expofy.Notificacion;
 
 /**
@@ -12,11 +12,19 @@ import Expofy.Notificacion;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public abstract class Usuario {
+public abstract class Usuario implements Serializable {
     private String NIF;
     private Set<Notificacion> notificaciones = new HashSet<>();
     private Boolean loged = false;
 
+    /**
+     * Comprueba si este usuario es igual al objeto proporcionado.
+     * Dos usuarios se consideran iguales si tienen el mismo NIF.
+     *
+     * @param obj El objeto con el que comparar este {@code Usuario}.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     *         contrario.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -44,15 +52,6 @@ public abstract class Usuario {
     }
 
     /**
-     * Comprueba si este usuario es igual a otro objeto.
-     *
-     * @param obj El objeto con el que se compara.
-     * @return true si son iguales, false en caso contrario.
-     */
-
-
-
-    /** 
      * Obtiene el NIF del usuario.
      *
      * @return El NIF del usuario.
@@ -134,5 +133,16 @@ public abstract class Usuario {
      */
     public void logOut() {
         this.loged = false;
+    }
+
+    /**
+     * Obtiene el mensaje de una notificación dada.
+     *
+     * @param notificacion La notificacion de la que se desea obtener el mensaje.
+     * @return El mensaje de la notificación proporcionada.
+     */
+    public String getMensajeNotificacion(Notificacion notificacion) {
+        notificacion.setLeida(true);
+        return notificacion.getMensaje();
     }
 }

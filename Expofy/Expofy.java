@@ -2,6 +2,7 @@ package Expofy;
 
 import java.io.*;
 import java.util.*;
+import java.io.File;
 
 import java.time.LocalDate;
 
@@ -15,6 +16,12 @@ import Inscripcion.Inscripcion;
 import TarjetaDeCredito.TarjetaDeCredito;
 import Usuario.Usuario;
 
+import es.uam.eps.padsof.tickets.ITicketInfo;
+import es.uam.eps.padsof.tickets.NonExistentFileException;
+import es.uam.eps.padsof.tickets.TicketSystem;
+import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
+
+import java.util.stream.Collectors;
 import es.uam.eps.padsof.telecard.*;
 
 /**
@@ -29,7 +36,7 @@ import es.uam.eps.padsof.telecard.*;
  */
 public class Expofy implements Serializable {
     private static Expofy instance;
-    private Set<CentroExposicion> centroExposicion = new HashSet<CentroExposicion>();
+    private Set<CentroExposicion> centrosExposicion = new HashSet<CentroExposicion>();
     private List<Notificacion> notificaciones = new ArrayList<Notificacion>();
     private Set<ClienteRegistrado> clientesRegistrados = new HashSet<ClienteRegistrado>();
 
@@ -59,8 +66,8 @@ public class Expofy implements Serializable {
      * 
      * @return Un conjunto de centros de exposición.
      */
-    public Set<CentroExposicion> getCentroExposicion() {
-        return centroExposicion;
+    public Set<CentroExposicion> getCentrosExposicion() {
+        return centrosExposicion;
     }
 
     /**
@@ -68,8 +75,8 @@ public class Expofy implements Serializable {
      * 
      * @param centroExposicion El conjunto de centros de exposición a establecer.
      */
-    public void setCentroExposicion(Set<CentroExposicion> centroExposicion) {
-        this.centroExposicion = centroExposicion;
+    public void setCentrosExposicion(Set<CentroExposicion> centroExposicion) {
+        this.centrosExposicion = centroExposicion;
     }
 
     /**
@@ -100,6 +107,21 @@ public class Expofy implements Serializable {
     }
 
     /**
+     * Obtiene un cliente registrado en Expofy basándose en su NIF.
+     * 
+     * @param NIF El NIF del cliente a obtener.
+     * @return El cliente registrado, o null si no se encuentra.
+     */
+    public ClienteRegistrado getClienteRegistrado(String NIF) {
+        for (ClienteRegistrado c : this.clientesRegistrados) {
+            if (c.getNIF().equals(NIF)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Establece el conjunto de clientes registrados en Expofy.
      * 
      * @param clientesRegistrados El conjunto de clientes registrados a establecer.
@@ -114,8 +136,12 @@ public class Expofy implements Serializable {
      * 
      * @param centroExposicion El centro de exposición a añadir.
      */
-    public void addCentroExposicion(CentroExposicion centroExposicion) {
-        this.centroExposicion.add(centroExposicion);
+    public Boolean addCentroExposicion(CentroExposicion centroExposicion) {
+        if (this.centrosExposicion.add(centroExposicion)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -128,22 +154,13 @@ public class Expofy implements Serializable {
     }
 
     /**
-     * Añade un nuevo cliente registrado al conjunto de clientes de Expofy.
-     * 
-     * @param clienteRegistrado El cliente registrado a añadir.
-     */
-    public void addClienteRegistrado(ClienteRegistrado clienteRegistrado) {
-        this.clientesRegistrados.add(clienteRegistrado);
-    }
-
-    /**
      * Elimina un centro de exposición del conjunto de centros gestionados por
      * Expofy.
      * 
      * @param centroExposicion El centro de exposición a eliminar.
      */
     public void removeCentroExposicion(CentroExposicion centroExposicion) {
-        this.centroExposicion.remove(centroExposicion);
+        this.centrosExposicion.remove(centroExposicion);
     }
 
     /**
@@ -156,15 +173,6 @@ public class Expofy implements Serializable {
     }
 
     /**
-     * Elimina un cliente registrado del conjunto de clientes de Expofy.
-     * 
-     * @param clienteRegistrado El cliente registrado a eliminar.
-     */
-    public void removeClienteRegistrado(ClienteRegistrado clienteRegistrado) {
-        this.clientesRegistrados.remove(clienteRegistrado);
-    }
-
-    /**
      * Registra un nuevo cliente en Expofy, creando un perfil con sus datos
      * personales y preferencias.
      * 
@@ -172,9 +180,13 @@ public class Expofy implements Serializable {
      * @param Contrasenia La contraseña del cliente.
      * @param publicidad  Indica si el cliente acepta recibir publicidad.
      */
-    public void registrarCliente(String NIF, String Contrasenia, Boolean publicidad) {
+    public Boolean registrarCliente(String NIF, String Contrasenia, Boolean publicidad) {
         ClienteRegistrado cliente = new ClienteRegistrado(NIF, publicidad, Contrasenia, false, null, null);
-        this.clientesRegistrados.add(cliente);
+        if (this.clientesRegistrados.add(cliente)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -223,15 +235,29 @@ public class Expofy implements Serializable {
         }
     }
 
-    public boolean enviarNotificacionCliente(String mensaje, Set<ClienteRegistrado> clientes, Empleado empleado) {
+    /**
+     * Intenta enviar una notificación a un cliente específico si el empleado que
+     * realiza la acción está logueado y tiene permisos para enviar mensajes.
+     *
+     * @param mensaje  El mensaje de la notificación a enviar.
+     * @param NIF      El NIF del cliente al que se enviará la notificación.
+     * @param empleado El empleado que intenta enviar la notificación.
+     * @return {@code true} si la notificación se envió con éxito, {@code false} en
+     *         caso contrario.
+     */
+    public boolean enviarNotificacionCliente(String mensaje, String NIF, Empleado empleado) {
         if (empleado.isLoged() == false || empleado.getPermisoMensajes() == false) {
             return false;
         }
         Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
-        for (ClienteRegistrado c : clientes) {
-            c.addNotificacion(notificacion);
+        for (ClienteRegistrado c : this.clientesRegistrados) {
+            if (c.getNIF().equals(NIF)) {
+                c.addNotificacion(notificacion);
+                this.notificaciones.add(notificacion);
+                return true;
+            }
         }
-        this.notificaciones.add(notificacion);
+        return false;
     }
 
     /**
@@ -239,12 +265,27 @@ public class Expofy implements Serializable {
      * 
      * @param mensaje  El mensaje de la notificación.
      * @param usuarios Los usuarios que recibirán la notificación.
+     *
      */
-    public void enviarNotificacion(String mensaje, Set<Usuario> usuarios) {
+    public void enviarNotificacionUsuarios(String mensaje, Set<Usuario> usuarios) {
         Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
         for (Usuario u : usuarios) {
             u.addNotificacion(notificacion);
         }
+        this.notificaciones.add(notificacion);
+    }
+
+
+    /**
+     * Envía una notificación a un único usuario.
+     * 
+     * @param mensaje  El mensaje de la notificación.
+     * @param usuarios Los usuarios que recibirán la notificación.
+     *
+     */
+    public void enviarNotificacionUsuario(String mensaje, Usuario usuario) {
+        Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
+        usuario.addNotificacion(notificacion);
         this.notificaciones.add(notificacion);
     }
 
@@ -255,6 +296,7 @@ public class Expofy implements Serializable {
      */
     public void enviarNotificacionAll(String mensaje) {
         Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
+        notificacion.setLeida(null);
         for (ClienteRegistrado c : this.clientesRegistrados) {
             c.addNotificacion(notificacion);
         }
@@ -270,36 +312,43 @@ public class Expofy implements Serializable {
      * @param fecha             La fecha de la visita.
      * @param hora              La hora de la visita.
      * @param nEntradas         El número de entradas a comprar.
-     * @param tarjetaDeCredito  La tarjeta de crédito para el pago.
+     * @param tarjetaDeCredito  La tarjeta de crédito para el pago. 
      * @return true si la compra es exitosa, false en caso contrario.
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
             Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String codigo) {
         Boolean horaDisponible = false;
         Double precioFinal;
-        // Verificaciones varias: cliente logueado, fecha y hora dentro del rango, y
-        // número de entradas válido.
+
+        // Verifica si el cliente está logueado. Si no, la compra no puede proceder.
         if (clienteRegistrado.isLoged() == false) {
             System.out.println("El cliente no está logeado");
             return false;
         }
 
+        // Verifica si la fecha de la visita está dentro del rango de fechas de la
+        // exposición.
         if (fecha.isBefore(exposicion.getFechaInicio()) || fecha.isAfter(exposicion.getFechaFin())) {
             System.out.println("La fecha no está dentro del rango de la exposición");
             return false;
         }
 
+        // Verifica el estado de la exposición, solo procede si está Prorrogada o
+        // Publicada.
         if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)
                 || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
             System.out.println("La exposición no está disponible");
             return false;
         }
 
+        // Asegura que la fecha y la hora de la visita coincidan.
         if (!fecha.equals(hora.getFecha())) {
             System.out.println("La fecha no coincide con la fecha de la hora");
             return false;
         }
 
+        // Verifica la disponibilidad de la hora elegida dentro del horario de la
+        // exposición.
         for (Hora h : exposicion.getHorario()) {
             if (hora.equals(h)) {
                 horaDisponible = true;
@@ -317,26 +366,31 @@ public class Expofy implements Serializable {
             return false;
         }
 
+        // Verifica la disponibilidad de entradas para la hora seleccionada.
         if (nEntradas >= hora.getCountEntradas() || nEntradas > hora.getCountEntradas()) {
             System.out.println("No hay suficientes entradas disponibles");
             return false;
         }
-        if (exposicion.getDescuento() != null) {
-            
-        }
 
-        if (validez_codigo(codigo, clienteRegistrado) == true) {
+        // Aplica descuento si corresponde y verifica la validez del código del código.
+        Descuento descuento = exposicion.getDescuento();
+        if (descuento != null) {
+            if (descuento.validezDescuento(clienteRegistrado.getUltimaCompra())) {
+                precioFinal = exposicion.getPrecio() * descuento.getDescuento();
+            }
+        }
+        if (validezCodigo(codigo, clienteRegistrado) == true) {
             precioFinal = 0.0;
         }
-        
 
-        if (!TeleChargeAndPaySystem.isValidCardNumber(tarjetaDeCredito.getNumero()))
-            return false;
-
-        if(!TeleChargeAndPaySystem.charge(tarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)){
+        // Verifica la validez del número de tarjeta de crédito y realiza el cobro.
+        if (!TeleChargeAndPaySystem.isValidCardNumber(tarjetaDeCredito.getNumero()) || !TeleChargeAndPaySystem
+                .charge(tarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)) {
+            enviarNotificacionUsuario("Ha habido un error en el pago de la entrada", clienteRegistrado);
             return false;
         }
 
+        // Procede con la compra, actualizando las estadísticas y asignando entradas.
         Estadisticas estadisticas = exposicion.getEstadisticas();
         int i;
         for (i = 0; i < nEntradas; i++) {
@@ -347,17 +401,24 @@ public class Expofy implements Serializable {
             estadisticas.incrementarTicketsVendidos();
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
-
+        TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora), "." + File.separator + "tmp");
+        clienteRegistrado.setUltimaCompra(LocalDate.now());
+        enviarNotificacionUsuario("La entrada se ha comprado con éxito", clienteRegistrado);
         return true;
     }
-    
+
+    /**
+     * Actualiza las sanciones de los clientes basándose en las inscripciones a
+     * sorteos que han pasado su fecha límite.
+     */
     public void updateSanciones() {
-        for (CentroExposicion centro : centroExposicion) {
-            for (Sorteo sorteo : centro.getSorteos()) {
+        for (CentroExposicion centroExposicion : centrosExposicion) {
+            for (Sorteo sorteo : centroExposicion.getSorteos()) {
                 for (Inscripcion inscripcion : sorteo.getInscripciones()) {
                     for (String codigo : inscripcion.getCodigos()) {
                         if (codigo != null && sorteo.getFechaLimite().isBefore(LocalDate.now())) {
-                            inscripcion.getCliente().setSancionadoHasta(LocalDate.now().plusDays(centro.getSancion()));
+                            inscripcion.getCliente()
+                                    .setSancionadoHasta(LocalDate.now().plusDays(centroExposicion.getSancion()));
                         }
                     }
                 }
@@ -365,58 +426,85 @@ public class Expofy implements Serializable {
         }
     }
 
+    /**
+     * Persiste el estado actual de Expofy en un archivo .dat para poder reanudarlo
+     * más tarde.
+     */
     public void persistirExpofy() {
         try (
                 ObjectOutputStream out = new ObjectOutputStream(
                         new FileOutputStream("ExpofyData.dat"))) {
             out.writeObject(this);
         } catch (IOException except) {
-            e.printStackTrace();
+            except.printStackTrace();
         }
     }
 
+    /**
+     * Reanuda la instancia de Expofy desde un archivo guardado, si existe.
+     */
     public void reanudarExpofy() {
+        // Definir la ruta del archivo donde se guardan los datos de Expofy
         File file = new File("ExpofyData.dat");
-        if (!file.exists())
-            return;
 
-        try (
-                ObjectInputStream input = new ObjectInputStream(
-                        new FileInputStream("ExpofyData.dat"))) {
-            Expofy nuevo = (Expofy) in.readObject();
+        // Comprobar si el archivo existe para evitar errores
+        if (!file.exists()) {
+            System.out.println("El archivo de datos de Expofy no existe. Se creará una nueva instancia.");
+            return; // Salir del método si el archivo no existe
+        }
+
+        // Intentar leer el objeto Expofy desde el archivo
+        try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(file))) {
+            // Leer la instancia de Expofy desde el archivo
+            Expofy nuevo = (Expofy) input.readObject();
             copiarExpofy(nuevo);
-            for (Exposicion exposicion : exposiciones) {
-                e.checkEstadoExposicion();
-            }
-            instance = this;
-        } catch (IOException | ClassNotFoundException except) {
-            e.printStackTrace();
+            System.out.println("La instancia de Expofy ha sido reanudada con éxito desde el archivo.");
+        } catch (IOException except) {
+            System.err.println("Se produjo un error al leer el archivo de datos de Expofy: " + except.getMessage());
+            except.printStackTrace();
+        } catch (ClassNotFoundException except) {
+            System.err.println("No se encontró la clase Expofy durante la deserialización: " + except.getMessage());
+            except.printStackTrace();
         }
     }
 
+    /**
+     * Copia el estado de una instancia de Expofy a esta instancia.
+     *
+     * @param nuevo La nueva instancia de Expofy cuyo estado se copiará.
+     */
     private void copiarExpofy(Expofy nuevo) {
-        centroExposicion = new HashSet<>(nuevo.CentroExposicion);
-        notificaciones = new ArrayList<>(nuevo.Notificacion);
-        clientesRegistrados = new HashSet<>(nuevo.ClienteRegistrado);
+        centrosExposicion = new HashSet<>(nuevo.getCentrosExposicion());
+        notificaciones = new ArrayList<>(nuevo.getNotificaciones());
+        clientesRegistrados = new HashSet<>(nuevo.getClientesRegistrados());
     }
 
-    private boolean validez_codigo(String codigo, ClienteRegistrado cliente){
-        for (CentroExposicion centroExposicion2 : centroExposicion) {
-            for (Sorteo sorteo : centroExposicion2.getSorteos()) {
-                for (Inscripcion inscripcion : sorteo.getInscripciones()) {
-                    if (inscripcion.getCliente().equals(cliente)) {
-                        for (String codigo_c : inscripcion.getCodigos()) {
-                            if (codigo_c.compareTo(codigo) == 0) {
-                                inscripcion.removeCodigo(codigo);
-                                return true;
+    /**
+     * Valida si un código de inscripción es válido para un cliente específico.
+     *
+     * @param codigo  El código de inscripción a validar.
+     * @param cliente El cliente al que pertenece el código.
+     * @return {@code true} si el código es válido y pertenece al cliente,
+     *         {@code false} en caso contrario.
+     */
+    private boolean validezCodigo(String codigo, ClienteRegistrado cliente) {
+        if (codigo == null)
+            for (CentroExposicion centroExposicion : centrosExposicion) {
+                for (Sorteo sorteo : centroExposicion.getSorteos()) {
+                    for (Inscripcion inscripcion : sorteo.getInscripciones()) {
+                        if (inscripcion.getCliente().equals(cliente)) {
+                            for (String codigo_c : inscripcion.getCodigos()) {
+                                if (codigo_c.compareTo(codigo) == 0) {
+                                    inscripcion.removeCodigo(codigo);
+                                    return true;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
         return false;
-    } 
+    }
 
     /**
      * Genera una representación en cadena de la instancia de Expofy, incluyendo
@@ -425,8 +513,20 @@ public class Expofy implements Serializable {
      * @return La representación en cadena de Expofy.
      */
     public String toString() {
-        return "Expofy [centroExposicion=" + centroExposicion + ", notificaciones=" + notificaciones.toString()
-                + ", clientesRegistrados=" + clientesRegistrados.toString() + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Expofy:\n");
+        sb.append("Centros de Exposición:\n");
+        for (CentroExposicion centro : centrosExposicion) {
+            sb.append(centro.toString()).append("\n");
+        }
+        sb.append("Notificaciones:\n");
+        for (Notificacion notificacion : notificaciones) {
+            sb.append(notificacion.toString()).append("\n");
+        }
+        sb.append("Clientes Registrados:\n");
+        for (ClienteRegistrado cliente : clientesRegistrados) {
+            sb.append(cliente.toString()).append("\n");
+        }
+        return sb.toString();
     }
-
 }

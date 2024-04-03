@@ -10,20 +10,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import Expofy.ClienteRegistrado;
-import Expofy.Notificacion;
+import Expofy.Expofy;
 
 /**
  * Clase Sorteo.
  * Esta clase abstracta gestiona la información básica de un sorteo, incluyendo
  * la fecha del sorteo, la exposición relacionada, los códigos generados para
  * los ganadores, y las inscripciones de los participantes.
- * Proporciona funcionalidades para manipular estos datos, como añadir o remover
- * códigos,y añadir inscripciones, así como realizar el sorteo en sí.
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public abstract class Sorteo implements Serializable{
+public abstract class Sorteo implements Serializable {
     private LocalDate fechaSorteo;
     private int n_entradas;
     private Exposicion exposicion;
@@ -32,8 +30,9 @@ public abstract class Sorteo implements Serializable{
     /**
      * Construye una instancia de Sorteo asignando una fecha y una exposicion
      * 
-     * @param fechaSorteo La fecha del sorteo
-     * @param exposicion  La exposición relacionada con el sorteo
+     * @param fechaSorteo   La fecha del sorteo
+     * @param exposicion    La exposición relacionada con el sorteo
+     * @param inscripciones Set con las inscripciones al sorteo
      */
     public Sorteo(LocalDate fechaSorteo, Exposicion exposicion) {
         this.fechaSorteo = fechaSorteo;
@@ -95,7 +94,13 @@ public abstract class Sorteo implements Serializable{
         this.exposicion = exposicion;
     }
 
-    public Set<Inscripcion> getInscripciones(){
+    /**
+     * Obtiene el conjunto de inscripciones asociadas.
+     * 
+     * @return Un conjunto de {@link Inscripcion} que representa todas las
+     *         inscripciones actuales.
+     */
+    public Set<Inscripcion> getInscripciones() {
         return inscripciones;
     }
 
@@ -108,6 +113,11 @@ public abstract class Sorteo implements Serializable{
         inscripciones.add(inscripcion);
     }
 
+    /**
+     * Elimina una inscripción específica del conjunto de inscripciones.
+     * 
+     * @param inscripcion La inscripción a eliminar.
+     */
     public void removeInscripcion(Inscripcion inscripcion) {
         inscripciones.remove(inscripcion);
     }
@@ -163,37 +173,45 @@ public abstract class Sorteo implements Serializable{
 
     /**
      * Realiza el sorteo, asignando códigos a los ganadores y generando las
-     * notificaciones correspondientes.
-     * Este método determina los ganadores basándose en las inscripciones y la
-     * cantidad de entradas disponibles. Para cada ganador, se genera un código
+     * notificaciones correspondientes. Para cada ganador, se genera un código
      * único y se crea una notificación que incluye el código y detalles de la
      * exposición asociada.
      */
     public void realizarSorteo() {
         int i, j;
+        Expofy expofy = Expofy.getInstance();
         Inscripcion insc_ganadora;
         ClienteRegistrado ganador;
-        Notificacion notificacion;
         String codigo, mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \""
                 + exposicion.getNombre() +
                 "\" ha sido elegida, canjea los siguientes códigos al comprar tus etradas para que estas te salgan ¡GRATIS!: ";
         for (i = inscripciones.size(); n_entradas != 0 && i != 0; i--) {
-
+            // Seleccionamos aleatoriamente una inscripción de la lista de inscripciones.
             insc_ganadora = getRandomInscripcion(inscripciones);
             ganador = insc_ganadora.getCliente();
+
+            // Verificamos la condicion del número de entradas solicitadas
             if (insc_ganadora.getnEntradas() <= n_entradas) {
+                // Asignamos un código único por cada entrada solicitada en la inscripción
+                // ganadora.
                 for (j = 0; j < insc_ganadora.getnEntradas(); j++) {
+                    // Generamos un código único.
                     codigo = generadorCodigo();
                     insc_ganadora.addCodigo(codigo);
+                    // Añadimos el código al mensaje de notificación.
                     mensaje = mensaje + codigo + " ";
                     n_entradas--;
                 }
-                notificacion = new Notificacion(mensaje, LocalDate.now());
-                ganador.addNotificacion(notificacion);
+                expofy.enviarNotificacionUsuario(mensaje, ganador);
             }
         }
     }
 
+    /**
+     * Método abstracto para obtener la fecha límite asociada.
+     * 
+     * @return La fecha límite
+     */
     public abstract LocalDate getFechaLimite();
 
 }

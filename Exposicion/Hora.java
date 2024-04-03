@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 import Entrada.Entrada;
 
 /**
@@ -13,13 +14,12 @@ import Entrada.Entrada;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Hora {
+public class Hora implements Serializable {
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private Integer nEntradas;
-    private static Integer countEntradas;
-    private Double precio;
+    private Integer countEntradas;
     private Set<Entrada> entradas = new HashSet<>();
 
     /**
@@ -80,7 +80,6 @@ public class Hora {
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.nEntradas = nEntradas;
-        this.precio = precio;
         countEntradas = nEntradas;
     }
 
@@ -138,6 +137,11 @@ public class Hora {
         this.horaFin = horaFin;
     }
 
+    /**
+     * Obtiene el número actual de entradas no vendidas, es decir, disponibles.
+     *
+     * @return La cantidad de entradas disponibles.
+     */
     public Integer getCountEntradas() {
         return countEntradas;
     }
@@ -151,26 +155,11 @@ public class Hora {
         return nEntradas;
     }
 
+    /**
+     * Registra la venta de una entrada recudiendo en una unidad el contador.
+     */
     public void entradaVendida() {
         countEntradas--;
-    }
-
-    /**
-     * Obtiene el precio por entrada de la actividad.
-     * 
-     * @return El precio por entrada.
-     */
-    public Double getPrecio() {
-        return precio;
-    }
-
-    /**
-     * Establece el precio por entrada de la actividad.
-     * 
-     * @param precio El nuevo precio por entrada.
-     */
-    public void setPrecio(Double precio) {
-        this.precio = precio;
     }
 
     /**
@@ -180,6 +169,18 @@ public class Hora {
      */
     public Integer getnEntradasDisp() {
         return countEntradas;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Hora Details:\n");
+        sb.append("Fecha: ").append(fecha).append("\n");
+        sb.append("Hora de Inicio: ").append(horaInicio).append("\n");
+        sb.append("Hora de Fin: ").append(horaFin).append("\n");
+        sb.append("Número de Entradas: ").append(nEntradas).append("\n");
+
+        return sb.toString();
     }
 
     /**

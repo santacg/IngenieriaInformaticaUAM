@@ -3,6 +3,7 @@ package Obra;
 import java.util.HashSet;
 import java.util.Set;
 import java.time.LocalDate;
+import java.io.Serializable;
 
 /**
  * Clase Autor.
@@ -13,7 +14,7 @@ import java.time.LocalDate;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Autor {
+public class Autor implements Serializable {
     private String nombre;
     private LocalDate fechaNacimiento;
     private LocalDate fechaFallecimiento;
@@ -216,8 +217,16 @@ public class Autor {
      * @return La cadena de información del autor
      */
     public String toString() {
-        return "Autor [nombre=" + nombre + ", fechaNacimiento=" + fechaNacimiento + ", fechaFallecimiento="
-                + fechaFallecimiento + ", lugarNacimiento=" + lugarNacimiento + ", lugarFallecimiento="
-                + lugarFallecimiento + ", obras=" + obras + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Detalles autor:\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Fecha de Nacimiento: ").append(fechaNacimiento).append("\n");
+        sb.append("Fecha de Fallecimiento: ").append(fechaFallecimiento).append("\n");
+        sb.append("Lugar de Nacimiento: ").append(lugarNacimiento).append("\n");
+        sb.append("Lugar de Fallecimiento: ").append(lugarFallecimiento).append("\n");
+        sb.append("Obras: ").append(obras).append("\n");
+
+        return sb.toString();
     }
 }

@@ -2,6 +2,7 @@ package Sala;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Clase Sala.
@@ -11,7 +12,7 @@ import java.util.List;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Sala {
+public class Sala implements Serializable {
     private String nombre;
     private Integer aforo;
     private Integer humedad;
@@ -20,7 +21,7 @@ public class Sala {
     private Integer tomasElectricidad;
     private Double ancho;
     private Double largo;
-    private List<Sala> subsalas = new ArrayList<>();
+    private List<Sala> subSalas;
     private Sala salaPadre = null;
 
     /**
@@ -46,6 +47,7 @@ public class Sala {
         this.tomasElectricidad = tomasElectricidad;
         this.ancho = ancho;
         this.largo = largo;
+        this.subSalas = new ArrayList<>();
     }
 
     /**
@@ -194,6 +196,15 @@ public class Sala {
         this.largo = largo;
     }
 
+    /**
+     * Intenta agregar una subsala con las especificaciones dadas.
+     * 
+     * @param ancho              El ancho de la subsala.
+     * @param largo              El largo de la subsala.
+     * @param nTomasElectricidad El número de tomas de electricidad de la subsala.
+     * @param aforo              El aforo máximo de la subsala.
+     * @return true si la subsala se añade exitosamente, false de lo contrario.
+     */
     public boolean addSubsala(Double ancho, Double largo, Integer nTomasElectricidad, Integer aforo) {
         if (this.aforo <= aforo || this.ancho <= ancho || this.largo <= largo
                 || this.tomasElectricidad <= nTomasElectricidad) {
@@ -201,32 +212,57 @@ public class Sala {
             return false;
         }
 
-        int numSubsalas = subsalas.size();
-        Sala subsala = new Sala(nombre + " subsala" + (numSubsalas + 1), aforo, humedad, temperatura, climatizador,
+        int numsubSalas = subSalas.size();
+        Sala subSala = new Sala(nombre + " subsala" + (numsubSalas + 1), aforo, humedad, temperatura, climatizador,
                 nTomasElectricidad, ancho, largo);
-        subsala.salaPadre = this;
+        subSala.salaPadre = this;
         this.aforo -= aforo;
         this.ancho -= ancho;
         this.largo -= largo;
         this.tomasElectricidad -= nTomasElectricidad;
-        this.subsalas.add(subsala);
+        this.subSalas.add(subSala);
 
         return true;
     }
 
+    /**
+     * Elimina la última subsala añadida a esta sala. Si no hay subSalas, no realiza
+     * ninguna acción.
+     */
     public void removeSubsala() {
-        if (subsalas.size() > 0) {
-            subsalas.remove(subsalas.size() - 1);
-            subsalas.remove(subsalas.size() - 1);
+        if (subSalas.size() > 0) {
+            subSalas.remove(subSalas.size() - 1);
+            subSalas.remove(subSalas.size() - 1);
         }
     }
 
-    public List<Sala> getSubsalas() {
-        return subsalas;
+    /**
+     * Devuelve una lista de todas las subSalas asociadas a esta sala.
+     *
+     * @return La lista de subSalas.
+     */
+    public List<Sala> getSubSalas() {
+        return subSalas;
     }
 
+    /**
+     * Obtiene la sala padre de esta sala.
+     *
+     * @return La sala padre de esta sala, o null si no tiene.
+     */
     public Sala getSalaPadre() {
         return salaPadre;
+    }
+
+    /**
+     * Genera una representación en cadena de la subsala y sus propiedades.
+     *
+     * @return Una cadena que representa los detalles de la subsala.
+     */
+    public String toSubSalaString() {
+        return "Sala [nombre=" + nombre + ", aforo=" + aforo + ", humedad=" + humedad + ", temperatura=" + temperatura
+                + ", climatizador=" + climatizador + ", tomasElectricidad=" + tomasElectricidad + ", ancho=" + ancho
+                + ", largo=" + largo + "]";
     }
 
     /**
@@ -234,9 +270,29 @@ public class Sala {
      *
      * @return Una cadena que representa los detalles de la sala.
      */
+    @Override
     public String toString() {
-        return "Sala [nombre=" + nombre + ", aforo=" + aforo + ", humedad=" + humedad + ", temperatura=" + temperatura
-                + ", climatizador=" + climatizador + ", tomasElectricidad=" + tomasElectricidad + ", ancho=" + ancho
-                + ", largo=" + largo + ", subsalas=" + subsalas + ", salaPadre=" + salaPadre + "]";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Detalles sala:\n");
+        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("Aforo: ").append(aforo).append("\n");
+        sb.append("Humedad: ").append(humedad).append("\n");
+        sb.append("Temperatura: ").append(temperatura).append("\n");
+        sb.append("Climatizador: ").append(climatizador).append("\n");
+        sb.append("Tomas de Electricidad: ").append(tomasElectricidad).append("\n");
+        sb.append("Ancho: ").append(ancho).append("\n");
+        sb.append("Largo: ").append(largo).append("\n");
+        sb.append("Número de Subsalas: ").append(subSalas != null ? subSalas.size() : 0).append("\n");
+        sb.append("Sala Padre: ").append(salaPadre != null ? salaPadre.getNombre() : "none").append("\n");
+
+        if (subSalas != null) {
+            sb.append("Subsalas:\n");
+            for (Sala subSala : subSalas) {
+                sb.append(subSala.toSubSalaString()).append("\n");
+            }
+        }
+
+        return sb.toString();
     }
 }

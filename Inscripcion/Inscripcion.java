@@ -1,6 +1,7 @@
 package Inscripcion;
 
 import Expofy.ClienteRegistrado;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,10 +13,10 @@ import java.util.Set;
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Inscripcion {
+public class Inscripcion implements Serializable{
     private int nEntradas;
     private ClienteRegistrado cliente;
-    private Set<String> codigos;
+    private Set<String> codigos = new HashSet<>();
 
     /**
      * Constructor que instancia una inscripción.
