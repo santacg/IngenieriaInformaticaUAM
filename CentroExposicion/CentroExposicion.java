@@ -39,15 +39,20 @@ public class CentroExposicion {
     private Set<Descuento> descuentos = new HashSet<>();
     private Set<Sala> salas = new HashSet<>();
     private Gestor gestor;
-/**
- * Comprueba si este {@code CentroExposicion} es igual a otro objeto.
- * La comparación de las colecciones (exposiciones, sorteos, obras, empleados, descuentos, y salas) se realiza
- * a nivel de contenido, lo que significa que todos los elementos de cada colección deben ser iguales
- * entre los dos objetos de {@code CentroExposicion} para que se consideren iguales en su totalidad.
- *
- * @param obj el objeto con el que se compara este {@code CentroExposicion}
- * @return {@code true} si este objeto es igual al objeto argumento; {@code false} en caso contrario.
- */
+
+    /**
+     * Comprueba si este {@code CentroExposicion} es igual a otro objeto.
+     * La comparación de las colecciones (exposiciones, sorteos, obras, empleados,
+     * descuentos, y salas) se realiza
+     * a nivel de contenido, lo que significa que todos los elementos de cada
+     * colección deben ser iguales
+     * entre los dos objetos de {@code CentroExposicion} para que se consideren
+     * iguales en su totalidad.
+     *
+     * @param obj el objeto con el que se compara este {@code CentroExposicion}
+     * @return {@code true} si este objeto es igual al objeto argumento;
+     *         {@code false} en caso contrario.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -289,7 +294,7 @@ public class CentroExposicion {
         for (Exposicion exposicion : exposiciones) {
             if (exposicion.getFechaInicio().isAfter(fechaInicio) && exposicion.getFechaFin().isBefore(fechaFinal)
                     && (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                    || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA))) {
+                            || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA))) {
                 exposicionesPorFecha.add(exposicion);
             }
         }
@@ -413,7 +418,7 @@ public class CentroExposicion {
                 sorteosActivos.add(sorteo);
             }
         }
-        return sorteosActivos; 
+        return sorteosActivos;
     }
 
     public Set<Obra> getObras() {
@@ -517,7 +522,7 @@ public class CentroExposicion {
     }
 
     public Boolean loginEmpleado(String NIF, String numSS, String contrasenia) {
-        for (Empleado e: empleados) {
+        for (Empleado e : empleados) {
             if (e.getNIF().equals(NIF) && e.getNumSS().equals(numSS) && contrasenia.equals(contraseniaEmpleado)) {
                 e.logIn();
                 return true;

@@ -19,6 +19,7 @@ public class Exposicion {
     private LocalDate fechaFin;
     private String descripcion;
     private Double benificios;
+    private Double Precio;
     private EstadoExposicion estado;
     private Set<SalaExposicion> salas;
     private Set<Hora> horario;
@@ -40,7 +41,7 @@ public class Exposicion {
      * @param tipo        El tipo de exposición, puede ser temporal o permanente.
      */
     public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
-            Set<SalaExposicion> salas, TipoExpo tipo) {
+            Set<SalaExposicion> salas, TipoExpo tipo, Double precio) {
         this.ID = ++IDcount;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
@@ -48,6 +49,7 @@ public class Exposicion {
         this.descripcion = descripcion;
         this.salas = salas;
         this.tipo = tipo;
+        this.precio = precio;
     }
 
     /**
@@ -147,6 +149,24 @@ public class Exposicion {
      */
     public void setBenificios(Double benificios) {
         this.benificios = benificios;
+    }
+
+    /**
+     * Devuelve el precio de la exposición.
+     * 
+     * @return El precio de la exposición.
+     */
+    public Double getPrecio() {
+        return precio;
+    }
+
+    /**
+     * Actualiza el precio de la exposición.
+     * 
+     * @param precio El nuevo precio de la exposición.
+     */
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
     /**

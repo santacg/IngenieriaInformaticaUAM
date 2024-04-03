@@ -278,7 +278,8 @@ public class Expofy {
             return false;
         }
 
-        if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA) || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+        if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)
+                || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
             System.out.println("La exposición no está disponible");
             return false;
         }
@@ -305,7 +306,7 @@ public class Expofy {
             return false;
         }
 
-        if (nEntradas >= hora.getnEntradas()) {
+        if (nEntradas >= hora.getnEntradas() || nEntradas > hora.getnEntradasDisp()) {
             System.out.println("No hay suficientes entradas disponibles");
             return false;
         }
@@ -318,7 +319,7 @@ public class Expofy {
             entrada.setTarjetaDeCredito(tarjetaDeCredito);
             hora.entradaVendida();
             estadisticas.incrementarTicketsVendidos();
-            estadisticas.incrementarIngresosTotales(hora.getPrecio());
+            estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
 
         return true;
@@ -337,7 +338,6 @@ public class Expofy {
             }
         }
     }
-    
 
     /**
      * Genera una representación en cadena de la instancia de Expofy, incluyendo

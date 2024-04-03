@@ -42,7 +42,7 @@ public class Hora {
             return;
         }
         this.entradas.add(entrada);
-        countEntradas++;
+        countEntradas--;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Hora {
      */
     public void removeEntrada(Entrada entrada) {
         this.entradas.remove(entrada);
-        countEntradas--;
+        countEntradas++;
     }
 
     /**
@@ -79,7 +79,7 @@ public class Hora {
         this.horaFin = horaFin;
         this.nEntradas = nEntradas;
         this.precio = precio;
-        countEntradas = 0;
+        countEntradas = nEntradas;
     }
 
     /**
@@ -137,9 +137,9 @@ public class Hora {
     }
 
     /**
-     * Obtiene el número de entradas disponibles para la actividad.
+     * Obtiene el número de entradas totales para la actividad.
      * 
-     * @return El número total de entradas disponibles.
+     * @return El número total de entradas totales.
      */
     public Integer getnEntradas() {
         return nEntradas;
@@ -165,6 +165,15 @@ public class Hora {
      */
     public void setPrecio(Double precio) {
         this.precio = precio;
+    }
+
+    /**
+     * Obtiene el número de entradas disponibles para la actividad.
+     * 
+     * @return El número total de entradas disponibles.
+     */
+    public Integer getnEntradasDisp() {
+        return countEntradas;
     }
 
     /**

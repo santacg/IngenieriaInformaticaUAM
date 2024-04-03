@@ -132,7 +132,8 @@ public class Sala {
     /**
      * Establece el estado del climatizador en la sala.
      * 
-     * @param climatizador Verdadero para indicar que la sala tiene climatizador, falso de lo contrario.
+     * @param climatizador Verdadero para indicar que la sala tiene climatizador,
+     *                     falso de lo contrario.
      */
     public void setClimatizador(Boolean climatizador) {
         this.climatizador = climatizador;
@@ -150,7 +151,8 @@ public class Sala {
     /**
      * Establece el número de tomas de electricidad en la sala.
      * 
-     * @param tomasElectricidad El nuevo número de tomas de electricidad para la sala.
+     * @param tomasElectricidad El nuevo número de tomas de electricidad para la
+     *                          sala.
      */
     public void setTomasElectricidad(Integer tomasElectricidad) {
         this.tomasElectricidad = tomasElectricidad;
@@ -192,14 +194,24 @@ public class Sala {
         this.largo = largo;
     }
 
-    public void addSubsala() {
+    public boolean addSubsala(Double ancho, Double largo, Integer nTomasElectricidad, Integer aforo) {
+        if (this.aforo < aforo || this.ancho < ancho || this.largo < largo
+                || this.tomasElectricidad < nTomasElectricidad) {
+            System.out.println("No se puede añadir la subsala, no hay suficientes recursos.");
+            return false;
+        }
+
         int numSubsalas = subsalas.size();
-        Sala subsala1 = new Sala(nombre + " subsala" + (numSubsalas + 1), aforo/2, humedad, temperatura, climatizador,
-                tomasElectricidad/2, ancho/2, largo);
-        Sala subsala2 = new Sala(nombre + " subsala" + (numSubsalas + 2), aforo/2, humedad, temperatura, climatizador,
-                tomasElectricidad/2, ancho/2, largo);
-        this.subsalas.add(subsala1);
-        this.subsalas.add(subsala2);
+        Sala subsala = new Sala(nombre + " subsala" + (numSubsalas + 1), nAforo, humedad, temperatura, climatizador,
+                nTomasElectricidad, ancho, largo);
+        subsala.salaPadre = this;
+        this.aforo -= aforo;
+        this.ancho -= ancho;
+        this.largo -= largo;
+        this.tomasElectricidad -= nTomasElectricidad;
+        this.subsalas.add(subsala);
+
+        return true;
     }
 
     public void removeSubsala() {

@@ -149,7 +149,7 @@ public class ClienteRegistrado extends Usuario {
 
     public void inscribirse(Sorteo sorteo, int n_entradas) {
         String mensaje = "Tu participación por " + n_entradas + " entradas para la exposición " +
-                            sorteo.getExposicion().getNombre();
+                sorteo.getExposicion().getNombre();
         if (sancionadoHasta.isAfter(LocalDate.now()) || sorteo.getFechaSorteo().isBefore(LocalDate.now())) {
             mensaje = mensaje + " no ha podido realizarse ya que estás sancionado o el sorteo ha expirado";
         } else {
