@@ -1,6 +1,7 @@
 package CentroExposicion;
 
 import java.time.LocalDate;
+import java.io.Serializable;
 import Exposicion.Exposicion;
 
 /**
@@ -11,7 +12,7 @@ import Exposicion.Exposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class SorteoExpo extends Sorteo {
+public class SorteoExpo extends Sorteo implements Serializable{
     private Boolean vigenciaExpo;
 
     /**

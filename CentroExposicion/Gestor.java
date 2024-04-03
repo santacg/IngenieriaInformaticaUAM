@@ -1,6 +1,7 @@
 package CentroExposicion;
 
 import Usuario.Usuario;
+import java.io.Serializable;
 
 /**
  * Clase Gestor.
@@ -10,7 +11,7 @@ import Usuario.Usuario;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Gestor extends Usuario {
+public class Gestor extends Usuario implements Serializable{
 
     /**
      * Crea una nueva instancia de la clase Getsor con el NIF especificado.

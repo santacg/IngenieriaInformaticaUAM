@@ -8,8 +8,9 @@ package CentroExposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
+import java.io.Serializable;
 
-public abstract class Descuento {
+public abstract class Descuento implements Serializable{
     private Double descuento;
     private Integer cantidad;
 

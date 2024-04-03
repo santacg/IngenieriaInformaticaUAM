@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import CentroExposicion.Sorteo;
 import Inscripcion.Inscripcion;
 import Usuario.Usuario;
+import java.io.Serializable;
 
 /**
  * Clase ClienteRegistrado
@@ -16,7 +17,7 @@ import Usuario.Usuario;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class ClienteRegistrado extends Usuario {
+public class ClienteRegistrado extends Usuario implements Serializable{
     private Boolean publicidad;
     private String contrasenia;
     private Boolean sancionado;

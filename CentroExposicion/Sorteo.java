@@ -1,5 +1,6 @@
 package CentroExposicion;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 import Exposicion.Exposicion;
@@ -22,7 +23,7 @@ import Expofy.Notificacion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public abstract class Sorteo {
+public abstract class Sorteo implements Serializable{
     private LocalDate fechaSorteo;
     private int n_entradas;
     private Exposicion exposicion;

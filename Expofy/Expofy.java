@@ -1,11 +1,8 @@
 package Expofy;
 
-import java.util.HashSet;
-import java.util.List;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.SortedMap;
+import java.io.*;
+import java.util.*;
+
 
 import CentroExposicion.CentroExposicion;
 import CentroExposicion.Sorteo;
@@ -28,7 +25,7 @@ import Usuario.Usuario;
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Expofy {
+public class Expofy implements Serializable{
     private static Expofy instance;
     private Set<CentroExposicion> centroExposicion = new HashSet<CentroExposicion>();
     private List<Notificacion> notificaciones = new ArrayList<Notificacion>();
@@ -224,6 +221,17 @@ public class Expofy {
         }
     }
 
+    public boolean enviarNotificacionCliente(String mensaje, Set<ClienteRegistrado> clientes, Empleado empleado) {
+        if (empleado.isLoged() == false || empleado.getPermisoMensajes() == false) {
+            return false;
+        }
+        Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
+        for (ClienteRegistrado c : clientes) {
+            c.addNotificacion(notificacion);
+        }
+        this.notificaciones.add(notificacion);
+    }
+
     /**
      * Envía una notificación a un conjunto específico de usuarios.
      * 
@@ -306,10 +314,22 @@ public class Expofy {
             return false;
         }
 
-        if (nEntradas >= hora.getnEntradas() || nEntradas > hora.getnEntradasDisp()) {
+        if (nEntradas >= hora.getCountEntradas() || nEntradas > hora.getCountEntradas()) {
             System.out.println("No hay suficientes entradas disponibles");
             return false;
         }
+
+        if (!TeleChargeAndPaySystem.isValidCardNumber(numTarjeta)) return Status.ERROR;
+    
+    try {
+      TeleChargeAndPaySystem.charge(numTarjeta, "Entrada", precio, true);
+    } catch (InvalidCardNumberException e) {
+        return Status.ERROR;
+    } catch (FailedInternetConnectionException e) {
+        return Status.ERROR;
+    } catch (OrderRejectedException e) {
+        return Status.ERROR;
+    }
 
         Estadisticas estadisticas = exposicion.getEstadisticas();
         int i;
@@ -337,6 +357,41 @@ public class Expofy {
                 }
             }
         }
+    }
+
+    public void persistirExpofy() {
+        try (
+                ObjectOutputStream out = new ObjectOutputStream(
+                        new FileOutputStream("ExpofyData.dat"))) {
+            out.writeObject(this);
+        } catch (IOException except) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reanudarExpofy() {
+        File file = new File("ExpofyData.dat");
+        if (!file.exists())
+            return;
+
+        try (
+                ObjectInputStream input = new ObjectInputStream(
+                        new FileInputStream("ExpofyData.dat"))) {
+            Expofy nuevo = (Expofy) in.readObject();
+            copiarExpofy(nuevo);
+            for (Exposicion exposicion : exposiciones) {
+                e.checkEstadoExposicion();
+            }
+            instance = this;
+        } catch (IOException | ClassNotFoundException except) {
+            e.printStackTrace();
+        }
+    }
+
+    private void copiarExpofy(Expofy nuevo) {
+        centroExposicion = new HashSet<>(nuevo.CentroExposicion);
+        notificaciones = new ArrayList<>(nuevo.Notificacion); 
+        clientesRegistrados = new HashSet<>(nuevo.ClienteRegistrado);        
     }
 
     /**

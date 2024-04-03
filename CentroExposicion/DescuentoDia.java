@@ -8,7 +8,9 @@ package CentroExposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class DescuentoDia extends Descuento {
+import java.io.Serializable;
+
+public class DescuentoDia extends Descuento implements Serializable{
     /**
      * Referencia al constructor de la superclase descuento.
      *

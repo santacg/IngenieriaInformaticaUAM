@@ -1,7 +1,7 @@
 package CentroExposicion;
 
 import Usuario.Usuario;
-
+import java.io.Serializable;
 /**
  * Clase Empleado.
  * Representa un empleado dentro del sistema de gestión de usuarios.
@@ -14,7 +14,7 @@ import Usuario.Usuario;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Empleado extends Usuario {
+public class Empleado extends Usuario implements Serializable{
     private String nombre;
     private String numSS;
     private String numCuenta;

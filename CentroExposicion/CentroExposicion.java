@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import Sala.Sala;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import Exposicion.EstadoExposicion;
@@ -22,7 +23,7 @@ import Obra.Obra;
  *
  */
 
-public class CentroExposicion {
+public class CentroExposicion implements Serializable{
     private Integer ID;
     private static Integer IDcount = 0;
     private String nombre;

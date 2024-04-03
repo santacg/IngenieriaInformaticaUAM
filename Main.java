@@ -25,7 +25,7 @@ import Utils.LectorCSVObras;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class MainTest {
+public class Main {
       public static void main(String[] args) {
             // Instanciamos el sistema
             Expofy expofy = Expofy.getInstance();
@@ -45,7 +45,7 @@ public class MainTest {
             // Salas
             Set<Sala> salas = new HashSet<>();
             Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
-            sala1.addSubsala();
+            sala1.addSubsala(5.0, 7.0, 2, 20);
             salas.add(sala1);
 
             Sala sala2 = new Sala("Sala2", 100, 50, 25, true, 10, 15.0, 20.0);
@@ -76,9 +76,9 @@ public class MainTest {
             salasExposicion1.add(salaExposicion1);
             salasExposicion2.add(salaExposicion2);
             Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1),
-                        "Expo1", salasExposicion1, TipoExpo.PERMANENTE);
+                        "Expo1", salasExposicion1, TipoExpo.PERMANENTE, 21.0);
             Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2023, 2, 2), LocalDate.of(2024, 2, 2),
-                        "Expo2", salasExposicion2, TipoExpo.TEMPORAL);
+                        "Expo2", salasExposicion2, TipoExpo.TEMPORAL, 22.0);
 
             // Añadimos obras a una de las exposiciones
             Cuadro cuadro = new Cuadro(

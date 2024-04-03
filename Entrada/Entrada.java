@@ -2,7 +2,7 @@ package Entrada;
 
 import Expofy.ClienteRegistrado;
 import TarjetaDeCredito.TarjetaDeCredito;
-
+import java.io.Serializable;
 /**
  * Clase Entrada.
  * Esta clase representa una entrada adquirida por un cliente en el sistema
@@ -12,7 +12,7 @@ import TarjetaDeCredito.TarjetaDeCredito;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Entrada {
+public class Entrada implements Serializable{
     private Integer IDEntrada;
     private static Integer IDcount = 0;
     private ClienteRegistrado clienteRegistrado;

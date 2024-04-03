@@ -136,6 +136,10 @@ public class Hora {
         this.horaFin = horaFin;
     }
 
+    public Integer getCountEntradas() {
+        return countEntradas;
+    }
+
     /**
      * Obtiene el número de entradas totales para la actividad.
      * 
