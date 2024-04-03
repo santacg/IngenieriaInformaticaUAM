@@ -2,8 +2,12 @@ package Inscripcion;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import Expofy.ClienteRegistrado;
 
 /**
  * Clase InscripcionTest.
@@ -23,8 +27,9 @@ public class InscripcionTest {
      */
     @BeforeEach
     public void setUp() {
-        Integer nEntradas = 5;
-        inscripcion = new Inscripcion(nEntradas);
+        int nEntradas = 5;
+        ClienteRegistrado cliente1 = new ClienteRegistrado("55025166N", false, "12345", false, LocalDate.of(2020, 3, 14), null);
+        inscripcion = new Inscripcion(nEntradas, cliente1);
     }
 
     /**
@@ -34,8 +39,8 @@ public class InscripcionTest {
      */
     @Test
     public void testGetnEntradas() {
-        Integer expected = 5;
-        Integer actual = inscripcion.getnEntradas();
+        int expected = 5;
+        int actual = inscripcion.getnEntradas();
         assertEquals(expected, actual);
     }
 
@@ -46,9 +51,9 @@ public class InscripcionTest {
      */
     @Test
     public void testSetnEntradas() {
-        Integer newNEntradas = 10;
+        int newNEntradas = 10;
         inscripcion.setnEntradas(newNEntradas);
-        Integer actual = inscripcion.getnEntradas();
+        int actual = inscripcion.getnEntradas();
         assertEquals(newNEntradas, actual);
     }
 }

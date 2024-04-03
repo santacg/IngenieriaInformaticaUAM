@@ -5,12 +5,16 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.SortedMap;
+
 import CentroExposicion.CentroExposicion;
+import CentroExposicion.Sorteo;
 import Entrada.Entrada;
 import Exposicion.Estadisticas;
 import Exposicion.EstadoExposicion;
 import Exposicion.Exposicion;
 import Exposicion.Hora;
+import Inscripcion.Inscripcion;
 import TarjetaDeCredito.TarjetaDeCredito;
 import Usuario.Usuario;
 
@@ -319,6 +323,21 @@ public class Expofy {
 
         return true;
     }
+
+    public void updateSanciones() {
+        for (CentroExposicion centro : centroExposicion) {
+            for (Sorteo sorteo : centro.getSorteos()) {
+                for (Inscripcion inscripcion : sorteo.getInscripciones()) {
+                    for (String codigo : inscripcion.getCodigos()) {
+                        if (codigo != null && sorteo.getFechaLimite().isBefore(LocalDate.now())) {
+                            inscripcion.getCliente().setSancionadoHasta(LocalDate.now().plusDays(centro.getSancion()));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 
     /**
      * Genera una representación en cadena de la instancia de Expofy, incluyendo

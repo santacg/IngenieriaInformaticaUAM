@@ -94,6 +94,10 @@ public abstract class Sorteo {
         this.exposicion = exposicion;
     }
 
+    public Set<Inscripcion> getInscripciones(){
+        return inscripciones;
+    }
+
     /**
      * Añade una inscripción al conjunto de inscripciones del sorteo.
      * 
@@ -101,6 +105,10 @@ public abstract class Sorteo {
      */
     public void addInscripcion(Inscripcion inscripcion) {
         inscripciones.add(inscripcion);
+    }
+
+    public void removeInscripcion(Inscripcion inscripcion) {
+        inscripciones.remove(inscripcion);
     }
 
     /**
@@ -111,9 +119,6 @@ public abstract class Sorteo {
      * @throws IllegalArgumentException Si el conjunto está vacío.
      */
     public static Inscripcion getRandomInscripcion(Set<Inscripcion> set) {
-        if (set == null || set.isEmpty()) {
-            throw new IllegalArgumentException("The Set cannot be empty.");
-        }
         int rand = new Random().nextInt(set.size());
         int i = 0;
         for (Inscripcion inscripcion : set) {
@@ -189,4 +194,5 @@ public abstract class Sorteo {
     }
 
     public abstract LocalDate getFechaLimite();
+
 }

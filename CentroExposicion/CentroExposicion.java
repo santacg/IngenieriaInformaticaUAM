@@ -406,6 +406,16 @@ public class CentroExposicion {
         this.sorteos.clear();
     }
 
+    public Set<Sorteo> getSorteosActivos() {
+        Set<Sorteo> sorteosActivos = new HashSet<>();
+        for (Sorteo sorteo : sorteos) {
+            if (sorteo.getFechaSorteo().isBefore(LocalDate.now()) || sorteo.getFechaSorteo().equals(LocalDate.now())) {
+                sorteosActivos.add(sorteo);
+            }
+        }
+        return sorteosActivos; 
+    }
+
     public Set<Obra> getObras() {
         return obras;
     }

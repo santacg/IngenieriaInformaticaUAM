@@ -139,21 +139,25 @@ public class ClienteRegistrado extends Usuario {
     }
 
     /**
-     * Intenta inscribir al cliente en un sorteo. La inscripción solo es posible si
-     * el cliente no está sancionado.
+     * Intenta inscribir al cliente en un sorteo y le confirma el resultado con
+     * una notificación. La inscripción solo es posible si
+     * el cliente no está sancionado y si la fecha del sorteo no ha expirado.
      * 
      * @param sorteo     El sorteo al cual el cliente desea inscribirse.
      * @param n_entradas Número de entradas que el cliente desea inscribir.
-     * @return {@code true} si la inscripción es exitosa, {@code false} en caso
-     *         contrario.
      */
 
-    public boolean inscribirse(Sorteo sorteo, int n_entradas) {
-        if (sancionadoHasta.isAfter(LocalDate.now())) {
-            return false;
+    public void inscribirse(Sorteo sorteo, int n_entradas) {
+        String mensaje = "Tu participación por " + n_entradas + " entradas para la exposición " +
+                            sorteo.getExposicion().getNombre();
+        if (sancionadoHasta.isAfter(LocalDate.now()) || sorteo.getFechaSorteo().isBefore(LocalDate.now())) {
+            mensaje = mensaje + " no ha podido realizarse ya que estás sancionado o el sorteo ha expirado";
+        } else {
+            sorteo.addInscripcion(new Inscripcion(n_entradas, this));
+            mensaje = mensaje + " se ha registrado correctamente";
         }
-        sorteo.addInscripcion(new Inscripcion(n_entradas, this));
-        return true;
+        Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
+        this.addNotificacion(notificacion);
     }
 
     /**
