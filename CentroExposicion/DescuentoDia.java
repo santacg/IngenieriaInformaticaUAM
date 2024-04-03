@@ -9,6 +9,7 @@ package CentroExposicion;
  *
  */
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class DescuentoDia extends Descuento implements Serializable{
     /**
@@ -20,4 +21,12 @@ public class DescuentoDia extends Descuento implements Serializable{
     public DescuentoDia(Double descuento, Integer cantidad) {
         super(descuento, cantidad);
     }
+
+    public boolean validezDescuento(LocalDate fecha){
+        if (fecha.isBefore()) {
+            
+        }
+    }
 }
+
+// Fecha ultima compra    Ok, lo hago  Fecha ultima compra + cantidad

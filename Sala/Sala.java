@@ -202,7 +202,7 @@ public class Sala {
         }
 
         int numSubsalas = subsalas.size();
-        Sala subsala = new Sala(nombre + " subsala" + (numSubsalas + 1), nAforo, humedad, temperatura, climatizador,
+        Sala subsala = new Sala(nombre + " subsala" + (numSubsalas + 1), aforo, humedad, temperatura, climatizador,
                 nTomasElectricidad, ancho, largo);
         subsala.salaPadre = this;
         this.aforo -= aforo;

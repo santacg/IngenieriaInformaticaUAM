@@ -42,7 +42,8 @@ public class Hora {
             return;
         }
         this.entradas.add(entrada);
-        countEntradas--;
+        nEntradas++;
+        countEntradas++;
     }
 
     /**
@@ -52,7 +53,8 @@ public class Hora {
      */
     public void removeEntrada(Entrada entrada) {
         this.entradas.remove(entrada);
-        countEntradas++;
+        nEntradas--;
+        countEntradas--;
     }
 
     /**

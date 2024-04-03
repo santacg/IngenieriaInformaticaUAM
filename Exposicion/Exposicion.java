@@ -19,11 +19,11 @@ public class Exposicion {
     private LocalDate fechaFin;
     private String descripcion;
     private Double benificios;
-    private Double Precio;
+    private Double precio;
     private EstadoExposicion estado;
     private Set<SalaExposicion> salas;
     private Set<Hora> horario;
-    private Set<Descuento> descuentos;
+    private Descuento descuento;
     private Estadisticas estadisticas;
     private TipoExpo tipo;
 
@@ -345,42 +345,17 @@ public class Exposicion {
      * 
      * @return El conjunto de descuentos de la exposición.
      */
-    public Set<Descuento> getDescuentos() {
-        return descuentos;
+    public Descuento getDescuento() {
+        return descuento;
     }
 
     /**
      * Establece el conjunto de descuentos aplicables a la exposición.
      * 
-     * @param descuentos El nuevo conjunto de descuentos para la exposición.
+     * @param descuento El nuevo conjunto de descuentos para la exposición.
      */
-    public void setDescuentos(Set<Descuento> descuentos) {
-        this.descuentos = descuentos;
-    }
-
-    /**
-     * Añade un descuento al conjunto de descuentos de la exposición.
-     * 
-     * @param descuento El descuento a añadir.
-     */
-    public void addDescuento(Descuento descuento) {
-        this.descuentos.add(descuento);
-    }
-
-    /**
-     * Elimina un descuento del conjunto de descuentos de la exposición.
-     * 
-     * @param descuento El descuento a eliminar.
-     */
-    public void removeDescuento(Descuento descuento) {
-        this.descuentos.remove(descuento);
-    }
-
-    /**
-     * Elimina todos los descuentos del conjunto de descuentos de la exposición.
-     */
-    public void removeAllDescuentos() {
-        this.descuentos.clear();
+    public void setDescuento(Descuento descuento) {
+        this.descuento = descuento;
     }
 
     /**
@@ -392,7 +367,7 @@ public class Exposicion {
     public String toString() {
         return "Exposicion [ID=" + ID + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
                 + ", descripcion=" + descripcion + ", benificios=" + benificios + ", estado=" + estado + ", salas="
-                + salas + ", horario=" + horario + ", descuentos=" + descuentos + ", estadisticas=" + estadisticas
+                + salas + ", horario=" + horario + ", descuentos=" + descuento + ", estadisticas=" + estadisticas
                 + ", tipo=" + tipo + "]";
     }
 

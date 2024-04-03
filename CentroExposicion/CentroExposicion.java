@@ -553,5 +553,4 @@ public class CentroExposicion implements Serializable{
                 + obras
                 + ", empleados=" + empleados.toString() + ", gestor=" + gestor + ", descuentos=" + descuentos + "]";
     }
-
 }

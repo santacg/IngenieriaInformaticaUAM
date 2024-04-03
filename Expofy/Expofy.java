@@ -3,8 +3,9 @@ package Expofy;
 import java.io.*;
 import java.util.*;
 
-import CentroExposicion.CentroExposicion;
-import CentroExposicion.Sorteo;
+import java.time.LocalDate;
+
+import CentroExposicion.*;
 import Entrada.Entrada;
 import Exposicion.Estadisticas;
 import Exposicion.EstadoExposicion;
@@ -13,6 +14,8 @@ import Exposicion.Hora;
 import Inscripcion.Inscripcion;
 import TarjetaDeCredito.TarjetaDeCredito;
 import Usuario.Usuario;
+
+import es.uam.eps.padsof.telecard.*;
 
 /**
  * Clase Expofy.
@@ -318,13 +321,19 @@ public class Expofy implements Serializable {
             System.out.println("No hay suficientes entradas disponibles");
             return false;
         }
+        if (exposicion.getDescuento() != null) {
+            
+        }
 
+        if (validez_codigo(codigo, clienteRegistrado) == true) {
+            precioFinal = 0.0;
+        }
         
 
         if (!TeleChargeAndPaySystem.isValidCardNumber(tarjetaDeCredito.getNumero()))
             return false;
 
-        if(!TeleChargeAndPaySystem.charge(tatarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)){
+        if(!TeleChargeAndPaySystem.charge(tarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)){
             return false;
         }
 
@@ -390,6 +399,24 @@ public class Expofy implements Serializable {
         notificaciones = new ArrayList<>(nuevo.Notificacion);
         clientesRegistrados = new HashSet<>(nuevo.ClienteRegistrado);
     }
+
+    private boolean validez_codigo(String codigo, ClienteRegistrado cliente){
+        for (CentroExposicion centroExposicion2 : centroExposicion) {
+            for (Sorteo sorteo : centroExposicion2.getSorteos()) {
+                for (Inscripcion inscripcion : sorteo.getInscripciones()) {
+                    if (inscripcion.getCliente().equals(cliente)) {
+                        for (String codigo_c : inscripcion.getCodigos()) {
+                            if (codigo_c.compareTo(codigo) == 0) {
+                                inscripcion.removeCodigo(codigo);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    } 
 
     /**
      * Genera una representación en cadena de la instancia de Expofy, incluyendo

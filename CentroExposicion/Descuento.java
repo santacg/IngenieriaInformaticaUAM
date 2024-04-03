@@ -9,6 +9,7 @@ package CentroExposicion;
  *
  */
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public abstract class Descuento implements Serializable{
     private Double descuento;
@@ -56,4 +57,6 @@ public abstract class Descuento implements Serializable{
     public void setcantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
+
+    public abstract boolean validezDescuento(LocalDate fecha);
 }
