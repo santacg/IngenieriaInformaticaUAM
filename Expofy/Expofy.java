@@ -3,7 +3,6 @@ package Expofy;
 import java.io.*;
 import java.util.*;
 
-
 import CentroExposicion.CentroExposicion;
 import CentroExposicion.Sorteo;
 import Entrada.Entrada;
@@ -25,7 +24,7 @@ import Usuario.Usuario;
  *
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class Expofy implements Serializable{
+public class Expofy implements Serializable {
     private static Expofy instance;
     private Set<CentroExposicion> centroExposicion = new HashSet<CentroExposicion>();
     private List<Notificacion> notificaciones = new ArrayList<Notificacion>();
@@ -274,6 +273,7 @@ public class Expofy implements Serializable{
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
             Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String codigo) {
         Boolean horaDisponible = false;
+        Double precioFinal;
         // Verificaciones varias: cliente logueado, fecha y hora dentro del rango, y
         // número de entradas válido.
         if (clienteRegistrado.isLoged() == false) {
@@ -319,17 +319,14 @@ public class Expofy implements Serializable{
             return false;
         }
 
-        if (!TeleChargeAndPaySystem.isValidCardNumber(numTarjeta)) return Status.ERROR;
-    
-    try {
-      TeleChargeAndPaySystem.charge(numTarjeta, "Entrada", precio, true);
-    } catch (InvalidCardNumberException e) {
-        return Status.ERROR;
-    } catch (FailedInternetConnectionException e) {
-        return Status.ERROR;
-    } catch (OrderRejectedException e) {
-        return Status.ERROR;
-    }
+        
+
+        if (!TeleChargeAndPaySystem.isValidCardNumber(tarjetaDeCredito.getNumero()))
+            return false;
+
+        if(!TeleChargeAndPaySystem.charge(tatarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)){
+            return false;
+        }
 
         Estadisticas estadisticas = exposicion.getEstadisticas();
         int i;
@@ -344,7 +341,7 @@ public class Expofy implements Serializable{
 
         return true;
     }
-
+    
     public void updateSanciones() {
         for (CentroExposicion centro : centroExposicion) {
             for (Sorteo sorteo : centro.getSorteos()) {
@@ -390,8 +387,8 @@ public class Expofy implements Serializable{
 
     private void copiarExpofy(Expofy nuevo) {
         centroExposicion = new HashSet<>(nuevo.CentroExposicion);
-        notificaciones = new ArrayList<>(nuevo.Notificacion); 
-        clientesRegistrados = new HashSet<>(nuevo.ClienteRegistrado);        
+        notificaciones = new ArrayList<>(nuevo.Notificacion);
+        clientesRegistrados = new HashSet<>(nuevo.ClienteRegistrado);
     }
 
     /**
