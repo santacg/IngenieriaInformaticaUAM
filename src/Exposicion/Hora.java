@@ -1,11 +1,11 @@
-package Exposicion;
+package src.Exposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
-import Entrada.Entrada;
+import src.Entrada.Entrada;
 
 /**
  * Clase Hora.

@@ -1,6 +1,6 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
-import Usuario.Usuario;
+import src.Usuario.Usuario;
 
 
 /**

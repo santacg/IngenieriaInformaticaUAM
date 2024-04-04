@@ -1,10 +1,10 @@
-package Expofy;
+package src.Expofy;
 
 import java.time.LocalDate;
 
-import CentroExposicion.Sorteo;
-import Inscripcion.Inscripcion;
-import Usuario.Usuario;
+import src.CentroExposicion.Sorteo;
+import src.Inscripcion.Inscripcion;
+import src.Usuario.Usuario;
 
 /**
  * Clase ClienteRegistrado

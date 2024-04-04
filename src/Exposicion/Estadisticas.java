@@ -1,4 +1,4 @@
-package Exposicion;
+package src.Exposicion;
 
 import java.io.Serializable;
 

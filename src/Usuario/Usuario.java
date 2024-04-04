@@ -1,9 +1,9 @@
-package Usuario;
+package src.Usuario;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
-import Expofy.Notificacion;
+import src.Expofy.Notificacion;
 
 /**
  * Clase Usuario.

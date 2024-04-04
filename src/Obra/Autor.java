@@ -1,4 +1,4 @@
-package Obra;
+package src.Obra;
 
 import java.util.HashSet;
 import java.util.Set;

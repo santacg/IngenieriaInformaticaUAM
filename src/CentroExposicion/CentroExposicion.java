@@ -1,13 +1,13 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import Sala.Sala;
+import src.Sala.Sala;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
 import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
-import Expofy.*;
+import src.Expofy.*;
 import java.io.File;
 
 import java.io.File;
@@ -15,8 +15,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import Exposicion.*;
-import Obra.Obra;
+import src.Exposicion.*;
+import src.Obra.Obra;
 
 /**
  * Clase CentroExposicion.

@@ -1,4 +1,4 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
 /**
  * Clase DescuentoDia.

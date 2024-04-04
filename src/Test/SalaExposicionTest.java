@@ -1,12 +1,13 @@
-package Exposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Obra.Obra;
-import Sala.Sala;
+import src.Obra.Obra;
+import src.Sala.Sala;
+import src.Exposicion.SalaExposicion;
 
 public class SalaExposicionTest {
     private SalaExposicion salaExposicion;

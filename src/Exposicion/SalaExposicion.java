@@ -1,12 +1,12 @@
-package Exposicion;
+package src.Exposicion;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
 
-import Obra.Obra;
-import Obra.ObraNoDigital;
-import Sala.Sala;
+import src.Obra.Obra;
+import src.Obra.ObraNoDigital;
+import src.Sala.Sala;
 
 /**
  * Clase SalaExposicion.

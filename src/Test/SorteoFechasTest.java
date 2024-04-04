@@ -1,4 +1,4 @@
-package CentroExposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,7 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Exposicion.Exposicion;
+import src.Exposicion.Exposicion;
+import src.CentroExposicion.SorteoFechas;
 
 public class SorteoFechasTest {
     private SorteoFechas sorteo;

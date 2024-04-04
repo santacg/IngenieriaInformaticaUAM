@@ -1,4 +1,4 @@
-package Exposicion;
+package src.Exposicion;
 /**
  * Clase EstadoExposicion.
  * Representa los posibles estados en los que puede encontrarse una exposición.

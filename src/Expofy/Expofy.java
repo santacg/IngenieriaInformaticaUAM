@@ -1,4 +1,4 @@
-package Expofy;
+package src.Expofy;
 
 import java.io.*;
 import java.util.*;
@@ -6,15 +6,12 @@ import java.io.File;
 
 import java.time.LocalDate;
 
-import CentroExposicion.*;
-import Entrada.Entrada;
-import Exposicion.Estadisticas;
-import Exposicion.EstadoExposicion;
-import Exposicion.Exposicion;
-import Exposicion.Hora;
-import Inscripcion.Inscripcion;
-import TarjetaDeCredito.TarjetaDeCredito;
-import Usuario.Usuario;
+import src.CentroExposicion.*;
+import src.Entrada.Entrada;
+import src.Exposicion.*;
+import src.Inscripcion.Inscripcion;
+import src.TarjetaDeCredito.TarjetaDeCredito;
+import src.Usuario.Usuario;
 
 import es.uam.eps.padsof.tickets.ITicketInfo;
 import es.uam.eps.padsof.tickets.NonExistentFileException;

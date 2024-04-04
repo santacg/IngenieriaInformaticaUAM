@@ -3,14 +3,14 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import CentroExposicion.*;
-import Expofy.*;
-import Exposicion.*;
-import Inscripcion.Inscripcion;
-import Obra.*;
-import Sala.*;
-import TarjetaDeCredito.TarjetaDeCredito;
-import Utils.LectorCSVObras;
+import src.CentroExposicion.*;
+import src.Expofy.*;
+import src.Exposicion.*;
+import src.Inscripcion.Inscripcion;
+import src.Obra.*;
+import src.Sala.*;
+import src.TarjetaDeCredito.TarjetaDeCredito;
+import src.Utils.LectorCSVObras;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
@@ -29,8 +29,6 @@ public class Main {
       public static void main(String[] args) throws NonExistentFileException, UnsupportedImageTypeException {
             // Instanciamos el sistema
             Expofy expofy = Expofy.getInstance();
-
-            // Cliente no registrado busca obras
 
             // Instanciamos varios atributos que componen el sistema
 
@@ -152,6 +150,7 @@ public class Main {
 
             // Empleado vende entradas para el mismo día
             centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(), LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
+
             // Gestor cambia el estado de una obra
             cuadro.restaurarObra();
 
@@ -189,6 +188,7 @@ public class Main {
             centroExposicion1.setHoraApertura(LocalTime.of(9, 0, 0));
             centroExposicion2.setHoraCierre(LocalTime.of(22, 0, 0));
 
+            // Cliente registrado busca obras con filtros
             
             System.out.println(expofy.toString());
       }

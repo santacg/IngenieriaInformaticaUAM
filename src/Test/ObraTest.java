@@ -1,4 +1,4 @@
-package Obra;
+package src.Obra;
 
 import static org.junit.jupiter.api.Assertions.*;
 

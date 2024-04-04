@@ -1,4 +1,4 @@
-package Expofy;
+package src.Expofy;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;

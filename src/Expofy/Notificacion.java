@@ -1,4 +1,4 @@
-package Expofy;
+package src.Expofy;
 
 import java.time.LocalDate;
 import java.io.Serializable;

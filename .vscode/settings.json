@@ -4,8 +4,8 @@
         "."
     ],
     "java.project.referencedLibraries": [
-        "./ServicioTicket/TicketSystem.jar",
-        "./ServicioPago/TeleChargeAndPaySystem8.jar",
+        "./resources/ServicioTicket/TicketSystem.jar",
+        "./resources/ServicioPago/TeleChargeAndPaySystem8.jar",
         "test-lib/**/*.jar"
     ],
     "java.debug.settings.showHex": true,

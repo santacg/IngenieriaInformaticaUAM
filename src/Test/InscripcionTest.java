@@ -1,4 +1,4 @@
-package Inscripcion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,7 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Expofy.ClienteRegistrado;
+import src.Expofy.ClienteRegistrado;
+import src.Inscripcion.Inscripcion;
 
 public class InscripcionTest {
     private Inscripcion inscripcion;

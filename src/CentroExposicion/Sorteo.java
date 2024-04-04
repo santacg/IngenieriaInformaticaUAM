@@ -1,16 +1,16 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
-import Exposicion.Exposicion;
-import Inscripcion.Inscripcion;
+import src.Exposicion.Exposicion;
+import src.Inscripcion.Inscripcion;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import Expofy.ClienteRegistrado;
-import Expofy.Expofy;
+import src.Expofy.ClienteRegistrado;
+import src.Expofy.Expofy;
 
 /**
  * Clase Sorteo.

@@ -1,4 +1,4 @@
-package Exposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,7 +10,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Entrada.Entrada;
+import src.Entrada.Entrada;
+import src.Exposicion.Hora;
 
 public class HoraTest {
     private Hora hora;

@@ -1,4 +1,4 @@
-package Utils;
+package src.Utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import Exposicion.SalaExposicion;
-import Obra.*;
+import src.Exposicion.SalaExposicion;
+import src.Obra.*;
 
 /**
  * Clase LectorCSVObras.

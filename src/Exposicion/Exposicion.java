@@ -1,10 +1,10 @@
-package Exposicion;
+package src.Exposicion;
 
 import java.time.LocalDate;
 import java.util.Set;
 import java.io.Serializable;
-import CentroExposicion.Descuento;
-import Obra.Obra;
+import src.CentroExposicion.Descuento;
+import src.Obra.Obra;
 
 /**
  * Clase Exposición.

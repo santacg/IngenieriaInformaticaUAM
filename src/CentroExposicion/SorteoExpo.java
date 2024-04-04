@@ -1,7 +1,7 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
 import java.time.LocalDate;
-import Exposicion.Exposicion;
+import src.Exposicion.Exposicion;
 
 /**
  * Clase SorteoExpo.

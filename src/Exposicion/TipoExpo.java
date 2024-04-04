@@ -1,4 +1,4 @@
-package Exposicion;
+package src.Exposicion;
 
 /**
  * Clase TipoExpo.

@@ -1,4 +1,4 @@
-package CentroExposicion;
+package src.CentroExposicion;
 
 import static org.junit.jupiter.api.Assertions.*;
 

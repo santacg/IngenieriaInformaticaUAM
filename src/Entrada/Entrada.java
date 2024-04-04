@@ -1,7 +1,7 @@
-package Entrada;
+package src.Entrada;
 
-import Expofy.ClienteRegistrado;
-import TarjetaDeCredito.TarjetaDeCredito;
+import src.Expofy.ClienteRegistrado;
+import src.TarjetaDeCredito.TarjetaDeCredito;
 import java.io.Serializable;
 
 /**

@@ -1,10 +1,12 @@
+package src.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import Expofy.ClienteRegistrado;
-import TarjetaDeCredito.TarjetaDeCredito;
+import src.Expofy.ClienteRegistrado;
+import src.TarjetaDeCredito.TarjetaDeCredito;
+import src.Entrada.Entrada;
 
 public class EntradaTest {
     private Entrada entrada;

@@ -1,6 +1,6 @@
-package Inscripcion;
+package src.Inscripcion;
 
-import Expofy.ClienteRegistrado;
+import src.Expofy.ClienteRegistrado;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;

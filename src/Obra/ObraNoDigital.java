@@ -1,4 +1,4 @@
-package Obra;
+package src.Obra;
 
 import java.util.Map;
 import java.util.HashMap;

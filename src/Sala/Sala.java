@@ -1,4 +1,4 @@
-package Sala;
+package src.Sala;
 
 import java.util.ArrayList;
 import java.util.List;
