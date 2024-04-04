@@ -14,8 +14,6 @@ import java.io.Serializable;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public abstract class Obra implements Serializable {
-    private Integer ID;
-    private static Integer IDcount = 0;
     private String nombre;
     private Integer anio;
     private String descripcion;
@@ -24,6 +22,16 @@ public abstract class Obra implements Serializable {
     private String numeroSeguro;
     private Set<Autor> autores = new HashSet<>();
     private Estado estado;
+
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        result = prime * result + ((anio == null) ? 0 : anio.hashCode());
+        return result;
+    }
 
     /**
      * Comprueba si este objeto {@code Obra} es igual a otro objeto.
@@ -36,6 +44,7 @@ public abstract class Obra implements Serializable {
      * @return {@code true} si el objeto proporcionado es igual a esta obra;
      *         {@code false} en caso contrario.
      */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -55,13 +64,9 @@ public abstract class Obra implements Serializable {
                 return false;
         } else if (!anio.equals(other.anio))
             return false;
-        if (autores == null) {
-            if (other.autores != null)
-                return false;
-        } else if (!autores.equals(other.autores))
-            return false;
         return true;
     }
+
 
     /**
      * Crea una nueva instancia de una obra de arte con los parámetros
@@ -77,7 +82,6 @@ public abstract class Obra implements Serializable {
      */
     public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
             String numeroSeguro) {
-        this.ID = IDcount++;
         this.nombre = nombre;
         this.anio = anio;
         this.descripcion = descripcion;
@@ -85,15 +89,6 @@ public abstract class Obra implements Serializable {
         this.cuantiaSeguro = cuantiaSeguro;
         this.numeroSeguro = numeroSeguro;
         this.estado = Estado.ALMACENADA;
-    }
-
-    /**
-     * Obtiene el ID de la entidad.
-     * 
-     * @return El ID como Integer.
-     */
-    public Integer getID() {
-        return ID;
     }
 
     /**
@@ -157,15 +152,6 @@ public abstract class Obra implements Serializable {
      */
     public Set<Autor> getAutores() {
         return autores;
-    }
-
-    /**
-     * Establece el ID de la entidad.
-     * 
-     * @param ID El ID a establecer.
-     */
-    public void setID(Integer ID) {
-        this.ID = ID;
     }
 
     /**
@@ -261,7 +247,7 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a ALMACENADA.
      */
-    public void almecenarObra() {
+    public void almacenarObra() {
         this.estado = Estado.ALMACENADA;
     }
 
@@ -307,7 +293,6 @@ public abstract class Obra implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Detalles obra:\n");
-        sb.append("ID: ").append(ID).append("\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Año: ").append(anio).append("\n");
         sb.append("Descripción: ").append(descripcion).append("\n");

@@ -1,6 +1,7 @@
 package src.Exposicion;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
 import src.CentroExposicion.Descuento;
@@ -14,8 +15,6 @@ import src.Obra.Obra;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class Exposicion implements Serializable {
-    private static Integer IDcount = 0;
-    private Integer ID;
     private String nombre;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
@@ -23,9 +22,9 @@ public class Exposicion implements Serializable {
     private Double benificios;
     private Double precio;
     private EstadoExposicion estado;
-    private Set<SalaExposicion> salas;
-    private Set<Hora> horario;
-    private Descuento descuento;
+    private Set<SalaExposicion> salas = new HashSet<>();
+    private Set<Hora> horario = new HashSet<>();
+    private Descuento descuento = null;
     private Estadisticas estadisticas;
     private TipoExpo tipo;
 
@@ -44,7 +43,6 @@ public class Exposicion implements Serializable {
      */
     public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
             Set<SalaExposicion> salas, TipoExpo tipo, Double precio) {
-        this.ID = ++IDcount;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -57,14 +55,6 @@ public class Exposicion implements Serializable {
         this.estadisticas = estadisticas;
     }
 
-    /**
-     * Devuelve el identificador único de la exposición.
-     * 
-     * @return El ID de la exposición.
-     */
-    public Integer getID() {
-        return ID;
-    }
 
     /**
      * Devuelve el nombre de la exposición.
@@ -221,7 +211,7 @@ public class Exposicion implements Serializable {
         this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
         for (SalaExposicion sala: salas) {
             for (Obra obra: sala.getObras()) {
-                obra.almecenarObra();
+                obra.almacenarObra();
             }
         }
     }
@@ -269,7 +259,7 @@ public class Exposicion implements Serializable {
      */
     public void removeSala(SalaExposicion sala) {
         for (Obra obra: sala.getObras()) {
-            obra.almecenarObra();
+            obra.almacenarObra();
         }
         this.salas.remove(sala);
     }
@@ -389,7 +379,6 @@ public class Exposicion implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Exposicion Details:\n");
-        sb.append("ID: ").append(ID).append("\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Fecha de Inicio: ").append(fechaInicio).append("\n");
         sb.append("Fecha de Fin: ").append(fechaFin).append("\n");
@@ -405,13 +394,30 @@ public class Exposicion implements Serializable {
         return sb.toString();
     }
 
+    
     /**
-     * Compara esta exposición con otro objeto para verificar si son iguales.
-     * Dos exposiciones se consideran iguales si todos sus atributos son iguales.
+     * Genera un código hash para la exposición.
      * 
-     * @param obj El objeto con el que se compara esta exposición.
-     * @return {@code true} si este objeto es igual al objeto argumento;
-     *         {@code false} en caso contrario.
+     * @return Un código hash para la exposición.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        result = prime * result + ((fechaInicio == null) ? 0 : fechaInicio.hashCode());
+        result = prime * result + ((fechaFin == null) ? 0 : fechaFin.hashCode());
+        return result;
+    }
+
+    /**
+     * Compara esta exposición con otro objeto dado. Dos exposiciones se consideran
+     * iguales si tienen el mismo nombre, fecha de inicio y fecha de fin.
+     * 
+     * @param obj El objeto con el que comparar esta exposición.
+     * 
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     * contrario.
      */
     @Override
     public boolean equals(Object obj) {

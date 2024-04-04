@@ -1,7 +1,13 @@
-package Obra;
+package src.Test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import src.Obra.Autor;
+import src.Obra.Cuadro;
+import src.Obra.Escultura;
+import src.Obra.Obra;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -110,10 +116,10 @@ public class AutorTest {
 
     @Test
     public void testGetObras() {
-        Set<Obra> obras = autor.getObras();
-        assertEquals(2, obras.size());
-        assertTrue(obras.contains(obra1));
-        assertTrue(obras.contains(obra2));
+        Set<Obra> obrasTest = autor.getObras();
+        assertEquals(2, obrasTest.size());
+        assertTrue(obrasTest.contains(obra1));
+        assertTrue(obrasTest.contains(obra2));
     }
 
     @Test

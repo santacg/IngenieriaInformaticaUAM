@@ -1,16 +1,18 @@
-package Exposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import src.Exposicion.Estadisticas;
+
 public class EstadisticasTest {
     private Estadisticas estadisticas;
 
     @BeforeEach
     public void setUp() {
-        estadisticas = new Estadisticas(0, 0.0);
+        estadisticas = new Estadisticas();
     }
 
     @Test

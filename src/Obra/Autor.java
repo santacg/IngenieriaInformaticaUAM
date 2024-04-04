@@ -22,13 +22,30 @@ public class Autor implements Serializable {
     private String lugarFallecimiento;
     private Set<Obra> obras = new HashSet<>();
 
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        result = prime * result + ((fechaNacimiento == null) ? 0 : fechaNacimiento.hashCode());
+        result = prime * result + ((fechaFallecimiento == null) ? 0 : fechaFallecimiento.hashCode());
+        result = prime * result + ((lugarNacimiento == null) ? 0 : lugarNacimiento.hashCode());
+        result = prime * result + ((lugarFallecimiento == null) ? 0 : lugarFallecimiento.hashCode());
+        return result;
+    }
+
+
     /**
-     * Comprueba si este Autor es igual a otro objeto.
-     * Considera iguales a dos autores si todos sus atributos (nombre, fechas y
-     * lugares de nacimiento y fallecimiento, y sus obras) son iguales.
+     * Comprueba si este autor es igual al objeto proporcionado.
+     * Dos autores se consideran iguales si tienen el mismo nombre, fecha de
+     * nacimiento, fecha de fallecimiento, lugar de nacimiento y lugar de
+     * fallecimiento.
      * 
-     * @param obj El objeto con el que se compara este Autor.
-     * @return true si los objetos son iguales; false de lo contrario.
+     * @param obj El objeto con el que comparar este {@code Autor}.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     *        contrario.
+     * 
      */
     @Override
     public boolean equals(Object obj) {
@@ -107,8 +124,8 @@ public class Autor implements Serializable {
      * Constructor de un autor.
      *
      * @param nombre             el nombre del autor
-     * @param i    la fecha de nacimiento del autor
-     * @param j la fecha de fallecimiento del autor
+     * @param fechaNacimiento    la fecha de nacimiento del autor
+     * @param fechaFallecimiento la fecha de fallecimiento del autor
      * @param lugarNacimiento    el lugar de nacimiento del autor
      * @param lugarFallecimiento el lugar de fallecimiento del autor
      */

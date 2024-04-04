@@ -215,4 +215,50 @@ public abstract class Sorteo implements Serializable {
      */
     public abstract LocalDate getFechaLimite();
 
+    /**
+     * Genera el códigi hash del sorteo.
+     * 
+     * @return Código hash del sorteo.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((fechaSorteo == null) ? 0 : fechaSorteo.hashCode());
+        result = prime * result + ((exposicion == null) ? 0 : exposicion.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si este sorteo es igual al objeto proporcionado.
+     * Dos sorteos se consideran iguales si tienen la misma fecha y exposición.
+     * 
+     * @param obj El objeto con el que comparar este {@code Sorteo}.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     * 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Sorteo other = (Sorteo) obj;
+        if (fechaSorteo == null) {
+            if (other.fechaSorteo != null)
+                return false;
+        } else if (!fechaSorteo.equals(other.fechaSorteo))
+            return false;
+        if (exposicion == null) {
+            if (other.exposicion != null)
+                return false;
+        } else if (!exposicion.equals(other.exposicion))
+            return false;
+        return true;
+    }
+
+    
+
 }

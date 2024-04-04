@@ -10,7 +10,6 @@ import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 import src.Expofy.*;
 import java.io.File;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,8 +27,6 @@ import src.Obra.Obra;
  */
 
 public class CentroExposicion implements Serializable {
-    private Integer ID;
-    private static Integer IDcount = 0;
     private String nombre;
     private LocalTime horaApertura;
     private LocalTime horaCierre;
@@ -46,13 +43,28 @@ public class CentroExposicion implements Serializable {
     private Gestor gestor;
 
     /**
-     * Comprueba si este centro de exposición es igual a otro objeto.
-     * Todos los elementos de cada colección deben ser iguales entre los dos objetos
-     * de {@code CentroExposicion} para que se consideren iguales en su totalidad.
-     *
-     * @param obj el objeto con el que se compara
-     * @return {@code true} si este objeto es igual al objeto argumento;
-     *         {@code false} en caso contrario.
+     * Genera el codigo hash para un centro de exposición.
+     * 
+     * @return el código hash generado.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        result = prime * result + ((localizacion == null) ? 0 : localizacion.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si este centro de exposición es igual al objeto proporcionado.
+     * Dos centros de exposición se consideran iguales si tienen el mismo nombre y
+     * localización.
+     * 
+     * @param obj el objeto con el que comparar este centro de exposición.
+     * 
+     * @return true si los objetos son iguales, false en caso contrario.
+     * 
      */
     @Override
     public boolean equals(Object obj) {
@@ -92,7 +104,6 @@ public class CentroExposicion implements Serializable {
             LocalTime horaCierre, String localizacion,
             String contraseniaEmpleado, String contraseniaGestor,
             Gestor gestor, Set<Sala> salas) {
-        this.ID = IDcount++;
         this.nombre = nombre;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
@@ -101,15 +112,6 @@ public class CentroExposicion implements Serializable {
         this.contraseniaGestor = contraseniaGestor;
         this.gestor = gestor;
         this.salas = salas;
-    }
-
-    /**
-     * Devuelve el identificador único de la entidad.
-     * 
-     * @return Identificador único del objeto.
-     */
-    public Integer getID() {
-        return ID;
     }
 
     /**
@@ -525,7 +527,7 @@ public class CentroExposicion implements Serializable {
             System.out.println("La obra ya está en el centro de exposiciones");
         }
         else {
-            obra.almecenarObra();
+            obra.almacenarObra();
         }
     }
 
@@ -796,13 +798,12 @@ public class CentroExposicion implements Serializable {
     /**
      * Crea una cadena que representa un centro de exposición.
      * 
-     * @return La cadena de representación del centro de exposición
+     * @return La cadena de representación del centro de exposición.
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("CentroExposicion Details:\n");
-        sb.append("ID: ").append(ID).append("\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Hora de Apertura: ").append(horaApertura).append("\n");
         sb.append("Hora de Cierre: ").append(horaCierre).append("\n");

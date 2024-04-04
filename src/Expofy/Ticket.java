@@ -1,7 +1,5 @@
 package src.Expofy;
 
-import java.io.File;
-
 import src.Exposicion.*;
 import java.time.LocalDate;
 import es.uam.eps.padsof.tickets.ITicketInfo;

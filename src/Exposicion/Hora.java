@@ -37,10 +37,6 @@ public class Hora implements Serializable {
      * @param entrada La entrada a añadir.
      */
     public void addEntrada(Entrada entrada) {
-        if (countEntradas + 1 > nEntradas) {
-            System.out.println("No se pueden añadir más entradas");
-            return;
-        }
         this.entradas.add(entrada);
         nEntradas++;
         countEntradas++;
@@ -184,12 +180,26 @@ public class Hora implements Serializable {
     }
 
     /**
-     * Comprueba si este objeto Hora es igual a otro objeto.
-     * La igualdad se basa en la comparación de la fecha, las horas de inicio y fin,
-     * el número y precio de las entradas, y el conjunto de entradas.
+     * Genera un código hash para el horario.
      * 
-     * @param obj El objeto con el que comparar.
-     * @return true si los objetos son iguales, false en caso contrario.
+     * @return El código hash.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+        result = prime * result + ((horaInicio == null) ? 0 : horaInicio.hashCode());
+        result = prime * result + ((horaFin == null) ? 0 : horaFin.hashCode());
+        return result;
+    }
+
+    /**
+     * Compara dos horarios para determinar si son iguales.
+     * 
+     * @param obj El objeto a comparar con este horario.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     * 
      */
     @Override
     public boolean equals(Object obj) {

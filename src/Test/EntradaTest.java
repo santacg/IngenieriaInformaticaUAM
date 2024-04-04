@@ -1,6 +1,8 @@
 package src.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +19,7 @@ public class EntradaTest {
     public void setUp() {
         entrada = new Entrada();
         tarjeta = new TarjetaDeCredito("12345", LocalDate.of(2025, 8, 24), 123);
-        cliente = new ClienteRegistrado("Juan García", "juan@gmail.com");
+        cliente = new ClienteRegistrado("Juan García", false, "123", false, null, null);
     }
 
     @Test
@@ -51,7 +53,7 @@ public class EntradaTest {
     public void testEquals() {
         Entrada entrada1 = new Entrada();
         Entrada entrada2 = new Entrada();
-        assertEquals(entrada1, entrada2);
+        assertNotEquals(entrada1, entrada2);
     }
 
 }

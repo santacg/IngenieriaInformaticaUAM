@@ -24,7 +24,7 @@ public class SorteoDiaHoraTest {
         fechaSorteo = LocalDate.of(2022, 1, 1);
         dia = LocalDate.of(2022, 1, 2);
         hora = LocalTime.of(12, 0);
-        sorteo = new SorteoDiaHora(exposicion, fechaSorteo, dia, hora);
+        sorteo = new SorteoDiaHora(exposicion, fechaSorteo, 2, dia, hora);
     }
 
     @Test

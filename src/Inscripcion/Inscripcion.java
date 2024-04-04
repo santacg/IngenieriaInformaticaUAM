@@ -103,4 +103,5 @@ public class Inscripcion implements Serializable{
     public void removeCodigo(String codigo) {
         codigos.remove(codigo);
     }
+
 }

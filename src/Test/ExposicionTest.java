@@ -1,14 +1,25 @@
-package Exposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import src.CentroExposicion.DescuentoDia;
+import src.Exposicion.Estadisticas;
+import src.Exposicion.EstadoExposicion;
+import src.Exposicion.Exposicion;
+import src.Exposicion.Hora;
+import src.Exposicion.SalaExposicion;
+import src.Exposicion.TipoExpo;
+import src.Obra.Estado;
+import src.Obra.Obra;
+import src.Sala.Sala;
 
 public class ExposicionTest {
     private Exposicion exposicion;
@@ -19,16 +30,14 @@ public class ExposicionTest {
     @BeforeEach
     public void setUp() {
         salas = new HashSet<>();
-        sala1 = new SalaExposicion("Sala 1");
-        sala2 = new SalaExposicion("Sala 2");
+        Sala salaf1 = new Sala("Sala1", 20, 20, 30, true, 3, 20.0, 20.0);
+        Sala salaf2 = new Sala("Sala2", 30, 25, 25, false, 5, 10.0, 30.0);
+        sala1 = new SalaExposicion(salaf1);
+        sala2 = new SalaExposicion(salaf2);
         salas.add(sala1);
         salas.add(sala2);
-        exposicion = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(7), "Descripción", salas, TipoExpo.TEMPORAL, 10.0);
-    }
-
-    @Test
-    public void testGetID() {
-        assertNotNull(exposicion.getID());
+        exposicion = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(7), "Descripción", salas,
+                TipoExpo.TEMPORAL, 10.0);
     }
 
     @Test
@@ -117,7 +126,8 @@ public class ExposicionTest {
 
     @Test
     public void testAddSala() {
-        SalaExposicion sala3 = new SalaExposicion("Sala 3");
+        Sala salaf3 = new Sala("Sala3", 40, 20, 30, true, 5, 10.0, 20.0);
+        SalaExposicion sala3 = new SalaExposicion(salaf3);
         exposicion.addSala(sala3);
         assertTrue(exposicion.getSalas().contains(sala3));
     }
@@ -130,19 +140,19 @@ public class ExposicionTest {
 
     @Test
     public void testGetHorario() {
-        assertNull(exposicion.getHorario());
+        assertTrue(exposicion.getHorario().isEmpty());
     }
 
     @Test
     public void testAddHorario() {
-        exposicion.addHorario(new Hora(10, 0));
+        exposicion.addHorario(new Hora(LocalDate.now(), LocalTime.now(), LocalTime.now().plusHours(1), 10, 10.0));
         assertNotNull(exposicion.getHorario());
         assertEquals(1, exposicion.getHorario().size());
     }
 
     @Test
     public void testRemoveHorario() {
-        Hora hora = new Hora(10, 0);
+        Hora hora = new Hora(LocalDate.now(), LocalTime.now(), LocalTime.now().plusHours(1), 10, 10.0);
         exposicion.addHorario(hora);
         exposicion.removeHorario(hora);
         assertTrue(exposicion.getHorario().isEmpty());
@@ -150,7 +160,8 @@ public class ExposicionTest {
 
     @Test
     public void testGetEstadisticas() {
-        assertNull(exposicion.getEstadisticas());
+        assertNotNull(exposicion.getEstadisticas());
+        assertTrue(exposicion.getEstadisticas() instanceof Estadisticas);
     }
 
     @Test
@@ -178,7 +189,7 @@ public class ExposicionTest {
 
     @Test
     public void testSetDescuento() {
-        Descuento descuento = new Descuento();
+        DescuentoDia descuento = new DescuentoDia(20.0, 10);
         exposicion.setDescuento(descuento);
         assertEquals(descuento, exposicion.getDescuento());
     }
@@ -215,7 +226,7 @@ public class ExposicionTest {
         assertEquals(EstadoExposicion.CERRADATEMPORALMENTE, exposicion.getEstado());
         for (SalaExposicion sala : exposicion.getSalas()) {
             for (Obra obra : sala.getObras()) {
-                assertTrue(obra.isAlmacenada());
+                assertTrue(obra.getEstado().equals(Estado.ALMACENADA));
             }
         }
     }
@@ -233,22 +244,4 @@ public class ExposicionTest {
         assertNull(exposicion.getFechaFin());
     }
 
-    @Test
-    public void testToString() {
-        String expected = "Exposicion Details:\n" +
-                          "ID: " + exposicion.getID() + "\n" +
-                          "Nombre: Exposicion 1\n" +
-                          "Fecha de inicio: " + exposicion.getFechaInicio() + "\n" +
-                          "Fecha de fin: " + exposicion.getFechaFin() + "\n" +
-                          "Descripción: Descripción\n" +
-                          "Beneficios: null\n" +
-                          "Precio: 10.0\n" +
-                          "Estado: EN_CREACION\n" +
-                          "Salas: [Sala 1, Sala 2]\n" +
-                          "Horario: null\n" +
-                          "Estadísticas: null\n" +
-                          "Tipo: TEMPORAL\n" +
-                          "Descuento: null\n";
-        assertEquals(expected, exposicion.toString());
-    }
 }

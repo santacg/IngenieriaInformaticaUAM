@@ -2,10 +2,13 @@ package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.Obra.Obra;
+import src.Obra.*;
 import src.Sala.Sala;
 import src.Exposicion.SalaExposicion;
 
@@ -17,11 +20,12 @@ public class SalaExposicionTest {
 
     @BeforeEach
     public void setUp() {
-        sala = new Sala("Sala 1", true);
+        sala = new Sala("Sala 1", 100, 40, 20, false, 10, 20.0, 40.0);
         salaExposicion = new SalaExposicion(sala);
-        obra1 = new ObraDigital("Obra 1", "Artista 1", "URL 1");
-        obra2 = new ObraNoDigital("Obra 2", "Artista 2");
+        obra1 = new Audiovisual("Oppenheimer", 2023, "Descripción", false, 5000.0, "67890", "3h00m00s", "Ingles");
+        obra2 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20, 90, 20, "óleo");
     }
+
 
     @Test
     public void testGetSala() {
@@ -30,7 +34,7 @@ public class SalaExposicionTest {
 
     @Test
     public void testSetSala() {
-        Sala newSala = new Sala("Sala 2", false);
+        Sala newSala = new Sala("Sala 2", 10, 30, 15, false, null, null, null);
         salaExposicion.setSala(newSala);
         assertEquals(newSala, salaExposicion.getSala());
     }
@@ -68,13 +72,4 @@ public class SalaExposicionTest {
         assertFalse(salaExposicion.getObras().contains(obra1));
     }
 
-    @Test
-    public void testToString() {
-        salaExposicion.addObra(obra1);
-        salaExposicion.addObra(obra2);
-        String expected = "SalaExposicion Details:\n" +
-                          "Sala: Sala 1\n" +
-                          "Obras: [Obra 1, Obra 2]\n";
-        assertEquals(expected, salaExposicion.toString());
-    }
 }

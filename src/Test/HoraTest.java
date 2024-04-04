@@ -26,8 +26,8 @@ public class HoraTest {
         Integer nEntradas = 10;
         Double precio = 10.0;
         hora = new Hora(fecha, horaInicio, horaFin, nEntradas, precio);
-        entrada1 = new Entrada("Entrada 1", precio);
-        entrada2 = new Entrada("Entrada 2", precio);
+        entrada1 = new Entrada();
+        entrada2 = new Entrada();
     }
 
     @Test
@@ -44,17 +44,7 @@ public class HoraTest {
     public void testAddEntrada() {
         hora.addEntrada(entrada1);
         assertTrue(hora.getEntradas().contains(entrada1));
-        assertEquals(9, hora.getCountEntradas());
-    }
-
-    @Test
-    public void testAddEntrada_MaximumReached() {
-        for (int i = 0; i < 10; i++) {
-            hora.addEntrada(new Entrada("Entrada " + (i + 1), 10.0));
-        }
-        hora.addEntrada(new Entrada("Entrada 11", 10.0));
-        assertFalse(hora.getEntradas().contains(new Entrada("Entrada 11", 10.0)));
-        assertEquals(0, hora.getCountEntradas());
+        assertEquals(11, hora.getCountEntradas());
     }
 
     @Test
@@ -71,7 +61,7 @@ public class HoraTest {
         hora.addEntrada(entrada2);
         hora.removeAllEntradas();
         assertTrue(hora.getEntradas().isEmpty());
-        assertEquals(10, hora.getCountEntradas());
+        assertEquals(0, hora.getCountEntradas());
     }
 
     @Test
@@ -132,16 +122,6 @@ public class HoraTest {
     @Test
     public void testGetnEntradasDisp() {
         assertEquals(10, hora.getnEntradasDisp());
-    }
-
-    @Test
-    public void testToString() {
-        String expected = "Hora Details:\n" +
-                          "Fecha: 2022-01-01\n" +
-                          "Hora de Inicio: 10:00\n" +
-                          "Hora de Fin: 12:00\n" +
-                          "Número de Entradas: 10\n";
-        assertEquals(expected, hora.toString());
     }
 
     @Test

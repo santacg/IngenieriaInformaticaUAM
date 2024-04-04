@@ -64,4 +64,49 @@ public abstract class Descuento implements Serializable{
      * @return boolean true si es aplicable, false si no
      */
     public abstract boolean validezDescuento(LocalDate fecha);
+
+    /**
+     * Genera el código hash de descuento.
+     * 
+     * @return El código hash del descuento.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((descuento == null) ? 0 : descuento.hashCode());
+        result = prime * result + ((cantidad == null) ? 0 : cantidad.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si este descuento es igual al objeto proporcionado.
+     * Dos descuentos se consideran iguales si tienen el mismo descuento y cantidad.
+     * 
+     * @param obj El objeto con el que comparar este {@code Descuento}.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Descuento other = (Descuento) obj;
+        if (descuento == null) {
+            if (other.descuento != null)
+                return false;
+        } else if (!descuento.equals(other.descuento))
+            return false;
+        if (cantidad == null) {
+            if (other.cantidad != null)
+                return false;
+        } else if (!cantidad.equals(other.cantidad))
+            return false;
+        return true;
+    }
+
+
 }

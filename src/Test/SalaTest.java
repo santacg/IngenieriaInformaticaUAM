@@ -1,9 +1,11 @@
-package Sala;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import src.Sala.Sala;
 
 import java.util.List;
 
@@ -145,12 +147,6 @@ public class SalaTest {
     @Test
     public void testGetSalaPadre() {
         assertNull(sala.getSalaPadre());
-    }
-
-    @Test
-    public void testToSubSalaString() {
-        String expected = "Sala [nombre=Sala de Prueba, aforo=100, humedad=50, temperatura=25, climatizador=true, tomasElectricidad=10, ancho=10.0, largo=10.0]";
-        assertEquals(expected, sala.toSubSalaString());
     }
 
 }

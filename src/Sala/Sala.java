@@ -25,6 +25,46 @@ public class Sala implements Serializable {
     private Sala salaPadre = null;
 
     /**
+     * Genera un código hash para esta sala.
+     * 
+     * @return El código hash de esta sala.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si este objeto {@code Sala} es igual a otro objeto.
+     * Este método devuelve {@code true} solo si el objeto proporcionado es una
+     * instancia de {@code Sala} y ambos tienen el mismo nombre.
+     * 
+     * @param obj el objeto con el que se compara esta {@code Sala} para la
+     * igualdad.
+     * @return {@code true} si el objeto proporcionado es igual a esta sala;
+     * {@code false} en caso contrario.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Sala other = (Sala) obj;
+        if (nombre == null) {
+            if (other.nombre != null)
+                return false;
+        } else if (!nombre.equals(other.nombre))
+            return false;
+        return true;
+    }
+
+    /**
      * Constructor que inicializa una nueva sala con sus propiedades específicas.
      *
      * @param nombre            El nombre de la sala.
@@ -101,6 +141,10 @@ public class Sala implements Serializable {
      * @param humedad El nuevo nivel de humedad para la sala.
      */
     public void setHumedad(Integer humedad) {
+        if (this.climatizador == false) {
+            System.out.println(nombre + " no tiene climatizador, no se puede cambiar la humedad.");
+            return;
+        }
         this.humedad = humedad;
     }
 
@@ -119,6 +163,10 @@ public class Sala implements Serializable {
      * @param temperatura La nueva temperatura para la sala.
      */
     public void setTemperatura(Integer temperatura) {
+        if (this.climatizador == false) {
+            System.out.println(nombre + " no tiene climatizador, no se puede cambiar la temperatura.");
+            return;
+        }
         this.temperatura = temperatura;
     }
 
@@ -230,10 +278,17 @@ public class Sala implements Serializable {
      * ninguna acción.
      */
     public void removeSubsala() {
-        if (subSalas.size() > 0) {
-            subSalas.remove(subSalas.size() - 1);
-            subSalas.remove(subSalas.size() - 1);
+        if (subSalas.size() == 0) {
+            System.out.println("No hay subSalas que eliminar.");
+            return;
         }
+
+        Sala subSala = subSalas.get(subSalas.size() - 1);
+        this.aforo += subSala.getAforo();
+        this.ancho += subSala.getAncho();
+        this.largo += subSala.getLargo();
+        this.tomasElectricidad += subSala.getTomasElectricidad();
+        subSalas.remove(subSala);
     }
 
     /**

@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class Entrada implements Serializable {
     private Integer IDEntrada;
     private static Integer IDcount = 0;
-    private ClienteRegistrado clienteRegistrado;
-    private TarjetaDeCredito tarjetaDeCredito;
+    private ClienteRegistrado clienteRegistrado = null;
+    private TarjetaDeCredito tarjetaDeCredito = null;
 
     /**
      * Constructor para crear una entrada con un identificador específico.
@@ -73,13 +73,27 @@ public class Entrada implements Serializable {
         this.clienteRegistrado = clienteRegistrado;
     }
 
+
     /**
-     * Comprueba si este objeto de entrada es igual a otro objeto de su misma clase.
-     * Dos objetos se consideran iguales si tienen el mismo IDEntrada
-     *
-     * @param obj el objeto con el que se va a comparar.
-     * @return {@code true} si este objeto es igual al objeto argumento;
-     *         {@code false} en caso contrario.
+     * Realiza el codigo hash de entrada.
+     * 
+     * @return Codigo hash de la entrada.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((IDEntrada == null) ? 0 : IDEntrada.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si esta entrada es igual al objeto proporcionado.
+     * Dos entradas se consideran iguales si tienen el mismo ID.
+     * 
+     * @param obj El objeto con el que comparar esta {@code Entrada}.
+     * 
+     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
      */
     @Override
     public boolean equals(Object obj) {

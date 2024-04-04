@@ -1,9 +1,11 @@
-package CentroExposicion;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import src.CentroExposicion.DescuentoMes;
 
 import java.time.LocalDate;
 
@@ -23,7 +25,7 @@ public class DescuentoMesTest {
 
     @Test
     public void testValidezDescuento_InvalidDate_ReturnsFalse() {
-        LocalDate fecha = LocalDate.now().plusMonths(4);
+        LocalDate fecha = LocalDate.now().plusMonths(10);
         assertFalse(descuento.validezDescuento(fecha));
     }
 

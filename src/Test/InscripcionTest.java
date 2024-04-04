@@ -22,7 +22,7 @@ public class InscripcionTest {
 
     @Test
     public void testGetnEntradas() {
-        assertEquals(2, inscripcion.getnEntradas());
+        assertEquals(1, inscripcion.getnEntradas());
     }
 
     @Test

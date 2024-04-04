@@ -1,9 +1,11 @@
-package src.Expofy;
+package src.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import src.Expofy.ClienteRegistrado;
 /**
  * Clase ClienteRegistradoTest
  * Esta clase contiene pruebas unitarias que validan la funcionalidad de los
@@ -125,9 +127,8 @@ public class ClienteRegistradoTest {
      */
     @Test
     public void testGetSancionadoHasta() {
-        LocalDate esperado = null;
         LocalDate actual = cliente.getSancionadoHasta();
-        assertEquals(esperado, actual);
+        assertEquals(LocalDate.of(1970,1, 1), actual);
     }
 
     /**
