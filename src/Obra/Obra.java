@@ -24,6 +24,11 @@ public abstract class Obra implements Serializable {
     private Estado estado;
 
 
+    /**
+     * Genera el codigo hash de la obra.
+     * 
+     * @return El código hash de la obra.
+     */
     @Override
     public int hashCode() {
         final int prime = 31;

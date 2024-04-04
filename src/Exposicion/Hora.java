@@ -170,7 +170,7 @@ public class Hora implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Hora Details:\n");
+        sb.append("Detalles hora:\n");
         sb.append("Fecha: ").append(fecha).append("\n");
         sb.append("Hora de Inicio: ").append(horaInicio).append("\n");
         sb.append("Hora de Fin: ").append(horaFin).append("\n");

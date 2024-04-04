@@ -21,6 +21,11 @@ public class Gestor extends Usuario {
         super(NIF);
     }
 
+    /**
+     * Devuelve una representación en cadena de un gestor.
+     * 
+     * @return a string representation of a gestor
+     */
     public String toString() {
         return "Gestor [NIF=" + getNIF() + "]";
     }

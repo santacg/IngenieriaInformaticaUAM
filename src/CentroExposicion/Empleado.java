@@ -214,7 +214,7 @@ public class Empleado extends Usuario {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Empleado Details:\n");
+        sb.append("Detalles empleado:\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Número de Seguridad Social: ").append(numSS).append("\n");
         sb.append("Número de Cuenta: ").append(numCuenta).append("\n");

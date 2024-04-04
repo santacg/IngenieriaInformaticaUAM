@@ -112,10 +112,15 @@ public class Entrada implements Serializable {
         return true;
     }
 
+    /**
+     * Devuelve una representación de la entrada en forma de cadena.
+     * 
+     * @return Cadena que representa la entrada.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Entrada Details:\n");
+        sb.append("Detalles entrada:\n");
         sb.append("ID Entrada: ").append(IDEntrada).append("\n");
         sb.append("Cliente Registrado: ").append(clienteRegistrado).append("\n");
         sb.append("Tarjeta de Crédito: ").append(tarjetaDeCredito).append("\n");

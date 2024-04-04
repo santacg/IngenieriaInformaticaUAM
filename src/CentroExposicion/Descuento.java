@@ -108,5 +108,13 @@ public abstract class Descuento implements Serializable{
         return true;
     }
 
+    /**
+     * Devuelve una representación en cadena del descuento.
+     * 
+     * @return Una representación en cadena del descuento.
+     */
+    public String toString() {
+        return "Descuento [descuento=" + descuento + ", cantidad=" + cantidad + "]";
+    }
 
 }

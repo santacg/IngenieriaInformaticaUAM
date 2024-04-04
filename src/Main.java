@@ -111,9 +111,9 @@ public class Main {
             SalaExposicion salaExposicion2 = new SalaExposicion(sala2);
             salasExposicion1.add(salaExposicion1);
             salasExposicion2.add(salaExposicion2);
-            Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2021, 1, 1), LocalDate.of(2022, 1, 1),
+            Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2021, 1, 1), LocalDate.now().plusYears(1),
                         "Expo1", salasExposicion1, TipoExpo.PERMANENTE, 21.0);
-            Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2023, 2, 2), LocalDate.of(2024, 2, 2),
+            Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2023, 2, 2), LocalDate.now().plusYears(1),
                         "Expo2", salasExposicion2, TipoExpo.TEMPORAL, 22.0);
 
             // Añadimos obras a una de las exposiciones
@@ -193,13 +193,21 @@ public class Main {
             centroExposicion2.setHoraCierre(LocalTime.of(22, 0, 0));
 
             // Cliente registrado busca exposiciones con filtros
-            centroExposicion1.getExposicionesPorFecha(LocalDate.of(2021, 4, 4), LocalDate.now());
-            centroExposicion1.getExposicionesPermanentes();
-            centroExposicion1.getExposicionesTemporales();
-            centroExposicion1.getExposicionesPorTipoObra(Cuadro.class);
+            for (Exposicion e : centroExposicion1.getExposicionesPorFecha(LocalDate.of(2021, 4, 4), LocalDate.now().plusMonths(2))) {
+                  System.out.println(e.toString());
+            }
+            for (Exposicion e: centroExposicion1.getExposicionesPermanentes()) {
+                  System.out.println(e.toString());
+            }
+            for (Exposicion e: centroExposicion1.getExposicionesTemporales()) {
+                  System.out.println(e.toString());
+            }
+            for (Exposicion e : centroExposicion1.getExposicionesPorTipoObra(Cuadro.class)) {
+                  System.out.println(e.toString());
+            }
+
 
             System.out.println(expofy.toString());
-
             expofy.persistirExpofy();
       }
 }

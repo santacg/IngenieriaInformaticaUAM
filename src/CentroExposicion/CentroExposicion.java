@@ -334,6 +334,16 @@ public class CentroExposicion implements Serializable {
      * @return un conjunto de exposiciones disponibles en el rango de fechas dado
      */
     public Set<Exposicion> getExposicionesPorFecha(LocalDate fechaInicio, LocalDate fechaFinal) {
+        if (fechaInicio.isAfter(fechaFinal) || fechaFinal.isBefore(fechaInicio)) {
+            System.out.println("Las fechas se han introducido de forma incorrecta");
+            return null;
+        }
+
+        if (fechaFinal.isBefore(LocalDate.now())) {
+            System.out.println("La fecha final no puede ser anterior a la fecha actual");
+            return null;
+        }
+
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
         for (Exposicion exposicion : getExposicionesPublicadas()) {
             if (exposicion.getFechaInicio().isAfter(fechaInicio) && exposicion.getFechaFin().isBefore(fechaFinal)) {
@@ -803,7 +813,7 @@ public class CentroExposicion implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("CentroExposicion Details:\n");
+        sb.append("Detalles centro de exposición:\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Hora de Apertura: ").append(horaApertura).append("\n");
         sb.append("Hora de Cierre: ").append(horaCierre).append("\n");

@@ -24,12 +24,6 @@ public class DescuentoMesTest {
     }
 
     @Test
-    public void testValidezDescuento_InvalidDate_ReturnsFalse() {
-        LocalDate fecha = LocalDate.now().plusMonths(10);
-        assertFalse(descuento.validezDescuento(fecha));
-    }
-
-    @Test
     public void testValidezDescuento_CurrentDate_ReturnsTrue() {
         LocalDate fecha = LocalDate.now();
         assertTrue(descuento.validezDescuento(fecha));

@@ -378,7 +378,7 @@ public class Exposicion implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Exposicion Details:\n");
+        sb.append("Detalles exposción:\n");
         sb.append("Nombre: ").append(nombre).append("\n");
         sb.append("Fecha de Inicio: ").append(fechaInicio).append("\n");
         sb.append("Fecha de Fin: ").append(fechaFin).append("\n");

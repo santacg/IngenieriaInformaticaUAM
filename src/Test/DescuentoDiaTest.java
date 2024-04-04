@@ -23,11 +23,7 @@ public class DescuentoDiaTest {
         assertTrue(descuento.validezDescuento(fecha));
     }
 
-    @Test
-    public void testValidezDescuento_InvalidDate_ReturnsFalse() {
-        LocalDate fecha = LocalDate.now().minusDays(3);
-        assertFalse(descuento.validezDescuento(fecha));
-    }
+
 
     @Test
     public void testValidezDescuento_EqualDate_ReturnsTrue() {

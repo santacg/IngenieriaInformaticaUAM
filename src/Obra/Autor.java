@@ -23,6 +23,11 @@ public class Autor implements Serializable {
     private Set<Obra> obras = new HashSet<>();
 
     
+    /**
+     * Genera un código hash para un autor.
+     * 
+     * @return El código hash.
+     */
     @Override
     public int hashCode() {
         final int prime = 31;

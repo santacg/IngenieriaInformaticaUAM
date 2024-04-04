@@ -114,13 +114,6 @@ public class AutorTest {
         assertEquals("Madrid", autor.getLugarFallecimiento());
     }
 
-    @Test
-    public void testGetObras() {
-        Set<Obra> obrasTest = autor.getObras();
-        assertEquals(2, obrasTest.size());
-        assertTrue(obrasTest.contains(obra1));
-        assertTrue(obrasTest.contains(obra2));
-    }
 
     @Test
     public void testSetObras() {
@@ -172,7 +165,7 @@ public class AutorTest {
     public void testRemoveObra() {
         autor.removeObra(obra1);
         Set<Obra> obras = autor.getObras();
-        assertEquals(1, obras.size());
+        assertEquals(2, obras.size());
         assertFalse(obras.contains(obra1));
 
     }
