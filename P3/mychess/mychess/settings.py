@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from os import getenv
+import os
 from dotenv import load_dotenv
 import dj_database_url
 
@@ -23,12 +24,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o76=!63^64b&_@!2k7=dt*j0m=%+jjmb9n-5mxl0h75qr#q7#k'
+# SECRET_KEY = 'django-insecure-o76=!63^64b&_@!2k7=dt*j0m=%+jjmb9n-5mxl0h75qr#q7#k'
+if 'RENDER' in os.environ:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY', default='santacg123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+if 'DEBUG' in os.environ:
+    DEBUG = os.environ.get('DEBUG').lower() in ['true', 't', '1']
+else:
+    DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -102,6 +114,14 @@ DATABASES = {
     }
 }
 
+LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
+
+if 'TESTING' in os.environ:
+    databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
+else:
+    databaseenv = dj_database_url.config(conn_max_age=600, default=LOCALPOSTGRES)
+
+DATABASES['default'] = databaseenv
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -150,4 +170,6 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'models.Player'
-AUTH_USER_MODEL = 'mychess.Player'
+AUTH_USER_MODEL = 'models.User'
+
+
