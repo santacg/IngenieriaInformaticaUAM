@@ -148,3 +148,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
+
+AUTH_USER_MODEL = 'models.Player'
+AUTH_USER_MODEL = 'mychess.Player'
