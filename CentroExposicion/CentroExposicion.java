@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import Sala.Sala;
+import es.uam.eps.padsof.tickets.NonExistentFileException;
+import es.uam.eps.padsof.tickets.TicketSystem;
+import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 import Expofy.*;
 import java.io.File;
 
@@ -711,7 +714,7 @@ public class CentroExposicion implements Serializable {
         return false;
     }
 
-    public boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas) {
+    public boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas) throws NonExistentFileException, UnsupportedImageTypeException {
         LocalDate fecha = LocalDate.now();
         Boolean horaDisponible = false;
 
@@ -772,6 +775,7 @@ public class CentroExposicion implements Serializable {
         TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, hora), "." + File.separator + "tmp");
         return true;
     }
+    
     
 
     /**

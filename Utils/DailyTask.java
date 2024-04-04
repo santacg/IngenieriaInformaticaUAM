@@ -11,7 +11,7 @@ public class DailyTask {
         Runnable task = () -> {
             System.out.println("Ejecutando tareas diarias");
             // Comprobar si una exposición ha terminado
-
+            
         };
 
         executor.scheduleAtFixedRate(task, 0, 24, TimeUnit.HOURS);

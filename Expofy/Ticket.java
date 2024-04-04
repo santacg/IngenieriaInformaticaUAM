@@ -13,7 +13,7 @@ import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
 
-class Ticket implements ITicketInfo {	// Just an example implementation
+public class Ticket implements ITicketInfo {	// Just an example implementation
     private Exposicion exposicion;
     private static int nextId = 0;
     private int idTicket;

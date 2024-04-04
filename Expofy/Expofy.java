@@ -275,7 +275,6 @@ public class Expofy implements Serializable {
         this.notificaciones.add(notificacion);
     }
 
-
     /**
      * Envía una notificación a un único usuario.
      * 
@@ -296,7 +295,6 @@ public class Expofy implements Serializable {
      */
     public void enviarNotificacionAll(String mensaje) {
         Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
-        notificacion.setLeida(null);
         for (ClienteRegistrado c : this.clientesRegistrados) {
             c.addNotificacion(notificacion);
         }
@@ -312,7 +310,7 @@ public class Expofy implements Serializable {
      * @param fecha             La fecha de la visita.
      * @param hora              La hora de la visita.
      * @param nEntradas         El número de entradas a comprar.
-     * @param tarjetaDeCredito  La tarjeta de crédito para el pago. 
+     * @param tarjetaDeCredito  La tarjeta de crédito para el pago.
      * @return true si la compra es exitosa, false en caso contrario.
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
@@ -371,24 +369,32 @@ public class Expofy implements Serializable {
             System.out.println("No hay suficientes entradas disponibles");
             return false;
         }
-
+        precioFinal = exposicion.getPrecio() * nEntradas;
         // Aplica descuento si corresponde y verifica la validez del código del código.
         Descuento descuento = exposicion.getDescuento();
         if (descuento != null) {
             if (descuento.validezDescuento(clienteRegistrado.getUltimaCompra())) {
-                precioFinal = exposicion.getPrecio() * descuento.getDescuento();
+                precioFinal = precioFinal * descuento.getDescuento();
             }
         }
         if (validezCodigo(codigo, clienteRegistrado) == true) {
-            precioFinal = 0.0;
+            precioFinal = precioFinal - exposicion.getPrecio();
         }
 
         // Verifica la validez del número de tarjeta de crédito y realiza el cobro.
-        if (!TeleChargeAndPaySystem.isValidCardNumber(tarjetaDeCredito.getNumero()) || !TeleChargeAndPaySystem
-                .charge(tarjetaDeCredito.getNumero(), "Entrada exposición", precioFinal, true)) {
-            enviarNotificacionUsuario("Ha habido un error en el pago de la entrada", clienteRegistrado);
+        if (!TeleChargeAndPaySystem.isValidCardNumber((tarjetaDeCredito.getNumero())))
+            return false;
+
+        try {
+            TeleChargeAndPaySystem.charge(tarjetaDeCredito.getNumero(), "Entradas", precioFinal, true);
+        } catch (InvalidCardNumberException e) {
+            return false;
+        } catch (FailedInternetConnectionException e) {
+            return false;
+        } catch (OrderRejectedException e) {
             return false;
         }
+        enviarNotificacionUsuario("Ha habido un error en el pago de la entrada", clienteRegistrado);
 
         // Procede con la compra, actualizando las estadísticas y asignando entradas.
         Estadisticas estadisticas = exposicion.getEstadisticas();
@@ -401,7 +407,16 @@ public class Expofy implements Serializable {
             estadisticas.incrementarTicketsVendidos();
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
-        TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora), "." + File.separator + "tmp");
+        try {
+             TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),
+                "." + File.separator + "tmp");
+        } catch (NonExistentFileException e) {
+           return false;
+        } catch(UnsupportedImageTypeException e){
+            return false;
+        }
+        
+        
         clienteRegistrado.setUltimaCompra(LocalDate.now());
         enviarNotificacionUsuario("La entrada se ha comprado con éxito", clienteRegistrado);
         return true;

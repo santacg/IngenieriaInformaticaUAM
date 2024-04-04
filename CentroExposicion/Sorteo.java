@@ -34,7 +34,7 @@ public abstract class Sorteo implements Serializable {
      * @param exposicion    La exposición relacionada con el sorteo
      * @param inscripciones Set con las inscripciones al sorteo
      */
-    public Sorteo(LocalDate fechaSorteo, Exposicion exposicion) {
+    public Sorteo(LocalDate fechaSorteo, Exposicion exposicion, int n_entradas) {
         this.fechaSorteo = fechaSorteo;
         this.exposicion = exposicion;
         this.inscripciones = new HashSet<Inscripcion>();

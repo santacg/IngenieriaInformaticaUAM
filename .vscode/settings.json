@@ -5,6 +5,7 @@
     ],
     "java.project.referencedLibraries": [
         "./ServicioTicket/TicketSystem.jar",
-        "./ServicioPago/TeleChargeAndPaySystem8.jar"
+        "./ServicioPago/TeleChargeAndPaySystem8.jar",
+        "test-lib/**/*.jar"
     ],
 }

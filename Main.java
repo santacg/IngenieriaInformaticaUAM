@@ -4,15 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import CentroExposicion.*;
-import Entrada.Entrada;
 import Expofy.*;
 import Exposicion.*;
 import Inscripcion.Inscripcion;
 import Obra.*;
 import Sala.*;
 import TarjetaDeCredito.TarjetaDeCredito;
-import Usuario.Usuario;
 import Utils.LectorCSVObras;
+import es.uam.eps.padsof.tickets.NonExistentFileException;
+import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
 /**
  * Clase MainTest.
@@ -26,7 +26,7 @@ import Utils.LectorCSVObras;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class Main {
-      public static void main(String[] args) {
+      public static void main(String[] args) throws NonExistentFileException, UnsupportedImageTypeException {
             // Instanciamos el sistema
             Expofy expofy = Expofy.getInstance();
 
@@ -37,7 +37,7 @@ public class Main {
             // Clientes
             // Registro y login de clientes
             expofy.registrarCliente("123456789", "123", true);
-            expofy.loginCliente("123456879", "123");
+            expofy.loginCliente("123456789", "123");
             expofy.registrarCliente("784512", "456", true);
             expofy.loginCliente("784512", "456");
 
@@ -86,8 +86,8 @@ public class Main {
             centroExposicion1.loginEmpleado("123485", "789", "123");
             centroExposicion1.loginEmpleado("789456", "456", "123");
             centroExposicion2.loginEmpleado("455456", "489", "789");
-            centroExposicion1.loginGestor("456123", "123");
-            centroExposicion2.loginGestor("216548", "789");
+            centroExposicion1.loginGestor("456123", "456");
+            centroExposicion2.loginGestor("216548", "456");
 
             // Empleado edita su perfil
             
@@ -149,7 +149,7 @@ public class Main {
             expofy.getClienteRegistrado("123456789").inscribirse(sorteo, 2);
 
             // Empleado vende entradas para el mismo día
-            centroExspoicion1.venderEntrada(exposicion2, LocalTime.now(), );
+            centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(), LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
             // Gestor cambia el estado de una obra
             cuadro.restaurarObra();
 
@@ -158,17 +158,26 @@ public class Main {
             centroExposicion1.setSancion(10);
 
             // Gestor asigna un descuento a una exposicion
-            
+            exposicion1.setDescuento(new DescuentoDia(0.15,15));
             // Gestor realiza un sorteo una vez finalizado el periodo de inscripcion
-            
+            sorteo.realizarSorteo();
             // Obtener código ganador Sorteo
-            
+            String codigo_ganador = null;
+            ClienteRegistrado ganador = null;
+            for (Inscripcion inscripcion: sorteo.getInscripciones()) {
+                  for (String codigo : inscripcion.getCodigos()) {
+                        if (codigo != null){
+                              ganador = inscripcion.getCliente();
+                              codigo_ganador = codigo;
+                              break;}
+                  }
+
+            }
             // Cliente registrado compra entrada con código de Sorteo
-            expofy.comprarEntrada(cliente, exposicion1, , null, null, null, null)
+            expofy.comprarEntrada(ganador, exposicion1, LocalDate.now().plusDays(7), 
+            new Hora(LocalDate.now(), LocalTime.of(9,0,0), 
+            LocalTime.of(10,0,0), 10, 25.00), 3, new TarjetaDeCredito("123123", LocalDate.of(2050,5,5), 243), codigo_ganador);
 
-            // Gestor ve notificaciones de sorteos ya finalizados
-
-            // Gestor notifica y reembolsa cancelaciones
 
             // Gestor divide sallas
             sala1.addSubsala(5.0, 7.0, 2, 20);

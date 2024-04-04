@@ -107,18 +107,19 @@ public class Autor implements Serializable {
      * Constructor de un autor.
      *
      * @param nombre             el nombre del autor
-     * @param fechaNacimiento    la fecha de nacimiento del autor
-     * @param fechaFallecimiento la fecha de fallecimiento del autor
+     * @param i    la fecha de nacimiento del autor
+     * @param j la fecha de fallecimiento del autor
      * @param lugarNacimiento    el lugar de nacimiento del autor
      * @param lugarFallecimiento el lugar de fallecimiento del autor
      */
     public Autor(String nombre, LocalDate fechaNacimiento, LocalDate fechaFallecimiento, String lugarNacimiento,
-            String lugarFallecimiento) {
+            String lugarFallecimiento, Set<Obra> obras) {
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.fechaFallecimiento = fechaFallecimiento;
         this.lugarNacimiento = lugarNacimiento;
         this.lugarFallecimiento = lugarFallecimiento;
+        this.obras = obras;
     }
 
     /**

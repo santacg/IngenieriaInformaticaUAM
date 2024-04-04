@@ -22,7 +22,7 @@ public class ClienteRegistradoTest {
     public void setUp() {
         String NIF = "123456789";
         Boolean publicidad = true;
-        String contrasenia = "password";
+        String contrasenia = "alumnodb";
         Boolean sancionado = false;
         LocalDate ultimaCompra = LocalDate.now();
         LocalDate sancionadoHasta = null;
@@ -56,7 +56,7 @@ public class ClienteRegistradoTest {
      */
     @Test
     public void testGetContrasenia() {
-        String esperado = "password";
+        String esperado = "alumnodb";
         String actual = cliente.getContrasenia();
         assertEquals(esperado, actual);
     }
@@ -67,7 +67,7 @@ public class ClienteRegistradoTest {
      */
     @Test
     public void testSetContrasenia() {
-        String nuevaContrasenia = "newpassword";
+        String nuevaContrasenia = "padsof";
         cliente.setContrasenia(nuevaContrasenia);
         String actual = cliente.getContrasenia();
         assertEquals(nuevaContrasenia, actual);

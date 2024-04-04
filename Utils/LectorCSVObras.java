@@ -78,7 +78,7 @@ public class LectorCSVObras {
                 Boolean externa = origen.toLowerCase().equals("externa");
 
                 // Crea un autor con el nombre leído, sin especificar fechas o lugares.
-                Autor autor = new Autor(autorName, null, null, null, null);
+                Autor autor = new Autor(autorName, null, null, null, null, null);
                 Obra obra = null; // Inicializa la referencia de Obra como null.
                 // Crea una instancia de Obra según el tipo leído del archivo.
                 switch (tipo.toLowerCase()) {

@@ -293,7 +293,7 @@ public abstract class Obra implements Serializable {
      *
      * @param autor El autor a eliminar.
      */
-    public void removeAuotor(Autor autor) {
+    public void removeAutor(Autor autor) {
         this.autores.remove(autor);
     }
 
