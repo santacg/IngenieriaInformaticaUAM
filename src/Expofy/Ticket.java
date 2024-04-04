@@ -8,9 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import es.uam.eps.padsof.tickets.ITicketInfo;
-import es.uam.eps.padsof.tickets.NonExistentFileException;
-import es.uam.eps.padsof.tickets.TicketSystem;
-import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
+
 
 
 public class Ticket implements ITicketInfo {
@@ -36,6 +34,4 @@ public class Ticket implements ITicketInfo {
 	public double getPrice () { return this.exposicion.getPrecio(); }
 	public double getDiscount () { return this.exposicion.getDescuento().getDescuento(); }
 	public double getPayedPrice () { return this.payedPrice; }
-    public String getPicture () { return "." + File.separator + "resources" + File.separator + "centrocentro.jpg";
-    }
 }
