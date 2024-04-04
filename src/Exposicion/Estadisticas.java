@@ -11,8 +11,8 @@ import java.io.Serializable;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class Estadisticas implements Serializable {
-   private static Integer ticketsVendidos;
-   private static Double ingresosTotales;
+   private Integer ticketsVendidos;
+   private Double ingresosTotales;
 
    /**
     * Constructor de la clase Estadísticas.
@@ -57,6 +57,16 @@ public class Estadisticas implements Serializable {
     */
    public void incrementarIngresosTotales(Double precio) {
       ingresosTotales += precio;
+   }
+
+   @Override
+   public String toString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Estadisticas {");
+      sb.append("ingresosTotales=").append(ingresosTotales);
+      sb.append(", ticketsVendidos=").append(ticketsVendidos);
+      sb.append("}");
+      return sb.toString();
    }
 
 }

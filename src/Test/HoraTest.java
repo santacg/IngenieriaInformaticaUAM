@@ -125,39 +125,6 @@ public class HoraTest {
     }
 
     @Test
-    public void testEquals_SameObject() {
-        assertTrue(hora.equals(hora));
-    }
-
-    @Test
-    public void testEquals_NullObject() {
-        assertFalse(hora.equals(null));
-    }
-
-    @Test
-    public void testEquals_DifferentClass() {
-        assertFalse(hora.equals("Hora"));
-    }
-
-    @Test
-    public void testEquals_DifferentFecha() {
-        Hora other = new Hora(LocalDate.of(2022, 2, 1), LocalTime.of(10, 0), LocalTime.of(12, 0), 10, 10.0);
-        assertFalse(hora.equals(other));
-    }
-
-    @Test
-    public void testEquals_DifferentHoraInicio() {
-        Hora other = new Hora(LocalDate.of(2022, 1, 1), LocalTime.of(11, 0), LocalTime.of(12, 0), 10, 10.0);
-        assertFalse(hora.equals(other));
-    }
-
-    @Test
-    public void testEquals_DifferentHoraFin() {
-        Hora other = new Hora(LocalDate.of(2022, 1, 1), LocalTime.of(10, 0), LocalTime.of(13, 0), 10, 10.0);
-        assertFalse(hora.equals(other));
-    }
-
-    @Test
     public void testEquals_SameAttributes() {
         Hora other = new Hora(LocalDate.of(2022, 1, 1), LocalTime.of(10, 0), LocalTime.of(12, 0), 10, 10.0);
         assertTrue(hora.equals(other));

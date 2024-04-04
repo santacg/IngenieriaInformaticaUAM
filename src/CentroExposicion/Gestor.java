@@ -2,7 +2,6 @@ package src.CentroExposicion;
 
 import src.Usuario.Usuario;
 
-
 /**
  * Clase Gestor.
  * Representa un gestor dentro del sistema de gestión de usuarios.
@@ -11,7 +10,7 @@ import src.Usuario.Usuario;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class Gestor extends Usuario{
+public class Gestor extends Usuario {
 
     /**
      * Crea una nueva instancia de la clase Getsor con el NIF especificado.
@@ -21,4 +20,9 @@ public class Gestor extends Usuario{
     public Gestor(String NIF) {
         super(NIF);
     }
+
+    public String toString() {
+        return "Gestor [NIF=" + getNIF() + "]";
+    }
+
 }

@@ -143,8 +143,10 @@ public class Main {
 
             // Cliente registrado desactiva recepción de publicidad
             cliente.setPublicidad(false);
+
+            // Publicación de exposiciones
             exposicion1.expoPublicar();
-            exposicion1.getEstado();
+            exposicion2.expoPublicar();
 
             // Cliente registrado participa en un sorteo
             Sorteo sorteo = new SorteoExpo(exposicion1, LocalDate.now().plusDays(5), 2);
@@ -190,8 +192,14 @@ public class Main {
             centroExposicion1.setHoraApertura(LocalTime.of(9, 0, 0));
             centroExposicion2.setHoraCierre(LocalTime.of(22, 0, 0));
 
-            // Cliente registrado busca obras con filtros
-            
+            // Cliente registrado busca exposiciones con filtros
+            centroExposicion1.getExposicionesPorFecha(LocalDate.of(2021, 4, 4), LocalDate.now());
+            centroExposicion1.getExposicionesPermanentes();
+            centroExposicion1.getExposicionesTemporales();
+            centroExposicion1.getExposicionesPorTipoObra(Cuadro.class);
+
             System.out.println(expofy.toString());
+
+            expofy.persistirExpofy();
       }
 }
