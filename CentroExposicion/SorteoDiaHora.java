@@ -25,8 +25,8 @@ public class SorteoDiaHora extends Sorteo{
      * @param dia         El día específico en que se realizará el sorteo
      * @param hora        La hora específica a la que se realizará el sorteo
      */
-    public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, LocalDate dia, LocalTime hora) {
-        super(fechaSorteo, exposicion);
+    public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia, LocalTime hora) {
+        super(fechaSorteo, exposicion, n_entradas);
         this.dia = dia;
         this.hora = hora;
     }

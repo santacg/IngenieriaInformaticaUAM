@@ -38,6 +38,7 @@ public abstract class Sorteo implements Serializable {
         this.fechaSorteo = fechaSorteo;
         this.exposicion = exposicion;
         this.inscripciones = new HashSet<Inscripcion>();
+        this.n_entradas = n_entradas;
     }
 
     /**

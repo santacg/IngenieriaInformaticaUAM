@@ -20,7 +20,7 @@ public class Estadisticas implements Serializable {
     * @param ticketsVendidos Número de tickets vendidos.
     * @param ingresosTotales Ingresos totales generados.
     */
-   public Estadisticas(Integer ticketsVendidos, Double ingresosTotales) {
+   public Estadisticas() {
       ticketsVendidos = 0;
       ingresosTotales = (double) 0;
    }

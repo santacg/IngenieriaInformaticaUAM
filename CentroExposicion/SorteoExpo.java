@@ -19,8 +19,8 @@ public class SorteoExpo extends Sorteo{
      * @param exposicion   La exposición del sorteo
      * @param fechaSorteo  La fecha en la que se realizará el sorteo
      */
-    public SorteoExpo(Exposicion exposicion, LocalDate fechaSorteo) {
-        super(fechaSorteo, exposicion);
+    public SorteoExpo(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
+        super(fechaSorteo, exposicion, n_entradas);
     }
 
     public LocalDate getFechaLimite() {

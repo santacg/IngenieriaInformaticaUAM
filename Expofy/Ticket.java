@@ -13,7 +13,7 @@ import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
 
-public class Ticket implements ITicketInfo {	// Just an example implementation
+public class Ticket implements ITicketInfo {
     private Exposicion exposicion;
     private static int nextId = 0;
     private int idTicket;
@@ -30,13 +30,12 @@ public class Ticket implements ITicketInfo {	// Just an example implementation
         this.ticketDayTime = fecha.toString() + " " + hora.getHoraInicio().toString();
     }
     public int getIdTicket () { return this.idTicket; }
-    // The following are optional methods
 	public String getExhibitionName () { return this.exposicion.getNombre(); }
 	public int getNumberOfTickets () { return this.numberOfTickets; }
 	public String getTicketDateTime () { return this.ticketDayTime; }
 	public double getPrice () { return this.exposicion.getPrecio(); }
 	public double getDiscount () { return this.exposicion.getDescuento().getDescuento(); }
 	public double getPayedPrice () { return this.payedPrice; }
-
-
+    public String getPicture () { return "." + File.separator + "resources" + File.separator + "centrocentro.jpg";
+    }
 }

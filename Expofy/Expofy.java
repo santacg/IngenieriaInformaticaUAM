@@ -333,8 +333,7 @@ public class Expofy implements Serializable {
 
         // Verifica el estado de la exposición, solo procede si está Prorrogada o
         // Publicada.
-        if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)
-                || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+        if (!exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
             System.out.println("La exposición no está disponible");
             return false;
         }
@@ -347,17 +346,7 @@ public class Expofy implements Serializable {
 
         // Verifica la disponibilidad de la hora elegida dentro del horario de la
         // exposición.
-        for (Hora h : exposicion.getHorario()) {
-            if (hora.equals(h)) {
-                horaDisponible = true;
-                break;
-            }
-        }
 
-        if (horaDisponible == false) {
-            System.out.println("La hora no está dentro del rango de la exposición");
-            return false;
-        }
 
         if (nEntradas <= 0) {
             System.out.println("El número de entradas no puede ser menor o igual a 0");
@@ -394,7 +383,6 @@ public class Expofy implements Serializable {
         } catch (OrderRejectedException e) {
             return false;
         }
-        enviarNotificacionUsuario("Ha habido un error en el pago de la entrada", clienteRegistrado);
 
         // Procede con la compra, actualizando las estadísticas y asignando entradas.
         Estadisticas estadisticas = exposicion.getEstadisticas();
@@ -408,15 +396,13 @@ public class Expofy implements Serializable {
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
         try {
-             TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),
-                "." + File.separator + "tmp");
+            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora), "./ticket.pdf");
         } catch (NonExistentFileException e) {
-           return false;
-        } catch(UnsupportedImageTypeException e){
+            return false;
+        } catch (UnsupportedImageTypeException e) {
             return false;
         }
-        
-        
+
         clienteRegistrado.setUltimaCompra(LocalDate.now());
         enviarNotificacionUsuario("La entrada se ha comprado con éxito", clienteRegistrado);
         return true;

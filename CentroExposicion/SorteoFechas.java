@@ -23,8 +23,8 @@ public class SorteoFechas extends Sorteo{
      * @param fechaInicio La fecha de inicio
      * @param fechaFin    La fecha de fin
      */
-    public SorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, LocalDate fechaInicio, LocalDate fechaFin) {
-        super(fechaSorteo, exposicion);
+    public SorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,LocalDate fechaInicio, LocalDate fechaFin) {
+        super(fechaSorteo, exposicion, n_entradas);
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }

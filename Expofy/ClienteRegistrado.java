@@ -39,7 +39,11 @@ public class ClienteRegistrado extends Usuario {
         this.publicidad = publicidad;
         this.contrasenia = contrasenia;
         this.sancionado = sancionado;
-        this.ultimaCompra = ultimaCompra;
+        if (ultimaCompra == null) {
+            this.ultimaCompra = LocalDate.of(1970, 1, 1);
+        } else {
+            this.ultimaCompra = ultimaCompra;
+        }
         if (sancionadoHasta == null) {
             this.sancionadoHasta = LocalDate.of(1970, 1, 1);
         } else {

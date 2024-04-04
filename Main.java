@@ -143,9 +143,11 @@ public class Main {
 
             // Cliente registrado desactiva recepción de publicidad
             cliente.setPublicidad(false);
+            exposicion1.expoPublicar();
+            exposicion1.getEstado();
 
             // Cliente registrado participa en un sorteo
-            Sorteo sorteo = new SorteoExpo(exposicion1, LocalDate.now().plusDays(5));
+            Sorteo sorteo = new SorteoExpo(exposicion1, LocalDate.now().plusDays(5), 2);
             expofy.getClienteRegistrado("123456789").inscribirse(sorteo, 2);
 
             // Empleado vende entradas para el mismo día
@@ -174,12 +176,12 @@ public class Main {
 
             }
             // Cliente registrado compra entrada con código de Sorteo
-            expofy.comprarEntrada(ganador, exposicion1, LocalDate.now().plusDays(7), 
-            new Hora(LocalDate.now(), LocalTime.of(9,0,0), 
-            LocalTime.of(10,0,0), 10, 25.00), 3, new TarjetaDeCredito("123123", LocalDate.of(2050,5,5), 243), codigo_ganador);
+            expofy.comprarEntrada(ganador, exposicion1, LocalDate.of(2021,1,2), 
+            new Hora(LocalDate.of(2021,1,2), LocalTime.of(9,0,0), 
+            LocalTime.of(10,0,0), 10, 25.00), 3, new TarjetaDeCredito("1234123412341234", LocalDate.of(2050,5,5), 243), codigo_ganador);
 
 
-            // Gestor divide sallas
+            // Gestor divide salas
             sala1.addSubsala(5.0, 7.0, 2, 20);
             sala1.addSubsala(3.0, 5.0, 3, 10);
 

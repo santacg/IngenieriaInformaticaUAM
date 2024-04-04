@@ -53,6 +53,8 @@ public class Exposicion implements Serializable {
         this.tipo = tipo;
         this.precio = precio;
         this.estado = EstadoExposicion.EN_CREACION;
+        Estadisticas estadisticas = new Estadisticas();
+        this.estadisticas = estadisticas;
     }
 
     /**
