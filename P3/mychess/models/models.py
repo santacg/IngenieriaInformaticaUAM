@@ -67,5 +67,3 @@ class ChessMove(models.Model):
             promotion_piece = next((piece for code, piece in self.PROMOTION_CHOICES if code == self.promotion), None)
             move_description += f", promocionado a {promotion_piece}"
         return move_description
-
-

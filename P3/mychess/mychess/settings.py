@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'models',
 ]
 
 MIDDLEWARE = [
@@ -169,7 +170,5 @@ REST_FRAMEWORK = {
     ),
 }
 
+
 AUTH_USER_MODEL = 'models.Player'
-AUTH_USER_MODEL = 'models.User'
-
-
