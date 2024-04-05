@@ -5,9 +5,8 @@ from .models import Player, ChessGame, ChessMove
 admin.site.register(Player)
 
 class ChessGameAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status', 'start_time', 'end_time', 'time_control', 'white_player', 'black_player', 'winner')
-    list_filter = ('status', 'white_player', 'black_player', 'winner')
-    search_fields = ('white_player__username', 'black_player__username', 'winner__username')
+    list_display = ('id', 'white_player', 'black_player')
+    search_fields = ('white_player__username', 'black_player__username')
 
 class ChessMoveAdmin(admin.ModelAdmin):
     list_display = ('game', 'player', 'move_from', 'move_to', 'promotion')

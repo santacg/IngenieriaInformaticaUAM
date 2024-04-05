@@ -6,7 +6,11 @@ import chess
 # Create your models here.
 
 class Player(AbstractUser):
-    rating = models.IntegerField(default=1200)
+    username = models.CharField(unique=True, max_length=100)
+    rating = models.IntegerField(default=-1)
+
+    def __str__(self):
+        return f"{self.username} ({self.rating})" 
 
 class ChessGame(models.Model):
     STATUS_CHOICES = [
@@ -14,13 +18,15 @@ class ChessGame(models.Model):
             ('ACTIVE', 'Activa'),
             ('FINISHED', 'Finalizada'),
     ]
+    board = chess.Board().fen()
+
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default='PENDING')
-    board_state = models.TextField(help_text="Almacena la posición de las piezas en formato FEN")
-    start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField(null=True, blank=True, help_text="Tiempo de finalización de la partida")
-    time_control = models.CharField(max_length=50, help_text="Control de tiempo para cada jugador")
-    white_player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="games_as_white", on_delete=models.CASCADE)
-    black_player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_as_black', on_delete=models.CASCADE)
+    board_state = models.TextField(board, help_text="Almacena la posición de las piezas en formato FEN")
+    start_time = models.DateTimeField('Start', auto_now=True, null=True, blank=True, help_text="Game starting time")
+    end_time = models.DateTimeField('Ending', null=True, blank=True, help_text="Game ending time")
+    time_control = models.CharField('Time Control', max_length=50, help_text="Control de tiempo para cada jugador")
+    white_player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="games_as_white", on_delete=models.CASCADE, null=True)
+    black_player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_as_black', on_delete=models.CASCADE, null=True)
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_won', null=True, blank=True, on_delete=models.SET_NULL, help_text="El ganador de la partida. Puede ser nulo si el juego está pendiente o ha terminado en empate.")
 
     def __str__(self):
@@ -34,8 +40,7 @@ class ChessGame(models.Model):
         else:
             black_player = str(self.black_player)
 
-        game_id = self.id if self.id is not None else "Pending"
-        return f"Game ID = {game_id}; Players: White: {white_player}, Black: {black_player}"
+        return f"GameID=({self.id}) {white_player} vs {black_player}"
 
 
 
