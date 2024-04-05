@@ -6,7 +6,7 @@ import chess
 # Create your models here.
 
 class Player(AbstractUser):
-    rating = models.IntegerField(1200)
+    rating = models.IntegerField(default=1200)
 
 class ChessGame(models.Model):
     STATUS_CHOICES = [
@@ -24,7 +24,19 @@ class ChessGame(models.Model):
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_won', null=True, blank=True, on_delete=models.SET_NULL, help_text="El ganador de la partida. Puede ser nulo si el juego está pendiente o ha terminado en empate.")
 
     def __str__(self):
-        return f"{self.white_player.username} vs {self.black_player.username} - {self.get_status_display()}"
+        if self.white_player is None:
+            white_player = 'Unknown'
+        else:
+            white_player = str(self.white_player)
+
+        if self.black_player is None:
+            black_player = 'Unknown'
+        else:
+            black_player = str(self.black_player)
+
+        game_id = self.id if self.id is not None else "Pending"
+        return f"Game ID = {game_id}; Players: White: {white_player}, Black: {black_player}"
+
 
 
 class ChessMove(models.Model):
