@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path 
 from django.urls import include
+from models.api import MyTokenCreateView
 
 urlpatterns = [ 
     path('admin/', admin.site.urls),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
-    path(r'api/v1/mytokenlogin/', api.MyTokenCreateView.as_view()),
+    path(r'api/v1/mytokenlogin/', MyTokenCreateView.as_view()),
 ]
