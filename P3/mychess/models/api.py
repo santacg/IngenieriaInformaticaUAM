@@ -20,26 +20,29 @@ class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewset
     serializer_class = ChessGameSerializer
 
     def create(self, request, *args, **kwargs):
-        available_games = ChessGame.objects.filter(status='pending').exclude(whitePlayer=request.user).exclude(blackPlayer=request.user)
-        if available_games.exists():
-            game = available_games.first()
-            if not game.whitePlayer:
-                game.whitePlayer = request.user
-            else:
-                game.blackPlayer = request.user
-            game.status = 'active'
-            game.save()
-            return Response(self.get_serializer(game).data, status=status.HTTP_201_CREATED)
-        else:
-            game = ChessGame()
-            if random.choice([True, False]):
-                game.whitePlayer = request.user
-            else:
-                game.blackPlayer = request.user
-            game.status = 'pending'
-            game.save()  # Asegúrate de guardar el juego
-            return Response(self.get_serializer(game).data, status=status.HTTP_201_CREATED)
+        # Intenta encontrar un juego pendiente que el usuario actual pueda unirse
+        available_game = ChessGame.objects.filter(status='pending').exclude(whitePlayer=request.user).exclude(blackPlayer=request.user).first()
 
+        if available_game:
+            # Asigna el usuario actual como el segundo jugador y cambia el estado a ACTIVE
+            if not available_game.whitePlayer:
+                available_game.whitePlayer = request.user
+            else:
+                available_game.blackPlayer = request.user
+            available_game.status = 'ChessGame.ACTIVE'
+            available_game.save()
+            serializer = self.get_serializer(available_game)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # No hay juego disponible para unirse, crea un nuevo juego
+            # Decide aleatoriamente si el usuario actual será el jugador blanco o negro
+            player_role = random.choice(['whitePlayer', 'blackPlayer'])
+            data = {player_role: request.user.id, 'status': ChessGame.PENDING}
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         partial = kwargs.pop('partial', False)
