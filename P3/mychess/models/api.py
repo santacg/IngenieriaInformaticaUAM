@@ -41,5 +41,22 @@ class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewset
             return Response(self.get_serializer(game).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        # Implementa lógica específica de actualización si es necesario
-        return super().update(request, *args, **kwargs)
+        instance = self.get_object()
+        partial = kwargs.pop('partial', False)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        if instance.status == 'active':
+            return Response({'detail': 'Game is already active'}, status=status.HTTP_400_BAD_REQUEST)
+        if instance.status == 'PENDING':
+            instance.status = 'ACTIVE'
+            # Asegúrate de asignar el jugador contrario si es necesario
+            if not instance.whitePlayer:
+                instance.whitePlayer = request.user
+            elif not instance.blackPlayer:
+                instance.blackPlayer = request.user
+            instance.save()
+
+        self.perform_update(serializer)
+
+        return Response(serializer.data)

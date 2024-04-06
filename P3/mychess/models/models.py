@@ -14,6 +14,9 @@ class Player(AbstractUser):
         return f"{self.username} ({self.rating})" 
 
 class ChessGame(models.Model):
+    PENDING = 'PENDING'
+    ACTIVE = 'ACTIVE'
+    FINISHED = 'FINISHED'
     DEFAULT_BOARD_STATE = chess.STARTING_FEN
     STATUS_CHOICES = [
             ('PENDING', 'pending'),
