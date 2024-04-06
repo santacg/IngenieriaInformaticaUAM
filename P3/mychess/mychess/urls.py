@@ -15,13 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path 
-from django.urls import include
-from models.api import MyTokenCreateView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from models.api import MyTokenCreateView, ChessGameViewSet  # Asegúrate de importar correctamente
 
-urlpatterns = [ 
+# Crear el router y registrar nuestros viewsets
+router = DefaultRouter()
+router.register(r'games', ChessGameViewSet)
+
+urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
-    path(r'api/v1/mytokenlogin/', MyTokenCreateView.as_view()),
+    path('api/v1/mytokenlogin/', MyTokenCreateView.as_view()),
+
+    # Incluir las URLs de router para el ChessGameViewSet
+    path('api/v1/', include(router.urls)),  # Asegúrate de que esta línea esté al final
 ]
