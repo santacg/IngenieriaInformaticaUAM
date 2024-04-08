@@ -174,7 +174,10 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    "USER_ID_FIELD": "username"
+    'USER_ID_FIELD': "username", 
+    # http://127.0.0.1:8000/api/v1/users/username 
+    # De esta forma no se expone el id del usuario
+    # haciendo que sea más seguro
 }
 
 AUTH_USER_MODEL = 'models.Player'
