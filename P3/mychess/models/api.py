@@ -6,7 +6,6 @@ from .models import ChessGame
 from .serializers import ChessGameSerializer
 from django.db.models import Q
 import random
-import pdb
 
 class MyTokenCreateView(TokenCreateView):
     def _action(self, serializer):
