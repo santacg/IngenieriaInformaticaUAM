@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'models',
+    'daphne'
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -91,6 +93,12 @@ ASGI_APPLICATION = 'mychess.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 # Replace the DATABASES section of your settings.py with this
 DATABASES = {
