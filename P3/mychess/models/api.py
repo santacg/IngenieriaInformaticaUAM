@@ -22,10 +22,8 @@ class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewset
     serializer_class = ChessGameSerializer
 
     def create(self, request, *args, **kwargs):
-        pdb.set_trace()
-        game = ChessGame.objects.filter(status='pending').filter(Q(whitePlayer=None) | Q(blackPlayer=None)).first()
+        game = ChessGame.objects.filter(Q(whitePlayer=None) | Q(blackPlayer=None)).first()
         if game:
-            kwargs['pk'] = game.id
             return self.update(request, game, *args, **kwargs)  
         
         data = {'status': 'PENDING'}
@@ -49,5 +47,5 @@ class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewset
             update_data['blackPlayer'] = self.request.user.id
 
         request._full_data = update_data
-        kwargs['pk'] = game.id
+        self.kwargs['pk'] = str(game.id)
         return super().update(request, *args, **kwargs)

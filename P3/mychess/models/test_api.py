@@ -4,7 +4,6 @@ from rest_framework import status
 # from django.contrib.auth.models import User
 from models.models import ChessGame
 from django.contrib.auth import get_user_model
-import pdb
 # you may modify the following lines
 URL = '/api/v1/games/'
 # do not modify the code below
@@ -37,7 +36,6 @@ class ChessGameAPITest(TestCase):
         """Update a game using the create method.
         That is, call create when an available game exists.
         whiteuser already exists"""
-        pdb.set_trace()
         game = ChessGame.objects.create(whitePlayer=self.user1)
         self.client.force_authenticate(user=self.user2)
         response = self.client.post(f'{URL}', {})
