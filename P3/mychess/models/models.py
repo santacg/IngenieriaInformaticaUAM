@@ -65,7 +65,7 @@ class ChessMove(models.Model):
             move = chess.Move.from_uci(f"{self.move_from}{self.move_to}")
 
         if move not in board.legal_moves:
-            raise ValueError("Not a legal move")
+            raise ValueError(-1)
                  
         board.push(move)
         self.game.board_state = board.fen()
