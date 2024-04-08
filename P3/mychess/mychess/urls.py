@@ -16,19 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from models.api import MyTokenCreateView, ChessGameViewSet  # Asegúrate de importar correctamente
-
-# Crear el router y registrar nuestros viewsets
-router = DefaultRouter()
-router.register(r'games', ChessGameViewSet)
+from models import api 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
-    path('api/v1/mytokenlogin/', MyTokenCreateView.as_view()),
-
-    # Incluir las URLs de router para el ChessGameViewSet
-    path('api/v1/', include(router.urls)),  # Asegúrate de que esta línea esté al final
+    path(r'api/v1/mytokenlogin/', api.MyTokenCreateView.as_view()),
+    path('api/v1/', include('models.urls'))
 ]

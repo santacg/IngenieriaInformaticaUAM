@@ -4,7 +4,9 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from .models import ChessGame
 from .serializers import ChessGameSerializer
+from django.db.models import Q
 import random
+import pdb
 
 class MyTokenCreateView(TokenCreateView):
     def _action(self, serializer):
@@ -20,46 +22,32 @@ class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewset
     serializer_class = ChessGameSerializer
 
     def create(self, request, *args, **kwargs):
-        # Intenta encontrar un juego pendiente que el usuario actual pueda unirse
-        available_game = ChessGame.objects.filter(status='pending').exclude(whitePlayer=request.user).exclude(blackPlayer=request.user).first()
-
-        if available_game:
-            # Asigna el usuario actual como el segundo jugador y cambia el estado a ACTIVE
-            if not available_game.whitePlayer:
-                available_game.whitePlayer = request.user
-            else:
-                available_game.blackPlayer = request.user
-            available_game.status = 'ChessGame.ACTIVE'
-            available_game.save()
-            serializer = self.get_serializer(available_game)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        pdb.set_trace()
+        game = ChessGame.objects.filter(status='pending').filter(Q(whitePlayer=None) | Q(blackPlayer=None)).first()
+        if game:
+            kwargs['pk'] = game.id
+            return self.update(request, game, *args, **kwargs)  
+        
+        data = {'status': 'PENDING'}
+        if random.choice([True, False]):
+            data['whitePlayer'] = self.request.user.id
         else:
-            # No hay juego disponible para unirse, crea un nuevo juego
-            # Decide aleatoriamente si el usuario actual será el jugador blanco o negro
-            player_role = random.choice(['whitePlayer', 'blackPlayer'])
-            data = {player_role: request.user.id, 'status': ChessGame.PENDING}
-            serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        partial = kwargs.pop('partial', False)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
+            data['blackPlayer'] = self.request.user.id
 
-        if instance.status == 'active':
-            return Response({'detail': 'Game is already active'}, status=status.HTTP_400_BAD_REQUEST)
-        if instance.status == 'PENDING':
-            instance.status = 'ACTIVE'
-            # Asegúrate de asignar el jugador contrario si es necesario
-            if not instance.whitePlayer:
-                instance.whitePlayer = request.user
-            elif not instance.blackPlayer:
-                instance.blackPlayer = request.user
-            instance.save()
+        request._full_data = data 
+        return super().create(request, *args, **kwargs)
 
-        self.perform_update(serializer)
 
-        return Response(serializer.data)
+    def update(self, request, game, *args, **kwargs):
+        if game.status != 'pending':
+            return Response({'detail': 'Game is not pending'}, status=status.HTTP_400_BAD_REQUEST)
+
+        update_data = {'status': 'ACTIVE'}
+        if game.whitePlayer is None:
+            update_data['whitePlayer'] = self.request.user.id
+        else:
+            update_data['blackPlayer'] = self.request.user.id
+
+        request._full_data = update_data
+        kwargs['pk'] = game.id
+        return super().update(request, *args, **kwargs)

@@ -4,4 +4,4 @@ from .models import ChessGame
 class ChessGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChessGame
-        fields = '__all__'
+        fields = ['id', 'status', 'whitePlayer', 'blackPlayer']
