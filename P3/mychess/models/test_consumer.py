@@ -10,6 +10,7 @@ from channels.db import database_sync_to_async
 import logging
 import chess
 from channels.layers import get_channel_layer
+import pdb
 
 User = get_user_model()
 application = URLRouter([

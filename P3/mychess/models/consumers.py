@@ -1,41 +1,46 @@
 import json
+from django.test.testcases import async_to_sync
+from djoser.conf import settings
+from channels.db import database_sync_to_async
+from django.contrib.auth.models import User
 from .serializers import ChessMoveSerializer 
 from .models import ChessMove, ChessGame, Player
-from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
+from rest_framework.authtoken.models import Token
+from asgiref.sync import sync_to_async
 import chess
 import pdb
 
 class ChessConsumer(AsyncWebsocketConsumer):
-    ''' 
-    Se verifica el token proporcionado en la URL de la conexión para asegurarse de que el usuario esté autorizado.
-    Esto es, se comprueba que el token existe y se registra a qué usuario pertenece. Si el token es inválido,
-    se envía un mensaje de error y se cierra la conexión. Si es válido, el usuario es aceptado en el canal WebSocket 
-    y se le añade a un grupo (channel_layer) cuyo nombre es igual al identificador del juego.
-    '''
     async def connect(self):
-        pdb.set_trace()
         self.gameID = self.scope['url_route']['kwargs']['gameID']
-        self.token = self.scope['url_route']['kwargs']['token']
-        # acceder al usuario a través del token
-
+        game = None
+        game = await (sync_to_async(ChessGame.objects.filter)(id=self.gameID))        
+        if game is None: 
+          await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Invalid token',
+                'status': 'pending',
+                'playerID': None,
+            }))
+          await self.close()
+          return
+        token = self.scope['query_string'].decode()       
+ 
+        self.user = await self.get_user_by_token(token)
         if self.user is None:
-            status = 401
-            message = 'Invalid token'
-            type = 'error'
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Invalid token',
+                'status': 'pending',
+                'playerID': None,
+            }))
             await self.close()
         else:
             await self.accept()
-            status = 200
-            message = 'Connected to game'
-            type = 'game'
-            await self.channel_layer.group_add(self.gameID, self.channel_name)
-            await self.send(text_data=json.dumps({
-                'type':type,
-                'message':message,
-                'status':status, 
-                'playerID':self.user.id
-                }))
+            await self.channel_layer.group_add(str(self.gameID), self.channel_name)
+            await self.game_cb('game', 'OK', 'active', self.user.id)
+
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -62,8 +67,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
                     'from': data['from'],
                     'to': data['to'],
                     'playerID': data['playerID'],
-                    'promotion': data['promotion']
-
+                    'promotion': data['promotion'],
                 })
                 board = chess.Board(game.board_state)
                 # si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones
@@ -76,5 +80,52 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 return
                         
 
+    async def game_cb(self, _type, message, status, playerID):
+        await self.channel_layer.group_send(
+            str(self.gameID),
+            {
+                'type': 'game.message',  # Esto define el método handler que será llamado
+                'message': {
+                    'type': _type,
+                    'message': message,
+                    'status': status,
+                    'playerID': playerID,
+                }
+            }
+        )
+
+    async def game_message(self, event):
+        await self.send(text_data=json.dumps(event['message']))
+
+    async def move_cb(self, _type, message, status, playerID):
+        await self.channel_layer.group_send(
+            str(self.gameID),
+            {
+                'type': 'game.message',  # Esto define el método handler que será llamado
+                'message': {
+                    'type': _type,
+                    'message': message,
+                    'status': status,
+                    'playerID': playerID,
+                }
+            }
+        )
+
+    async def move_message(self, event):
+        await self.send(text_data=json.dumps(event['message']))
+
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.user, self.channel_name)
+        await self.channel_layer.group_discard(str(self.gameID), self.channel_name)
+
+    @database_sync_to_async
+    def get_user_by_token(self, token_key):
+        try:
+            token = Token.objects.get(key=token_key)
+            return token.user
+        except Token.DoesNotExist:
+            return None
+
+    @database_sync_to_async
+    def get_game_by_id(self, gameID):
+        game = ChessGame.objects.get(id=gameID)
+        return game
