@@ -46,6 +46,8 @@ if RENDER_EXTERNAL_HOSTNAME:
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,8 +58,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'models',
-    'daphne'
-    'channels'
 ]
 
 MIDDLEWARE = [
@@ -179,13 +179,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',      
     )
-}
-
-DJOSER = {
-    'USER_ID_FIELD': "username", 
-    # http://127.0.0.1:8000/api/v1/users/username 
-    # De esta forma no se expone el id del usuario
-    # haciendo que sea más seguro
 }
 
 AUTH_USER_MODEL = 'models.Player'

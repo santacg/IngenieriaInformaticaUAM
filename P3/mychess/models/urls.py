@@ -4,13 +4,7 @@ from .api import ChessGameViewSet
 
 router = DefaultRouter()
 router.register(r'games', ChessGameViewSet)
-router.register(r'play', ChessGameViewSet)
-
 
 urlpatterns = [
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/PSI/master
     path('', include(router.urls)),
 ]
