@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 import chess
 
-
+# Modelo de datos para gestionar jugadores.
 class Player(AbstractUser):
     username = models.CharField(unique=True, max_length=50)
     rating = models.IntegerField(default=-1)
@@ -12,8 +12,10 @@ class Player(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.rating})"
 
-
+# Modelo de datos para gestionar partidas de ajedrez.
+# Autor: Carlos García Santa
 class ChessGame(models.Model):
+    # Estados de la partida
     PENDING = 'PENDING'
     ACTIVE = 'ACTIVE'
     FINISHED = 'FINISHED'
@@ -23,6 +25,7 @@ class ChessGame(models.Model):
         ('ACTIVE', 'active'),
         ('FINISHED', 'finished'),
     ]
+    # Campos de la partida
     status = models.CharField(
         max_length=64, choices=STATUS_CHOICES, default='pending')
     board_state = models.TextField(
@@ -39,7 +42,7 @@ class ChessGame(models.Model):
         settings.AUTH_USER_MODEL, related_name='blackPlayer', on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_won', null=True, blank=True, on_delete=models.SET_NULL,
                                help_text="El ganador de la partida. Puede ser nulo si el juego está pendiente o ha terminado en empate.")
-
+    # Métodos de la partida
     def __str__(self):
         white_data = "unknown" if self.whitePlayer is None else str(
             self.whitePlayer)
@@ -48,15 +51,17 @@ class ChessGame(models.Model):
 
         return f"GameID=({self.id}) {white_data} vs {black_data}"
 
-
+# Modelo de datos para gestionar movimientos de ajedrez.
+# Autor: Carlos García Santa
 class ChessMove(models.Model):
+    # Elección de promoción
     PROMOTION_CHOICES = [
         ('Q', 'Queen'),
         ('R', 'Rook'),
         ('N', 'Knight'),
         ('B', 'Bishop'),
     ]
-
+    # Campos del movimiento
     game = models.ForeignKey(
         'ChessGame', related_name='game', on_delete=models.CASCADE)
     player = models.ForeignKey(
@@ -65,29 +70,34 @@ class ChessMove(models.Model):
     move_to = models.CharField(max_length=2)
     promotion = models.CharField(
         max_length=1, choices=PROMOTION_CHOICES, blank=True, null=True)
-
+    
+    # Métodos del movimiento
+    # Guarda el movimiento en la base de datos y actualiza el estado del tablero.
     def save(self, *args, **kwargs):
+        # Fundamental! Esto nos llevó horas solucionarlo
+        # Actualiza el estado de la partida desde la base de datos
         self.game.refresh_from_db()
+        # Comprueba que la partida esté activa
         if self.game.status != 'active':
             raise ValidationError("Game is not active")
-
+        # Comprueba que el jugador sea el siguiente
         board = chess.Board(self.game.board_state)
         if self.promotion:
             move = chess.Move.from_uci(
                 f"{self.move_from}{self.move_to}{self.promotion}")
         else:
             move = chess.Move.from_uci(f"{self.move_from}{self.move_to}")
-
+        # Comprueba que el movimiento sea válido
         if move not in board.legal_moves:
             raise ValueError(-1)
-
+        # Actualiza el estado del tablero
         board.push(move)
-
         self.game.board_state = board.fen()
         self.game.save()
 
         super().save(*args, **kwargs)
 
+    # Representación del movimiento
     def __str__(self):
         move_description = f"{self.player}: {self.move_from} -> {self.move_to}"
         if self.promotion:
