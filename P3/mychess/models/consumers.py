@@ -14,24 +14,25 @@ import pdb
 class ChessConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.gameID = self.scope['url_route']['kwargs']['gameID']
-        game = None
-        game = await (sync_to_async(ChessGame.objects.filter)(id=self.gameID))        
-        if game is None: 
-          await self.send(text_data=json.dumps({
+        game = await self.get_game_by_id(self.gameID)        
+        if game is None:
+            await self.accept()
+            await self.send(text_data=json.dumps({
                 'type': 'error',
-                'message': 'Invalid token',
+                'message': f'Invalid game with id {self.gameID}',
                 'status': 'pending',
                 'playerID': None,
             }))
-          await self.close()
-          return
+            await self.close()
+            return
         token = self.scope['query_string'].decode()       
  
-        self.user = await self.get_user_by_token(token)
-        if self.user is None:
+        user = await self.get_user_by_token(token)
+        if user is None:
+            await self.accept()
             await self.send(text_data=json.dumps({
                 'type': 'error',
-                'message': 'Invalid token',
+                'message': 'Invalid token. Connection not authorized.',
                 'status': 'pending',
                 'playerID': None,
             }))
@@ -39,7 +40,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
         else:
             await self.accept()
             await self.channel_layer.group_add(str(self.gameID), self.channel_name)
-            await self.game_cb('game', 'OK', 'active', self.user.id)
+            await self.game_cb('game', 'OK', 'active', user.id)
 
 
     async def receive(self, text_data):
@@ -127,5 +128,8 @@ class ChessConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_game_by_id(self, gameID):
-        game = ChessGame.objects.get(id=gameID)
-        return game
+        try:
+            game = ChessGame.objects.get(id=gameID)
+            return game
+        except ChessGame.DoesNotExist:
+            return None
