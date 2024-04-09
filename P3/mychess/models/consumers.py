@@ -21,13 +21,13 @@ class ChessConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'error',
                 'message': f'Invalid game with id {self.gameID}',
-                'status': 'pending',
+                'status': None,
                 'playerID': None,
             }))
             await self.close()
             return
+
         token = self.scope['query_string'].decode()       
- 
         self.user = await self.get_user_by_token(token)
         if self.user is None or not await self.is_user_in_game(self.user, self.game):
             await self.accept()
@@ -38,14 +38,14 @@ class ChessConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'error',
                 'message': message, 
-                'status': 'pending',
+                'status': self.game.status,
                 'playerID': None,
             }))
             await self.close()
         else:
             await self.accept()
             await self.channel_layer.group_add(str(self.gameID), self.channel_name)
-            await self.game_cb('game', 'OK', 'active', self.user.id)
+            await self.game_cb('game', 'OK', self.game.status, self.user.id)
 
 
     async def receive(self, text_data):
@@ -74,6 +74,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 board = chess.Board(self.game.board_state)
                 # si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones
                 if board.is_checkmate() or board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition():
+                    pdb.set_trace()
                     self.game.status = 'FINISHED'
                     self.game.winner = self.user
                     self.game.save()
@@ -107,29 +108,20 @@ class ChessConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event['message']))
 
     async def move_cb(self, _type, _from, to, playerID, promotion, _message):
-        if message is not None:
-            await self.channel_layer.group_send(
-                str(self.gameID),
-                {
-                    'type': 'move.message',  # Esto define el método handler que será llamado
-                    'message': {
-                        'type': _type,
-                        'from': _from,
-                        'to': to,
-                        'playerID': playerID,
-                        'promotion': promotion,
-                        'message': _message, 
+        await self.channel_layer.group_send(
+            str(self.gameID),
+            {
+                'type': 'move.message',  # Esto define el método handler que será llamado
+                'message': {
+                    'type': _type,
+                    'from': _from,
+                    'to': to,
+                    'playerID': playerID,
+                    'promotion': promotion,
+                    'message': _message, 
                 }
             }
         )
-        else:            
-            await self.channel_layer.group_send(
-                str(self.gameID),
-                {
-                    'type': 'move.message',  # Esto define el método handler que será llamado
-                    'message': _message,
-                } 
-            )
 
     async def move_message(self, event):
         await self.send(text_data=json.dumps(event['message']))
