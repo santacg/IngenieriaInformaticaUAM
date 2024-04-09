@@ -14,8 +14,8 @@ import pdb
 class ChessConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.gameID = self.scope['url_route']['kwargs']['gameID']
-        game = await self.get_game_by_id(self.gameID)        
-        if game is None:
+        self.game = await self.get_game_by_id(self.gameID)        
+        if self.game is None:
             await self.accept()
             await self.send(text_data=json.dumps({
                 'type': 'error',
@@ -27,12 +27,16 @@ class ChessConsumer(AsyncWebsocketConsumer):
             return
         token = self.scope['query_string'].decode()       
  
-        user = await self.get_user_by_token(token)
-        if user is None:
+        self.user = await self.get_user_by_token(token)
+        if self.user is None or not await self.is_user_in_game(self.user, self.game):
             await self.accept()
+            if self.user is None:
+                message = 'Invalid token. Connection not authorized.'
+            else:
+                message = f'Invalid game with id {self.gameID}'
             await self.send(text_data=json.dumps({
                 'type': 'error',
-                'message': 'Invalid token. Connection not authorized.',
+                'message': message, 
                 'status': 'pending',
                 'playerID': None,
             }))
@@ -40,45 +44,44 @@ class ChessConsumer(AsyncWebsocketConsumer):
         else:
             await self.accept()
             await self.channel_layer.group_add(str(self.gameID), self.channel_name)
-            await self.game_cb('game', 'OK', 'active', user.id)
+            await self.game_cb('game', 'OK', 'active', self.user.id)
 
 
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
-
-        game = ChessGame.objects.get(id=self.gameID)
         if message == 'move':
             #verifica si el movimiento es válido
             try:
+                _from = data['from']
+                to = data['to']
+                playerID = data['playerID']
+                promotion = None
+                promotion = data['promotion']
                 # crea un nuevo movimiento
                 move = ChessMove.objects.create(
-                    game=game,
-                    player=self.user,
-                    move_from=data['from'],
-                    move_to=data['to'],
-                    promotion=data['promotion']
+                    game=self.game,
+                    player=playerID,
+                    move_from=_from,
+                    move_to=to,
+                    promotion=promotion
                 )
                 serializer = ChessMoveSerializer(move)
                 serializer.is_valid(raise_exception=True)
                 move.save()
                 # envia el movimiento al otro jugador
-                await self.channel_layer.group_send(self.gameID, {
-                    'type':'move',
-                    'from': data['from'],
-                    'to': data['to'],
-                    'playerID': data['playerID'],
-                    'promotion': data['promotion'],
-                })
-                board = chess.Board(game.board_state)
+                await self.move_cb('move', _from, to, playerID, promotion)
+                board = chess.Board(self.game.board_state)
                 # si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones
                 if board.is_checkmate() or board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition():
-                    game.status = 'FINISHED'
-                    game.winner = self.user
-                    game.save()
+                    self.game.status = 'FINISHED'
+                    self.game.winner = self.user
+                    self.game.save()
             except Exception:
                 await self.send(text_data=json.dumps({'error': 'Invalid move'}))
                 return
+        else:
+            return
                         
 
     async def game_cb(self, _type, message, status, playerID):
@@ -98,16 +101,17 @@ class ChessConsumer(AsyncWebsocketConsumer):
     async def game_message(self, event):
         await self.send(text_data=json.dumps(event['message']))
 
-    async def move_cb(self, _type, message, status, playerID):
+    async def move_cb(self, _type, _from, to, playerID, promotion):
         await self.channel_layer.group_send(
             str(self.gameID),
             {
-                'type': 'game.message',  # Esto define el método handler que será llamado
+                'type': 'move.message',  # Esto define el método handler que será llamado
                 'message': {
                     'type': _type,
-                    'message': message,
-                    'status': status,
+                    'from': _from,
+                    'to': to,
                     'playerID': playerID,
+                    'promotion': promotion,
                 }
             }
         )
@@ -133,3 +137,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
             return game
         except ChessGame.DoesNotExist:
             return None
+
+    @database_sync_to_async
+    def is_user_in_game(self, user, game):
+        return game.whitePlayer == user or game.blackPlayer == user
