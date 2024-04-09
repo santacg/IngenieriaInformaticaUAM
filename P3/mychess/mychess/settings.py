@@ -110,7 +110,7 @@ CHANNEL_LAYERS = {
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dotenv_path = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path=dotenv_path)
-
+TESTING_ENV = os.getenv('TESTING', 'false').lower() == 'true'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
