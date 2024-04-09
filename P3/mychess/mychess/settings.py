@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
 from os import getenv
 import os
@@ -106,22 +107,24 @@ CHANNEL_LAYERS = {
     }
 }
 
-# Replace the DATABASES section of your settings.py with this
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=dotenv_path)
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'), conn_max_age=600, ssl_require=True)
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': getenv('PGDATABASE'),
+    'USER': getenv('PGUSER'),
+    'PASSWORD': getenv('PGPASSWORD'),
+    'HOST': getenv('PGHOST'),
+    'PORT': getenv('PGPORT', 5432),
+    'OPTIONS': {
+      'sslmode': 'require',
+    },
+  }
 }
 
-LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
-NEON_URL = 'postgresql://psi3_owner:Ggk71RCrZewW@ep-quiet-bonus-a2q474fe.eu-central-1.aws.neon.tech/psi3?sslmode=require'
-
-if os.getenv('TESTING', 'false').lower() in ['true', '1', 't']:
-    databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
-else:
-    databaseenv = dj_database_url.parse(NEON_URL, conn_max_age=500)
-
-
-DATABASES['default'].update(databaseenv)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
