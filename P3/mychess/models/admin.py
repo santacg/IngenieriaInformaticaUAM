@@ -2,9 +2,6 @@ from django.contrib import admin
 from .models import Player, ChessGame, ChessMove
 # Register your models here.
 
-admin.site.register(Player)
-
-
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'rating')
     search_fields = ('username',)

@@ -1,0 +1,34 @@
+Name                                                                               Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------------------------------------------------
+models/__init__.py                                                                     0      0   100%
+models/admin.py                                                                       16      0   100%
+models/api.py                                                                         39      1    97%   35
+models/apps.py                                                                         4      0   100%
+models/consumers.py                                                                   79      3    96%   74-77
+models/migrations/0001_initial.py                                                     10      0   100%
+models/migrations/0002_alter_chessgame_black_player_and_more.py                        6      0   100%
+models/migrations/0003_alter_chessgame_status.py                                       4      0   100%
+models/migrations/0004_rename_black_player_chessgame_black_and_more.py                 4      0   100%
+models/migrations/0005_alter_chessgame_status.py                                       4      0   100%
+models/migrations/0006_alter_chessgame_white.py                                        6      0   100%
+models/migrations/0007_alter_player_username.py                                        4      0   100%
+models/migrations/0008_alter_chessgame_black_alter_chessgame_white.py                  6      0   100%
+models/migrations/0009_alter_chessgame_black_alter_chessgame_white.py                  6      0   100%
+models/migrations/0010_alter_chessgame_black_alter_chessgame_white.py                  6      0   100%
+models/migrations/0011_remove_chessgame_black_remove_chessgame_white_and_more.py       6      0   100%
+models/migrations/0012_rename_time_control_chessgame_timecontrol.py                    4      0   100%
+models/migrations/0013_alter_chessmove_game.py                                         5      0   100%
+models/migrations/0014_alter_chessgame_board_state.py                                  4      0   100%
+models/migrations/__init__.py                                                          0      0   100%
+models/models.py                                                                      55      2    96%   94-96
+models/routing.py                                                                      3      3     0%   1-4
+models/serializers.py                                                                 10      0   100%
+models/test_api.py                                                                    52      0   100%
+models/test_consumer.py                                                              196      6    97%   153-154, 193-194, 222-223
+models/test_djoser.py                                                                 47      0   100%
+models/test_models.py                                                                 80      0   100%
+models/tests.py                                                                        1      1     0%   1
+models/urls.py                                                                         6      0   100%
+models/views.py                                                                        9      9     0%   1-12
+----------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                672     25    96%
