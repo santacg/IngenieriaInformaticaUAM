@@ -110,7 +110,6 @@ CHANNEL_LAYERS = {
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dotenv_path = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path=dotenv_path)
-TESTING_ENV = os.getenv('TESTING', 'false').lower() == 'true'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
@@ -125,8 +124,9 @@ DATABASES = {
   }
 }
 
+TESTING_ENV = os.getenv('TESTING', 'false').lower() == 'true'
 LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
-if 'TESTING' in os.environ:
+if TESTING_ENV:
     databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
     DATABASES['default'].update(databaseenv)
 
