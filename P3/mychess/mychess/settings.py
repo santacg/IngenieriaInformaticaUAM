@@ -100,27 +100,19 @@ CHANNEL_LAYERS = {
 }
 
 # Replace the DATABASES section of your settings.py with this
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': getenv('PGDATABASE'),
-        'USER': getenv('PGUSER'),
-        'PASSWORD': getenv('PGPASSWORD'),
-        'HOST': getenv('PGHOST'),
-        'PORT': getenv('PGPORT', 5432),
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
-    },
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'), conn_max_age=600, ssl_require=True)
 }
 
 LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
 NEON_URL = 'postgresql://psi3_owner:Ggk71RCrZewW@ep-quiet-bonus-a2q474fe.eu-central-1.aws.neon.tech/psi3?sslmode=require'
 
-if 'TESTING' in os.environ:
+if os.getenv('TESTING', 'false').lower() in ['true', '1', 't']:
     databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
 else:
-    databaseenv = dj_database_url.config(default=NEON_URL, conn_max_age=500)
+    databaseenv = dj_database_url.parse(NEON_URL, conn_max_age=500)
+
 
 DATABASES['default'].update(databaseenv)
 # Password validation
