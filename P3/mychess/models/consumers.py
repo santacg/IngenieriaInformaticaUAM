@@ -1,5 +1,6 @@
 import json
-from django.test.testcases import async_to_sync
+from django.core.mail import message
+from django.test.testcases import ValidationError, async_to_sync
 from djoser.conf import settings
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
@@ -49,37 +50,41 @@ class ChessConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
-        if message == 'move':
-            #verifica si el movimiento es válido
+        _from = ''
+        to = ''
+        playerID = ''
+        promotion = ''
+        if data['type'] == 'move':
             try:
                 _from = data['from']
                 to = data['to']
                 playerID = data['playerID']
                 promotion = None
                 promotion = data['promotion']
-                # crea un nuevo movimiento
-                move = ChessMove.objects.create(
+                # crea un nuevo movimiento, se llama a save con la creación y en ese método se comprueba la validez del movimiento
+                await sync_to_async(ChessMove.objects.create)(
                     game=self.game,
-                    player=playerID,
+                    player=self.user,
                     move_from=_from,
                     move_to=to,
                     promotion=promotion
                 )
-                serializer = ChessMoveSerializer(move)
-                serializer.is_valid(raise_exception=True)
-                move.save()
                 # envia el movimiento al otro jugador
-                await self.move_cb('move', _from, to, playerID, promotion)
+                await self.move_cb('move', _from, to, playerID, promotion, None)
                 board = chess.Board(self.game.board_state)
                 # si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones
                 if board.is_checkmate() or board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition():
                     self.game.status = 'FINISHED'
                     self.game.winner = self.user
                     self.game.save()
+            except ValidationError:
+                message = f"Error: invalid move (game is not active)"
+                await self.move_cb('error', _from, to, playerID, promotion, message)
+            except ValueError:
+                message = f'Error: invalid move {_from}{to}' 
+                await self.move_cb('error', _from, to, playerID, promotion, message)
             except Exception:
-                await self.send(text_data=json.dumps({'error': 'Invalid move'}))
-                return
+                await self.move_cb('error', _from, to, playerID, promotion, None)
         else:
             return
                         
@@ -101,20 +106,30 @@ class ChessConsumer(AsyncWebsocketConsumer):
     async def game_message(self, event):
         await self.send(text_data=json.dumps(event['message']))
 
-    async def move_cb(self, _type, _from, to, playerID, promotion):
-        await self.channel_layer.group_send(
-            str(self.gameID),
-            {
-                'type': 'move.message',  # Esto define el método handler que será llamado
-                'message': {
-                    'type': _type,
-                    'from': _from,
-                    'to': to,
-                    'playerID': playerID,
-                    'promotion': promotion,
+    async def move_cb(self, _type, _from, to, playerID, promotion, _message):
+        if message is not None:
+            await self.channel_layer.group_send(
+                str(self.gameID),
+                {
+                    'type': 'move.message',  # Esto define el método handler que será llamado
+                    'message': {
+                        'type': _type,
+                        'from': _from,
+                        'to': to,
+                        'playerID': playerID,
+                        'promotion': promotion,
+                        'message': _message, 
                 }
             }
         )
+        else:            
+            await self.channel_layer.group_send(
+                str(self.gameID),
+                {
+                    'type': 'move.message',  # Esto define el método handler que será llamado
+                    'message': _message,
+                } 
+            )
 
     async def move_message(self, event):
         await self.send(text_data=json.dumps(event['message']))
