@@ -7,18 +7,18 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
-import models.routing
-from django.core.asgi import get_asgi_application
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
-import os
+import os   
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mychess.settings')
 
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from django.core.asgi import get_asgi_application
 
 django_asgi_app = get_asgi_application()
 
+import models.routing
 
-application = ProtocolTypeRouter({
+application =  ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AuthMiddlewareStack(
         URLRouter(
@@ -26,3 +26,4 @@ application = ProtocolTypeRouter({
         )
     ),
 })
+
