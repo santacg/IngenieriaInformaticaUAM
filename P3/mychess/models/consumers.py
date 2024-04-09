@@ -38,14 +38,14 @@ class ChessConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'error',
                 'message': message, 
-                'status': self.game.status,
+                'status': self.game.status.upper(),
                 'playerID': None,
             }))
             await self.close()
         else:
             await self.accept()
             await self.channel_layer.group_add(str(self.gameID), self.channel_name)
-            await self.game_cb('game', 'OK', self.game.status, self.user.id)
+            await self.game_cb('game', 'OK', self.game.status.upper(), self.user.id)
 
 
     async def receive(self, text_data):
@@ -71,13 +71,6 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 )
                 # envia el movimiento al otro jugador
                 await self.move_cb('move', _from, to, playerID, promotion, None)
-                board = chess.Board(self.game.board_state)
-                # si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones
-                if board.is_checkmate() or board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition():
-                    pdb.set_trace()
-                    self.game.status = 'FINISHED'
-                    self.game.winner = self.user
-                    self.game.save()
             except ValidationError:
                 message = f"Error: invalid move (game is not active)"
                 await self.move_cb('error', _from, to, playerID, promotion, message)

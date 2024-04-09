@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.core.exceptions import ValidationError
 import chess
+import pdb
 # Create your models here.
 
 class Player(AbstractUser):
@@ -64,12 +65,15 @@ class ChessMove(models.Model):
         else:
             move = chess.Move.from_uci(f"{self.move_from}{self.move_to}")
 
+        print(board.legal_moves)
         if move not in board.legal_moves:
             raise ValueError(-1)
                  
         board.push(move)
+
         self.game.board_state = board.fen()
         self.game.save()
+        print("Board_state after save in model: ", self.game.board_state)
 
         super().save(*args, **kwargs)
 
