@@ -54,18 +54,17 @@ class ChessMove(models.Model):
     move_to = models.CharField(max_length=2)   
     promotion = models.CharField(max_length=1, choices=PROMOTION_CHOICES, blank=True, null=True)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs): 
+        self.game.refresh_from_db()
         if self.game.status != 'active':
             raise ValidationError("Game is not active")
-
+        
         board = chess.Board(self.game.board_state)
-
         if self.promotion:
             move = chess.Move.from_uci(f"{self.move_from}{self.move_to}{self.promotion}")
         else:
             move = chess.Move.from_uci(f"{self.move_from}{self.move_to}")
 
-        print(board.legal_moves)
         if move not in board.legal_moves:
             raise ValueError(-1)
                  
@@ -73,7 +72,6 @@ class ChessMove(models.Model):
 
         self.game.board_state = board.fen()
         self.game.save()
-        print("Board_state after save in model: ", self.game.board_state)
 
         super().save(*args, **kwargs)
 

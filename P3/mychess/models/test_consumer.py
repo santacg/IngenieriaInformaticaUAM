@@ -10,7 +10,6 @@ from channels.db import database_sync_to_async
 import logging
 import chess
 from channels.layers import get_channel_layer
-import pdb
 
 User = get_user_model()
 application = URLRouter([
@@ -230,7 +229,6 @@ class ChessConsumerTests(ChannelsLiveServerTestCase):
         await communicator.disconnect()
 
     async def test_020_scholar_mate(self):
-        print("TEST QUE IMPORTA")
         # scholar's check
         moves = [  # from to promoted_piece
             ["e2", "e4", ""],
@@ -358,11 +356,9 @@ class ChessConsumerTests(ChannelsLiveServerTestCase):
             # Send the move data
             await current_communicator.send_json_to(move_data)
 
-            print("Board FEN in test before move: ", self.game.board_state)
             # Receive and validate the response
             response = await communicator1.receive_json_from()
             self.assertEqual(response["type"], "move")
-            print("Board FEN in test after move: ", self.game.board_state)
             response = await communicator2.receive_json_from()
             self.assertEqual(response["type"], "move")
             board.push(chess.Move.from_uci(move[0] + move[1] + move[2]))
