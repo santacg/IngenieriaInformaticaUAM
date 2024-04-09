@@ -27,7 +27,7 @@ class ModelTests(TestCase):
             timeControl='10+5'
         )
 
-    def test_035_invalid_en_passant(self):
+    def test_101_invalid_en_passant(self):
         fen = "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR b KQkq e3 0 1"
         self.game.board_state = fen
         self.game.save()
@@ -46,7 +46,7 @@ class ModelTests(TestCase):
             fen
         )
     
-    def test_040_invalid_promotion(self):
+    def test_102_invalid_promotion(self):
         fen = "rnbqkbnr/pppp1ppp/8/3Pp3/8/8/PPP1PPPP/RNBQKBNR b KQkq e3 0 1"
         self.game.board_state = fen
         self.game.save()
@@ -65,7 +65,7 @@ class ModelTests(TestCase):
             fen
         )
     
-    def test_050_invalid_move_from(self):
+    def test_103_invalid_move_from(self):
         move = ChessMove(
             game=self.game,
             player=self.player1,
@@ -108,7 +108,7 @@ class ConsumerTests(ChannelsLiveServerTestCase):
             status='active')
         self.game2.save()  # two players
               
-    async def test_023_foolsmate(self):
+    async def test_104_foolsmate(self):
         moves = [
             ('f2', 'f3', ''),
             ('e7', 'e5', ''),
@@ -117,7 +117,7 @@ class ConsumerTests(ChannelsLiveServerTestCase):
         ]
         await self.play_a_few_moves(moves)
     
-    async def test_024_anastasia_mate(self):
+    async def test_105_anastasia_mate(self):
         moves = [
             ('g2', 'g4', ''),
             ('e7', 'e5', ''),
@@ -126,7 +126,7 @@ class ConsumerTests(ChannelsLiveServerTestCase):
         ]
         await self.play_a_few_moves(moves)        
 
-    async def test_025_greco_mate(self):
+    async def test_106_greco_mate(self):
         moves = [
             ('e2', 'e4', ''),
             ('e7', 'e5', ''),
