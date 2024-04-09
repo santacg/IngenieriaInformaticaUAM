@@ -125,6 +125,11 @@ DATABASES = {
   }
 }
 
+LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
+if 'TESTING' in os.environ:
+    databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
+    DATABASES['default'].update(databaseenv)
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
