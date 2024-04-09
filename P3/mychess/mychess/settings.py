@@ -53,10 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'models',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    'models',
 ]
 
 MIDDLEWARE = [
@@ -120,8 +120,7 @@ NEON_URL = 'postgresql://psi3_owner:Ggk71RCrZewW@ep-quiet-bonus-a2q474fe.eu-cent
 if 'TESTING' in os.environ:
     databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
 else:
-    databaseenv = dj_database_url.config(
-        conn_max_age=600, default=NEON_URL)
+    databaseenv = dj_database_url.config(default=NEON_URL, conn_max_age=500)
 
 DATABASES['default'].update(databaseenv)
 # Password validation
@@ -179,3 +178,5 @@ DJOSER = {
 }
 
 AUTH_USER_MODEL = 'models.Player'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
