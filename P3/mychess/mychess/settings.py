@@ -72,11 +72,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'https://psi-o0g3.onrender.com'
-]
+CORS_ORIGIN_ALLOW_ALL = True 
+
+CSRF_TRUSTED_ORIGINS = ['https://psi-o0g3.onrender.com']
 
 ROOT_URLCONF = 'mychess.urls'
 
