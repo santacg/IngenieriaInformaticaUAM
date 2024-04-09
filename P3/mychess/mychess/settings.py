@@ -36,7 +36,7 @@ if 'DEBUG' in os.environ:
 else:
     DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -103,14 +103,6 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'psi',
-        'USER': 'alumnodb',
-        'PASSWORD': 'alumnodb',
-        'HOST': 'localhost',  # O una IP si es remota pero considerada 'local' para tus propósitos
-        'PORT': '5432',
-    },
-    'neon': {
-        'ENGINE': 'django.db.backends.postgresql',
         'NAME': getenv('PGDATABASE'),
         'USER': getenv('PGUSER'),
         'PASSWORD': getenv('PGPASSWORD'),
@@ -119,18 +111,19 @@ DATABASES = {
         'OPTIONS': {
             'sslmode': 'require',
         },
-    }
+    },
 }
 
 LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
+NEON_URL = 'postgresql://psi3_owner:Ggk71RCrZewW@ep-quiet-bonus-a2q474fe.eu-central-1.aws.neon.tech/psi3?sslmode=require'
 
 if 'TESTING' in os.environ:
     databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
 else:
     databaseenv = dj_database_url.config(
-        conn_max_age=600, default=LOCALPOSTGRES)
+        conn_max_age=600, default=NEON_URL)
 
-DATABASES['default'] = databaseenv
+DATABASES['default'].update(databaseenv)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
