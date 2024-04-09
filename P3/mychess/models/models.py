@@ -1,11 +1,8 @@
-from typing import Type
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.core.exceptions import ValidationError
 import chess
-import pdb
-# Create your models here.
 
 
 class Player(AbstractUser):
