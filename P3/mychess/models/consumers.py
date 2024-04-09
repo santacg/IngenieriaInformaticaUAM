@@ -4,7 +4,7 @@ from django.test.testcases import ValidationError, async_to_sync
 from djoser.conf import settings
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
-from .serializers import ChessMoveSerializer 
+from .serializers import ChessMoveSerializer
 from .models import ChessMove, ChessGame, Player
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework.authtoken.models import Token
@@ -12,10 +12,11 @@ from asgiref.sync import sync_to_async
 import chess
 import pdb
 
+
 class ChessConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.gameID = self.scope['url_route']['kwargs']['gameID']
-        self.game = await self.get_game_by_id(self.gameID)        
+        self.game = await self.get_game_by_id(self.gameID)
         if self.game is None:
             await self.accept()
             await self.send(text_data=json.dumps({
@@ -27,7 +28,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        token = self.scope['query_string'].decode()       
+        token = self.scope['query_string'].decode()
         self.user = await self.get_user_by_token(token)
         if self.user is None or not await self.is_user_in_game(self.user, self.game):
             await self.accept()
@@ -37,7 +38,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 message = f'Invalid game with id {self.gameID}'
             await self.send(text_data=json.dumps({
                 'type': 'error',
-                'message': message, 
+                'message': message,
                 'status': self.game.status.upper(),
                 'playerID': None,
             }))
@@ -46,7 +47,6 @@ class ChessConsumer(AsyncWebsocketConsumer):
             await self.accept()
             await self.channel_layer.group_add(str(self.gameID), self.channel_name)
             await self.game_cb('game', 'OK', self.game.status.upper(), self.user.id)
-
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -75,13 +75,12 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 message = f"Error: invalid move (game is not active)"
                 await self.move_cb('error', _from, to, playerID, promotion, message)
             except ValueError:
-                message = f'Error: invalid move {_from}{to}' 
+                message = f'Error: invalid move {_from}{to}'
                 await self.move_cb('error', _from, to, playerID, promotion, message)
             except Exception:
                 await self.move_cb('error', _from, to, playerID, promotion, None)
         else:
             return
-                        
 
     async def game_cb(self, _type, message, status, playerID):
         await self.channel_layer.group_send(
@@ -111,7 +110,7 @@ class ChessConsumer(AsyncWebsocketConsumer):
                     'to': to,
                     'playerID': playerID,
                     'promotion': promotion,
-                    'message': _message, 
+                    'message': _message,
                 }
             }
         )

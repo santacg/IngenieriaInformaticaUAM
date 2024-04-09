@@ -128,7 +128,8 @@ LOCALPOSTGRES = 'postgresql://alumnodb:alumnodb@localhost:5432/psi'
 if 'TESTING' in os.environ:
     databaseenv = dj_database_url.parse(LOCALPOSTGRES, conn_max_age=600)
 else:
-    databaseenv = dj_database_url.config(conn_max_age=600, default=LOCALPOSTGRES)
+    databaseenv = dj_database_url.config(
+        conn_max_age=600, default=LOCALPOSTGRES)
 
 DATABASES['default'] = databaseenv
 # Password validation
@@ -177,7 +178,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',      
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 

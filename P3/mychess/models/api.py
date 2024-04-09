@@ -7,6 +7,7 @@ from .serializers import ChessGameSerializer
 from django.db.models import Q
 import random
 
+
 class MyTokenCreateView(TokenCreateView):
     def _action(self, serializer):
         response = super()._action(serializer)
@@ -16,24 +17,25 @@ class MyTokenCreateView(TokenCreateView):
         response.data['rating'] = tokenObject.user.rating
         return response
 
+
 class ChessGameViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = ChessGame.objects.all()
     serializer_class = ChessGameSerializer
 
     def create(self, request, *args, **kwargs):
-        game = ChessGame.objects.filter(Q(whitePlayer=None) | Q(blackPlayer=None)).first()
+        game = ChessGame.objects.filter(
+            Q(whitePlayer=None) | Q(blackPlayer=None)).first()
         if game:
-            return self.update(request, game, *args, **kwargs)  
-        
+            return self.update(request, game, *args, **kwargs)
+
         data = {'status': 'PENDING'}
         if random.choice([True, False]):
             data['whitePlayer'] = self.request.user.id
         else:
             data['blackPlayer'] = self.request.user.id
 
-        request._full_data = data 
+        request._full_data = data
         return super().create(request, *args, **kwargs)
-
 
     def update(self, request, game, *args, **kwargs):
         if game.status != 'pending':

@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import ChessGame
-from .serializers import ChessGameSerializer, serializers 
+from .serializers import ChessGameSerializer, serializers
 # Create your views here.
+
 
 @api_view(['GET'])
 def getData(request):

@@ -4,14 +4,24 @@ from .models import Player, ChessGame, ChessMove
 
 admin.site.register(Player)
 
+
+class PlayerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'rating')
+    search_fields = ('username',)
+    list_filter = ('rating',)
+    ordering = ('-rating',)
+
+
 class ChessGameAdmin(admin.ModelAdmin):
     list_display = ('id', 'whitePlayer', 'blackPlayer')
-    search_fields = ('whitePlayer__username', 'blackPlayer__username')
+    list_filter = ('whitePlayer', 'blackPlayer')
+
 
 class ChessMoveAdmin(admin.ModelAdmin):
     list_display = ('game', 'player', 'move_from', 'move_to', 'promotion')
     list_filter = ('game', 'player')
-    search_fields = ('player__username', 'move_from', 'move_to')
+
 
 admin.site.register(ChessGame, ChessGameAdmin)
 admin.site.register(ChessMove, ChessMoveAdmin)
+admin.site.register(Player, PlayerAdmin)
