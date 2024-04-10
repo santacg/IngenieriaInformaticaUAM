@@ -1,5 +1,7 @@
 package blockchain.NetworkElement;
 
+import blockchain.IConnectable;
+
 /**
  * Interfaz de marcado que identifica a los elementos de la red de blockchain.
  * Los elementos de red pueden incluir nodos y subredes. Esta interfaz no define
@@ -9,6 +11,6 @@ package blockchain.NetworkElement;
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public interface NetworkElement {
+public interface NetworkElement extends IConnectable {
 
 }

@@ -2,6 +2,7 @@ package blockchain.BlockchainNetwork;
 
 import java.util.ArrayList;
 
+import blockchain.IConnectable;
 import blockchain.NetworkElement.NetworkElement;
 
 /**
@@ -10,7 +11,7 @@ import blockchain.NetworkElement.NetworkElement;
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public class BlockchainNetwork {
+public class BlockchainNetwork implements IConnectable {
     private String name;
     private ArrayList<NetworkElement> elements;
 
