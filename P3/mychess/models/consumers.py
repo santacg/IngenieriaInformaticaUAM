@@ -5,6 +5,7 @@ from .models import ChessMove, ChessGame
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework.authtoken.models import Token
 from asgiref.sync import sync_to_async
+import chess
 
 # Consumidor de WebSockets para el juego de ajedrez.
 # Autor: Eduardo Junoy Ortega
@@ -70,6 +71,12 @@ class ChessConsumer(AsyncWebsocketConsumer):
                 )
         # Envía el movimiento al otro jugador.
                 await self.move_cb('move', _from, to, playerID, promotion, None)
+                board = chess.Board(self.game.board_state)
+        # Si es jaque mate, ahogado, insuficiente material, 75 movimientos o 5 repeticiones.
+                if board.is_checkmate() or board.is_stalemate() or board.is_insufficient_material() or board.is_seventyfive_moves() or board.is_fivefold_repetition():
+                    self.game.status = 'FINISHED'
+                    self.game.winner = self.user
+                    self.game.save()
             except ValidationError:
                 message = f"Error: invalid move (game is not active)"
                 await self.move_cb('error', _from, to, playerID, promotion, message)
