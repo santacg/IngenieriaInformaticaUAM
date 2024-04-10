@@ -78,7 +78,7 @@ class ChessMove(models.Model):
         # Actualiza el estado de la partida desde la base de datos
         self.game.refresh_from_db()
         # Comprueba que la partida esté activa
-        if self.game.status != 'active':
+        if self.game.status.upper() != 'ACTIVE':
             raise ValidationError("Game is not active")
         # Comprueba que el jugador sea el siguiente
         board = chess.Board(self.game.board_state)

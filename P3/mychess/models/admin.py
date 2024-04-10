@@ -10,7 +10,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
 # Modelo de administración para gestionar partidas de ajedrez.
 class ChessGameAdmin(admin.ModelAdmin):
-    list_display = ('id', 'whitePlayer', 'blackPlayer')
+    list_display = ('id', 'whitePlayer', 'blackPlayer', 'status')
     list_filter = ('whitePlayer', 'blackPlayer')
 
 # Modelo de administración para gestionar movimientos de ajedrez.
