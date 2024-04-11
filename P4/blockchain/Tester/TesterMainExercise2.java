@@ -1,6 +1,7 @@
 package blockchain.Tester;
 
 import blockchain.Transaction.*;
+import blockchain.*;
 
 public class TesterMainExercise2 extends TesterMainExercise1 {
     public void buildFaultyNetwork() {

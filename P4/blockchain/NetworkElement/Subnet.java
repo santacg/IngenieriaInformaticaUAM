@@ -2,15 +2,16 @@ package blockchain.NetworkElement;
 
 import java.util.HashSet;
 
+import blockchain.BlockchainNetwork.BlockchainNetwork;
+
 /**
  * La clase Subnet representa una subred dentro de la red de blockchain, la cual puede contener múltiples nodos.
  * Esta estructura permite agrupar nodos para organizar mejor la red y potencialmente optimizar su funcionamiento.
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public class Subnet implements NetworkElement {
+public class Subnet extends NetworkElement {
     private static int idcounter = 0; // Contador estático para asignar un ID único a cada subred creada.
-    private int id; // ID único de la subred.
     private HashSet<Node> nodes; // Conjunto de nodos que pertenecen a esta subred.
 
     /**
@@ -19,12 +20,15 @@ public class Subnet implements NetworkElement {
      * @param nodes Nodos iniciales para incluir en la subred.
      */
     public Subnet(Node... nodes) {
-        this.id = idcounter++; // Asigna el ID y luego incrementa el contador para la próxima subred.
+        setId(idcounter++); // Asigna el ID y luego incrementa el contador para la próxima subred.
         this.nodes = new HashSet<>();
         for (Node node : nodes) {
             this.nodes.add(node);
+            node.setParent(this);
         }
     }
+
+    
 
     /**
      * Añade un nodo a la subred.

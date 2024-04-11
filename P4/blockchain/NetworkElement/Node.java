@@ -11,9 +11,8 @@ import blockchain.Transaction.*;
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public class Node implements NetworkElement {
+public class Node extends NetworkElement {
     private static int idcounter = 0; // Contador estático para asegurar un ID único para cada nodo
-    private int id; // El identificador único del nodo
     private Wallet wallet; // La billetera asociada con el nodo
     private ArrayList<Transaction> transactions; // Las transacciones realizadas por el nodo
 
@@ -23,19 +22,11 @@ public class Node implements NetworkElement {
      * @param wallet La billetera asociada con este nodo.
      */
     public Node(Wallet wallet) {
-        this.id = idcounter++;
+        setId(idcounter++);
         this.wallet = wallet;
         this.transactions = new ArrayList<>();
     }
 
-    /**
-     * Obtiene el identificador del nodo.
-     * 
-     * @return El identificador del nodo.
-     */
-    public int getId() {
-        return id;
-    }
 
     /**
      * Devuelve el nombre completo del nodo, incluyendo su ID con formato.
