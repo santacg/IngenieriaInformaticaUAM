@@ -24,8 +24,8 @@ public class Transaction {
     public Transaction(Wallet walletSender, Wallet walletReceiver, int value) {
         this.id = idcounter++; // Asigna el ID actual y luego incrementa el contador para la próxima
                                // transacción.
-        this.keySender = walletSender.getKey();
-        this.keyReceiver = walletReceiver.getKey();
+        this.keySender = walletSender.getPublicKey();
+        this.keyReceiver = walletReceiver.getPublicKey();
         this.value = value;
     }
 }

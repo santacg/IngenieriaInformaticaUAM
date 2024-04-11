@@ -3,13 +3,13 @@ package blockchain;
 import blockchain.NetworkElement.NetworkElement;
 import blockchain.NetworkElement.Node;
 
-public class DuplicateConnectionException extends Exception {
-    private NetworkElement element;
+public class DuplicateConnectionException extends RuntimeException {
 
     public DuplicateConnectionException(NetworkElement element) {
-        this.element = element;
+        super(element);
     }
 
+    @Override
     public String toString() {
         String name = "";
 

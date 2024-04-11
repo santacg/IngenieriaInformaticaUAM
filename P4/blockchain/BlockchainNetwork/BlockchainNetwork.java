@@ -1,6 +1,5 @@
 package blockchain.BlockchainNetwork;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 
 import javax.swing.text.html.parser.Element;
@@ -57,11 +56,11 @@ public class BlockchainNetwork implements IConnectable {
      * @return La instancia actual de BlockchainNetwork para permitir
      *         encadenamiento.
      */
-    public BlockchainNetwork connect(NetworkElement element) {
+    public BlockchainNetwork connect(NetworkElement element) throws ConnectionException{
         if (element instanceof Node) {
-            Node node = element;
+
             if (elements.contains(element)) {
-                throw new ConnectionException(Node node);
+                throw new ConnectionException(element);
             }
         }
         if (element.getTopParent() != this && element.getTopParent() != null) {
@@ -73,6 +72,8 @@ public class BlockchainNetwork implements IConnectable {
         System.out.println(this.name + " - new peer connected: " + element.toString());
         return this;
     }
+
+    
 
     /**
      * Devuelve una representación en cadena de la red de blockchain, mostrando

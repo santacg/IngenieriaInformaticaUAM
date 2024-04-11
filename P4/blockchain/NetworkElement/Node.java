@@ -34,7 +34,11 @@ public class Node extends NetworkElement {
      * @return El nombre completo del nodo.
      */
     public String fullName() {
-        return "Node#" + String.format("%03d", id);
+        return "Node#" + String.format("%03d", getId());
+    }
+
+    public Transaction createTransaction(Wallet wallet, int value){
+        return new Transaction(this.wallet, wallet, value);
     }
     
     /**
@@ -44,6 +48,6 @@ public class Node extends NetworkElement {
      */
     @Override
     public String toString() {
-        return "u: " + this.wallet.getUsername() + ", PK: " + this.wallet.getKey() + ", balance: " + this.wallet.getBalance() + " | @" + fullName();
+        return "u: " + this.wallet.getUsername() + ", PK: " + this.wallet.getPublicKey() + ", balance: " + this.wallet.getBalance() + " | @" + fullName();
     }
 }

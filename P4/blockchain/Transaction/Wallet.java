@@ -30,7 +30,7 @@ public class Wallet {
      * 
      * @return La clave criptográfica de la billetera.
      */
-    public String getKey() {
+    public String getPublicKey() {
         return this.key;
     }
 
