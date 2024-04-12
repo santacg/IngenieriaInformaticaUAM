@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.ConnectionException;
 
 import blockchain.NetworkElement.NetworkElement;
 

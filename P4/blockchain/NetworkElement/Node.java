@@ -3,10 +3,10 @@ package blockchain.NetworkElement;
 import java.util.ArrayList;
 
 import blockchain.IMessage;
-import blockchain.InsufficientBalance;
-import blockchain.NegativeTransfer;
-import blockchain.TransactionException;
+import blockchain.TransactionException.*;
 import blockchain.Transaction.*;
+import blockchain.TransactionException.InsufficientBalance;
+import blockchain.TransactionException.NegativeTransfer;
 
 /**
  * Representa un nodo en la red de blockchain. Cada nodo tiene un identificador único,

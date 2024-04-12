@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.TransactionException;
 
 import blockchain.Transaction.Wallet;
 

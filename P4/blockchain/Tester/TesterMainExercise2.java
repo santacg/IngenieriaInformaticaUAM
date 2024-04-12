@@ -1,7 +1,10 @@
 package blockchain.Tester;
 
 import blockchain.Transaction.*;
+import blockchain.TransactionException.TransactionException;
 import blockchain.*;
+import blockchain.ConnectionException.ConnectionException;
+import blockchain.ConnectionException.DuplicateConnectionException;
 
 public class TesterMainExercise2 extends TesterMainExercise1 {
     public void buildFaultyNetwork() {

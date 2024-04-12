@@ -2,9 +2,9 @@ package blockchain.BlockchainNetwork;
 
 import java.util.ArrayList;
 
-import javax.swing.text.html.parser.Element;
-
 import blockchain.*;
+import blockchain.ConnectionException.ConnectionException;
+import blockchain.ConnectionException.DuplicateConnectionException;
 import blockchain.NetworkElement.*;
 
 /**
