@@ -2,7 +2,10 @@ package blockchain.NetworkElement;
 
 import java.util.ArrayList;
 
-
+import blockchain.IMessage;
+import blockchain.InsufficientBalance;
+import blockchain.NegativeTransfer;
+import blockchain.TransactionException;
 import blockchain.Transaction.*;
 
 /**
@@ -12,7 +15,6 @@ import blockchain.Transaction.*;
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class Node extends NetworkElement {
-    private static int idcounter = 0; // Contador estático para asegurar un ID único para cada nodo
     private Wallet wallet; // La billetera asociada con el nodo
     private ArrayList<Transaction> transactions; // Las transacciones realizadas por el nodo
 
@@ -22,7 +24,8 @@ public class Node extends NetworkElement {
      * @param wallet La billetera asociada con este nodo.
      */
     public Node(Wallet wallet) {
-        setId(idcounter++);
+        setId(getIdCounter());
+        increaseIdCounter();
         this.wallet = wallet;
         this.transactions = new ArrayList<>();
     }
@@ -37,8 +40,36 @@ public class Node extends NetworkElement {
         return "Node#" + String.format("%03d", getId());
     }
 
-    public Transaction createTransaction(Wallet wallet, int value){
-        return new Transaction(this.wallet, wallet, value);
+    public Transaction createTransaction(Wallet wallet, int value) throws TransactionException{
+        if (value > this.wallet.getBalance()) {
+            throw new InsufficientBalance(this.wallet, wallet.getPublicKey(), value);
+        }
+        if (value < 1) {
+            throw new NegativeTransfer(this.wallet, wallet.getPublicKey(), value);
+        }
+        Transaction transaction = new Transaction(this.wallet, wallet, value);
+        transactions.add(transaction);
+        return transaction;
+    }
+
+    public Transaction createTransaction(String keyReceiver, int value) throws TransactionException{
+        if (value > this.wallet.getBalance()) {
+            throw new InsufficientBalance(this.wallet, keyReceiver, value);
+        }
+        if (value < 1) {
+            throw new NegativeTransfer(this.wallet, keyReceiver, value);
+        }
+        Transaction transaction = new Transaction(this.wallet, wallet, value);
+        transactions.add(transaction);
+        return transaction;
+    }
+
+    public boolean isNode(){
+        return true;
+    }
+
+    public void broadcast(IMessage msg){
+        msg.process(this);
     }
     
     /**

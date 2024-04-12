@@ -28,4 +28,35 @@ public class Transaction {
         this.keyReceiver = walletReceiver.getPublicKey();
         this.value = value;
     }
+
+    /**
+     * Crea una nueva transacción entre dos billeteras con un valor específico.
+     * 
+     * @param walletSender   La billetera del emisor de la transacción.
+     * @param walletReceiver La clave de la billetera del receptor de la transacción.
+     * @param value          El valor de la transacción.
+     */
+    public Transaction(Wallet walletSender, String keyReceiver, int value) {
+        this.id = idcounter++; // Asigna el ID actual y luego incrementa el contador para la próxima
+                               // transacción.
+        this.keySender = walletSender.getPublicKey();
+        this.keyReceiver = keyReceiver;
+        this.value = value;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public String getKeySender(){
+        return keySender;
+    }
+
+    public String getKeyReceiver(){
+        return keyReceiver;
+    }
+
+    public int getValue(){
+        return value;
+    }
 }

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import javax.swing.text.html.parser.Element;
 
 import blockchain.*;
-import blockchain.IConnectable;
-import blockchain.NetworkElement.NetworkElement;
 import blockchain.NetworkElement.*;
 
 /**
@@ -20,6 +18,7 @@ import blockchain.NetworkElement.*;
 public class BlockchainNetwork implements IConnectable {
     private String name;
     private ArrayList<NetworkElement> elements;
+    private IConnectable parent = null;
 
     /**
      * Constructor para crear una nueva red de blockchain con un nombre específico.
@@ -56,24 +55,32 @@ public class BlockchainNetwork implements IConnectable {
      * @return La instancia actual de BlockchainNetwork para permitir
      *         encadenamiento.
      */
-    public BlockchainNetwork connect(NetworkElement element) throws ConnectionException{
-        if (element instanceof Node) {
+    public BlockchainNetwork connect(NetworkElement element) throws ConnectionException {
+        if (element.isNode()) {
 
             if (elements.contains(element)) {
                 throw new ConnectionException(element);
             }
         }
-        if (element.getTopParent() != this && element.getTopParent() != null) {
+        if (element.getParent() != this && element.getParent() != null) {
             throw new DuplicateConnectionException(element);
         }
-        
+
         addElement(element);
         element.setParent(this);
         System.out.println(this.name + " - new peer connected: " + element.toString());
         return this;
     }
 
-    
+    public IConnectable getParent() {
+        return parent;
+    }
+
+    public void broadcast(IMessage msg) {
+        for (NetworkElement element : elements) {
+            element.broadcast(msg);
+        }
+    }
 
     /**
      * Devuelve una representación en cadena de la red de blockchain, mostrando

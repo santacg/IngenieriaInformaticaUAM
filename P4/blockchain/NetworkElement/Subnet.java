@@ -2,6 +2,7 @@ package blockchain.NetworkElement;
 
 import java.util.HashSet;
 
+import blockchain.IMessage;
 import blockchain.BlockchainNetwork.BlockchainNetwork;
 
 /**
@@ -11,7 +12,6 @@ import blockchain.BlockchainNetwork.BlockchainNetwork;
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
 public class Subnet extends NetworkElement {
-    private static int idcounter = 0; // Contador estático para asignar un ID único a cada subred creada.
     private HashSet<Node> nodes; // Conjunto de nodos que pertenecen a esta subred.
 
     /**
@@ -20,7 +20,8 @@ public class Subnet extends NetworkElement {
      * @param nodes Nodos iniciales para incluir en la subred.
      */
     public Subnet(Node... nodes) {
-        setId(idcounter++); // Asigna el ID y luego incrementa el contador para la próxima subred.
+        setId(getIdCounter());
+        increaseIdCounter();
         this.nodes = new HashSet<>();
         for (Node node : nodes) {
             this.nodes.add(node);
@@ -46,6 +47,18 @@ public class Subnet extends NetworkElement {
      */
     public void removeNode(Node node) {
         this.nodes.remove(node);
+    }
+
+    public boolean isNode(){
+        return false;
+    }
+    
+    public void broadcast(IMessage msg){
+        String mensaje = "[Subnet#"  + String.format("%03d", getId()) + "] " + msg.getMessage() + "\nBroadcasting to " + nodes.size() + " nodes:";
+        System.out.println(mensaje);
+        for (Node node : nodes) {
+            msg.process(node);
+        }
     }
 
     /**

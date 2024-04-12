@@ -1,9 +1,8 @@
 package blockchain;
 
 import blockchain.NetworkElement.NetworkElement;
-import blockchain.NetworkElement.Node;
 
-public class DuplicateConnectionException extends RuntimeException {
+public class DuplicateConnectionException extends ConnectionException {
 
     public DuplicateConnectionException(NetworkElement element) {
         super(element);
@@ -12,13 +11,14 @@ public class DuplicateConnectionException extends RuntimeException {
     @Override
     public String toString() {
         String name = "";
+        NetworkElement element = this.getElement();
 
-        if (element instanceof Node) {
+        if (element.isNode()) {
             name = "Node";
         } else {
             name = "Subnet";
         }
         return "Connection exception: " + name + " " + String.format("%03d", element.getId())
-                + " is already connected to the network\n";
+                + " is connected to a different network";
     }
 }

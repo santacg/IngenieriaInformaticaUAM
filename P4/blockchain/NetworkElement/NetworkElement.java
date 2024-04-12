@@ -6,7 +6,8 @@ import blockchain.BlockchainNetwork.BlockchainNetwork;
 /**
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public class NetworkElement implements IConnectable {
+public abstract class NetworkElement implements IConnectable {
+    private static int idCounter = 0; // Contador estático para asignar un ID único a cada network element.
     private int id;
     private IConnectable parent = null;
 
@@ -30,4 +31,18 @@ public class NetworkElement implements IConnectable {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getIdCounter() {
+        return idCounter;
+    }
+
+    public void increaseIdCounter() {
+        idCounter++;
+    }
+
+    public void decreaseIdCounter() {
+        idCounter--;
+    }
+
+    public abstract boolean isNode();
 }
