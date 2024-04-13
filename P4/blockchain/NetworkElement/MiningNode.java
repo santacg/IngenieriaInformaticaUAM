@@ -1,5 +1,8 @@
 package blockchain.NetworkElement;
 
+import java.util.ArrayList;
+
+import blockchain.Block;
 import blockchain.Transaction.Wallet;
 
 /**
@@ -10,6 +13,7 @@ import blockchain.Transaction.Wallet;
  */
 public class MiningNode extends Node {
     private int mips; // Capacidad de minería del nodo, en MIPS.
+    private ArrayList<Block> validateBlocks;
 
     /**
      * Construye un nodo de minería con una billetera asociada y capacidad de minería específica.
