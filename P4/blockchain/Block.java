@@ -1,6 +1,5 @@
 package blockchain;
 
-
 import java.util.Date;
 
 import blockchain.Transaction.Transaction;
@@ -9,51 +8,69 @@ import blockchain.utils.*;
 public class Block {
     private static int idCounter = 0;
     private int id;
-    private int version;
+    private int version = BlockConfig.VERSION;
     private int nonce;
     private int timestamp;
-    private int difficulty;
+    private int difficulty = BlockConfig.DIFFICULTY;
     private Transaction o_Transaction;
-    private boolean validation;
+    private boolean validation = false;
     private String hash;
-    private Block previousBlock = null;
+    private Block previousBlock;
+    private String minerKey;
 
-    public Block() {
+    public Block(Transaction transaction, Block previousBlock, String minerKey) {
         id = idCounter++;
-        version = BlockConfig.VERSION;
-        nonce = (int) Math.random() * (1000);
-        timestamp = (int) (new Date().getTime()/1000);
-        difficulty = BlockConfig.DIFFICULTY;
+        nonce = (int) (Math.random() * 1000);
+        timestamp = (int) (new Date().getTime() / 1000);
+        o_Transaction = transaction;
+        this.previousBlock = previousBlock;
+        this.minerKey = minerKey;
     }
 
-    public int getVersion(){
+    public int getId(){
+        return id;
+    }
+
+    public int getVersion() {
         return version;
     }
 
-    public int getNonce(){
+    public int getNonce() {
         return nonce;
     }
 
-    public int getTimestamp(){
+    public int getTimestamp() {
         return timestamp;
     }
 
-    public int getDifficulty(){
+    public int getDifficulty() {
         return difficulty;
     }
 
-    public String getHash(){
+    public String getHash() {
         return hash;
     }
-    public Block getPreviousBlock(){
+
+    public Block getPreviousBlock() {
         return previousBlock;
     }
 
-    public String getPreviousBlockHash(){
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getPreviousBlockHash() {
         if (previousBlock != null) {
             return previousBlock.hash;
         }
         return BlockConfig.GENESIS_BLOCK;
+    }
+
+    @Override
+    public String toString() {
+        return "id: " + this.id + ", v: " + this.version + ", nonce: "
+                + this.nonce + ", ts: " + this.timestamp + ", diff: " + this.difficulty + ", hash: " + this.hash
+                + ", minerK: " + this.minerKey;
     }
 
 }

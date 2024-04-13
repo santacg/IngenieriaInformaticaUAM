@@ -59,4 +59,9 @@ public class Transaction {
     public int getValue(){
         return value;
     }
+    
+    @Override
+    public String toString(){
+        return "Transaction " + id + "| from: " + keySender + ", to: " + keyReceiver + ", quantity: " + value;
+    }
 }

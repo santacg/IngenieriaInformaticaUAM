@@ -1,20 +1,20 @@
 package blockchain.Transaction;
 
 import blockchain.IMessage;
+import blockchain.NetworkElement.MiningNode;
 
 public class TransactionNotification implements IMessage {
-    int id;
-    String keySender;
-    String ketReceiver;
-    int value;
+    Transaction transaction;
     public TransactionNotification(Transaction transaction){
-        this.id = transaction.getId();
-        this.keySender = transaction.getKeySender();
-        this.ketReceiver = transaction.getKeyReceiver();
-        this.value = transaction.getValue();
+        this.transaction = transaction;
+    }
+
+    public Transaction getTransaction(){
+        return transaction;
     }
 
     public String getMessage(){
-        return "Transaction " + id + "| from: " + keySender + ", to: " + ketReceiver + ", quantity: " + value;
+        return transaction.toString();
     }
+
 }

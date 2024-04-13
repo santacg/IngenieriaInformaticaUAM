@@ -1,6 +1,7 @@
 package blockchain.Tester;
 
 import blockchain.Transaction.TransactionNotification;
+import blockchain.*;
 
 public class TesterMainExercise3 extends TesterMainExercise2 {
     public void createTransactions() {

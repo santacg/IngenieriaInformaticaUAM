@@ -1,6 +1,7 @@
 package blockchain.NetworkElement;
 
 import blockchain.IConnectable;
+import blockchain.IMessage;
 
 /**
  * @author Carlos García Santa y Joaquín Abad Díaz

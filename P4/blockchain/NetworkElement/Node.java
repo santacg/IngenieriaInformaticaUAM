@@ -9,7 +9,8 @@ import blockchain.TransactionException.InsufficientBalance;
 import blockchain.TransactionException.NegativeTransfer;
 
 /**
- * Representa un nodo en la red de blockchain. Cada nodo tiene un identificador único,
+ * Representa un nodo en la red de blockchain. Cada nodo tiene un identificador
+ * único,
  * una billetera asociada y puede realizar transacciones.
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
@@ -30,7 +31,6 @@ public class Node extends NetworkElement {
         this.transactions = new ArrayList<>();
     }
 
-
     /**
      * Devuelve el nombre completo del nodo, incluyendo su ID con formato.
      * 
@@ -40,7 +40,7 @@ public class Node extends NetworkElement {
         return "Node#" + String.format("%03d", getId());
     }
 
-    public Transaction createTransaction(Wallet wallet, int value) throws TransactionException{
+    public Transaction createTransaction(Wallet wallet, int value) throws TransactionException {
         if (value > this.wallet.getBalance()) {
             throw new InsufficientBalance(this.wallet, wallet.getPublicKey(), value);
         }
@@ -52,7 +52,7 @@ public class Node extends NetworkElement {
         return transaction;
     }
 
-    public Transaction createTransaction(String keyReceiver, int value) throws TransactionException{
+    public Transaction createTransaction(String keyReceiver, int value) throws TransactionException {
         if (value > this.wallet.getBalance()) {
             throw new InsufficientBalance(this.wallet, keyReceiver, value);
         }
@@ -64,21 +64,42 @@ public class Node extends NetworkElement {
         return transaction;
     }
 
-    public boolean isNode(){
+    public boolean isNode() {
         return true;
     }
 
-    public void broadcast(IMessage msg){
+    public void broadcast(IMessage msg) {
         msg.process(this);
     }
-    
+
+    protected void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
+    }
+
+    protected void removeTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
+    }
+
+    protected boolean containsTransaction(Transaction transaction) {
+        if (transactions.contains(transaction)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected String getWalletPublicKey(){
+        return wallet.getPublicKey();
+    }
+
     /**
-     * Representación en cadena del nodo que incluye la información de la billetera y el nombre del nodo.
+     * Representación en cadena del nodo que incluye la información de la billetera
+     * y el nombre del nodo.
      * 
      * @return Una cadena representando la información del nodo.
      */
     @Override
     public String toString() {
-        return "u: " + this.wallet.getUsername() + ", PK: " + this.wallet.getPublicKey() + ", balance: " + this.wallet.getBalance() + " | @" + fullName();
+        return "u: " + this.wallet.getUsername() + ", PK: " + this.wallet.getPublicKey() + ", balance: "
+                + this.wallet.getBalance() + " | @" + fullName();
     }
 }

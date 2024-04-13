@@ -28,8 +28,6 @@ public class Subnet extends NetworkElement {
         }
     }
 
-    
-
     /**
      * Añade un nodo a la subred.
      * 
@@ -56,7 +54,7 @@ public class Subnet extends NetworkElement {
         String mensaje = "[Subnet#"  + String.format("%03d", getId()) + "] " + msg.getMessage() + "\nBroadcasting to " + nodes.size() + " nodes:";
         System.out.println(mensaje);
         for (Node node : nodes) {
-            msg.process(node);
+            node.broadcast(msg);
         }
     }
 
