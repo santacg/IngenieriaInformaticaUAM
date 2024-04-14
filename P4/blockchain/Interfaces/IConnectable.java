@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.Interfaces;
 
 public interface IConnectable {
     public void broadcast(IMessage msg);

@@ -1,5 +1,6 @@
-package blockchain;
+package blockchain.Block;
 
+import blockchain.Interfaces.IMessage;
 import blockchain.NetworkElement.MiningNode;
 import blockchain.NetworkElement.Node;
 

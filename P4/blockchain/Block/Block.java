@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.Block;
 
 import java.util.Date;
 
@@ -45,6 +45,18 @@ public class Block {
 
     public int getDifficulty() {
         return difficulty;
+    }
+
+    public Transaction getTransaction(){
+        return o_Transaction;
+    }
+
+    public boolean getValidation(){
+        return validation;
+    }
+
+    public void setValidation(boolean validation){
+        this.validation = validation;
     }
 
     public String getHash() {

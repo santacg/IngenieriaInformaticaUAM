@@ -2,11 +2,10 @@ package blockchain.NetworkElement;
 
 import java.util.ArrayList;
 
-import blockchain.IMessage;
+import blockchain.Block.ValidateBlockRes;
+import blockchain.Interfaces.IMessage;
 import blockchain.TransactionException.*;
 import blockchain.Transaction.*;
-import blockchain.TransactionException.InsufficientBalance;
-import blockchain.TransactionException.NegativeTransfer;
 
 /**
  * Representa un nodo en la red de blockchain. Cada nodo tiene un identificador
@@ -48,19 +47,17 @@ public class Node extends NetworkElement {
             throw new NegativeTransfer(this.wallet, wallet.getPublicKey(), value);
         }
         Transaction transaction = new Transaction(this.wallet, wallet, value);
-        transactions.add(transaction);
         return transaction;
     }
 
     public Transaction createTransaction(String keyReceiver, int value) throws TransactionException {
-        if (value > this.wallet.getBalance()) {
-            throw new InsufficientBalance(this.wallet, keyReceiver, value);
+        if (value > wallet.getBalance()) {
+            throw new InsufficientBalance(wallet, keyReceiver, value);
         }
         if (value < 1) {
-            throw new NegativeTransfer(this.wallet, keyReceiver, value);
+            throw new NegativeTransfer(wallet, keyReceiver, value);
         }
-        Transaction transaction = new Transaction(this.wallet, wallet, value);
-        transactions.add(transaction);
+        Transaction transaction = new Transaction(wallet, keyReceiver, value);
         return transaction;
     }
 
@@ -68,8 +65,47 @@ public class Node extends NetworkElement {
         return true;
     }
 
+    private void commitingTransaction(Transaction transaction) {
+        System.out.println(
+                "[" + fullName() + "]" + " Commiting transaction : Tx-" + transaction.getId() + " in " + fullName());
+    }
+
+    private void transactionDetails(Transaction transaction) {
+        System.out.println("[" + fullName() + "]" + " -> Tx details:" + transaction);
+        transactions.add(transaction);
+    }
+
+    private void appliedTransaction(Transaction transaction) {
+        if (transaction.getKeySender() == wallet.getPublicKey()) {
+            wallet.decreaseBalance(transaction.getValue());
+        } else {
+            wallet.increaseBalance(transaction.getValue());
+        }
+        System.out.println("[" + fullName() + "]" + " Applied Transaction: " + transaction);
+    }
+
+    private void newWalletValue(Transaction transaction) {
+        System.out.println("[" + fullName() + "]" + " New wallet value: " + wallet);
+    }
+
     public void broadcast(IMessage msg) {
         msg.process(this);
+        if (msg instanceof ValidateBlockRes) {
+            broadcastValidateBlockRes((ValidateBlockRes) msg);
+        }
+    }
+
+    public void broadcastValidateBlockRes(ValidateBlockRes msg) {
+        Transaction transaction = msg.getBlock().getTransaction();
+        if (msg.getValidationRes()) {
+            commitingTransaction(transaction);
+            transactionDetails(transaction);
+            if (transaction.getKeySender() == wallet.getPublicKey()
+                    || transaction.getKeyReceiver() == wallet.getPublicKey()) {
+                appliedTransaction(transaction);
+                newWalletValue(transaction);
+            }
+        }
     }
 
     protected void addTransaction(Transaction transaction) {
@@ -87,7 +123,7 @@ public class Node extends NetworkElement {
         return false;
     }
 
-    protected String getWalletPublicKey(){
+    protected String getWalletPublicKey() {
         return wallet.getPublicKey();
     }
 
@@ -99,7 +135,6 @@ public class Node extends NetworkElement {
      */
     @Override
     public String toString() {
-        return "u: " + this.wallet.getUsername() + ", PK: " + this.wallet.getPublicKey() + ", balance: "
-                + this.wallet.getBalance() + " | @" + fullName();
+        return wallet + " | @" + fullName();
     }
 }

@@ -1,7 +1,8 @@
 package blockchain.NetworkElement;
 
-import blockchain.IConnectable;
-import blockchain.IMessage;
+import blockchain.Interfaces.IConnectable;
+import blockchain.Interfaces.IMessage;
+import blockchain.Transaction.Wallet;
 
 /**
  * @author Carlos García Santa y Joaquín Abad Díaz
@@ -43,6 +44,7 @@ public abstract class NetworkElement implements IConnectable {
     public void decreaseIdCounter() {
         idCounter--;
     }
+
 
     public abstract boolean isNode();
 }

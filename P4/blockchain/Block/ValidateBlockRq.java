@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.Block;
 
 import blockchain.NetworkElement.MiningNode;
 

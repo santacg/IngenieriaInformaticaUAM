@@ -1,6 +1,6 @@
 package blockchain.Transaction;
 
-import blockchain.IMessage;
+import blockchain.Interfaces.IMessage;
 import blockchain.NetworkElement.MiningNode;
 
 public class TransactionNotification implements IMessage {

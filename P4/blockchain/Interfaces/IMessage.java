@@ -1,4 +1,4 @@
-package blockchain;
+package blockchain.Interfaces;
 
 import blockchain.NetworkElement.Node;
 

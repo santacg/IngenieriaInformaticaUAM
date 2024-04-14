@@ -51,5 +51,18 @@ public class Wallet {
     public int getBalance() {
         return this.balance;
     }
+
+    public void increaseBalance(int value){
+        balance += value;
+    }
     
+    public void decreaseBalance(int value){
+        balance -= value;
+    }
+
+    @Override
+    public String toString(){
+        return "u: " + username + ", PK: " + key + ", balance: "
+        + balance;
+    }
 }

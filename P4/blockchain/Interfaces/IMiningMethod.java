@@ -1,5 +1,6 @@
-package blockchain;
+package blockchain.Interfaces;
 
+import blockchain.Block.Block;
 import blockchain.Transaction.Transaction;
 public interface IMiningMethod {
     String createHash(Block block);
