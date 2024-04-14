@@ -30,11 +30,13 @@ public class Transaction {
     }
 
     /**
-     * Crea una nueva transacción entre dos billeteras con un valor específico.
+     * Constructor alternativo que crea una nueva transacción utilizando la clave
+     * pública del receptor en lugar de su billetera.
      * 
-     * @param walletSender   La billetera del emisor de la transacción.
-     * @param walletReceiver La clave de la billetera del receptor de la transacción.
-     * @param value          El valor de la transacción.
+     * @param walletSender La billetera del emisor de la transacción.
+     * @param keyReceiver  La clave pública de la billetera del receptor de la
+     *                     transacción.
+     * @param value        El valor de la transacción.
      */
     public Transaction(Wallet walletSender, String keyReceiver, int value) {
         this.id = idcounter++; // Asigna el ID actual y luego incrementa el contador para la próxima
@@ -44,24 +46,51 @@ public class Transaction {
         this.value = value;
     }
 
-    public int getId(){
+    /**
+     * Devuelve el identificador único de la transacción.
+     * 
+     * @return El identificador de la transacción.
+     */
+    public int getId() {
         return id;
     }
 
-    public String getKeySender(){
+    /**
+     * Devuelve la clave pública del emisor de la transacción.
+     * 
+     * @return La clave pública del emisor.
+     */
+    public String getKeySender() {
         return keySender;
     }
 
-    public String getKeyReceiver(){
+    /**
+     * Devuelve la clave pública del receptor de la transacción.
+     * 
+     * @return La clave pública del receptor.
+     */
+    public String getKeyReceiver() {
         return keyReceiver;
     }
 
-    public int getValue(){
+    /**
+     * Devuelve el valor monetario de la transacción.
+     * 
+     * @return El valor de la transacción.
+     */
+    public int getValue() {
         return value;
     }
-    
+
+    /**
+     * Proporciona una representación en cadena de la transacción, incluyendo el
+     * identificador,
+     * las claves del emisor y del receptor, y el valor de la transacción.
+     * 
+     * @return Una cadena que representa la transacción.
+     */
     @Override
-    public String toString(){
+    public String toString() {
         return "Transaction " + id + "| from: " + keySender + ", to: " + keyReceiver + ", quantity: " + value;
     }
 }

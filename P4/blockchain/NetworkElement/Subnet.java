@@ -5,8 +5,8 @@ import java.util.HashSet;
 import blockchain.Interfaces.IMessage;
 
 /**
- * La clase Subnet representa una subred dentro de la red de blockchain, la cual puede contener múltiples nodos.
- * Esta estructura permite agrupar nodos para organizar mejor la red y potencialmente optimizar su funcionamiento.
+ * La clase Subnet representa una subred dentro de la red de blockchain, la cual
+ * puede contener múltiples nodos.
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
@@ -14,7 +14,8 @@ public class Subnet extends NetworkElement {
     private HashSet<Node> nodes; // Conjunto de nodos que pertenecen a esta subred.
 
     /**
-     * Construye una nueva subred y opcionalmente inicializa con un conjunto de nodos.
+     * Construye una nueva subred y opcionalmente inicializa con un conjunto de
+     * nodos.
      * 
      * @param nodes Nodos iniciales para incluir en la subred.
      */
@@ -36,7 +37,7 @@ public class Subnet extends NetworkElement {
     public void addNode(Node node) {
         this.nodes.add(node);
     }
-    
+
     /**
      * Elimina un nodo de la subred.
      * 
@@ -46,13 +47,26 @@ public class Subnet extends NetworkElement {
         this.nodes.remove(node);
     }
 
-
-    public boolean isNode(){
+    /**
+     * Indica que este elemento no es un nodo
+     * 
+     * @return false porque no es un nodo
+     */
+    public boolean isNode() {
         return false;
     }
-    
-    public void broadcast(IMessage msg){
-        String mensaje = "[Subnet#"  + String.format("%03d", getId()) + "] " + msg.getMessage() + "\nBroadcasting to " + nodes.size() + " nodes:";
+
+    /**
+     * Envía un mensaje a todos los nodos dentro de la subred utilizando el método
+     * de broadcasting de cada nodo.
+     * El mensaje es precedido por un encabezado que incluye el identificador de la
+     * subred.
+     *
+     * @param msg El mensaje a difundir a todos los nodos de la subred.
+     */
+    public void broadcast(IMessage msg) {
+        String mensaje = "[Subnet#" + String.format("%03d", getId()) + "] " + msg.getMessage() + "\nBroadcasting to "
+                + nodes.size() + " nodes:";
         System.out.println(mensaje);
         for (Node node : nodes) {
             node.broadcast(msg);
@@ -60,7 +74,8 @@ public class Subnet extends NetworkElement {
     }
 
     /**
-     * Proporciona una representación en cadena de la subred, incluyendo la cantidad de nodos
+     * Proporciona una representación en cadena de la subred, incluyendo la cantidad
+     * de nodos
      * que contiene y una lista de estos nodos.
      * 
      * @return Una representación en cadena de la subred y sus nodos.

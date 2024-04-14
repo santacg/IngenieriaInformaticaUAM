@@ -2,13 +2,11 @@ package blockchain.BlockchainNetwork;
 
 import java.util.ArrayList;
 
-
 import blockchain.ConnectionException.ConnectionException;
 import blockchain.ConnectionException.DuplicateConnectionException;
 import blockchain.Interfaces.IConnectable;
 import blockchain.Interfaces.IMessage;
 import blockchain.NetworkElement.*;
-
 
 /**
  * Implementa una red de blockchain con capacidad para añadir, remover y
@@ -57,6 +55,9 @@ public class BlockchainNetwork implements IConnectable {
      * @param element El elemento a conectar.
      * @return La instancia actual de BlockchainNetwork para permitir
      *         encadenamiento.
+     * @throws ConnectionException          Si el elemento ya está conectado a la
+     *                                      red.
+     * @throws DuplicateConnectionException Si el elemento pertenece a otra red.
      */
     public BlockchainNetwork connect(NetworkElement element) throws ConnectionException {
         if (element.isNode()) {
@@ -75,16 +76,25 @@ public class BlockchainNetwork implements IConnectable {
         return this;
     }
 
+    /**
+     * Obtiene el elemento padre de esta red, que es siempre null para la red principal.
+     * 
+     * @return null ya que es la red de nivel superior.
+     */
     public IConnectable getParent() {
         return parent;
     }
 
+    /**
+     * Envía un mensaje a todos los elementos de la red, propagando el mensaje a través de la red.
+     * 
+     * @param msg El mensaje a transmitir a todos los elementos conectados.
+     */
     public void broadcast(IMessage msg) {
         for (NetworkElement element : elements) {
             element.broadcast(msg);
         }
     }
-
 
     /**
      * Devuelve una representación en cadena de la red de blockchain, mostrando
