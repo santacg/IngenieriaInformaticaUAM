@@ -21,8 +21,6 @@ public class ConnectionException extends RuntimeException {
      *                conectarse nuevamente.
      */
     public ConnectionException(NetworkElement element) {
-        super("Connection exception: Node " + String.format("%03d", element.getId())
-                + " is already connected to the network");
         this.element = element;
     }
 
