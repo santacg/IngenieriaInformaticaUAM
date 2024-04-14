@@ -10,7 +10,7 @@ import blockchain.Transaction.Wallet;
  * 
  * @author Carlos García Santa y Joaquín Abad Díaz
  */
-public class TransactionException extends RuntimeException {
+public abstract class TransactionException extends RuntimeException {
     private Wallet walletSender; // La billetera del emisor de la transacción.
     private String keyReceiver; // La clave pública del receptor de la transacción.
     private int value; // El valor involucrado en la transacción.
