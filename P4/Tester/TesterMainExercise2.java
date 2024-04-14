@@ -1,4 +1,4 @@
-package blockchain.Tester;
+package Tester;
 
 import blockchain.Transaction.*;
 import blockchain.TransactionException.TransactionException;

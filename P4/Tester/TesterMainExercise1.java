@@ -1,9 +1,9 @@
-package blockchain.Tester;
-import blockchain.utils.*;
+package Tester;
 import blockchain.BlockchainNetwork.BlockchainNetwork;
 import blockchain.NetworkElement.*;
 import blockchain.Transaction.*;
 import blockchain.Transaction.Wallet;
+import utils.*;
 
 public class TesterMainExercise1 {
     protected Wallet wallet1, wallet2, wallet3;

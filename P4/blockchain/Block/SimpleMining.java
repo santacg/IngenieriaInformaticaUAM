@@ -2,7 +2,7 @@ package blockchain.Block;
 
 import blockchain.Interfaces.IMiningMethod;
 import blockchain.Transaction.Transaction;
-import blockchain.utils.*;
+import utils.*;
 
 /**
  * Clase que implementa el método simple de minado para bloques en una cadena de

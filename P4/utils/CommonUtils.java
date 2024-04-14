@@ -1,4 +1,4 @@
-package blockchain.utils;
+package utils;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

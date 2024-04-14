@@ -2,7 +2,7 @@ package blockchain.Block;
 
 import java.util.Date;
 import blockchain.Transaction.Transaction;
-import blockchain.utils.*;
+import utils.*;
 
 /**
  * Representa un bloque en la cadena de bloques, conteniendo información
