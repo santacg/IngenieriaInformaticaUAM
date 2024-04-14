@@ -2,13 +2,13 @@ package blockchain.BlockchainNetwork;
 
 import java.util.ArrayList;
 
-import blockchain.*;
+
 import blockchain.ConnectionException.ConnectionException;
 import blockchain.ConnectionException.DuplicateConnectionException;
 import blockchain.Interfaces.IConnectable;
 import blockchain.Interfaces.IMessage;
 import blockchain.NetworkElement.*;
-import blockchain.Transaction.Wallet;
+
 
 /**
  * Implementa una red de blockchain con capacidad para añadir, remover y

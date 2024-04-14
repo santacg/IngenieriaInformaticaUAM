@@ -1,7 +1,6 @@
 package blockchain.Tester;
 
 import blockchain.Transaction.TransactionNotification;
-import blockchain.*;
 import blockchain.Block.SimpleMining;
 import blockchain.Block.SimpleValidate;
 

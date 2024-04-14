@@ -1,8 +1,6 @@
 package blockchain.NetworkElement;
 
 import blockchain.Interfaces.IConnectable;
-import blockchain.Interfaces.IMessage;
-import blockchain.Transaction.Wallet;
 
 /**
  * @author Carlos García Santa y Joaquín Abad Díaz

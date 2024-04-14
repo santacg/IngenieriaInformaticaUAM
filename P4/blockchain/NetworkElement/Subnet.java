@@ -3,7 +3,6 @@ package blockchain.NetworkElement;
 import java.util.HashSet;
 
 import blockchain.Interfaces.IMessage;
-import blockchain.Transaction.Wallet;
 
 /**
  * La clase Subnet representa una subred dentro de la red de blockchain, la cual puede contener múltiples nodos.

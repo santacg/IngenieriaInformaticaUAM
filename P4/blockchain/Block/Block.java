@@ -18,12 +18,11 @@ public class Block {
     private Block previousBlock;
     private String minerKey;
 
-    public Block(Transaction transaction, Block previousBlock, String minerKey) {
+    public Block(Transaction transaction, String minerKey) {
         id = idCounter++;
         nonce = (int) (Math.random() * 1000);
         timestamp = (int) (new Date().getTime() / 1000);
         o_Transaction = transaction;
-        this.previousBlock = previousBlock;
         this.minerKey = minerKey;
     }
 
@@ -65,6 +64,10 @@ public class Block {
 
     public Block getPreviousBlock() {
         return previousBlock;
+    }
+
+    public void setPreviousBlock(Block block){
+        previousBlock = block;
     }
 
     public void setHash(String hash) {
