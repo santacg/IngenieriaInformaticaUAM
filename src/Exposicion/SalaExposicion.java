@@ -61,7 +61,9 @@ public class SalaExposicion implements Serializable {
      * @param obras El nuevo conjunto de obras de arte.
      */
     public void setObras(Set<Obra> obras) {
-        this.obras = obras;
+        for (Obra obra: obras) {
+            addObra(obra);
+        }
     }
 
     /**
@@ -77,7 +79,6 @@ public class SalaExposicion implements Serializable {
                 return false;
             }
         }
-        obra.exponerObra();
         this.obras.add(obra);
         return true;
     }

@@ -29,8 +29,8 @@ public class Audiovisual extends Obra {
      * @param idioma        El idioma principal de la obra audiovisual.
      */
     public Audiovisual(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro, String duracion, String idioma) {
-        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro);
+            String numeroSeguro, String duracion, String idioma, String... autores) {
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, autores);
         this.duracion = duracion;
         this.idioma = idioma;
     }

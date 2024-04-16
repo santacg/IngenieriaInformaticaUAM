@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.File;
 
 import src.CentroExposicion.*;
 import src.Expofy.*;
@@ -13,7 +14,10 @@ import src.Obra.*;
 import src.Sala.*;
 import src.TarjetaDeCredito.TarjetaDeCredito;
 import src.Utils.LectorCSVObras;
+import es.uam.eps.padsof.tickets.*;
+import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
+import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
 /**
@@ -130,7 +134,8 @@ public class Main {
                         15,
                         60,
                         40,
-                        "Óleo");
+                        "Óleo",
+                        "Kojima, Hideo");        
             salaExposicion1.addObra(cuadro);
 
             // Leemos obras de un archivo y lo añadimos a una sala de una de las
@@ -179,10 +184,15 @@ public class Main {
 
             }
             // Cliente registrado compra entrada con código de Sorteo
-            expofy.comprarEntrada(ganador, exposicion1, LocalDate.of(2021,1,2), 
+            boolean resultadocompra = expofy.comprarEntrada(ganador, exposicion1, LocalDate.of(2021,1,2), 
             new Hora(LocalDate.of(2021,1,2), LocalTime.of(9,0,0), 
             LocalTime.of(10,0,0), 10, 25.00), 3, new TarjetaDeCredito("1234123412341234", LocalDate.of(2050,5,5), 243), codigo_ganador);
 
+            System.out.println("Resultado de la compra: " + resultadocompra);
+            
+            Ticket ticket = new Ticket(exposicion1, 5.0, 2, LocalDate.of(2050,5,5), "HORA");
+            System.out.println(ticket.dataTicket());
+            TicketSystem.createTicket(ticket, "." + File.separator + "tmp");
 
             // Gestor divide salas
             sala1.addSubsala(5.0, 7.0, 2, 20);

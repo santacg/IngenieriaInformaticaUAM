@@ -392,8 +392,9 @@ public class Expofy implements Serializable {
             estadisticas.incrementarTicketsVendidos();
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
+        String horaTemporal = "15";
         try {
-            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora), "./ticket.pdf");
+            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, horaTemporal), "." + File.separator + "tmp");
         } catch (NonExistentFileException e) {
             return false;
         } catch (UnsupportedImageTypeException e) {

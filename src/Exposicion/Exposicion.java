@@ -184,6 +184,19 @@ public class Exposicion implements Serializable {
      * Cambia el estado de la exposición a PUBLICADA.
      */
     public void expoPublicar() {
+        Boolean flag = false;
+        for (SalaExposicion sala: this.salas) {
+            for (Obra obra: sala.getObras()) {
+                obra.exponerObra();
+                flag = true;
+            }
+        }
+
+        if (flag == false) {
+            System.out.println("No se puede publicar una exposición sin obras");
+            return;
+        }
+
         this.estado = EstadoExposicion.PUBLICADA;
     }
 

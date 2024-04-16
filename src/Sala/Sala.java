@@ -292,6 +292,41 @@ public class Sala implements Serializable {
     }
 
     /**
+     * Elimina una subsala con el nombre dado de esta sala. Si no se encuentra la
+     * subsala, no realiza ninguna acción.
+     * 
+     * @param name El nombre de la subsala a eliminar.
+     */
+    public void removeSubsalaI(String name) {
+        for (Sala subSala : subSalas) {
+            if (subSala.getNombre().equals(name)) {
+                this.aforo += subSala.getAforo();
+                this.ancho += subSala.getAncho();
+                this.largo += subSala.getLargo();
+                this.tomasElectricidad += subSala.getTomasElectricidad();
+                subSalas.remove(subSala);
+                return;
+            }
+        }
+        System.out.println("No se ha encontrado la subsala con nombre " + name);
+    }
+
+
+    /**
+     * Elimina todas las subSalas asociadas a esta sala.
+     * 
+     */
+    public void removeAllSubsalas() {
+        for (Sala subSala : subSalas) {
+            this.aforo += subSala.getAforo();
+            this.ancho += subSala.getAncho();
+            this.largo += subSala.getLargo();
+            this.tomasElectricidad += subSala.getTomasElectricidad();
+        }
+        subSalas.clear();
+    }
+
+    /**
      * Devuelve una lista de todas las subSalas asociadas a esta sala.
      *
      * @return La lista de subSalas.

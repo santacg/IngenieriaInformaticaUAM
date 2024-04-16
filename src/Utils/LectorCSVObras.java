@@ -78,35 +78,34 @@ public class LectorCSVObras {
                 Boolean externa = origen.toLowerCase().equals("externa");
 
                 // Crea un autor con el nombre leído, sin especificar fechas o lugares.
-                Autor autor = new Autor(autorName, null, null, null, null, null);
                 Obra obra = null; // Inicializa la referencia de Obra como null.
                 // Crea una instancia de Obra según el tipo leído del archivo.
                 switch (tipo.toLowerCase()) {
                     case "cuadro":
                         obra = new Cuadro(titulo, anio, descripcion, externa, cuantiaSeguro, numeroSeguro,
                                 alto, ancho, temperaturaMax, temperaturaMin, humedadMax, humedadMin,
-                                fields[8]);
+                                fields[8], autorName);
                         break;
                     case "escultura":
                         obra = new Escultura(titulo, anio, descripcion, externa, cuantiaSeguro,
                                 numeroSeguro, alto, ancho, Double.parseDouble(fields[15]), temperaturaMax,
-                                temperaturaMin, humedadMax, humedadMin, fields[9]);
+                                temperaturaMin, humedadMax, humedadMin, fields[9], autorName);
                         break;
                     case "fotografia":
                         Boolean color = fields[10].toLowerCase().equals("color");
                         obra = new Fotografia(titulo, anio, descripcion, externa, cuantiaSeguro,
                                 numeroSeguro, alto, ancho, temperaturaMax, temperaturaMin,
-                                humedadMax, humedadMin, color);
+                                humedadMax, humedadMin, color, autorName);
                         break;
                     case "audiovisual":
                         obra = new Audiovisual(titulo, anio, descripcion, externa, cuantiaSeguro,
-                                numeroSeguro, fields[11], fields[12]);
+                                numeroSeguro, fields[11], fields[12], autorName);
                         break;
                     default:
                         break; // No hace nada si el tipo de obra no coincide con los conocidos.
                 }
                 if (obra != null) { // Si se creó una obra, añade el autor y la marca como expuesta.
-                    obra.addAutor(autor);
+                    obra.addAutor(autorName);
                     obra.exponerObra();
                     obras.add(obra); // Añade la obra al conjunto de obras.
                 }

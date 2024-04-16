@@ -36,10 +36,10 @@ public class Fotografia extends ObraNoDigital {
     public Fotografia(String nombre, Integer anio, String descripcion, Boolean externa,
             Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,
             Integer temperaturaMaxima, Integer temperaturaMinima,
-            Integer humedadMaxima, Integer humedadMinima, Boolean color) {
+            Integer humedadMaxima, Integer humedadMinima, Boolean color, String... autores) {
         super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro,
                 alto, ancho, temperaturaMaxima, temperaturaMinima,
-                humedadMaxima, humedadMinima);
+                humedadMaxima, humedadMinima, autores);
 
         this.color = color;
     }

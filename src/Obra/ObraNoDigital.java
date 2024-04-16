@@ -1,7 +1,5 @@
 package src.Obra;
 
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Clase ObraNoDigital.
@@ -13,26 +11,19 @@ import java.util.HashMap;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public abstract class ObraNoDigital extends Obra {
-    /**
-     * Dimensiones de la obra en metros.
-     */
-    private Double alto, ancho;
-    /**
-     * Rango de temperatura óptima para la conservación de la obra, expresada en
-     * grados Celsius.
-     */
-    private Map<Integer, Integer> rangoTemperatura;
-    /**
-     * Rango de humedad óptima para la conservación de la obra, expresada en
-     * porcentaje.
-     */
-    private Map<Integer, Integer> rangoHumedad;
+
+    private double alto;
+    private double ancho;
+    private Integer temperaturaMaxima;
+    private Integer temperaturaMinima;
+    private Integer humedadMaxima;
+    private Integer humedadMinima;
 
     /**
      * Crea una nueva obra no digital con las especificaciones proporcionadas.
      *
      * @param nombre            el nombre de la obra
-     * @param anio              el año de creación de la obra
+     * @param anio              el año de cración de la obra
      * @param descripcion       una breve descripción de la obra
      * @param externa           indica si la obra es externa
      * @param cuantiaSeguro     el valor asegurado de la obra
@@ -43,98 +34,178 @@ public abstract class ObraNoDigital extends Obra {
      * @param temperaturaMinima la temperatura mínima para la conservación
      * @param humedadMaxima     la humedad máxima para la conservación
      * @param humedadMinima     la humedad mínima para la conservación
+     * @param autores           los autores de la obra
      */
     public ObraNoDigital(String nombre, Integer anio, String descripcion, Boolean externa,
             Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,
             Integer temperaturaMaxima, Integer temperaturaMinima,
-            Integer humedadMaxima, Integer humedadMinima) {
-        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro);
+            Integer humedadMaxima, Integer humedadMinima, String... autores) {
+        super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, autores);
+        if (temperaturaMaxima != null && temperaturaMinima != null && humedadMaxima != null && humedadMinima != null) {
+            if (temperaturaMaxima < temperaturaMinima || humedadMaxima < humedadMinima) {
+                System.out.println("Temperaturas o humedades incorrectas");
+                return;
+            }
+        }
         this.alto = alto;
         this.ancho = ancho;
-        this.rangoHumedad = new HashMap<>();
-        this.rangoTemperatura = new HashMap<>();
-
-        this.rangoHumedad.put(humedadMinima, humedadMaxima);
-        this.rangoTemperatura.put(temperaturaMinima, temperaturaMaxima);
+        this.temperaturaMaxima = temperaturaMaxima;
+        this.temperaturaMinima = temperaturaMinima;
+        this.humedadMaxima = humedadMaxima;
+        this.humedadMinima = humedadMinima;
     }
 
     /**
-     * Obtiene el alto del objeto.
-     * 
-     * @return El alto como Double.
+     * Obtiene la altura de la obra en metros.
+     *
+     * @return la altura de la obra
      */
-    public Double getAlto() {
-        return this.alto;
+    public double getAlto() {
+        return alto;
+    } 
+
+    /**
+     * Obtiene el ancho de la obra en metros.
+     *
+     * @return el ancho de la obra
+     */
+    public double getAncho() {
+        return ancho;
     }
 
     /**
-     * Obtiene el ancho del objeto.
-     * 
-     * @return El ancho como Double.
+     * Obtiene la temperatura máxima para la conservación de la obra.
+     *
+     * @return la temperatura máxima
      */
-    public Double getAncho() {
-        return this.ancho;
+    public Integer getTemperaturaMaxima() {
+        return temperaturaMaxima;
     }
 
     /**
-     * Obtiene el rango de temperatura aceptable para el objeto.
-     * 
-     * @return El rango de temperatura como un Map donde la clave y el valor
-     *         representan la temperatura mínima y máxima aceptables,
-     *         respectivamente.
+     * Obtiene la temperatura mínima para la conservación de la obra.
+     *
+     * @return la temperatura mínima
      */
-    public Map<Integer, Integer> getRangoTemperatura() {
-        return rangoTemperatura;
+    public Integer getTemperaturaMinima() {
+        return temperaturaMinima;
     }
 
     /**
-     * Obtiene el rango de humedad aceptable para el objeto.
-     * 
-     * @return El rango de humedad como un Map donde la clave y el valor representan
-     *         la humedad mínima y máxima aceptables, respectivamente.
+     * Obtiene la humedad máxima para la conservación de la obra.
+     *
+     * @return la humedad máxima
      */
-    public Map<Integer, Integer> getRangoHumedad() {
-        return rangoHumedad;
+    public Integer getHumedadMaxima() {
+        return humedadMaxima;
     }
 
     /**
-     * Establece el alto del objeto.
-     * 
-     * @param alto El nuevo alto a establecer.
+     * Obtiene la humedad mínima para la conservación de la obra.
+     *
+     * @return la humedad mínima
      */
-    public void setAlto(Double alto) {
+    public Integer getHumedadMinima() {
+        return humedadMinima;
+    }
+
+    /**
+     * Establece la altura de la obra en metros.
+     *
+     * @param alto la altura de la obra
+     */
+    public void setAlto(double alto) {
         this.alto = alto;
     }
 
     /**
-     * Establece el ancho del objeto.
-     * 
-     * @param ancho El nuevo ancho a establecer.
+     * Establece el ancho de la obra en metros.
+     *
+     * @param ancho el ancho de la obra
      */
-    public void setAncho(Double ancho) {
+    public void setAncho(double ancho) {
         this.ancho = ancho;
     }
 
     /**
-     * Establece el rango de temperatura aceptable para el objeto.
-     * 
-     * @param rangoTemperatura El nuevo rango de temperatura a establecer, donde la
-     *                         clave y el valor representan la temperatura mínima y
-     *                         máxima aceptables, respectivamente.
+     * Establece la temperatura máxima para la conservación de la obra.
+     *
+     * @param temperaturaMaxima la temperatura máxima
      */
-    public void setRangoTemperatura(Map<Integer, Integer> rangoTemperatura) {
-        this.rangoTemperatura = rangoTemperatura;
+    public void setTemperaturaMaxima(Integer temperaturaMaxima) {
+        if (temperaturaMaxima < this.temperaturaMinima) {
+            System.out.println("Temperatura máxima incorrecta");
+            return;
+        }
+        this.temperaturaMaxima = temperaturaMaxima;
     }
 
     /**
-     * Establece el rango de humedad aceptable para el objeto.
-     * 
-     * @param rangoHumedad El nuevo rango de humedad a establecer, donde la clave y
-     *                     el valor representan la humedad mínima y máxima
-     *                     aceptables, respectivamente.
+     * Establece la temperatura mínima para la conservación de la obra.
+     *
+     * @param temperaturaMinima la temperatura mínima
      */
-    public void setRangoHumedad(Map<Integer, Integer> rangoHumedad) {
-        this.rangoHumedad = rangoHumedad;
+    public void setTemperaturaMinima(Integer temperaturaMinima) {
+        if (temperaturaMinima > this.temperaturaMaxima) {
+            System.out.println("Temperatura mínima incorrecta");
+            return;
+        }
+        this.temperaturaMinima = temperaturaMinima;
     }
 
+    /**
+     * Establece la humedad máxima para la conservación de la obra.
+     *
+     * @param humedadMaxima la humedad máxima
+     */
+    public void setHumedadMaxima(Integer humedadMaxima) {
+        if (humedadMaxima < this.humedadMinima) {
+            System.out.println("Humedad máxima incorrecta");
+            return;
+        }
+        this.humedadMaxima = humedadMaxima;
+    }
+
+    /**
+     * Establece la humedad mínima para la conservación de la obra.
+     *
+     * @param humedadMinima la humedad mínima
+     */
+    public void setHumedadMinima(Integer humedadMinima) {
+        if (humedadMinima > this.humedadMaxima) {
+            System.out.println("Humedad mínima incorrecta");
+            return;
+        }
+        this.humedadMinima = humedadMinima;
+    }
+
+    /**
+     * Establece las dimensiones de la obra.
+     *
+     * @param alto  la altura de la obra
+     * @param ancho el ancho de la obra
+     */
+    public void setDimensiones(double alto, double ancho) {
+        this.alto = alto;
+        this.ancho = ancho;
+    }
+
+    /**
+     * Establece los rangos climáticos de la obra.
+     *
+     * @param temperaturaMaxima la temperatura máxima
+     * @param temperaturaMinima la temperatura mínima
+     * @param humedadMaxima     la humedad máxima
+     * @param humedadMinima     la humedad mínima
+     */
+    public void setRangosClima(Integer temperaturaMaxima, Integer temperaturaMinima, Integer humedadMaxima, Integer humedadMinima) {
+        if (temperaturaMaxima < temperaturaMinima || humedadMaxima < humedadMinima) {
+            System.out.println("Temperaturas o humedades incorrectas");
+            return;
+        }
+        this.temperaturaMaxima = temperaturaMaxima;
+        this.temperaturaMinima = temperaturaMinima;
+        this.humedadMaxima = humedadMaxima;
+        this.humedadMinima = humedadMinima;
+    }
 }

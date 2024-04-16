@@ -138,6 +138,16 @@ public class SalaTest {
     }
 
     @Test
+    public void testRemoveSubsalaCheckSala() {
+        sala.addSubsala(5.0, 5.0, 5, 50);
+        sala.removeSubsala();
+        assertEquals(100, sala.getAforo());
+        assertEquals(10.0, sala.getAncho());
+        assertEquals(10.0, sala.getLargo());
+        assertEquals(10, sala.getTomasElectricidad());
+    }
+
+    @Test
     public void testGetSubSalas() {
         sala.addSubsala(5.0, 5.0, 5, 50);
         List<Sala> subSalas = sala.getSubSalas();
@@ -147,6 +157,13 @@ public class SalaTest {
     @Test
     public void testGetSalaPadre() {
         assertNull(sala.getSalaPadre());
+    }
+
+    @Test
+    public void testGetSalaPadreNotNUll() {
+        sala.addSubsala(5.0, 5.0, 5, 50);
+        Sala subSala = sala.getSubSalas().get(0);
+        assertEquals(sala, subSala.getSalaPadre());
     }
 
 }

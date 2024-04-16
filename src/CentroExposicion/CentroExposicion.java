@@ -537,6 +537,7 @@ public class CentroExposicion implements Serializable {
             System.out.println("La obra ya está en el centro de exposiciones");
         }
         else {
+            this.obras.add(obra);
             obra.almacenarObra();
         }
     }
@@ -552,6 +553,14 @@ public class CentroExposicion implements Serializable {
             return;
         }
 
+        for (Exposicion exposicion : exposiciones) {
+            for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                if (salaExpo.getObras().contains(obra)) {
+                    System.out.println("No se puede eliminar una obra que está siendo utilizada por una exposición");
+                    return;
+                }
+            }
+        }
         this.obras.remove(obra);
     }
 
@@ -784,7 +793,8 @@ public class CentroExposicion implements Serializable {
             estadisticas.incrementarTicketsVendidos();
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
-        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, hora), "." + File.separator + "tmp");
+        
+        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, "hora"), "." + File.separator + "tmp");
         return true;
     }
     

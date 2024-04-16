@@ -40,10 +40,9 @@ public class Escultura extends ObraNoDigital {
     public Escultura(String nombre, Integer anio, String descripcion, Boolean externa,
             Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho, Double profundidad,
             Integer temperaturaMaxima, Integer temperaturaMinima,
-            Integer humedadMaxima, Integer humedadMinima, String material) {
+            Integer humedadMaxima, Integer humedadMinima, String material, String... autores) {
         super(nombre, anio, descripcion, externa, cuantiaSeguro, numeroSeguro, alto, ancho, temperaturaMaxima,
-                temperaturaMinima,
-                humedadMaxima, humedadMinima);
+                temperaturaMinima, humedadMaxima, humedadMinima, autores);
         this.material = material;
         this.profundidad = profundidad;
     }

@@ -1,5 +1,6 @@
 package src.Obra;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
@@ -20,9 +21,32 @@ public abstract class Obra implements Serializable {
     private Boolean externa;
     private Double cuantiaSeguro;
     private String numeroSeguro;
-    private Set<Autor> autores = new HashSet<>();
+    private Set<String> autores = new HashSet<>();
     private Estado estado;
 
+    /**
+     * Crea una nueva instancia de una obra de arte con los parámetros
+     * especificados.
+     *
+     * @param nombre        El nombre de la obra.
+     * @param anio          El año de creación de la obra.
+     * @param descripcion   Una breve descripción de la obra.
+     * @param externa       Indica si la obra es externa o no.
+     * @param cuantiaSeguro El valor del seguro de la obra.
+     * @param numeroSeguro  El número de la póliza del seguro.
+     * @param estado        El estado inicial de la obra.
+     */
+    public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
+            String numeroSeguro, String... autores) {
+        this.nombre = nombre;
+        this.anio = anio;
+        this.descripcion = descripcion;
+        this.externa = externa;
+        this.cuantiaSeguro = cuantiaSeguro;
+        this.numeroSeguro = numeroSeguro;
+        this.estado = Estado.ALMACENADA;
+        this.autores.addAll(Arrays.asList(autores));
+    }
 
     /**
      * Genera el codigo hash de la obra.
@@ -35,6 +59,7 @@ public abstract class Obra implements Serializable {
         int result = 1;
         result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
         result = prime * result + ((anio == null) ? 0 : anio.hashCode());
+        result = prime * result + ((autores == null) ? 0 : autores.hashCode());
         return result;
     }
 
@@ -69,31 +94,12 @@ public abstract class Obra implements Serializable {
                 return false;
         } else if (!anio.equals(other.anio))
             return false;
+        if (autores == null) {
+            if (other.autores != null)
+                return false;
+        } else if (!autores.equals(other.autores))
+            return false;
         return true;
-    }
-
-
-    /**
-     * Crea una nueva instancia de una obra de arte con los parámetros
-     * especificados.
-     *
-     * @param nombre        El nombre de la obra.
-     * @param anio          El año de creación de la obra.
-     * @param descripcion   Una breve descripción de la obra.
-     * @param externa       Indica si la obra es externa o no.
-     * @param cuantiaSeguro El valor del seguro de la obra.
-     * @param numeroSeguro  El número de la póliza del seguro.
-     * @param estado        El estado inicial de la obra.
-     */
-    public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
-            String numeroSeguro) {
-        this.nombre = nombre;
-        this.anio = anio;
-        this.descripcion = descripcion;
-        this.externa = externa;
-        this.cuantiaSeguro = cuantiaSeguro;
-        this.numeroSeguro = numeroSeguro;
-        this.estado = Estado.ALMACENADA;
     }
 
     /**
@@ -155,8 +161,17 @@ public abstract class Obra implements Serializable {
      * 
      * @return El conjunto de autores como Set<Autor>.
      */
-    public Set<Autor> getAutores() {
+    public Set<String> getAutores() {
         return autores;
+    }
+
+    /**
+     * Obtiene el estado actual de la entidad.
+     * 
+     * @return El estado como Estado.
+     */
+    public Estado getEstado() {
+        return estado;
     }
 
     /**
@@ -218,17 +233,26 @@ public abstract class Obra implements Serializable {
      * 
      * @param autores El conjunto de autores a establecer.
      */
-    public void setAutores(Set<Autor> autores) {
-        this.autores = autores;
+    public void setAutores(String... autores) {
+        this.autores.addAll(Arrays.asList(autores));
     }
 
     /**
-     * Obtiene el estado actual de la entidad.
+     * Añade un autor a la obra.
      * 
-     * @return El estado como Estado.
+     * @param autor El autor a añadir.
      */
-    public Estado getEstado() {
-        return estado;
+    public void addAutor(String autor) {
+        this.autores.add(autor);
+    }
+
+    /**
+     * Elimina un autor de la obra.
+     * 
+     * @param autor El autor a eliminar.
+     */
+    public void removeAutor(String autor) {
+        this.autores.remove(autor);
     }
 
     /**
@@ -268,24 +292,6 @@ public abstract class Obra implements Serializable {
      */
     public void restaurarObra() {
         this.estado = Estado.RESTAURACION;
-    }
-
-    /**
-     * Añade un autor a la lista de autores de la obra.
-     *
-     * @param autor El autor a añadir.
-     */
-    public void addAutor(Autor autor) {
-        this.autores.add(autor);
-    }
-
-    /**
-     * Elimina un autor de la lista de autores de la obra.
-     *
-     * @param autor El autor a eliminar.
-     */
-    public void removeAutor(Autor autor) {
-        this.autores.remove(autor);
     }
 
     /**
