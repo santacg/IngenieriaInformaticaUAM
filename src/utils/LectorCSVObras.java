@@ -3,8 +3,6 @@ package src.utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import src.centroExposicion.CentroExposicion;
 import src.obra.*;
@@ -29,7 +27,6 @@ public class LectorCSVObras {
      * @param sala La sala de exposición a la que se añadirán las obras leídas.
      */
     public static void leerObras(CentroExposicion centroExposicion) {
-        Set<Obra> obras = new HashSet<>();
         String line = ""; // Variable para almacenar cada línea leída del archivo.
         String csvSeparador = ";"; // Define el separador utilizado en el archivo CSV.
 

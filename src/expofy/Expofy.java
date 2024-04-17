@@ -311,7 +311,6 @@ public class Expofy implements Serializable {
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
             Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String codigo) {
-        Boolean horaDisponible = false;
         Double precioFinal;
 
         // Verifica si el cliente está logueado. Si no, la compra no puede proceder.
