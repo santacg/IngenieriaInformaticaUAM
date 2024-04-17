@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.io.File;
 
-import src.CentroExposicion.*;
-import src.Expofy.*;
-import src.Exposicion.*;
-import src.Inscripcion.Inscripcion;
-import src.Obra.*;
-import src.Sala.*;
-import src.TarjetaDeCredito.TarjetaDeCredito;
-import src.Utils.LectorCSVObras;
+import src.centroExposicion.*;
+import src.expofy.*;
+import src.exposicion.*;
+import src.inscripcion.Inscripcion;
+import src.obra.*;
+import src.sala.*;
+import src.tarjetaDeCredito.TarjetaDeCredito;
+import src.utils.LectorCSVObras;
 import es.uam.eps.padsof.tickets.*;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
@@ -87,11 +87,11 @@ public class Main {
             expofy.addCentroExposicion(centroExposicion2);
 
             // Login empleados y gestores
-            centroExposicion1.loginEmpleado("123485", "789", "123");
-            centroExposicion1.loginEmpleado("789456", "456", "123");
-            centroExposicion2.loginEmpleado("455456", "489", "789");
-            centroExposicion1.loginGestor("456123", "456");
-            centroExposicion2.loginGestor("216548", "456");
+            centroExposicion1.loginEmpleado("123485", "123");
+            centroExposicion1.loginEmpleado("789456", "123");
+            centroExposicion2.loginEmpleado("455456", "789");
+            centroExposicion1.loginGestor("456123");
+            centroExposicion2.loginGestor("216548");
 
             // Empleado edita su perfil
             
@@ -140,7 +140,7 @@ public class Main {
 
             // Leemos obras de un archivo y lo añadimos a una sala de una de las
             // exposiciones
-            LectorCSVObras.leerObras(salaExposicion2);
+            LectorCSVObras.leerObras(centroExposicion1);
 
             // Añadimos las exposiciones al centro
             centroExposicion1.addExposicion(exposicion1);
