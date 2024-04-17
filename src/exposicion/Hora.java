@@ -82,9 +82,9 @@ public class Hora implements Serializable {
     }
 
     /**
-     * Obtiene la fecha de la actividad.
+     * Obtiene la fecha del tramo horario.
      * 
-     * @return La fecha en que se realiza la actividad.
+     * @return La fecha del tramo horario.
      */
     public LocalDate getFecha() {
         return fecha;

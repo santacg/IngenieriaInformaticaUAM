@@ -149,6 +149,9 @@ public class Main {
             // Cliente registrado desactiva recepción de publicidad
             cliente.setPublicidad(false);
 
+            for (Obra obra: centroExposicion1.getObras()) {
+                  salaExposicion2.addObra(obra);
+            }
             // Publicación de exposiciones
             exposicion1.expoPublicar();
             exposicion2.expoPublicar();

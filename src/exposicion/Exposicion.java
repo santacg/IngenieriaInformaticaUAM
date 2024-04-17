@@ -44,10 +44,18 @@ public class Exposicion implements Serializable {
      */
     public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
             Set<SalaExposicion> salas, TipoExpo tipo, Double precio) {
-        if (fechaInicio.isAfter(fechaFin)) {
-            System.out.println("La fecha de inicio no puede ser posterior a la fecha de fin");
+
+        if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) {
+            System.out.println("La fecha de inicio no puede ser posterior o igual a la fecha de fin");
             return;
         }
+
+        if (fechaInicio.isEqual(LocalDate.now()) || fechaInicio.isBefore(LocalDate.now())
+                || fechaFin.isBefore(LocalDate.now()) || fechaFin.isEqual(LocalDate.now())) {
+            System.out.println("La fecha de inicio o fin no puede ser igual o anterior a la fecha actual");
+            return;
+        }
+
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         if (tipo.equals(TipoExpo.PERMANENTE)) {
@@ -175,7 +183,6 @@ public class Exposicion implements Serializable {
         this.precio = precio;
     }
 
-
     /**
      * Cambia el estado de la exposición a EN_CREACION.
      */
@@ -207,8 +214,20 @@ public class Exposicion implements Serializable {
     /**
      * Cambia el estado de la exposición a CANCELADA.
      */
-    public void expoCancelar() {
+    public Boolean expoCancelar(LocalDate fechaCancelacion) {
+        if (fechaCancelacion.isBefore(LocalDate.now().plusDays(7))) {
+            System.out.println("No se puede cancelar la exposición con menos de 7 días de antelación");
+            return false;
+        }
+
+        if (setFechaFin(fechaCancelacion) == false) {
+            System.out.println(
+                    "No se puede cancelar la exposición con una fecha de fin anterior a la de inicio o la actual");
+            return false;
+        }
+
         this.estado = EstadoExposicion.CANCELADA;
+        return false;
     }
 
     /**
@@ -342,13 +361,13 @@ public class Exposicion implements Serializable {
         return tipo;
     }
 
-
     /**
      * Cambia el tipo de la exposición a temporal.
      */
     public Boolean expoTemporal(LocalDate fechaFin) {
         if (setFechaFin(fechaFin) == false) {
-            System.out.println("No se puede cambiar el tipo de la exposición a temporal con una fecha de fin anterior a la actual");
+            System.out.println(
+                    "No se puede cambiar el tipo de la exposición a temporal con una fecha de fin anterior a la actual");
             return false;
         }
 

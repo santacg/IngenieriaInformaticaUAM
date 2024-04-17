@@ -185,7 +185,7 @@ public class ExposicionTest {
 
     @Test
     public void testExpoCancelar() {
-        exposicion.expoCancelar();
+        exposicion.expoCancelar(LocalDate.now().plusDays(10));
         assertEquals(EstadoExposicion.CANCELADA, exposicion.getEstado());
     }
 
