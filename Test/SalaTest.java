@@ -107,6 +107,7 @@ public class SalaTest {
 
     @Test
     public void testAddSubsala_ValidParameters() {
+        // La dividimos por la mitad, los atributos de sala padre por tanto deben dividirse por la mitad
         assertTrue(sala.addSubsala(5.0, 5.0, 5, 50));
         List<Sala> subSalas = sala.getSubSalas();
         assertEquals(1, subSalas.size());
@@ -120,6 +121,9 @@ public class SalaTest {
         assertEquals(5.0, sala.getLargo());
         assertEquals(5, subSala.getTomasElectricidad());
         assertEquals(5, sala.getTomasElectricidad());
+        assertTrue(subSala.getClimatizador());
+        assertEquals(subSala.getTemperatura(), sala.getTemperatura());
+        assertEquals(subSala.getHumedad(), sala.getHumedad());
     }
 
     @Test
@@ -139,6 +143,7 @@ public class SalaTest {
 
     @Test
     public void testRemoveSubsalaCheckSala() {
+        // La sala debe recuperar sus atributos iniciales tras eliminar la subsala
         sala.addSubsala(5.0, 5.0, 5, 50);
         sala.removeSubsala();
         assertEquals(100, sala.getAforo());
@@ -156,7 +161,10 @@ public class SalaTest {
 
     @Test
     public void testGetSalaPadre() {
-        assertNull(sala.getSalaPadre());
+        sala.addSubsala(5.0, 5.0, 5, 50);
+        List<Sala> subSalas = sala.getSubSalas();
+        Sala subSala = subSalas.get(0);
+        assertNotNull(subSala.getSalaPadre());
     }
 
     @Test
