@@ -889,6 +889,20 @@ public class CentroExposicion implements Serializable {
         return false;
     }
 
+    public Estadisticas getEstadisticasDates(LocalDate fecha1, LocalDate fecha2) {
+        Estadisticas estadisticas = new Estadisticas();
+        if (fecha1.isAfter(fecha2)) {
+            System.out.println("La fecha 1 no puede ser posterior a la fecha 2");
+            return null;
+        }
+
+        for (Exposicion exposicion : getExposicionesPorFecha(fecha1, fecha2)) {
+            return null;
+        }
+
+        return null;
+    }
+
     /**
      * Crea una cadena que representa un centro de exposición.
      * 

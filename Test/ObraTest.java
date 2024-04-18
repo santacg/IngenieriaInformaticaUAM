@@ -144,13 +144,38 @@ public class ObraTest {
 
     @Test
     public void testRetirarObra() {
-        obra2.retirarObra();
-        assertEquals(Estado.RETIRADA, obra2.getEstado());
+        obra1.retirarObra();
+        assertEquals(Estado.RETIRADA, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.exponerObra();
+        obra1.retirarObra();
+        assertEquals(Estado.RETIRADA, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.restaurarObra();
+        assertFalse(obra1.retirarObra());
+
+        obra1.almacenarObra();
+        obra1.prestarObra();
+        assertFalse(obra1.retirarObra());
     }
 
     @Test
     public void testAlmacenarObra() {
         obra1.exponerObra();
+        obra1.almacenarObra();
+        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+
+        obra1.retirarObra();
+        obra1.almacenarObra();
+        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+
+        obra1.prestarObra();
+        obra1.almacenarObra();
+        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+
+        obra1.restaurarObra();
         obra1.almacenarObra();
         assertEquals(Estado.ALMACENADA, obra1.getEstado());
     }
@@ -159,18 +184,56 @@ public class ObraTest {
     public void testPrestarObra() {
         obra1.prestarObra();
         assertEquals(Estado.PRESTADA, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.exponerObra();
+        obra1.prestarObra();
+        assertEquals(Estado.PRESTADA, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.retirarObra();
+        assertFalse(obra1.prestarObra());
+
+        obra1.almacenarObra();
+        obra1.restaurarObra();
+        assertFalse(obra1.prestarObra());
     }
 
     @Test
     public void testExponerObra() {
         obra1.exponerObra();
         assertEquals(Estado.EXPUESTA, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.restaurarObra();
+        assertFalse(obra1.exponerObra());
+
+        obra1.almacenarObra();
+        obra1.prestarObra();
+        assertFalse(obra1.exponerObra());
+
+        obra1.almacenarObra();
+        obra1.retirarObra();
+        assertFalse(obra1.exponerObra());
     }
 
     @Test
     public void testRestaurarObra() {
         obra1.restaurarObra();
         assertEquals(Estado.RESTAURACION, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.exponerObra();
+        obra1.restaurarObra();
+        assertEquals(Estado.RESTAURACION, obra1.getEstado());
+
+        obra1.almacenarObra();
+        obra1.retirarObra();
+        assertFalse(obra1.restaurarObra());
+
+        obra1.almacenarObra();
+        obra1.restaurarObra();
+        assertFalse(obra1.restaurarObra());
     }
 
     @Test
@@ -215,6 +278,21 @@ public class ObraTest {
     @Test
     public void testGetHumedadMaxima() {
         assertEquals(70, ((Fotografia) obra3).getHumedadMaxima());
+    }
+
+    @Test
+    public void testGetHumedadMinima() {
+        assertEquals(20, ((Fotografia) obra3).getHumedadMinima());
+    }
+
+    @Test
+    public void testGetTemperaturaMaxima() {
+        assertEquals(25, ((Fotografia) obra3).getTemperaturaMaxima());
+    }
+
+    @Test
+    public void testGetTemperaturaMinima() {
+        assertEquals(15, ((Fotografia) obra3).getTemperaturaMinima());
     }
 
     @Test
