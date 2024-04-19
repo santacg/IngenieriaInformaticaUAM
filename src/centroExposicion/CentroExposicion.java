@@ -39,7 +39,6 @@ public class CentroExposicion implements Serializable {
     private Set<Sorteo> sorteos = new HashSet<>();
     private Set<Obra> obras = new HashSet<>();
     private Set<Empleado> empleados = new HashSet<>();
-    private Set<Descuento> descuentos = new HashSet<>();
     private Set<Sala> salas = new HashSet<>();
     private Gestor gestor;
 
@@ -420,7 +419,7 @@ public class CentroExposicion implements Serializable {
             System.out.println("No puedes añadir exposiciones si no eres el gestor");
             return false;
         }
-        
+
         if (this.exposiciones.add(exposicion) == false) {
             System.out.println("La exposición ya está en el centro de exposiciones");
             return false;
@@ -491,6 +490,24 @@ public class CentroExposicion implements Serializable {
         this.sorteos.add(sorteo);
     }
 
+    public void confgiurarSorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia,
+            Hora hora) {
+        SorteoDiaHora sorteo = new SorteoDiaHora(exposicion, fechaSorteo, n_entradas, dia, hora);
+        addSorteo(sorteo);
+    }
+
+
+    public void confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
+        SorteoExpo sorteo = new SorteoExpo(exposicion, fechaSorteo, n_entradas);
+        addSorteo(sorteo);
+    }
+
+
+    public void confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,LocalDate fechaInicio, LocalDate fechaFin) {
+        SorteoFechas sorteo = new SorteoFechas(exposicion, fechaSorteo, n_entradas, fechaInicio, fechaFin);
+        addSorteo(sorteo);
+    }
+
     /**
      * Elimina un sorteo determinado de un centro de exposiciones.
      * 
@@ -559,8 +576,8 @@ public class CentroExposicion implements Serializable {
         if (this.obras.add(obra) == false) {
             System.out.println("La obra ya está en el centro de exposiciones");
             return false;
-        } 
-        
+        }
+
         obra.almacenarObra();
         return true;
     }
@@ -580,7 +597,7 @@ public class CentroExposicion implements Serializable {
             System.out.println("No se puede eliminar una obra que está expuesta");
             return false;
         }
-        
+
         if (obra.getEstado().equals(Estado.PRESTADA)) {
             System.out.println("No se puede eliminar una obra que está prestada");
             return false;
@@ -740,57 +757,6 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
-     * Obtiene los descuentos disponibles en el centro de exposición.
-     *
-     * @return Un conjunto de {@link Descuento}.
-     */
-    public Set<Descuento> getDescuentos() {
-        return descuentos;
-    }
-
-    /**
-     * Establece los descuentos disponibles en el centro de exposición.
-     *
-     * @param descuentos el conjunto de descuentos a establecer.
-     */
-    public void setDescuentos(Set<Descuento> descuentos) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes añadir descuentos si no eres el gestor");
-            return;
-        }
-
-        this.descuentos = descuentos;
-    }
-
-    /**
-     * Añade un descuento determinado a un centro de exposiciones.
-     * 
-     * @param descuento el descuento a añadir
-     */
-    public void addDescuento(Descuento descuento) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes añadir descuentos si no eres el gestor");
-            return;
-        }
-
-        this.descuentos.add(descuento);
-    }
-
-    /**
-     * Elimina un descuento determinado de un centro de exposiciones.
-     * 
-     * @param empleado el empleado a eliminar
-     */
-    public void removeDescuento(Descuento descuento) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes eliminar descuentos si no eres el gestor");
-            return;
-        }
-
-        this.descuentos.remove(descuento);
-    }
-
-    /**
      * Permite el login de un empleado al sistema, verificando su NIF, número de
      * seguridad social y contraseña.
      *
@@ -925,7 +891,6 @@ public class CentroExposicion implements Serializable {
         sb.append("Obras: ").append(obras).append("\n");
         sb.append("Empleados: ").append(empleados).append("\n");
         sb.append("Gestor: ").append(gestor).append("\n");
-        sb.append("Descuentos: ").append(descuentos).append("\n");
 
         return sb.toString();
     }

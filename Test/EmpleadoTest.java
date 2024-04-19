@@ -12,18 +12,18 @@ public class EmpleadoTest {
 
     @BeforeEach
     public void setUp() {
-        empleado = new Empleado("1234567890", "John Doe", "123456789", "1234567890", true, false, true, "123 Main St");
+        empleado = new Empleado("123456789X", "María García", "123456789", "1234567890", true, false, true, "Calle de la Vírgen de la Paloma, 1");
     }
 
     @Test
     public void testGetNombre() {
-        assertEquals("John Doe", empleado.getNombre());
+        assertEquals("María García", empleado.getNombre());
     }
 
     @Test
     public void testSetNombre() {
-        empleado.setNombre("Jane Smith");
-        assertEquals("Jane Smith", empleado.getNombre());
+        empleado.setNombre("María García Sánchez");
+        assertEquals("María García Sánchez", empleado.getNombre());
     }
 
     @Test
@@ -83,13 +83,13 @@ public class EmpleadoTest {
 
     @Test
     public void testGetDireccion() {
-        assertEquals("123 Main St", empleado.getDireccion());
+        assertEquals("Calle de la Vírgen de la Paloma, 1", empleado.getDireccion());
     }
 
     @Test
     public void testSetDireccion() {
-        empleado.setDireccion("456 Elm St");
-        assertEquals("456 Elm St", empleado.getDireccion());
+        empleado.setDireccion("Calle del Pez, 2");
+        assertEquals("Calle del Pez, 2", empleado.getDireccion());
     }
 
     @Test
@@ -102,10 +102,10 @@ public class EmpleadoTest {
 
     @Test
     public void testModificarDatos() {
-        empleado.modificarDatos("987654321", "0987654321", "456 Elm St");
+        empleado.modificarDatos("987654321", "0987654321", "Calle del Pez, 2");
         assertEquals("987654321", empleado.getNumSS());
         assertEquals("0987654321", empleado.getNumCuenta());
-        assertEquals("456 Elm St", empleado.getDireccion());
+        assertEquals("Calle del Pez, 2", empleado.getDireccion());
     }
 
 }

@@ -1,9 +1,10 @@
-package src.entrada;
+package src.exposicion;
 
 import src.expofy.ClienteRegistrado;
 import src.tarjetaDeCredito.TarjetaDeCredito;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Clase Entrada.
@@ -17,6 +18,7 @@ import java.io.Serializable;
 public class Entrada implements Serializable {
     private Integer IDEntrada;
     private static Integer IDcount = 0;
+    private LocalDate fechaDeCompra;
     private ClienteRegistrado clienteRegistrado = null;
     private TarjetaDeCredito tarjetaDeCredito = null;
 
@@ -25,8 +27,11 @@ public class Entrada implements Serializable {
      * 
      * @param IDEntrada Identificador único de la entrada.
      */
-    public Entrada() {
+    public Entrada(ClienteRegistrado cliente, TarjetaDeCredito tarjeta) {
         this.IDEntrada = IDcount++;
+        this.fechaDeCompra = LocalDate.now();
+        this.clienteRegistrado = cliente;
+        this.tarjetaDeCredito = tarjeta;
     }
 
     /**
@@ -38,23 +43,19 @@ public class Entrada implements Serializable {
         return IDEntrada;
     }
 
+    public LocalDate getFechaDeCompra() {
+        return this.fechaDeCompra;
+    }
+
     /**
      * Obtiene la tarjeta de crédito asociada.
      * 
      * @return Tarjeta de crédito asociada.
      */
     public TarjetaDeCredito getTarjetaDeCredito() {
-        return tarjetaDeCredito;
+        return this.tarjetaDeCredito;
     }
 
-    /**
-     * Asigna una tarjeta de crédito.
-     * 
-     * @param tarjetaDeCredito Tarjeta de crédito a asignar.
-     */
-    public void setTarjetaDeCredito(TarjetaDeCredito tarjetaDeCredito) {
-        this.tarjetaDeCredito = tarjetaDeCredito;
-    }
 
     /**
      * Obtiene el cliente registrado.
@@ -62,19 +63,10 @@ public class Entrada implements Serializable {
      * @return Cliente registrado.
      */
     public ClienteRegistrado getClienteRegistrado() {
-        return clienteRegistrado;
+        return this.clienteRegistrado;
     }
 
-    /**
-     * Asigna un cliente registrado.
-     * 
-     * @param clienteRegistrado Cliente a asignar.
-     */
-    public void addClienteRegistrado(ClienteRegistrado clienteRegistrado) {
-        this.clienteRegistrado = clienteRegistrado;
-    }
-
-
+ 
     /**
      * Realiza el codigo hash de entrada.
      * 

@@ -1,4 +1,4 @@
-package src.centroExposicion;
+package src.exposicion;
 
 /**
  * Clase Descuento.

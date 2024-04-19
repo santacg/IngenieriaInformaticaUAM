@@ -7,7 +7,6 @@ import java.io.File;
 import java.time.LocalDate;
 
 import src.centroExposicion.*;
-import src.entrada.Entrada;
 import src.exposicion.*;
 import src.inscripcion.Inscripcion;
 import src.tarjetaDeCredito.TarjetaDeCredito;
@@ -257,6 +256,21 @@ public class Expofy implements Serializable {
     }
 
     /**
+     * Envía una notificación a todos los clientes registrados en Expofy que hayan
+     * aceptado recibir publicidad.
+     * 
+     * @param mensaje El mensaje de la notificación.
+     */
+    public void enviarNotificacionesClientesPublicidad(String mensaje) {
+        Notificacion notificacion = new Notificacion(mensaje, LocalDate.now());
+        for (ClienteRegistrado c : this.clientesRegistrados) {
+            if (c.getPublicidad() == true) {
+                c.addNotificacion(notificacion);
+            }
+        }
+    }
+
+    /**
      * Envía una notificación a un conjunto específico de usuarios.
      * 
      * @param mensaje  El mensaje de la notificación.
@@ -310,7 +324,7 @@ public class Expofy implements Serializable {
      * @return true si la compra es exitosa, false en caso contrario.
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,
-            Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String codigo) {
+            Hora hora, Integer nEntradas, TarjetaDeCredito tarjetaDeCredito, String... codigos) {
         Double precioFinal;
 
         // Verifica si el cliente está logueado. Si no, la compra no puede proceder.
@@ -342,7 +356,6 @@ public class Expofy implements Serializable {
         // Verifica la disponibilidad de la hora elegida dentro del horario de la
         // exposición.
 
-
         if (nEntradas <= 0) {
             System.out.println("El número de entradas no puede ser menor o igual a 0");
             return false;
@@ -361,8 +374,10 @@ public class Expofy implements Serializable {
                 precioFinal = precioFinal * descuento.getDescuento();
             }
         }
-        if (validezCodigo(codigo, clienteRegistrado) == true) {
-            precioFinal = precioFinal - exposicion.getPrecio();
+        for (String codigo : codigos) {
+            if (validezCodigo(codigo, clienteRegistrado) == true) {
+                precioFinal = precioFinal - exposicion.getPrecio();
+            }
         }
 
         // Verifica la validez del número de tarjeta de crédito y realiza el cobro.
@@ -383,16 +398,16 @@ public class Expofy implements Serializable {
         Estadisticas estadisticas = exposicion.getEstadisticas();
         int i;
         for (i = 0; i < nEntradas; i++) {
-            Entrada entrada = new Entrada();
-            entrada.addClienteRegistrado(clienteRegistrado);
-            entrada.setTarjetaDeCredito(tarjetaDeCredito);
+            Entrada entrada = new Entrada(clienteRegistrado, tarjetaDeCredito);
+            exposicion.addEntrada(entrada);
             hora.entradaVendida();
             estadisticas.incrementarTicketsVendidos();
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
-        String horaTemporal = "15";
+
         try {
-            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, horaTemporal), "." + File.separator + "tmp");
+            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, "Hora"),
+                    "." + File.separator + "tmp");
         } catch (NonExistentFileException e) {
             return false;
         } catch (UnsupportedImageTypeException e) {
@@ -400,27 +415,9 @@ public class Expofy implements Serializable {
         }
 
         clienteRegistrado.setUltimaCompra(LocalDate.now());
-        enviarNotificacionUsuario("La entrada se ha comprado con éxito", clienteRegistrado);
-        return true;
-    }
+        enviarNotificacionUsuario("Las " + nEntradas + "entrada/s se ha/n comprado con éxito", clienteRegistrado);
 
-    /**
-     * Actualiza las sanciones de los clientes basándose en las inscripciones a
-     * sorteos que han pasado su fecha límite.
-     */
-    public void updateSanciones() {
-        for (CentroExposicion centroExposicion : centrosExposicion) {
-            for (Sorteo sorteo : centroExposicion.getSorteos()) {
-                for (Inscripcion inscripcion : sorteo.getInscripciones()) {
-                    for (String codigo : inscripcion.getCodigos()) {
-                        if (codigo != null && sorteo.getFechaLimite().isBefore(LocalDate.now())) {
-                            inscripcion.getCliente()
-                                    .setSancionadoHasta(LocalDate.now().plusDays(centroExposicion.getSancion()));
-                        }
-                    }
-                }
-            }
-        }
+        return true;
     }
 
     /**

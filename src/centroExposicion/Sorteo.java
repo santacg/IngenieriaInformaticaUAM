@@ -181,7 +181,7 @@ public abstract class Sorteo implements Serializable {
     public void realizarSorteo() {
         int i, j;
         Expofy expofy = Expofy.getInstance();
-        Inscripcion insc_ganadora;
+        Inscripcion insc_ganadora = null;
         ClienteRegistrado ganador;
         String codigo, mensaje = "¡ENHORABUENA! tu participación al sorteo para la exposición \""
                 + exposicion.getNombre() +
@@ -204,6 +204,15 @@ public abstract class Sorteo implements Serializable {
                     n_entradas--;
                 }
                 expofy.enviarNotificacionUsuario(mensaje, ganador);
+            }
+        }
+        mensaje = "Más suerte la próxima vez tu participación al sorteo para la exposición \""
+                + exposicion.getNombre() +
+                "\" no ha sido elegida";
+
+        for (Inscripcion inscripcion : inscripciones) {
+            if (!inscripcion.equals(insc_ganadora)) {
+                expofy.enviarNotificacionUsuario(mensaje, inscripcion.getCliente());
             }
         }
     }
@@ -234,7 +243,8 @@ public abstract class Sorteo implements Serializable {
      * Dos sorteos se consideran iguales si tienen la misma fecha y exposición.
      * 
      * @param obj El objeto con el que comparar este {@code Sorteo}.
-     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     *         contrario.
      * 
      */
     @Override
@@ -258,7 +268,5 @@ public abstract class Sorteo implements Serializable {
             return false;
         return true;
     }
-
-    
 
 }

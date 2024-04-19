@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.centroExposicion.DescuentoDia;
+import src.exposicion.DescuentoDia;
 import src.exposicion.Estadisticas;
 import src.exposicion.EstadoExposicion;
 import src.exposicion.Exposicion;
@@ -167,7 +167,6 @@ public class ExposicionTest {
     @Test
     public void testSetDescuento() {
         DescuentoDia descuento = new DescuentoDia(20.0, 10);
-        exposicion.setDescuento(descuento);
         assertEquals(descuento, exposicion.getDescuento());
     }
 

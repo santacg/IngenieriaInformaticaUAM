@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
 
-import src.centroExposicion.Descuento;
 import src.obra.Obra;
+import src.usuario.Usuario;
+import src.expofy.*;
 
 /**
  * Clase Exposición.
@@ -25,6 +26,7 @@ public class Exposicion implements Serializable {
     private EstadoExposicion estado;
     private Set<SalaExposicion> salas = new HashSet<>();
     private Set<Hora> horario = new HashSet<>();
+    private Set<Entrada> entradas = new HashSet<>();
     private Descuento descuento = null;
     private Estadisticas estadisticas;
     private TipoExpo tipo;
@@ -104,7 +106,7 @@ public class Exposicion implements Serializable {
      * 
      * @param fechaInicio La nueva fecha de inicio.
      */
-    public Boolean setFechaInicio(LocalDate fechaInicio) {
+    public boolean setFechaInicio(LocalDate fechaInicio) {
         if (this.fechaFin.isBefore(fechaInicio)) {
             System.out.println("La fecha de fin no puede ser anterior a la fecha de inicio");
             return false;
@@ -128,7 +130,7 @@ public class Exposicion implements Serializable {
      * 
      * @param fechaFin La nueva fecha de fin.
      */
-    public Boolean setFechaFin(LocalDate fechaFin) {
+    public boolean setFechaFin(LocalDate fechaFin) {
         if (this.fechaInicio.isAfter(fechaFin)) {
             System.out.println("La fecha de inicio no puede ser posterior a la fecha de fin");
             return false;
@@ -193,19 +195,16 @@ public class Exposicion implements Serializable {
     /**
      * Cambia el estado de la exposición a PUBLICADA.
      */
-    public Boolean expoPublicar() {
-        Boolean flag = false;
+    public boolean expoPublicar() {
         for (SalaExposicion sala : this.salas) {
             for (Obra obra : sala.getObras()) {
-                flag = true;
-                break;
+                obra.exponerObra();
             }
         }
 
-        if (flag == false) {
-            System.out.println("No se puede publicar una exposición sin obras");
-            return false;
-        }
+        Expofy expofy = Expofy.getInstance();
+        expofy.enviarNotificacionesClientesPublicidad(
+                "Se ha publicado una nueva exposicion " + getNombre() + ": " + getDescripcion());
 
         this.estado = EstadoExposicion.PUBLICADA;
         return true;
@@ -214,7 +213,12 @@ public class Exposicion implements Serializable {
     /**
      * Cambia el estado de la exposición a CANCELADA.
      */
-    public Boolean expoCancelar(LocalDate fechaCancelacion) {
+    public boolean expoCancelar(LocalDate fechaCancelacion) {
+        if (this.estado == EstadoExposicion.EN_CREACION) {
+            System.out.println("No se puede cancelar una exposición que esta en creacion");
+            return false;
+        }
+
         if (fechaCancelacion.isBefore(LocalDate.now().plusDays(7))) {
             System.out.println("No se puede cancelar la exposición con menos de 7 días de antelación");
             return false;
@@ -226,6 +230,17 @@ public class Exposicion implements Serializable {
             return false;
         }
 
+        Expofy expofy = Expofy.getInstance();
+        Set<Usuario> clientes = new HashSet<>();
+        for (Entrada entrada : this.entradas) {
+            if (entrada.getFechaDeCompra().isAfter(fechaCancelacion)) {
+                clientes.add(entrada.getClienteRegistrado());
+            }
+        }
+
+        expofy.enviarNotificacionUsuarios("Se ha cancelado la exposicion: " + this.nombre
+                + ".Se ha reintegrado el importe de la entrada en tu cuenta bancaria", clientes);
+
         this.estado = EstadoExposicion.CANCELADA;
         return false;
     }
@@ -235,7 +250,11 @@ public class Exposicion implements Serializable {
      * 
      * @param fechaFin La nueva fecha de fin para la exposición.
      */
-    public Boolean expoProrrogar(LocalDate fechaFin) {
+    public boolean expoProrrogar(LocalDate fechaFin) {
+        if (this.estado != EstadoExposicion.PUBLICADA) {
+            System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
+        }
+
         if (setFechaFin(fechaFin) == false) {
             System.out.println("No se puede prorrogar la exposición con una fecha de fin anterior a la actual");
             return false;
@@ -248,13 +267,32 @@ public class Exposicion implements Serializable {
     /**
      * Cierra temporalmente la exposición.
      */
-    public void expoCerrarTemporalmente() {
-        this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
+    public boolean expoCerrarTemporalmente(LocalDate fechaInicioCierre, LocalDate fechaFinCierre) {
+        if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {
+            System.out.println("No se puede cerrar temporalmente una exposición que no ha sido publicada o prorrogada");
+            return false;
+        }
+
+        if (fechaInicioCierre.isBefore(LocalDate.now()) || fechaFinCierre.isBefore(LocalDate.now())
+                || fechaInicioCierre.isAfter(fechaFinCierre)) {
+            System.out.println("No se puede cerrar temporalmente la exposición con fechas incorrectas");
+            return false;
+        }
+
+        if (this.fechaFin.isBefore(fechaFinCierre) || this.fechaInicio.isAfter(fechaInicioCierre)) {
+            System.out.println(
+                    "No se puede cerrar temporalmente la exposición con una fecha de fin anterior a la actual o de inicio posterior a la actual");
+            return false;
+        }
+
         for (SalaExposicion sala : salas) {
             for (Obra obra : sala.getObras()) {
                 obra.almacenarObra();
             }
         }
+
+        this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
+        return true;
     }
 
     /**
@@ -280,7 +318,7 @@ public class Exposicion implements Serializable {
      * 
      * @param sala La sala a añadir.
      */
-    public Boolean addSala(SalaExposicion sala) {
+    public boolean addSala(SalaExposicion sala) {
         if (this.salas.add(sala) == false) {
             System.out.println("La sala ya pertenece a la exposición");
             return false;
@@ -293,7 +331,7 @@ public class Exposicion implements Serializable {
      * 
      * @param sala La sala a eliminar.
      */
-    public Boolean removeSala(SalaExposicion sala) {
+    public boolean removeSala(SalaExposicion sala) {
         if (this.salas.contains(sala) == false) {
             System.out.println("La sala no pertenece a la exposición");
             return false;
@@ -364,7 +402,7 @@ public class Exposicion implements Serializable {
     /**
      * Cambia el tipo de la exposición a temporal.
      */
-    public Boolean expoTemporal(LocalDate fechaFin) {
+    public boolean expoTemporal(LocalDate fechaFin) {
         if (setFechaFin(fechaFin) == false) {
             System.out.println(
                     "No se puede cambiar el tipo de la exposición a temporal con una fecha de fin anterior a la actual");
@@ -393,12 +431,28 @@ public class Exposicion implements Serializable {
     }
 
     /**
-     * Establece el conjunto de descuentos aplicables a la exposición.
+     * Configura un descuento para la exposición basado en la cantidad de días
      * 
-     * @param descuento El nuevo conjunto de descuentos para la exposición.
+     * @param cantidadDescuento
+     * @param dias
      */
-    public void setDescuento(Descuento descuento) {
+    public void configurarDescuentoDia(double cantidadDescuento, int dias) {
+        DescuentoDia descuento = new DescuentoDia(cantidadDescuento, dias);
         this.descuento = descuento;
+    }
+
+    public void configurarDescuentoMes(double cantidadDescuento, int meses) {
+        DescuentoMes descuento = new DescuentoMes(cantidadDescuento, meses);
+        this.descuento = descuento;
+    }
+
+    public boolean addEntrada(Entrada entrada) {
+        if (this.entradas.add(entrada) == false) {
+            System.out.println("La entrada ya existe");
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -120,8 +120,6 @@ public class SalaExposicion implements Serializable {
         }
 
         this.obras.add(obra);
-
-        obra.exponerObra();
         return true;
     }
 

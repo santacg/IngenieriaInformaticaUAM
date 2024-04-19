@@ -3,7 +3,7 @@ package src.centroExposicion;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import src.exposicion.Exposicion;
+import src.exposicion.*;
 
 /**
  * Clase SorteoDiaHora.
@@ -15,7 +15,7 @@ import src.exposicion.Exposicion;
  */
 public class SorteoDiaHora extends Sorteo{
     private LocalDate dia;
-    private LocalTime hora;
+    private Hora hora;
 
     /**
      * Constructor de un sorteo para un día y una hora especificados.
@@ -25,10 +25,11 @@ public class SorteoDiaHora extends Sorteo{
      * @param dia         El día específico en que se realizará el sorteo
      * @param hora        La hora específica a la que se realizará el sorteo
      */
-    public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia, LocalTime hora) {
+    public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia, Hora tiempo) {
         super(fechaSorteo, exposicion, n_entradas);
         this.dia = dia;
-        this.hora = hora;
+        this.hora = tiempo;
+        hora.reservarEntradas(n_entradas);
     }
 
     /**
@@ -45,7 +46,7 @@ public class SorteoDiaHora extends Sorteo{
      * 
      * @return La hora establecida para el evento o actividad.
      */
-    public LocalTime getHora() {
+    public Hora getHora() {
         return hora;
     }
 
@@ -63,7 +64,7 @@ public class SorteoDiaHora extends Sorteo{
      * 
      * @param hora La nueva hora a establecer.
      */
-    public void setHora(LocalTime hora) {
+    public void setHora(Hora hora) {
         this.hora = hora;
     }
 

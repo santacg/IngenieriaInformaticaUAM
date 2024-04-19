@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.entrada.Entrada;
+import src.exposicion.Entrada;
 import src.exposicion.Hora;
 
 public class HoraTest {

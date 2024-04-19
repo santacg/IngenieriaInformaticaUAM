@@ -6,8 +6,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.entrada.Entrada;
 import src.expofy.ClienteRegistrado;
+import src.exposicion.Entrada;
 import src.tarjetaDeCredito.TarjetaDeCredito;
 
 public class EntradaTest {

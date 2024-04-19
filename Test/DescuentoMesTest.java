@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.centroExposicion.DescuentoMes;
+import src.exposicion.DescuentoMes;
 
 import java.time.LocalDate;
 

@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import src.entrada.Entrada;
-
 import java.io.Serializable;
 
 /**
@@ -22,24 +19,13 @@ public class Hora implements Serializable {
     private LocalTime horaFin;
     private Integer nEntradas;
     private Integer countEntradas;
-    private Set<Entrada> entradas = new HashSet<>();
-
-    /**
-     * Devuelve el conjunto de entradas asociadas a este horario.
-     * 
-     * @return Un conjunto de entradas.
-     */
-    public Set<Entrada> getEntradas() {
-        return entradas;
-    }
 
     /**
      * Añade una entrada al conjunto de entradas para este horario.
      * 
      * @param entrada La entrada a añadir.
      */
-    public void addEntrada(Entrada entrada) {
-        this.entradas.add(entrada);
+    public void addEntrada() {
         nEntradas++;
         countEntradas++;
     }
@@ -49,8 +35,7 @@ public class Hora implements Serializable {
      * 
      * @param entrada La entrada a eliminar.
      */
-    public void removeEntrada(Entrada entrada) {
-        this.entradas.remove(entrada);
+    public void removeEntrada() {
         nEntradas--;
         countEntradas--;
     }
@@ -61,7 +46,6 @@ public class Hora implements Serializable {
      */
     public void removeAllEntradas() {
         countEntradas = 0;
-        this.entradas.clear();
     }
 
     /**
@@ -194,6 +178,16 @@ public class Hora implements Serializable {
         result = prime * result + ((horaInicio == null) ? 0 : horaInicio.hashCode());
         result = prime * result + ((horaFin == null) ? 0 : horaFin.hashCode());
         return result;
+    }
+
+    public void reservarEntradas(int n_entradas){
+        if (n_entradas <= this.countEntradas) {
+            countEntradas -= n_entradas;
+        }
+        else{
+            System.err.println("No hay tantas entradas disponibles para ese día a esa hora");
+        }
+        
     }
 
     /**

@@ -115,9 +115,9 @@ public class Main {
             SalaExposicion salaExposicion2 = new SalaExposicion(sala2);
             salasExposicion1.add(salaExposicion1);
             salasExposicion2.add(salaExposicion2);
-            Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2021, 1, 1), LocalDate.now().plusYears(1),
+            Exposicion exposicion1 = new Exposicion("Expo1", LocalDate.of(2025, 1, 1), LocalDate.now().plusYears(1),
                         "Expo1", salasExposicion1, TipoExpo.PERMANENTE, 21.0);
-            Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2023, 2, 2), LocalDate.now().plusYears(1),
+            Exposicion exposicion2 = new Exposicion("Expo2", LocalDate.of(2025, 2, 2), LocalDate.now().plusYears(1),
                         "Expo2", salasExposicion2, TipoExpo.TEMPORAL, 22.0);
 
             // Añadimos obras a una de las exposiciones
@@ -161,7 +161,7 @@ public class Main {
             expofy.getClienteRegistrado("123456789").inscribirse(sorteo, 2);
 
             // Empleado vende entradas para el mismo día
-            centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(), LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
+            // centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(), LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
 
             // Gestor cambia el estado de una obra
             cuadro.restaurarObra();
@@ -171,7 +171,7 @@ public class Main {
             centroExposicion1.setSancion(10);
 
             // Gestor asigna un descuento a una exposicion
-            exposicion1.setDescuento(new DescuentoDia(0.15,15));
+            exposicion1.configurarDescuentoDia(15, 20);     
             // Gestor realiza un sorteo una vez finalizado el periodo de inscripcion
             sorteo.realizarSorteo();
             // Obtener código ganador Sorteo
