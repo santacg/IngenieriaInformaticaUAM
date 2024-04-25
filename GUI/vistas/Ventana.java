@@ -30,8 +30,30 @@ public class Ventana extends JFrame {
 		cartas.add(signUp, SIGNUP);
 		cartas.add(panelPrincipal, PANELPRINCIPAL);
 
-		JPasswordField password = new JPasswordField(10);
-		panelPrincipal.add(password);
+		// Configuración del panel principal
+		panelPrincipal.setLayout(new BorderLayout(50, 50));
+		
+		// Agregar un título y descripción
+		JLabel titleLabel = new JLabel("EXPOFY", JLabel.CENTER);
+		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+		panelPrincipal.add(titleLabel, BorderLayout.NORTH);
+
+		// Panel para el formulario de login
+		JPanel loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+		JLabel userLabel = new JLabel("Usuario:");
+		JTextField userField = new JTextField();
+		JLabel passwordLabel = new JLabel("Contraseña:");
+		JPasswordField passwordField = new JPasswordField();
+		loginPanel.add(userLabel);
+		loginPanel.add(userField);
+		loginPanel.add(passwordLabel);
+		loginPanel.add(passwordField);
+		panelPrincipal.add(loginPanel, BorderLayout.CENTER);
+
+		// Botón de login
+		JButton loginButton = new JButton("Login");
+		panelPrincipal.add(loginButton, BorderLayout.SOUTH);
+
 		setContentPane(cartas);
 	}
 
