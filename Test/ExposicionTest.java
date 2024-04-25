@@ -10,16 +10,16 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.exposicion.DescuentoDia;
-import src.exposicion.Estadisticas;
-import src.exposicion.EstadoExposicion;
-import src.exposicion.Exposicion;
-import src.exposicion.Hora;
-import src.exposicion.SalaExposicion;
-import src.exposicion.TipoExpo;
-import src.obra.Estado;
-import src.obra.Obra;
-import src.sala.Sala;
+import GUI.modelo.exposicion.DescuentoDia;
+import GUI.modelo.exposicion.Estadisticas;
+import GUI.modelo.exposicion.EstadoExposicion;
+import GUI.modelo.exposicion.Exposicion;
+import GUI.modelo.exposicion.Hora;
+import GUI.modelo.exposicion.SalaExposicion;
+import GUI.modelo.exposicion.TipoExpo;
+import GUI.modelo.obra.Estado;
+import GUI.modelo.obra.Obra;
+import GUI.modelo.sala.Sala;
 
 public class ExposicionTest {
     private Exposicion exposicion;

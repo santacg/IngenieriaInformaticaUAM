@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.centroExposicion.Empleado;
+import GUI.modelo.centroExposicion.Empleado;
 
 public class EmpleadoTest {
     private Empleado empleado;

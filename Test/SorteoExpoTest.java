@@ -9,11 +9,11 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.centroExposicion.SorteoExpo;
-import src.exposicion.Exposicion;
-import src.exposicion.SalaExposicion;
-import src.exposicion.TipoExpo;
-import src.sala.Sala;
+import GUI.modelo.centroExposicion.SorteoExpo;
+import GUI.modelo.exposicion.Exposicion;
+import GUI.modelo.exposicion.SalaExposicion;
+import GUI.modelo.exposicion.TipoExpo;
+import GUI.modelo.sala.Sala;
 
 public class SorteoExpoTest {
     private SorteoExpo sorteo;

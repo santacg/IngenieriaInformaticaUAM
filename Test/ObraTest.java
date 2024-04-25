@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.obra.*;
+import GUI.modelo.obra.*;
 
 public class ObraTest {
     private Obra obra1;

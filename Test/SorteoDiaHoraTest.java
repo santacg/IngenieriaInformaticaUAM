@@ -8,8 +8,8 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.centroExposicion.SorteoDiaHora;
-import src.exposicion.Exposicion;
+import GUI.modelo.centroExposicion.SorteoDiaHora;
+import GUI.modelo.exposicion.Exposicion;
 
 public class SorteoDiaHoraTest {
     private SorteoDiaHora sorteo;

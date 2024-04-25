@@ -8,9 +8,9 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.exposicion.SalaExposicion;
-import src.obra.*;
-import src.sala.Sala;
+import GUI.modelo.exposicion.SalaExposicion;
+import GUI.modelo.obra.*;
+import GUI.modelo.sala.Sala;
 
 public class SalaExposicionTest {
     private SalaExposicion salaExposicion;

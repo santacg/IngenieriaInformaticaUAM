@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.expofy.ClienteRegistrado;
-import src.inscripcion.Inscripcion;
+import GUI.modelo.expofy.ClienteRegistrado;
+import GUI.modelo.inscripcion.Inscripcion;
 
 public class InscripcionTest {
     private Inscripcion inscripcion;

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.sala.Sala;
+import GUI.modelo.sala.Sala;
 
 import java.util.List;
 

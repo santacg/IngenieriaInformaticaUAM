@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.expofy.ClienteRegistrado;
+import GUI.modelo.expofy.ClienteRegistrado;
 /**
  * Clase ClienteRegistradoTest
  * Esta clase contiene pruebas unitarias que validan la funcionalidad de los

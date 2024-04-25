@@ -10,8 +10,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.exposicion.Entrada;
-import src.exposicion.Hora;
+import GUI.modelo.exposicion.Entrada;
+import GUI.modelo.exposicion.Hora;
 
 public class HoraTest {
     private Hora hora;
