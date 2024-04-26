@@ -15,50 +15,31 @@ public class Ventana extends JFrame {
 	
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
 		cartas = new JPanel();
 		cartas.setLayout(new CardLayout());
-		JPanel panelPrincipal = new JPanel();
-		JPanel logInGestor = new JPanel();
-		JPanel logInEmpleado = new JPanel();
-		JPanel exposiciones = new JPanel();
-		JPanel signUp = new JPanel();
 
-		cartas.add(logInGestor, LOGINGESTOR);
-		cartas.add(logInEmpleado, LOGINEMPLEADO);
-		cartas.add(exposiciones, EXPOSICIONES); 
-		cartas.add(signUp, SIGNUP);
-		cartas.add(panelPrincipal, PANELPRINCIPAL);
-
-		// Configuración del panel principal
-		panelPrincipal.setLayout(new BorderLayout(50, 50));
-		
-		// Agregar un título y descripción
-		JLabel titleLabel = new JLabel("EXPOFY", JLabel.CENTER);
-		titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-		panelPrincipal.add(titleLabel, BorderLayout.NORTH);
-
-		// Panel para el formulario de login
-		JPanel loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-		JLabel userLabel = new JLabel("Usuario:");
-		JTextField userField = new JTextField();
-		JLabel passwordLabel = new JLabel("Contraseña:");
-		JPasswordField passwordField = new JPasswordField();
-		loginPanel.add(userLabel);
-		loginPanel.add(userField);
-		loginPanel.add(passwordLabel);
-		loginPanel.add(passwordField);
-		panelPrincipal.add(loginPanel, BorderLayout.CENTER);
-
-		// Botón de login
-		JButton loginButton = new JButton("Login");
-		panelPrincipal.add(loginButton, BorderLayout.SOUTH);
-
+		cartas.add(new PantallaPrincipal(), PANELPRINCIPAL);
 		setContentPane(cartas);
 	}
 
 	public String getPanelPrincipal() {
 		return PANELPRINCIPAL;
+	}
+
+	public String getLogInGestor() {
+		return LOGINGESTOR;
+	}
+
+	public String getLogInEmpleado() {
+		return LOGINEMPLEADO;
+	}
+
+	public String getExposiciones() {
+		return EXPOSICIONES;
+	}
+
+	public String getSignUp() {
+		return SIGNUP;
 	}
 
 	public void setControlador(Controlador controlador) {
