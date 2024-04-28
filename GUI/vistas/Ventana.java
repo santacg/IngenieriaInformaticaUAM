@@ -24,8 +24,10 @@ public class Ventana extends JFrame {
 	private PantallaPrincipal vistaPantallaPrincipal;
 
 	private LoginEmpleado vistaLoginEmpleado;
+	private ControladorLoginEmpleado controladorLoginEmpleado;
 
 	private LoginGestor vistaLoginGestor;
+	private ControladorLoginGestor controladorLoginGestor;
 
 	private RegistroUsuario vistaRegistro;
 	private ControladorRegistro controladorRegistro;
@@ -70,14 +72,6 @@ public class Ventana extends JFrame {
 		return PANELPRINCIPAL;
 	}
 
-	public PantallaPrincipal getVistaPantallaPrincipal() {
-		return vistaPantallaPrincipal;
-	}
-
-	public RegistroUsuario getVistaRegistro() {
-		return vistaRegistro;
-	}
-
 	public String getLogInGestor() {
 		return LOGINGESTOR;
 	}
@@ -102,6 +96,18 @@ public class Ventana extends JFrame {
 		return CLIENTEPRINCIPAL;
 	}
 
+	public PantallaPrincipal getVistaPantallaPrincipal() {
+		return vistaPantallaPrincipal;
+	}
+
+	public RegistroUsuario getVistaRegistro() {
+		return vistaRegistro;
+	}
+
+	public LoginGestor getVistaLogInGestor() {
+		return vistaLoginGestor;
+	}
+
 	public JPanel getCardByName(String name) {
 		for (Component comp : cartas.getComponents()) {
 			if (comp.getName() != null && comp.getName().equals(name)) {
@@ -123,6 +129,14 @@ public class Ventana extends JFrame {
 		this.controladorRegistro = controlador.getControladorRegistro();
 		this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
 				controladorRegistro.getCancelarListener());
+
+		this.controladorLoginGestor = controlador.getControladorLoginGestor();
+		this.vistaLoginGestor.setControlador(controladorLoginGestor.getAceptarListener(),
+				controladorLoginGestor.getAtrasListener());
+
+		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
+		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(), controladorLoginEmpleado.getAtrasListener());
+
 	}
 
 	public void mostrarPanel(String carta) {

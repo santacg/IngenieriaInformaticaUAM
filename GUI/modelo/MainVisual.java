@@ -30,6 +30,8 @@ public class MainVisual {
                 LocalTime.of(21, 0, 0), "Madrid",
                 "123", "456", gestor1, salas);
 
+        centroExposicion1.addEmpleado(empleado1);
+
         expofy.addCentroExposicion(centroExposicion1);
         centroExposicion1.loginGestor("456");
 

@@ -2,10 +2,13 @@ package GUI.vistas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class LoginEmpleado extends JPanel {
     private JTextField textUser;
     private JPasswordField fieldPassword;
+    private JButton atrasBoton;
+    private JButton aceptarBoton;
 
     public LoginEmpleado() {
         setLayout(new GridBagLayout());
@@ -59,17 +62,18 @@ public class LoginEmpleado extends JPanel {
     }
 
     public void addButtons(GridBagConstraints constraints) {
-        JButton acceptButton = new JButton("Aceptar");
+        aceptarBoton = new JButton("Aceptar");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
-        add(acceptButton, constraints);
+        add(aceptarBoton, constraints);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JButton atrasBoton = new JButton("Atrás");
+        atrasBoton = new JButton("Atrás");
 
         buttonPanel.add(atrasBoton);
+
 
         constraints.gridx = 0;
         constraints.gridy = 4;
@@ -77,4 +81,10 @@ public class LoginEmpleado extends JPanel {
         constraints.anchor = GridBagConstraints.LAST_LINE_END;
         add(buttonPanel, constraints);
     }
+
+    public void setControlador(ActionListener cAceptar, ActionListener cAtras){
+        aceptarBoton.addActionListener(cAceptar);
+        atrasBoton.addActionListener(cAtras);
+    }
+    
 }

@@ -39,6 +39,7 @@ public class ControladorRegistro {
 
             JOptionPane.showMessageDialog(frame, "Usuario registrado correctamente.", "Registro",
                     JOptionPane.INFORMATION_MESSAGE);
+            vistaRegistro.update();
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
     };

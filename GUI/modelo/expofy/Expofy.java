@@ -176,12 +176,15 @@ public class Expofy implements Serializable {
      * @param publicidad  Indica si el cliente acepta recibir publicidad.
      */
     public Boolean registrarCliente(String NIF, String Contrasenia, Boolean publicidad) {
-        if (this.clientesRegistrados.add(new ClienteRegistrado(NIF, publicidad, Contrasenia, false, null, null))) {
-            return true;
-        } else {
-            System.out.println("El cliente ya está registrado");
-            return false;
+        for (ClienteRegistrado c : this.clientesRegistrados) {
+            if (c.getNIF().equals(NIF)) {
+                return false;
+            }
         }
+
+        ClienteRegistrado cliente = new ClienteRegistrado(NIF, publicidad, Contrasenia, false, null, null);
+        this.clientesRegistrados.add(cliente);
+        return true;
     }
 
     /**

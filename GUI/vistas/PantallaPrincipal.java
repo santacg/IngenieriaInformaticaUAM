@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class PantallaPrincipal extends JPanel {
-    private JButton acceptButton;
+    private JButton aceptarBoton;
     private JButton buscarBoton;
     private JButton gestorBoton;
     private JButton empleadoBoton;
@@ -62,11 +62,11 @@ public class PantallaPrincipal extends JPanel {
     }
 
     public void addButtons(GridBagConstraints constraints) {
-        this.acceptButton = new JButton("Aceptar");
+        this.aceptarBoton = new JButton("Aceptar");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
-        add(acceptButton, constraints);
+        add(aceptarBoton, constraints);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -90,7 +90,7 @@ public class PantallaPrincipal extends JPanel {
     public void setControlador(ActionListener cBuscar, ActionListener cAceptar, ActionListener cGestor,
             ActionListener cEmpleado, ActionListener cRegistrar) {
         this.buscarBoton.addActionListener(cBuscar);
-        this.acceptButton.addActionListener(cAceptar);
+        this.aceptarBoton.addActionListener(cAceptar);
         this.gestorBoton.addActionListener(cGestor);
         this.empleadoBoton.addActionListener(cEmpleado);
         this.registrarBoton.addActionListener(cRegistrar);

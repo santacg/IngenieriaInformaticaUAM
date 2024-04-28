@@ -1,10 +1,14 @@
 package GUI.vistas;
 
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class LoginGestor extends JPanel {
     private JPasswordField fieldPassword;
+    private JButton aceptarBtn;
+    private JButton atrasBtn;
 
     public LoginGestor() {
         setLayout(new GridBagLayout());
@@ -45,17 +49,17 @@ public class LoginGestor extends JPanel {
 
 
     public void addButtons(GridBagConstraints constraints) {
-        JButton acceptButton = new JButton("Aceptar");
+        this.aceptarBtn = new JButton("Aceptar");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
-        add(acceptButton, constraints);
+        add(aceptarBtn, constraints);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JButton atrasBoton = new JButton("Atrás");
+        this.atrasBtn = new JButton("Atrás");
 
-        buttonPanel.add(atrasBoton);
+        buttonPanel.add(atrasBtn);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
@@ -64,4 +68,17 @@ public class LoginGestor extends JPanel {
         add(buttonPanel, constraints);
     }
 
+
+    public void setControlador(ActionListener cAceptar, ActionListener cAtras) {
+        this.aceptarBtn.addActionListener(cAceptar);
+        this.atrasBtn.addActionListener(cAtras);
+    }
+
+    public String getPassword() {
+        return new String(this.fieldPassword.getPassword());
+    }
+
+    public void update() {
+        this.fieldPassword.setText("");
+    }
 }
