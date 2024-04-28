@@ -4,7 +4,7 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.Ventana;
 
-public class Controlador implements GestorInterfaz {
+public class Controlador {
 	
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
 	private ControladorRegistro controladorRegistro;
@@ -39,17 +39,8 @@ public class Controlador implements GestorInterfaz {
 		return this.controladorLoginEmpleado;
 	}
 
-	public void onGestorLogin(CentroExposicion centro) {
-		if (controladorGestor == null) {
-			controladorGestor = new ControladorGestor(frame, centro);
-		}
-	}
 
 	public ControladorGestor getControladorGestor() {
-		if (this.controladorGestor == null) {
-			return null;
-		}
-
 		return this.controladorGestor;
 	}
 }
