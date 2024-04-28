@@ -14,11 +14,13 @@ public class ControladorLoginGestor {
     private Ventana frame;
     private LoginGestor vista;
     private Expofy expofy;
+    private GestorInterfaz gestorInterfaz;
 
-    public ControladorLoginGestor(Ventana frame, Expofy expofy) {
+    public ControladorLoginGestor(Ventana frame, Expofy expofy, GestorInterfaz gestorInterfaz) {
         this.frame = frame;
         this.expofy = expofy;
         this.vista = frame.getVistaLogInGestor();
+        this.gestorInterfaz = gestorInterfaz;
     }
 
     private ActionListener aceptarListener = new ActionListener() {
@@ -34,7 +36,9 @@ public class ControladorLoginGestor {
             for (CentroExposicion centro : expofy.getCentrosExposicion()) {
                 if (centro.loginGestor(password) == true) {
                     JOptionPane.showMessageDialog(frame, "Bienvenido gestor!");
+                    gestorInterfaz.onGestorLogin(centro);
                     vista.update();
+                    frame.mostrarPanel(frame.getGestorPrincipal());
                     return;
                 }
             }

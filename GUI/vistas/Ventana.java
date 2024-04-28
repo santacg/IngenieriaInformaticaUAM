@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import GUI.controlador.*;
+import GUI.modelo.centroExposicion.Gestor;
 
 public class Ventana extends JFrame {
 
@@ -16,7 +17,7 @@ public class Ventana extends JFrame {
 	private final static String EXPOSICIONES = "exposiciones";
 	private final static String REGISTRO = "registro";
 	private final static String PANELPRINCIPAL = "panelPrincipal";
-
+	private final static String GESTORPRINCIPAL = "gestorPrincipal";
 	private final static String EMPLEADOPRINCIPAL = "empleadoPrincipal";
 	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
 
@@ -37,6 +38,9 @@ public class Ventana extends JFrame {
 	private EmpleadoPrincipal vistaEmpleadoPrincipal;
 
 	private ClientePrincipal vistaClientePrincipal;
+
+	private GestorPrincipal vistaGestorPrincipal;
+	private ControladorGestor controladorGestor;
 
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,10 +64,13 @@ public class Ventana extends JFrame {
 		cartas.add(vistaExposiciones, EXPOSICIONES);
 
 		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
-//		cartas.add(vistaExposiciones, EMPLEADOPRINCIPAL);
+		cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
 
 		this.vistaClientePrincipal = new ClientePrincipal();
 		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
+
+		this.vistaGestorPrincipal = new GestorPrincipal();
+		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 
 		setContentPane(cartas);
 	}
@@ -96,6 +103,10 @@ public class Ventana extends JFrame {
 		return CLIENTEPRINCIPAL;
 	}
 
+	public String getGestorPrincipal() {
+		return GESTORPRINCIPAL;
+	}
+
 	public PantallaPrincipal getVistaPantallaPrincipal() {
 		return vistaPantallaPrincipal;
 	}
@@ -110,6 +121,14 @@ public class Ventana extends JFrame {
 
 	public LoginEmpleado getVistaLoginEmpleado() {
 		return vistaLoginEmpleado;
+	}
+
+	public EmpleadoPrincipal getVistEmpleadoPrincipal() {
+		return vistaEmpleadoPrincipal;
+	}
+
+	public GestorPrincipal getVistaGestorPrincipal() {
+		return vistaGestorPrincipal;
 	}
 
 	public void setControlador(Controlador controlador) {
@@ -132,6 +151,8 @@ public class Ventana extends JFrame {
 		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
 		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(), controladorLoginEmpleado.getAtrasListener());
 
+		this.controladorGestor = controlador.getControladorGestor();
+		this.vistaGestorPrincipal.setControlador();
 	}
 
 	public void mostrarPanel(String carta) {

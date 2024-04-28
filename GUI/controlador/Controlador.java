@@ -1,14 +1,16 @@
 package GUI.controlador;
 
+import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.Ventana;
 
-public class Controlador {
+public class Controlador implements GestorInterfaz {
 	
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
 	private ControladorRegistro controladorRegistro;
 	private ControladorLoginGestor controladorLogInGestor;
 	private ControladorLoginEmpleado controladorLoginEmpleado;
+	private ControladorGestor controladorGestor;
 	private Ventana frame;
 	private Expofy expofy;
 
@@ -35,5 +37,19 @@ public class Controlador {
 
 	public ControladorLoginEmpleado getControladorLoginEmpleado() {
 		return this.controladorLoginEmpleado;
+	}
+
+	public void onGestorLogin(CentroExposicion centro) {
+		if (controladorGestor == null) {
+			controladorGestor = new ControladorGestor(frame, centro);
+		}
+	}
+
+	public ControladorGestor getControladorGestor() {
+		if (this.controladorGestor == null) {
+			return null;
+		}
+
+		return this.controladorGestor;
 	}
 }

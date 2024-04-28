@@ -32,7 +32,6 @@ public class MainVisual {
         
         centroExposicion1.loginGestor("123");
         centroExposicion1.addEmpleado(empleado1);
-        centroExposicion1.setContraseniaEmpleado("12345");
 
         expofy.addCentroExposicion(centroExposicion1);
         centroExposicion1.loginGestor("456");
