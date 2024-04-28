@@ -15,6 +15,9 @@ public class MainVisual {
     public static void main(String[] args) {
         Expofy expofy = Expofy.getInstance();
 
+        // Cliente 
+        expofy.registrarCliente("123", "123", false);
+
         // Centro de exposicion
         Gestor gestor1 = new Gestor("123");
         Set<Sala> salas = new HashSet<>();

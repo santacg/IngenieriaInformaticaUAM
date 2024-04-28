@@ -2,42 +2,39 @@ package GUI.vistas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
-public class PantallaPrincipal extends JPanel {
-    private JButton acceptButton;
-    private JButton buscarBoton;
-    private JButton gestorBoton;
-    private JButton empleadoBoton;
-    private JButton registrarBoton;
+public class LoginEmpleado extends JPanel {
     private JTextField textUser;
     private JPasswordField fieldPassword;
 
-    public PantallaPrincipal() {
+    public LoginEmpleado() {
         setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
 
+        // Componentes del formulario
         addTitle(constraints);
-        addUserFields(constraints);
+        addNIF(constraints);
         addPasswordField(constraints);
         addButtons(constraints);
     }
 
     private void addTitle(GridBagConstraints constraints) {
-        JLabel titleLabel = new JLabel("Expofy");
+        JLabel titleLabel = new JLabel("Login de empleados");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
+
         add(titleLabel, constraints);
+
     }
 
-    private void addUserFields(GridBagConstraints constraints) {
-        JLabel labelUser = new JLabel("Usuario:");
+    private void addNIF(GridBagConstraints constraints) {
+        JLabel labelUser = new JLabel("DNI/NIF:");
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -62,7 +59,7 @@ public class PantallaPrincipal extends JPanel {
     }
 
     public void addButtons(GridBagConstraints constraints) {
-        this.acceptButton = new JButton("Aceptar");
+        JButton acceptButton = new JButton("Aceptar");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 2;
@@ -70,15 +67,9 @@ public class PantallaPrincipal extends JPanel {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        this.buscarBoton = new JButton("Buscar exposicion");
-        this.gestorBoton = new JButton("Gestor");
-        this.empleadoBoton = new JButton("Empleado");
-        this.registrarBoton = new JButton("Registrarse");
+        JButton atrasBoton = new JButton("Atrás");
 
-        buttonPanel.add(this.buscarBoton);
-        buttonPanel.add(this.gestorBoton);
-        buttonPanel.add(this.empleadoBoton);
-        buttonPanel.add(this.registrarBoton);
+        buttonPanel.add(atrasBoton);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
@@ -86,22 +77,4 @@ public class PantallaPrincipal extends JPanel {
         constraints.anchor = GridBagConstraints.LAST_LINE_END;
         add(buttonPanel, constraints);
     }
-
-    public void setControlador(ActionListener cBuscar, ActionListener cAceptar, ActionListener cGestor,
-            ActionListener cEmpleado, ActionListener cRegistrar) {
-        this.buscarBoton.addActionListener(cBuscar);
-        this.acceptButton.addActionListener(cAceptar);
-        this.gestorBoton.addActionListener(cGestor);
-        this.empleadoBoton.addActionListener(cEmpleado);
-        this.registrarBoton.addActionListener(cRegistrar);
-    }
-
-    public String getUsuario() {
-        return this.textUser.getText();
-    }
-
-    public String getPassword() {
-        return new String(this.fieldPassword.getPassword());
-    }
-
 }
