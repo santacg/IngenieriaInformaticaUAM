@@ -29,8 +29,10 @@ public class MainVisual {
         CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                 LocalTime.of(21, 0, 0), "Madrid",
                 "123", "456", gestor1, salas);
-
+        
+        centroExposicion1.loginGestor("123");
         centroExposicion1.addEmpleado(empleado1);
+        centroExposicion1.setContraseniaEmpleado("12345");
 
         expofy.addCentroExposicion(centroExposicion1);
         centroExposicion1.loginGestor("456");

@@ -9,13 +9,13 @@ import GUI.vistas.*;
 
 public class ControladorLoginEmpleado {
     private Ventana frame;
-    private PantallaPrincipal vista;
+    private LoginEmpleado vista;
     private Expofy expofy;
 
     public ControladorLoginEmpleado(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
-        this.vista = frame.getVistaPantallaPrincipal();
+        this.vista = frame.getVistaLoginEmpleado();
     }
 
     private ActionListener acceptListener = new ActionListener() {
@@ -43,7 +43,7 @@ public class ControladorLoginEmpleado {
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
-            frame.panelPrevio();
+            frame.mostrarPanelPrevio();
         }
     };
 

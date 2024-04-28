@@ -74,7 +74,6 @@ public class LoginEmpleado extends JPanel {
 
         buttonPanel.add(atrasBoton);
 
-
         constraints.gridx = 0;
         constraints.gridy = 4;
         constraints.gridwidth = 2;
@@ -82,9 +81,22 @@ public class LoginEmpleado extends JPanel {
         add(buttonPanel, constraints);
     }
 
+    public String getUsuario() {
+        return this.textUser.getText();
+    }
+
+    public String getPassword() {
+        return new String(this.fieldPassword.getPassword());
+    }
+
     public void setControlador(ActionListener cAceptar, ActionListener cAtras){
         aceptarBoton.addActionListener(cAceptar);
         atrasBoton.addActionListener(cAtras);
+    }
+
+    public void update() {
+        textUser.setText("");
+        fieldPassword.setText("");
     }
     
 }

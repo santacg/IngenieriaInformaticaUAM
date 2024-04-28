@@ -46,6 +46,7 @@ public class ControladorLoginGestor {
 
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+            vista.update();
             frame.mostrarPanelPrevio();
         }
     };

@@ -60,7 +60,7 @@ public class Ventana extends JFrame {
 		cartas.add(vistaExposiciones, EXPOSICIONES);
 
 		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
-		cartas.add(vistaExposiciones, EMPLEADOPRINCIPAL);
+//		cartas.add(vistaExposiciones, EMPLEADOPRINCIPAL);
 
 		this.vistaClientePrincipal = new ClientePrincipal();
 		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
@@ -108,13 +108,8 @@ public class Ventana extends JFrame {
 		return vistaLoginGestor;
 	}
 
-	public JPanel getCardByName(String name) {
-		for (Component comp : cartas.getComponents()) {
-			if (comp.getName() != null && comp.getName().equals(name)) {
-				return (JPanel) comp;
-			}
-		}
-		return null;
+	public LoginEmpleado getVistaLoginEmpleado() {
+		return vistaLoginEmpleado;
 	}
 
 	public void setControlador(Controlador controlador) {
@@ -149,7 +144,7 @@ public class Ventana extends JFrame {
 
 	public void mostrarPanelPrevio() {
 		if (cartaPrevia != null) {
-			mostrarPanel(cartaActual);
+			mostrarPanel(cartaPrevia);
 		}
 	}
 
