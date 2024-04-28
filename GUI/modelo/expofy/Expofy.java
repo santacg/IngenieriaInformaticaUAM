@@ -406,7 +406,7 @@ public class Expofy implements Serializable {
         }
 
         try {
-            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, "Hora"),
+            TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),
                     "." + File.separator + "tmp");
         } catch (NonExistentFileException e) {
             return false;

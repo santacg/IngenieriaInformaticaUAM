@@ -193,7 +193,8 @@ public class Main {
 
             System.out.println("Resultado de la compra: " + resultadocompra);
             
-            Ticket ticket = new Ticket(exposicion1, 5.0, 2, LocalDate.of(2050,5,5), "HORA");
+            Ticket ticket = new Ticket(exposicion1, 5.0, 2, LocalDate.of(2050,5,5), new Hora(LocalDate.of(2021,1,2), LocalTime.of(9,0,0), 
+            LocalTime.of(10,0,0), 10, 25.00));
             System.out.println(ticket.dataTicket());
             TicketSystem.createTicket(ticket, "." + File.separator + "tmp");
 

@@ -2,29 +2,39 @@ package GUI.vistas;
 
 import javax.swing.*;
 
-import org.apache.commons.logging.Log;
-
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 import GUI.controlador.*;
 
 public class Ventana extends JFrame {
 
 	private JPanel cartas;
-	String cartaPrevia, cartaActual;
+	private String cartaPrevia, cartaActual;
+
 	private final static String LOGINGESTOR = "logInGestor";
 	private final static String LOGINEMPLEADO = "logInEmpleado";
 	private final static String EXPOSICIONES = "exposiciones";
-	private final static String SIGNUP = "signUp";
+	private final static String REGISTRO = "registro";
 	private final static String PANELPRINCIPAL = "panelPrincipal";
+
+	private final static String EMPLEADOPRINCIPAL = "empleadoPrincipal";
+	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
 
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
 	private PantallaPrincipal vistaPantallaPrincipal;
-	
+
 	private LoginEmpleado vistaLoginEmpleado;
 
 	private LoginGestor vistaLoginGestor;
+
+	private RegistroUsuario vistaRegistro;
+	private ControladorRegistro controladorRegistro;
+
+	private BusquedaExposiciones vistaExposiciones;
+
+	private EmpleadoPrincipal vistaEmpleadoPrincipal;
+
+	private ClientePrincipal vistaClientePrincipal;
 
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,6 +50,19 @@ public class Ventana extends JFrame {
 
 		this.vistaLoginGestor = new LoginGestor();
 		cartas.add(vistaLoginGestor, LOGINGESTOR);
+
+		this.vistaRegistro = new RegistroUsuario();
+		cartas.add(vistaRegistro, REGISTRO);
+
+		this.vistaExposiciones = new BusquedaExposiciones();
+		cartas.add(vistaExposiciones, EXPOSICIONES);
+
+		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
+		cartas.add(vistaExposiciones, EMPLEADOPRINCIPAL);
+
+		this.vistaClientePrincipal = new ClientePrincipal();
+		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
+
 		setContentPane(cartas);
 	}
 
@@ -49,6 +72,10 @@ public class Ventana extends JFrame {
 
 	public PantallaPrincipal getVistaPantallaPrincipal() {
 		return vistaPantallaPrincipal;
+	}
+
+	public RegistroUsuario getVistaRegistro() {
+		return vistaRegistro;
 	}
 
 	public String getLogInGestor() {
@@ -63,8 +90,16 @@ public class Ventana extends JFrame {
 		return EXPOSICIONES;
 	}
 
-	public String getSignUp() {
-		return SIGNUP;
+	public String getRegistro() {
+		return REGISTRO;
+	}
+
+	public String getEmpleadoPrincipal() {
+		return EMPLEADOPRINCIPAL;
+	}
+
+	public String getClientePrincipal() {
+		return CLIENTEPRINCIPAL;
 	}
 
 	public JPanel getCardByName(String name) {
@@ -79,25 +114,38 @@ public class Ventana extends JFrame {
 	public void setControlador(Controlador controlador) {
 		this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
 		this.vistaPantallaPrincipal.setControlador(
-			controladorPantallaPrincipal.getBuscaListener(),
-			controladorPantallaPrincipal.getAcceptListener(),
-			controladorPantallaPrincipal.getGestorListener(),
-			controladorPantallaPrincipal.getEmpleadoListener(),
-			controladorPantallaPrincipal.getRegistrarListener()
-		);
+				controladorPantallaPrincipal.getBuscaListener(),
+				controladorPantallaPrincipal.getAcceptListener(),
+				controladorPantallaPrincipal.getGestorListener(),
+				controladorPantallaPrincipal.getEmpleadoListener(),
+				controladorPantallaPrincipal.getRegistrarListener());
+
+		this.controladorRegistro = controlador.getControladorRegistro();
+		this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
+				controladorRegistro.getCancelarListener());
 	}
 
 	public void mostrarPanel(String carta) {
+		cartaPrevia = cartaActual;
+		cartaActual = carta;
+
 		CardLayout l = (CardLayout) cartas.getLayout();
 		l.show(cartas, carta);
 	}
 
+	public void mostrarPanelPrevio() {
+		if (cartaPrevia != null) {
+			mostrarPanel(cartaActual);
+		}
+	}
+
 	public void panelPrevio() {
 		String carta_aux;
-		CardLayout l = (CardLayout)cartas.getLayout();
+		CardLayout l = (CardLayout) cartas.getLayout();
 		l.show(cartas, cartaPrevia);
 		carta_aux = cartaPrevia;
 		cartaPrevia = cartaActual;
 		cartaActual = carta_aux;
 	}
+
 }

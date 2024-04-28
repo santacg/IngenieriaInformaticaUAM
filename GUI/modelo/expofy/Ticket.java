@@ -14,15 +14,13 @@ public class Ticket implements ITicketInfo {
     private String ticketDayTime;
     private double payedPrice;
 
-    public Ticket(Exposicion exposicion, double precioFinal, int nEntradas, LocalDate fecha, String hora) {
+    public Ticket(Exposicion exposicion, double precioFinal, int nEntradas, LocalDate fecha, Hora hora) {
         this.exposicion = exposicion;
         this.idTicket = nextId++;
         this.payedPrice = precioFinal;
         this.numberOfTickets = nEntradas;
-        /*
         this.ticketDayTime = fecha.toString() + " " + hora.getHoraInicio().toString();
-        */
-       this.ticketDayTime = hora;
+
     }
 
     public int getIdTicket() {

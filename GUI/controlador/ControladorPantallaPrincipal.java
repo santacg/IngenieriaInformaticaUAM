@@ -1,6 +1,5 @@
 package GUI.controlador;
 
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -14,40 +13,40 @@ public class ControladorPantallaPrincipal {
 
     public ControladorPantallaPrincipal(Ventana frame, Expofy expofy) {
         this.frame = frame;
-        this.vista = frame.getVistaPantallaPrincipal();
         this.expofy = expofy;
+        this.vista = frame.getVistaPantallaPrincipal();
     }
 
     private ActionListener buscaListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame, "Buscando...");
+            vista.update();
+            frame.mostrarPanel(frame.getExposiciones());
         }
     };
 
     private ActionListener gestorListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame, "Gestor...");
+            vista.update(); 
             frame.mostrarPanel(frame.getLogInGestor());
         }
     };
 
     private ActionListener empleadoListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame, "Empleado...");
+            vista.update();
             frame.mostrarPanel(frame.getLogInEmpleado());
         }
     };
 
     private ActionListener registrarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame, "Registrando...");
+            vista.update();
+            frame.mostrarPanel(frame.getRegistro());
         }
     };
 
     private ActionListener acceptListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame, "Aceptando...");
-
             String usuario = vista.getUsuario();
             String password = vista.getPassword();
             if (usuario.equals("") || password.equals("")) {
@@ -63,7 +62,8 @@ public class ControladorPantallaPrincipal {
             }
 
             JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
-
+            vista.update();
+            frame.mostrarPanel(frame.getClientePrincipal());
         }
     };
 

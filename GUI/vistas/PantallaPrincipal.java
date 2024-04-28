@@ -104,4 +104,8 @@ public class PantallaPrincipal extends JPanel {
         return new String(this.fieldPassword.getPassword());
     }
 
+    public void update() {
+        this.textUser.setText("");
+        this.fieldPassword.setText("");
+    }  
 }

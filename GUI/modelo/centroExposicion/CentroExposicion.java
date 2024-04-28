@@ -835,7 +835,7 @@ public class CentroExposicion implements Serializable {
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
 
-        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, "hora"),
+        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, hora),
                 "." + File.separator + "tmp");
         return true;
     }

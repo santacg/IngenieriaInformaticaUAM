@@ -15,7 +15,7 @@ public class MainVisual {
     public static void main(String[] args) {
         Expofy expofy = Expofy.getInstance();
 
-        // Cliente 
+        // Cliente
         expofy.registrarCliente("123", "123", false);
 
         // Centro de exposicion
@@ -24,14 +24,16 @@ public class MainVisual {
         Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
         salas.add(sala1);
 
+        Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", false, false, false, "AnorLondo");
+
         CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                 LocalTime.of(21, 0, 0), "Madrid",
                 "123", "456", gestor1, salas);
-                
+
         expofy.addCentroExposicion(centroExposicion1);
         centroExposicion1.loginGestor("456");
 
-        // Exposicion 
+        // Exposicion
         Set<SalaExposicion> salasExposicion = new HashSet<>();
         SalaExposicion salaExposicion1 = new SalaExposicion(sala1);
         salasExposicion.add(salaExposicion1);
@@ -45,7 +47,7 @@ public class MainVisual {
         for (Obra obra : centroExposicion1.getObras()) {
             salaExposicion1.addObra(obra);
         }
-        
+
         exposicion1.expoPublicar();
         expofy.persistirExpofy();
         System.out.println(expofy.toString());
