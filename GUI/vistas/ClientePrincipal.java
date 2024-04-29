@@ -1,10 +1,7 @@
 package GUI.vistas;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-
-import org.bouncycastle.crypto.engines.HC128Engine;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.*;
@@ -19,15 +16,14 @@ public class ClientePrincipal extends JPanel {
     private JButton comprarBoton;
     private JTable tablaExposiciones;
 
-    
     private JPanel sorteos;
-    
+
     private JPanel perfil;
     private JCheckBox checkBoxPublicidad;
     private JButton actualizarBoton;
     private JTextField fieldContrasena;
     private JTextField fieldContrasenaConfirmar;
-    
+
     public ClientePrincipal() {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -36,9 +32,9 @@ public class ClientePrincipal extends JPanel {
         this.sorteos = new JPanel();
         this.perfil = new JPanel();
 
-        tabbedPane.add("Exposiciones",buscarExposiciones);
-        tabbedPane.add("Sorteos",sorteos);
-        tabbedPane.add("Perfil",perfil);
+        tabbedPane.add("Exposiciones", buscarExposiciones);
+        tabbedPane.add("Sorteos", sorteos);
+        tabbedPane.add("Perfil", perfil);
 
         add(tabbedPane, BorderLayout.CENTER);
 
@@ -95,7 +91,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 0;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
-        
+
         perfil_data.add(titleLabel);
 
         JLabel labelUser = new JLabel("DNI/NIF: ");
@@ -131,7 +127,6 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 3;
         constraints.gridwidth = 1;
         perfil_data.add(checkBoxPublicidad, constraints);
-        
 
         JLabel lablelChangePassword = new JLabel("Nueva Contraseña: ");
         constraints.gridx = 0;
@@ -161,8 +156,8 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil_actualizar.add(actualizarBoton, constraints);
 
-        perfil.add(perfil_data,BorderLayout.CENTER);
-        perfil.add(perfil_actualizar,BorderLayout.SOUTH);
+        perfil.add(perfil_data, BorderLayout.CENTER);
+        perfil.add(perfil_actualizar, BorderLayout.SOUTH);
     }
 
     public void setControlador(ActionListener cComprar, ActionListener cActualizar) {
@@ -170,18 +165,19 @@ public class ClientePrincipal extends JPanel {
         actualizarBoton.addActionListener(cActualizar);
     }
 
-    public JTable getTablaExposiciones(){
+    public JTable getTablaExposiciones() {
         return tablaExposiciones;
     }
 
-    public JCheckBox getCheckBoxPublicidad(){
+    public JCheckBox getCheckBoxPublicidad() {
         return checkBoxPublicidad;
     }
 
-    public String getFieldContrasena(){
+    public String getFieldContrasena() {
         return fieldContrasena.getText();
     }
-    public String getFieldContrasenaConfirmar(){
+
+    public String getFieldContrasenaConfirmar() {
         return fieldContrasenaConfirmar.getText();
     }
 }

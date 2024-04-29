@@ -1,6 +1,5 @@
 package GUI.controlador;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.Ventana;
 

@@ -25,6 +25,7 @@ public class ControladorGestor {
         this.frame = frame;
         this.centro = centro;
         this.vista = frame.getVistaGestorPrincipal();
+
         mostrarExposiciones();
         mostrarSalas();
         mostrarObras();
@@ -108,7 +109,8 @@ public class ControladorGestor {
 
     private ActionListener agregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            vista.mostrarObraFormulario();
+            ControladorObraFormulario controladorObraFormulario = new ControladorObraFormulario(vista);
+            vista.setControladorObraFormulario(controladorObraFormulario);
         }
     };
 

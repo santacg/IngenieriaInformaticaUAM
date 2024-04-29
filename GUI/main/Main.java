@@ -25,7 +25,7 @@ public class Main {
 					frame.setControlador(controlador);
 					frame.mostrarPanel(frame.getPanelPrincipal());
 					
-					frame.setSize(600, 450); // Tamaño de la ventana
+					frame.setSize(900, 750); // Tamaño de la ventana
 
 					/* 
 					Las tres líneas sirven para mostrar la ventana en pantalla completa:

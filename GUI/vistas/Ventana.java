@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import GUI.controlador.*;
-import GUI.modelo.centroExposicion.Gestor;
 
 public class Ventana extends JFrame {
 
@@ -133,10 +132,6 @@ public class Ventana extends JFrame {
 		this.vistaGestorPrincipal = new GestorPrincipal();
 		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 		return vistaGestorPrincipal;
-	}
-
-	public ObraFormulario getVistaObraFormulario() {
-		return null;
 	}
 
 	public ClientePrincipal getVistaClientePrincipal() {

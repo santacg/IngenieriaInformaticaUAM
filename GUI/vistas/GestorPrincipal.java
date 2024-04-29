@@ -25,7 +25,7 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
 
-    private ObraFormulario obraFormulario;
+    private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;
 
     // Obras atributos
@@ -197,79 +197,26 @@ public class GestorPrincipal extends JPanel {
         }
     }
 
-    // Formulario obra
-
-    public void mostrarObraFormulario() {
-        JDialog formulario = new JDialog();
-        formulario.setTitle("Agregar obra");
-        formulario.setSize(500, 400);
-        formulario.setLocationRelativeTo(null); // Centrar el formulario
-        formulario.setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
-
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(10, 10, 10, 10); 
-
-        addCampo("Nombre:", obraNombre = new JTextField(20), panelFormulario, constraints, 0);
-        addCampo("Autores:", obraAutores = new JTextField(20), panelFormulario, constraints, 1);
-        addCampo("Descripcion:", obraDescripcion = new JTextField(20), panelFormulario, constraints, 2);
-        addCampo("Año:", obraAnio = new JTextField(20), panelFormulario, constraints, 3);
-        addCampo("Externa:", obraExterna = new JCheckBox(), panelFormulario, constraints, 4);
-        addCampo("Cuantia Seguro:", obraCuantiaSeguro = new JTextField(20), panelFormulario, constraints, 5);
-        addCampo("Numero Seguro:", obraNumeroSeguro = new JTextField(20), panelFormulario, constraints, 6);
-        addCombo("Estado:", obraEstado = new JComboBox<>(Estado.values()), panelFormulario, constraints, 7);
-        addCombo("Tipo de Obra:", obraTipoObra = new JComboBox<>(new String[] { "Tipo 1", "Tipo 2", "Tipo 3" }),
-                panelFormulario, constraints, 8);
-
-        addBotones(panelFormulario, constraints, 9);
-
-        formulario.add(panelFormulario);
-        formulario.setVisible(true);
-    }
-
-    private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
-        JLabel jlabel = new JLabel(label);
-        constraints.gridx = 0;
-        constraints.gridy = gridy;
-        constraints.gridwidth = 1;
-        panel.add(jlabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = gridy;
-        panel.add(comp, constraints);
-    }
-
-    private void addCombo(String label, JComboBox<?> combo, JPanel panel, GridBagConstraints constraints, int gridy) {
-        JLabel jlabel = new JLabel(label);
-        constraints.gridx = 0;
-        constraints.gridy = gridy;
-        constraints.gridwidth = 1;
-        panel.add(jlabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = gridy;
-        panel.add(combo, constraints);
-    }
-
-    private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
-        constraints.gridx = 0;
-        constraints.gridy = gridy;
-        constraints.gridwidth = 2;
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(btnGuardar);
-        buttonPanel.add(btnCancelar);
-
-        constraints.anchor = GridBagConstraints.CENTER;
-        panel.add(buttonPanel, constraints);
-    }
-
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
+    }
+
+    public ObraFormulario getVistaObraFormulario() {
+        this.vistaObraFormulario = new ObraFormulario();
+        return this.vistaObraFormulario;
+    }
+
+    public void setControladorObraFormulario(ControladorObraFormulario controlador) {
+        this.controladorObraFormulario = controlador;
+        if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaObraFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
+    }
+
+    public void mostrarObraFormulario() {
+
     }
 
 }

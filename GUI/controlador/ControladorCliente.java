@@ -5,8 +5,6 @@ import GUI.vistas.ClientePrincipal;
 import GUI.vistas.Ventana;
 
 import java.awt.event.*;
-import javax.swing.event.*;
-import java.awt.*;
 
 import javax.swing.JOptionPane;
 
