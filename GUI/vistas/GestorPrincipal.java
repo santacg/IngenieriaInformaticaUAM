@@ -4,8 +4,10 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
+import GUI.controlador.ControladorObraFormulario;
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
+import GUI.modelo.obra.Estado;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 
@@ -22,9 +24,28 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionEmpleados;
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
+
+    private ObraFormulario obraFormulario;
+    private ControladorObraFormulario controladorObraFormulario;
+
+    // Obras atributos
     private JButton obraEjecutarBtn;
     private JComboBox<String> obraComboAcciones;
     private JTable tablaObras;
+    private JButton obraAgregarBtn;
+
+    // Atributos formulario obra
+    private JTextField obraNombre;
+    private JTextField obraAutores;
+    private JTextField obraDescripcion;
+    private JTextField obraAnio;
+    private JCheckBox obraExterna;
+    private JTextField obraCuantiaSeguro;
+    private JTextField obraNumeroSeguro;
+    private JComboBox<Estado> obraEstado;
+    private JComboBox<String> obraTipoObra;
+
+    //
 
     public GestorPrincipal() {
         setLayout(new BorderLayout());
@@ -86,6 +107,8 @@ public class GestorPrincipal extends JPanel {
         this.gestionExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
+    // Exposiciones
+
     public void addTablaSalas(CentroExposicion centro) {
         String[] titulos = { "Nombre", "Aforo", "Climatizador", "Tomas de corriente", "Ancho", "Largo" };
 
@@ -115,7 +138,10 @@ public class GestorPrincipal extends JPanel {
         this.gestionSalas.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
     }
 
+    // Obras
+
     public void addPanelObras(CentroExposicion centroExposicion) {
+        // Tabla
         String[] titulos = { "Seleccionar", "Nombre", "Autor", "Descripcion", "Año", "Externa", "Cuantía Seguro",
                 "Número Seguro", "Estado", "Tipo de Obra" };
         Object[][] datos = construirDatosObras(centroExposicion);
@@ -124,14 +150,17 @@ public class GestorPrincipal extends JPanel {
         this.tablaObras = new JTable(modeloTablaObras);
         this.gestionObras.add(new JScrollPane(tablaObras), BorderLayout.CENTER);
 
+        // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.obraComboAcciones = new JComboBox<>(
                 new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra" });
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
+        this.obraAgregarBtn = new JButton("Agregar obra");
 
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(this.obraComboAcciones);
         panelAcciones.add(obraEjecutarBtn);
+        panelAcciones.add(obraAgregarBtn);
         this.gestionObras.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -154,10 +183,6 @@ public class GestorPrincipal extends JPanel {
         return data.toArray(new Object[0][]);
     }
 
-    public void setControlador(ActionListener cObrasEjecutar) {
-        this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
-    }
-
     public String getAccionSeleccionada() {
         return this.obraComboAcciones.getSelectedItem().toString();
     }
@@ -170,6 +195,81 @@ public class GestorPrincipal extends JPanel {
         for (int i = 0; i < this.tablaObras.getRowCount(); i++) {
             this.tablaObras.setValueAt(false, i, 0);
         }
+    }
+
+    // Formulario obra
+
+    public void mostrarObraFormulario() {
+        JDialog formulario = new JDialog();
+        formulario.setTitle("Agregar obra");
+        formulario.setSize(500, 400);
+        formulario.setLocationRelativeTo(null); // Centrar el formulario
+        formulario.setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
+
+        JPanel panelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(10, 10, 10, 10); 
+
+        addCampo("Nombre:", obraNombre = new JTextField(20), panelFormulario, constraints, 0);
+        addCampo("Autores:", obraAutores = new JTextField(20), panelFormulario, constraints, 1);
+        addCampo("Descripcion:", obraDescripcion = new JTextField(20), panelFormulario, constraints, 2);
+        addCampo("Año:", obraAnio = new JTextField(20), panelFormulario, constraints, 3);
+        addCampo("Externa:", obraExterna = new JCheckBox(), panelFormulario, constraints, 4);
+        addCampo("Cuantia Seguro:", obraCuantiaSeguro = new JTextField(20), panelFormulario, constraints, 5);
+        addCampo("Numero Seguro:", obraNumeroSeguro = new JTextField(20), panelFormulario, constraints, 6);
+        addCombo("Estado:", obraEstado = new JComboBox<>(Estado.values()), panelFormulario, constraints, 7);
+        addCombo("Tipo de Obra:", obraTipoObra = new JComboBox<>(new String[] { "Tipo 1", "Tipo 2", "Tipo 3" }),
+                panelFormulario, constraints, 8);
+
+        addBotones(panelFormulario, constraints, 9);
+
+        formulario.add(panelFormulario);
+        formulario.setVisible(true);
+    }
+
+    private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
+        JLabel jlabel = new JLabel(label);
+        constraints.gridx = 0;
+        constraints.gridy = gridy;
+        constraints.gridwidth = 1;
+        panel.add(jlabel, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = gridy;
+        panel.add(comp, constraints);
+    }
+
+    private void addCombo(String label, JComboBox<?> combo, JPanel panel, GridBagConstraints constraints, int gridy) {
+        JLabel jlabel = new JLabel(label);
+        constraints.gridx = 0;
+        constraints.gridy = gridy;
+        constraints.gridwidth = 1;
+        panel.add(jlabel, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = gridy;
+        panel.add(combo, constraints);
+    }
+
+    private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
+        constraints.gridx = 0;
+        constraints.gridy = gridy;
+        constraints.gridwidth = 2;
+        JButton btnGuardar = new JButton("Guardar");
+        JButton btnCancelar = new JButton("Cancelar");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnCancelar);
+
+        constraints.anchor = GridBagConstraints.CENTER;
+        panel.add(buttonPanel, constraints);
+    }
+
+    public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar) {
+        this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
+        this.obraAgregarBtn.addActionListener(cObrasAgregar);
     }
 
 }

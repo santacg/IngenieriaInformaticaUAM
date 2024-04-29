@@ -42,6 +42,7 @@ public class ControladorGestor {
         vista.addPanelObras(centro);
     }
 
+    // Obras 
     private ActionListener ejecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String accion = vista.getAccionSeleccionada();
@@ -105,7 +106,17 @@ public class ControladorGestor {
         }
     };
 
+    private ActionListener agregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            vista.mostrarObraFormulario();
+        }
+    };
+
     public ActionListener getEjecutarListener() {
         return ejecutarListener;
+    }
+
+    public ActionListener getAgregarListener() {
+        return agregarListener;
     }
 }

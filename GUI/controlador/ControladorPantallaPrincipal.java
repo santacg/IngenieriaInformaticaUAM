@@ -3,8 +3,7 @@ package GUI.controlador;
 import java.awt.event.*;
 import javax.swing.*;
 
-import GUI.modelo.expofy.Expofy;
-import GUI.modelo.expofy.ClienteRegistrado;
+import GUI.modelo.expofy.*;
 import GUI.vistas.*;
 
 public class ControladorPantallaPrincipal {

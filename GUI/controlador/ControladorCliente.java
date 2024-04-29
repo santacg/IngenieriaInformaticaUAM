@@ -39,6 +39,10 @@ public class ControladorCliente {
         return comprarListener;
     }
 
+    public ActionListener getActualizarDatos() {
+        return actualizarDatosListener;
+    }
+
     private ActionListener comprarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = vista.getTablaExposiciones().getSelectedRow();
@@ -55,4 +59,22 @@ public class ControladorCliente {
             }
         }
     };
+
+    private ActionListener actualizarDatosListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String mensaje = "";
+            if (vista.getCheckBoxPublicidad().isSelected()) {
+                cliente.setPublicidad(true);
+            } else {
+                cliente.setPublicidad(true);
+            }
+
+            String contrasena = vista.getFieldContrasena();
+            String contrasenaCofirmada = vista.getFieldContrasenaConfirmar();
+            if (contrasena.equals("") || contrasenaCofirmada.equals("")) {
+                
+            }
+        }
+    };
+
 }

@@ -135,18 +135,22 @@ public class Ventana extends JFrame {
 		return vistaGestorPrincipal;
 	}
 
+	public ObraFormulario getVistaObraFormulario() {
+		return null;
+	}
+
 	public ClientePrincipal getVistaClientePrincipal() {
 		return vistaClientePrincipal;
 	}
 
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
-		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener());
+		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener(), controladorGestor.getAgregarListener());
 	}
 
 	public void setControladorCliente(ControladorCliente controlador) {
 		this.controladorCliente = controlador;
-		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener());
+		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(), controladorCliente.getActualizarDatos());
 	}
 
 	public void setControlador(Controlador controlador) {

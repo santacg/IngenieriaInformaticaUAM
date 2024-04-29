@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
+import org.bouncycastle.crypto.engines.HC128Engine;
+
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
@@ -15,13 +17,17 @@ import java.util.ArrayList;
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
+    private JTable tablaExposiciones;
 
     
     private JPanel sorteos;
     
     private JPanel perfil;
     private JCheckBox checkBoxPublicidad;
-    private JTable tablaExposiciones;
+    private JButton actualizarBoton;
+    private JTextField fieldContrasena;
+    private JTextField fieldContrasenaConfirmar;
+    
     public ClientePrincipal() {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -76,7 +82,12 @@ public class ClientePrincipal extends JPanel {
     }
 
     public void addPerfil(ClienteRegistrado cliente) {
-        perfil.setLayout(new GridBagLayout());
+        perfil.setLayout(new BorderLayout());
+        JPanel perfil_actualizar = new JPanel();
+        perfil_actualizar.setLayout(new GridBagLayout());
+
+        JPanel perfil_data = new JPanel();
+        perfil_data.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         JLabel titleLabel = new JLabel("Perfil");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
@@ -85,54 +96,92 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
         
-        perfil.add(titleLabel);
+        perfil_data.add(titleLabel);
 
         JLabel labelUser = new JLabel("DNI/NIF: ");
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
-        perfil.add(labelUser, constraints);
+        perfil_data.add(labelUser, constraints);
 
         JLabel name = new JLabel(cliente.getNIF());
         constraints.gridx = 1;
         constraints.gridy = 1;
-        perfil.add(name, constraints);
+        perfil_data.add(name, constraints);
 
         JLabel labelPassword = new JLabel("Contraseña: ");
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 1;
-        perfil.add(labelPassword, constraints);
+        perfil_data.add(labelPassword, constraints);
 
         JLabel password = new JLabel(cliente.getContrasenia());
         constraints.gridx = 1;
         constraints.gridy = 2;
-        perfil.add(password, constraints);
+        perfil_data.add(password, constraints);
 
         JLabel labelPublicidad = new JLabel("Publicidad: ");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
-        perfil.add(labelPublicidad, constraints);
+        perfil_data.add(labelPublicidad, constraints);
 
         checkBoxPublicidad = new JCheckBox();
-        if (checkBoxPublicidad.isSelected()) {
-            cliente.setPublicidad(true);
-        }
-        else{
-            cliente.setPublicidad(true);
-        }
         constraints.gridx = 1;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
-        perfil.add(checkBoxPublicidad, constraints);
+        perfil_data.add(checkBoxPublicidad, constraints);
+        
+
+        JLabel lablelChangePassword = new JLabel("Nueva Contraseña: ");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        perfil_actualizar.add(lablelChangePassword, constraints);
+
+        fieldContrasena = new JTextField(20);
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        perfil_actualizar.add(fieldContrasena, constraints);
+
+        JLabel lablelChangePasswordConfirmar = new JLabel("Repetir Nueva Contraseña: ");
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        perfil_actualizar.add(lablelChangePasswordConfirmar, constraints);
+
+        fieldContrasenaConfirmar = new JTextField(20);
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        perfil_actualizar.add(fieldContrasenaConfirmar, constraints);
+
+        actualizarBoton = new JButton("Actualizar datos");
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        perfil_actualizar.add(actualizarBoton, constraints);
+
+        perfil.add(perfil_data,BorderLayout.CENTER);
+        perfil.add(perfil_actualizar,BorderLayout.SOUTH);
     }
 
-    public void setControlador(ActionListener cComprar) {
+    public void setControlador(ActionListener cComprar, ActionListener cActualizar) {
         comprarBoton.addActionListener(cComprar);
+        actualizarBoton.addActionListener(cActualizar);
     }
 
     public JTable getTablaExposiciones(){
         return tablaExposiciones;
+    }
+
+    public JCheckBox getCheckBoxPublicidad(){
+        return checkBoxPublicidad;
+    }
+
+    public String getFieldContrasena(){
+        return fieldContrasena.getText();
+    }
+    public String getFieldContrasenaConfirmar(){
+        return fieldContrasenaConfirmar.getText();
     }
 }
