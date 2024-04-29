@@ -141,12 +141,12 @@ public class Ventana extends JFrame {
 
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
-		this.vistaGestorPrincipal.setControlador();
+		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener());
 	}
 
 	public void setControladorCliente(ControladorCliente controlador) {
 		this.controladorCliente = controlador;
-		this.vistaClientePrincipal.setControlador();
+		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener());
 	}
 
 	public void setControlador(Controlador controlador) {

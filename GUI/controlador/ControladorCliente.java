@@ -4,6 +4,12 @@ import GUI.modelo.expofy.*;
 import GUI.vistas.ClientePrincipal;
 import GUI.vistas.Ventana;
 
+import java.awt.event.*;
+import javax.swing.event.*;
+import java.awt.*;
+
+import javax.swing.JOptionPane;
+
 public class ControladorCliente {
 
     private Ventana frame;
@@ -11,16 +17,42 @@ public class ControladorCliente {
     private Expofy expofy;
     private ClienteRegistrado cliente;
 
-    public ControladorCliente(Ventana frame, Expofy expofy, ClienteRegistrado cliente){
+    public ControladorCliente(Ventana frame, Expofy expofy, ClienteRegistrado cliente) {
         this.frame = frame;
         this.cliente = cliente;
         this.expofy = expofy;
         this.vista = frame.getVistaClientePrincipal();
 
         mostrarExposiciones();
+        mostrarPerfil();
     }
 
-    public void mostrarExposiciones(){
+    public void mostrarExposiciones() {
         vista.addTablaExposiciones(expofy);
     }
+
+    public void mostrarPerfil() {
+        vista.addPerfil(cliente);
+    }
+
+    public ActionListener getComprarListener() {
+        return comprarListener;
+    }
+
+    private ActionListener comprarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            int selectedRow = vista.getTablaExposiciones().getSelectedRow();
+            if (selectedRow >= 0) {
+                String nombreExposicion = (String) vista.getTablaExposiciones().getValueAt(selectedRow, 0);
+                JOptionPane.showMessageDialog(frame, "Mostrando horarios para la exposición: " + nombreExposicion);
+                // exposicion = expofy.getExposicionPorNombre(nombreExposicion);
+                // ControladorHorario controladorHorario = new ControladorHorario(exposicion);
+                // frame.setHorarioControlador(controladorHorario);
+                // vista.update();
+                // frame.mostrarPanel(frame.getHorario());
+            } else {
+                JOptionPane.showMessageDialog(frame, "Por favor, selecciona una exposición.");
+            }
+        }
+    };
 }

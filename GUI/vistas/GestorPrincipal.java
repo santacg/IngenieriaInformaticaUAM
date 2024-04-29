@@ -9,6 +9,7 @@ import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -20,6 +21,9 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionEmpleados;
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
+    private JButton obraEjecutarBtn;
+    private JComboBox<String> obraComboAcciones;
+    private JTable tablaObras;
 
     public GestorPrincipal() {
         setLayout(new BorderLayout());
@@ -116,16 +120,16 @@ public class GestorPrincipal extends JPanel {
         Object[][] datos = construirDatosObras(centroExposicion);
 
         ModeloTablaObras modeloTablaObras = new ModeloTablaObras(titulos, datos);
-        JTable tablaObras = new JTable(modeloTablaObras);
+        this.tablaObras = new JTable(modeloTablaObras);
         this.gestionObras.add(new JScrollPane(tablaObras), BorderLayout.CENTER);
 
         JPanel panelAcciones = new JPanel();
-        JComboBox<String> comboAcciones = new JComboBox<>(new String[] { "Retirar Obra" });
-        JButton ejecutarBtn = new JButton("Ejecutar accion");
+        JComboBox<String> comboAcciones = new JComboBox<>(new String[] { "Retirar Obra", "Almacenar Obras" });
+        this.obraEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(comboAcciones);
-        panelAcciones.add(ejecutarBtn);
+        panelAcciones.add(obraEjecutarBtn);
         this.gestionObras.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -148,15 +152,15 @@ public class GestorPrincipal extends JPanel {
         return data.toArray(new Object[0][]);
     }
 
-    private List<Obra> obtenerObrasSeleccionadas(CentroExposicion centroExposicion, ModeloTablaObras modeloTablaObras) {
+    private List<Obra> obtenerObrasSeleccionadas(CentroExposicion centroExposicion) {
         List<Obra> obras = new ArrayList<>();
         Integer i = 0;
         Boolean seleccionado;
-        for (i = 0; i < modeloTablaObras.getRowCount(); i++) {
-            seleccionado = (Boolean) modeloTablaObras.getValueAt(i, 0);
+        for (i = 0; i < this.tablaObras.getRowCount(); i++) {
+            seleccionado = (Boolean) tablaObras.getValueAt(i, 0);
             if (seleccionado) {
                 for (Obra obra : obras) {
-                    if (obra.equals(modeloTablaObras.getValueAt(i, 1))) {
+                    if (obra.equals(tablaObras.getValueAt(i, 1))) {
                         obras.add(obra);
                         break;
                     }
@@ -167,25 +171,16 @@ public class GestorPrincipal extends JPanel {
         return obras;
     }
 
-    private void ejecutarAccionSeleccionada(JComboBox<String> comboAcciones, ModeloTablaObras modeloTablaObras,
-            CentroExposicion centroExposicion) {
-        String accion = (String) comboAcciones.getSelectedItem();
-        List<Obra> obras = obtenerObrasSeleccionadas(centroExposicion, modeloTablaObras);
 
-        switch (accion) {
-            case "Retirar Obra":
-                for (Obra obra : obras) {
-                    obra.retirarObra();
-                }
-                break;
-            default:
-                break;
-        }
-
+    public void setControlador(ActionListener cObrasEjecutar) {
+        this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
     }
 
-    public void setControlador() {
-
+    public String getAccionSeleccionada() {
+        return this.obraComboAcciones.getSelectedItem().toString();
     }
 
+    public JTable getTablaObras() {
+        return this.tablaObras;
+    }
 }

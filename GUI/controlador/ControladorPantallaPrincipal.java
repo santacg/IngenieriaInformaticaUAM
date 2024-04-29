@@ -62,9 +62,9 @@ public class ControladorPantallaPrincipal {
                 return;
             }
             ClienteRegistrado clienteRegistrado = expofy.getClienteRegistrado(usuario);
-            // ControladorCliente controladorCliente = new ControladorCliente(frame, expofy, clienteRegistrado);
+            ControladorCliente controladorCliente = new ControladorCliente(frame, expofy, clienteRegistrado);
             JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
-            // frame.setControladorCliente(controladorCliente);
+            frame.setControladorCliente(controladorCliente);
             vista.update();
             frame.mostrarPanel(frame.getClientePrincipal());
         }

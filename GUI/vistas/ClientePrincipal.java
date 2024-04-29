@@ -9,21 +9,20 @@ import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ClientePrincipal extends JPanel {
-    /*
-    private JButton sorteosBoton;
-    private JButton perfilBoton;
-    private JButton exposicionesBoton;
-    */
     private JPanel buscarExposiciones;
+    private JButton comprarBoton;
     private JPanel sorteos;
     private JPanel perfil;
+    private JTable tablaExposiciones;
     public ClientePrincipal() {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
         this.buscarExposiciones = new JPanel();
+        buscarExposiciones.setLayout(new BorderLayout());
         this.sorteos = new JPanel();
         this.perfil = new JPanel();
 
@@ -54,16 +53,21 @@ public class ClientePrincipal extends JPanel {
             }
         }
         Object[][] datos = data.toArray(new Object[0][]);
-        JTable tablaExposiciones = new JTable(new DefaultTableModel(datos, titulos) {
+        tablaExposiciones = new JTable(new DefaultTableModel(datos, titulos) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return true;
+                return false;
             }
         });
 
+        JPanel panelBoton = new JPanel();
+        comprarBoton = new JButton("Comprar");
         tablaExposiciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaExposiciones.setFillsViewportHeight(true);
 
+        tablaExposiciones.getSelectedRow();
+        panelBoton.add(comprarBoton);
+        buscarExposiciones.add(panelBoton, BorderLayout.SOUTH);
         this.buscarExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
@@ -92,18 +96,18 @@ public class ClientePrincipal extends JPanel {
 
         JLabel labelPassword = new JLabel("Contraseña: ");
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         constraints.gridwidth = 1;
         perfil.add(labelPassword, constraints);
 
         JLabel password = new JLabel(cliente.getContrasenia());
         constraints.gridx = 1;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         perfil.add(password, constraints);
 
         JLabel labelPublicidad = new JLabel("Publicidad: ");
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = 3;
         constraints.gridwidth = 1;
         perfil.add(labelPublicidad, constraints);
 
@@ -114,56 +118,17 @@ public class ClientePrincipal extends JPanel {
         else{
             cliente.setPublicidad(true);
         }
-        constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridx = 1;
+        constraints.gridy = 3;
         constraints.gridwidth = 1;
         perfil.add(checkBoxPublicidad, constraints);
     }
 
-    public void setControlador() {
+    public void setControlador(ActionListener cComprar) {
+        comprarBoton.addActionListener(cComprar);
+    }
 
+    public JTable getTablaExposiciones(){
+        return tablaExposiciones;
     }
 }
-/*
-        setLayout(new GridBagLayout());
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(10, 10, 10, 10);
-
-        // Componentes del formulario
-        addTitle(constraints);
-        addButtons(constraints);
-    }
-
-    private void addTitle(GridBagConstraints constraints) {
-        JLabel titleLabel = new JLabel("Bienvenido, [NOMBRE CLIENTE]");
-        titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        constraints.anchor = GridBagConstraints.CENTER;
-
-        add(titleLabel, constraints);
-
-    }
-    public void addButtons(GridBagConstraints constraints) {
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        this.sorteosBoton = new JButton("Búsqueda de exposiciones");
-        this.exposicionesBoton = new JButton("Sorteos");
-        this.perfilBoton = new JButton("Venta de entradas");
-
-        buttonPanel.add(this.sorteosBoton);
-        buttonPanel.add(this.exposicionesBoton);
-        buttonPanel.add(this.perfilBoton);
-
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.LAST_LINE_END;
-        add(buttonPanel, constraints);
-    }
-}
-
-*/
