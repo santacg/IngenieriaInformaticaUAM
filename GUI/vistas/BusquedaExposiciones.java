@@ -51,9 +51,7 @@ public class BusquedaExposiciones extends JPanel {
         tablaExposiciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaExposiciones.setFillsViewportHeight(true);
 
-        JScrollPane scrollPane = new JScrollPane(tablaExposiciones);
-
-        add(scrollPane, BorderLayout.CENTER);
+        add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
 }

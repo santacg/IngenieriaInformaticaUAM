@@ -1,11 +1,6 @@
 package GUI.controlador;
 
-import java.util.Set;
-
-import javax.swing.JFrame;
-
 import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.exposicion.Exposicion;
 import GUI.vistas.GestorPrincipal;
 import GUI.vistas.Ventana;
 
@@ -19,9 +14,21 @@ public class ControladorGestor {
         this.frame = frame;
         this.centro = centro;
         this.vista = frame.getVistaGestorPrincipal();
+        mostrarExposiciones();
+        mostrarSalas();
+        mostrarObras();
     }
 
-    public void setExposiciones(Set<Exposicion> exposiciones) {
-        vista.setExposiciones(exposiciones);
+    public void mostrarExposiciones() {
+        vista.addTablaExposiciones(centro);
     }
+
+    public void mostrarSalas() {
+        vista.addTablaSalas(centro);
+    }
+
+    public void mostrarObras() {
+        vista.addPanelObras(centro);
+    }
+
 }

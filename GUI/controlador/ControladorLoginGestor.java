@@ -34,6 +34,8 @@ public class ControladorLoginGestor {
             for (CentroExposicion centro : expofy.getCentrosExposicion()) {
                 if (centro.loginGestor(password) == true) {
                     JOptionPane.showMessageDialog(frame, "Bienvenido gestor!");
+                    ControladorGestor controladorGestor = new ControladorGestor(frame, centro);
+                    frame.setControladorGestor(controladorGestor);
                     vista.update();
                     frame.mostrarPanel(frame.getGestorPrincipal());
                     return;

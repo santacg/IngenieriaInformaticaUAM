@@ -39,8 +39,8 @@ public class Controlador {
 		return this.controladorLoginEmpleado;
 	}
 
-
 	public ControladorGestor getControladorGestor() {
 		return this.controladorGestor;
 	}
+
 }

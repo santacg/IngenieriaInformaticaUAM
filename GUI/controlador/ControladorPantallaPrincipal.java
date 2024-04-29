@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import GUI.modelo.expofy.Expofy;
+import GUI.modelo.expofy.ClienteRegistrado;
 import GUI.vistas.*;
 
 public class ControladorPantallaPrincipal {
@@ -60,8 +61,10 @@ public class ControladorPantallaPrincipal {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
+            ClienteRegistrado clienteRegistrado = expofy.getClienteRegistrado(usuario);
+            // ControladorCliente controladorCliente = new ControladorCliente(frame, expofy, clienteRegistrado);
             JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
+            // frame.setControladorCliente(controladorCliente);
             vista.update();
             frame.mostrarPanel(frame.getClientePrincipal());
         }

@@ -89,16 +89,6 @@ public abstract class Obra implements Serializable {
                 return false;
         } else if (!nombre.equals(other.nombre))
             return false;
-        if (anio == null) {
-            if (other.anio != null)
-                return false;
-        } else if (!anio.equals(other.anio))
-            return false;
-        if (autores == null) {
-            if (other.autores != null)
-                return false;
-        } else if (!autores.equals(other.autores))
-            return false;
         return true;
     }
 
@@ -315,6 +305,10 @@ public abstract class Obra implements Serializable {
 
         this.estado = Estado.RESTAURACION;
         return true;
+    }
+
+    public String getTipoObra() {
+        return this.getClass().getSimpleName();
     }
 
     /**

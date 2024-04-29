@@ -38,6 +38,7 @@ public class Ventana extends JFrame {
 	private EmpleadoPrincipal vistaEmpleadoPrincipal;
 
 	private ClientePrincipal vistaClientePrincipal;
+	private ControladorCliente controladorCliente;
 
 	private GestorPrincipal vistaGestorPrincipal;
 	private ControladorGestor controladorGestor;
@@ -68,9 +69,6 @@ public class Ventana extends JFrame {
 
 		this.vistaClientePrincipal = new ClientePrincipal();
 		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
-
-		this.vistaGestorPrincipal = new GestorPrincipal();
-		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 
 		setContentPane(cartas);
 	}
@@ -128,7 +126,27 @@ public class Ventana extends JFrame {
 	}
 
 	public GestorPrincipal getVistaGestorPrincipal() {
+		if (this.vistaGestorPrincipal != null) {
+			return vistaGestorPrincipal;
+		}
+
+		this.vistaGestorPrincipal = new GestorPrincipal();
+		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 		return vistaGestorPrincipal;
+	}
+
+	public ClientePrincipal getVistaClientePrincipal() {
+		return vistaClientePrincipal;
+	}
+
+	public void setControladorGestor(ControladorGestor controlador) {
+		this.controladorGestor = controlador;
+		this.vistaGestorPrincipal.setControlador();
+	}
+
+	public void setControladorCliente(ControladorCliente controlador) {
+		this.controladorCliente = controlador;
+		this.vistaClientePrincipal.setControlador();
 	}
 
 	public void setControlador(Controlador controlador) {
@@ -150,9 +168,6 @@ public class Ventana extends JFrame {
 
 		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
 		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(), controladorLoginEmpleado.getAtrasListener());
-
-		this.controladorGestor = controlador.getControladorGestor();
-		this.vistaGestorPrincipal.setControlador();
 	}
 
 	public void mostrarPanel(String carta) {
@@ -168,14 +183,4 @@ public class Ventana extends JFrame {
 			mostrarPanel(cartaPrevia);
 		}
 	}
-
-	public void panelPrevio() {
-		String carta_aux;
-		CardLayout l = (CardLayout) cartas.getLayout();
-		l.show(cartas, cartaPrevia);
-		carta_aux = cartaPrevia;
-		cartaPrevia = cartaActual;
-		cartaActual = carta_aux;
-	}
-
 }

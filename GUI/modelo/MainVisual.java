@@ -19,11 +19,15 @@ public class MainVisual {
         expofy.registrarCliente("123", "123", false);
 
         // Centro de exposicion
+        // Gestor
         Gestor gestor1 = new Gestor("123");
+
+        // Salas 
         Set<Sala> salas = new HashSet<>();
         Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
         salas.add(sala1);
 
+        // Empleado
         Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", false, false, false, "AnorLondo");
 
         CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
