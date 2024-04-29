@@ -12,10 +12,6 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import java.awt.event.*;
-import javax.swing.event.*;
-import java.awt.*;
-
 
 public class ControladorCliente {
 

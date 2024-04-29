@@ -28,17 +28,14 @@ public class Ventana extends JFrame {
 	private LoginEmpleado vistaLoginEmpleado;
 	private ControladorLoginEmpleado controladorLoginEmpleado;
 
-	private EnviarMensajes vistaEnviarMensajes;
-	private ControladorEmpleado controladorEmpleado;
-	private AjustarClimatizacion AjustarClimatizacion;
+	private BusquedaExposiciones vistaBusquedaExposiciones;
+	private ControladorBusquedaExposiciones controladorBusquedaExposiciones;
 
 	private LoginGestor vistaLoginGestor;
 	private ControladorLoginGestor controladorLoginGestor;
 
 	private RegistroUsuario vistaRegistro;
 	private ControladorRegistro controladorRegistro;
-
-	private BusquedaExposiciones vistaExposiciones;
 
 	private EmpleadoPrincipal vistaEmpleadoPrincipal;
 
@@ -47,6 +44,10 @@ public class Ventana extends JFrame {
 
 	private GestorPrincipal vistaGestorPrincipal;
 	private ControladorGestor controladorGestor;
+
+	private EnviarMensajes vistaEnviarMensajes;
+	private ControladorEmpleado controladorEmpleado;
+	private AjustarClimatizacion AjustarClimatizacion;
 
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,8 +73,8 @@ public class Ventana extends JFrame {
 		this.vistaRegistro = new RegistroUsuario();
 		cartas.add(vistaRegistro, REGISTRO);
 
-		this.vistaExposiciones = new BusquedaExposiciones();
-		cartas.add(vistaExposiciones, EXPOSICIONES);
+		this.vistaBusquedaExposiciones = new BusquedaExposiciones();
+		cartas.add(vistaBusquedaExposiciones, EXPOSICIONES);
 
 		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
 		cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
@@ -166,6 +167,10 @@ public class Ventana extends JFrame {
 		return vistaClientePrincipal;
 	}
 
+	public BusquedaExposiciones getVistaBusquedaExposiciones() {
+		return vistaBusquedaExposiciones;
+	}
+
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
 		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener(),
@@ -180,7 +185,13 @@ public class Ventana extends JFrame {
 
 	public void setControladorEmpleado(ControladorEmpleado controlador) {
 		this.controladorEmpleado = controlador;
-		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(), controlador.getClimatizacionListener());
+		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
+				controlador.getClimatizacionListener());
+	}
+
+	public void setControladorBusquedaExposiciones(ControladorBusquedaExposiciones controlador) {
+		this.controladorBusquedaExposiciones = controlador;
+		this.vistaBusquedaExposiciones.setControlador(controlador.getAtrasListener());
 	}
 
 	public void setControlador(Controlador controlador) {
@@ -203,6 +214,9 @@ public class Ventana extends JFrame {
 		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
 		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
 				controladorLoginEmpleado.getAtrasListener());
+
+		this.controladorBusquedaExposiciones = controlador.getControladorBusquedaExposiciones();
+		this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
 	}
 
 	public void mostrarPanel(String carta) {

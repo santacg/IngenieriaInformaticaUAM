@@ -1,14 +1,8 @@
 package GUI.vistas;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
-import org.bouncycastle.crypto.engines.HC128Engine;
-
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.Exposicion;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
