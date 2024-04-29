@@ -1,6 +1,7 @@
 package GUI.vistas;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
@@ -119,16 +120,17 @@ public class GestorPrincipal extends JPanel {
                 "Número Seguro", "Estado", "Tipo de Obra" };
         Object[][] datos = construirDatosObras(centroExposicion);
 
-        ModeloTablaObras modeloTablaObras = new ModeloTablaObras(titulos, datos);
+        AbstractTableModel modeloTablaObras = new ModeloTablaObras(titulos, datos);
         this.tablaObras = new JTable(modeloTablaObras);
         this.gestionObras.add(new JScrollPane(tablaObras), BorderLayout.CENTER);
 
         JPanel panelAcciones = new JPanel();
-        JComboBox<String> comboAcciones = new JComboBox<>(new String[] { "Retirar Obra", "Almacenar Obras" });
+        this.obraComboAcciones = new JComboBox<>(
+                new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra" });
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));
-        panelAcciones.add(comboAcciones);
+        panelAcciones.add(this.obraComboAcciones);
         panelAcciones.add(obraEjecutarBtn);
         this.gestionObras.add(panelAcciones, BorderLayout.SOUTH);
     }
@@ -152,26 +154,6 @@ public class GestorPrincipal extends JPanel {
         return data.toArray(new Object[0][]);
     }
 
-    private List<Obra> obtenerObrasSeleccionadas(CentroExposicion centroExposicion) {
-        List<Obra> obras = new ArrayList<>();
-        Integer i = 0;
-        Boolean seleccionado;
-        for (i = 0; i < this.tablaObras.getRowCount(); i++) {
-            seleccionado = (Boolean) tablaObras.getValueAt(i, 0);
-            if (seleccionado) {
-                for (Obra obra : obras) {
-                    if (obra.equals(tablaObras.getValueAt(i, 1))) {
-                        obras.add(obra);
-                        break;
-                    }
-                }
-            }
-        }
-
-        return obras;
-    }
-
-
     public void setControlador(ActionListener cObrasEjecutar) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
     }
@@ -183,4 +165,11 @@ public class GestorPrincipal extends JPanel {
     public JTable getTablaObras() {
         return this.tablaObras;
     }
+
+    public void deseleccionarTabla() {
+        for (int i = 0; i < this.tablaObras.getRowCount(); i++) {
+            this.tablaObras.setValueAt(false, i, 0);
+        }
+    }
+
 }

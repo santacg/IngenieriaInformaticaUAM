@@ -15,8 +15,12 @@ import java.util.ArrayList;
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
+
+    
     private JPanel sorteos;
+    
     private JPanel perfil;
+    private JCheckBox checkBoxPublicidad;
     private JTable tablaExposiciones;
     public ClientePrincipal() {
         setLayout(new BorderLayout());
@@ -111,7 +115,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil.add(labelPublicidad, constraints);
 
-        JCheckBox checkBoxPublicidad = new JCheckBox();
+        checkBoxPublicidad = new JCheckBox();
         if (checkBoxPublicidad.isSelected()) {
             cliente.setPublicidad(true);
         }

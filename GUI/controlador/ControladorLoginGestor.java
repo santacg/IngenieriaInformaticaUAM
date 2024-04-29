@@ -24,7 +24,7 @@ public class ControladorLoginGestor {
     private ActionListener aceptarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String password = vista.getPassword();
-           
+
             if (password.equals("")) {
                 JOptionPane.showMessageDialog(frame, "Debes introducir una contraseña.", "Error",
                         JOptionPane.ERROR_MESSAGE);
