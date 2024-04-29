@@ -22,7 +22,7 @@ public class MainVisual {
         // Gestor
         Gestor gestor1 = new Gestor("123");
 
-        // Salas 
+        // Salas
         Set<Sala> salas = new HashSet<>();
         Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
         salas.add(sala1);
@@ -33,7 +33,7 @@ public class MainVisual {
         CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                 LocalTime.of(21, 0, 0), "Madrid",
                 "123", "456", gestor1, salas);
-        
+
         centroExposicion1.loginGestor("123");
         centroExposicion1.addEmpleado(empleado1);
 
@@ -56,6 +56,8 @@ public class MainVisual {
         }
 
         exposicion1.expoPublicar();
+        expofy.enviarNotificacionUsuario("Hola qué tal, esto es una Notificacion de prueba a un cliente en concreto",
+                expofy.getClienteRegistrado("123"));
         expofy.persistirExpofy();
         System.out.println(expofy.toString());
     }

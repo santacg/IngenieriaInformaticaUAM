@@ -2,6 +2,7 @@ package GUI.vistas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class EmpleadoPrincipal extends JPanel {
     private JButton enviarMensajeBoton;
@@ -47,5 +48,9 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.LAST_LINE_END;
         add(buttonPanel, constraints);
+    }
+    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion) {
+        this.enviarMensajeBoton.addActionListener(cMensaje);
+        this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
     }
 }

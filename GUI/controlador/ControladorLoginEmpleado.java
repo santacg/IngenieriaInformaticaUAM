@@ -30,6 +30,8 @@ public class ControladorLoginEmpleado {
             for (CentroExposicion centro : expofy.getCentrosExposicion()) {
                 if (centro.loginEmpleado(usuario, password) == true) {
                     JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
+                    ControladorEmpleado controladorEmpleado = new ControladorEmpleado(frame, centro);
+                    frame.setControladorEmpleado(controladorEmpleado);
                     vista.update();
                     frame.mostrarPanel(frame.getEmpleadoPrincipal());
                     return;

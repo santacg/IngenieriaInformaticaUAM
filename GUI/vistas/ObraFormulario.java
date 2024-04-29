@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import GUI.modelo.obra.Estado;
-
 public class ObraFormulario extends JDialog {
 
     private JTextField obraNombre;
@@ -16,13 +14,16 @@ public class ObraFormulario extends JDialog {
     private JCheckBox obraExterna;
     private JTextField obraCuantiaSeguro;
     private JTextField obraNumeroSeguro;
+    private JTextField obraAlto;
+    private JTextField obraAncho;
+    private JTextField obraRangoTemperatura;
+    private JTextField obraRangoHumedad;
     private JTextField cuadroTecnica;
-    private JTextField esculturaAltura;
+    private JTextField esculturaProfundidad;
     private JTextField esculturaMaterial;
     private JCheckBox fotografiaColor;
     private JTextField audiovisualDuracion;
     private JTextField audiovisualIdioma;
-    private JComboBox<Estado> obraEstado;
     private String tipoObraSeleccionada;
     private JButton guardarBtn;
     private JButton cancelarBtn;
@@ -51,15 +52,23 @@ public class ObraFormulario extends JDialog {
         addCampo("Externa:", obraExterna = new JCheckBox(), panelFormulario, constraints, 4);
         addCampo("Cuantia Seguro:", obraCuantiaSeguro = new JTextField(32), panelFormulario, constraints, 5);
         addCampo("Numero Seguro:", obraNumeroSeguro = new JTextField(32), panelFormulario, constraints, 6);
+        addCampo("Alto", obraAlto = new JTextField(32), panelFormulario, constraints, 7);
+        addCampo("Ancho", obraAncho = new JTextField(32), panelFormulario, constraints, 8);
 
-        int gridy = 8;
+        if (tipoObraSeleccionada.equals("Escultura") || tipoObraSeleccionada.equals("Cuadro")
+            || tipoObraSeleccionada.equals("Fotografia")) {
+            addCampo("Rango temperatura", obraRangoTemperatura = new JTextField(32), panelFormulario, constraints, 9);
+            addCampo("Rango Humedad", obraRangoHumedad = new JTextField(32), panelFormulario, constraints, 10);
+        }
+
+        int gridy = 11;
         switch (tipoObraSeleccionada) {
             case "Cuadro":
                 addCampo("Técnica", cuadroTecnica = new JTextField(32), panelFormulario, constraints, gridy++);
                 break;
             case "Escultura":
                 addCampo("Material", esculturaMaterial = new JTextField(32), panelFormulario, constraints, gridy++);
-                addCampo("Altura", esculturaAltura = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Profundidad", esculturaProfundidad = new JTextField(32), panelFormulario, constraints, gridy++);
                 break;
             case "Fotografía":
                 addCampo("Color", fotografiaColor = new JCheckBox(), panelFormulario, constraints, gridy++);
@@ -75,7 +84,7 @@ public class ObraFormulario extends JDialog {
     }
 
     public String formularioTipoObra() {
-        String[] opcionesObras = { "Cuadro", "Escultura", "Fotografía", "Audiovisual" };
+        String[] opcionesObras = { "Cuadro", "Escultura", "Fotografia", "Audiovisual" };
         JComboBox<String> comboObras = new JComboBox<>(opcionesObras);
 
         int seleccion = JOptionPane.showConfirmDialog(null, comboObras, "Seleccione un tipo de obra para añadir",
@@ -144,10 +153,6 @@ public class ObraFormulario extends JDialog {
         return obraNumeroSeguro.getText();
     }
 
-    public Estado getObraEstado() {
-        return (Estado) obraEstado.getSelectedItem();
-    }
-
     public String getTipoDeObra() {
         return tipoObraSeleccionada;
     }
@@ -160,8 +165,8 @@ public class ObraFormulario extends JDialog {
         return esculturaMaterial.getText();
     }
 
-    public String getEsculturaAltura() {
-        return esculturaAltura.getText();
+    public String getEsculturaProfundidad() {
+        return esculturaProfundidad.getText();
     }
 
     public boolean getFotografiaColor() {
@@ -174,6 +179,46 @@ public class ObraFormulario extends JDialog {
 
     public String getAudiovisualIdioma() {
         return audiovisualIdioma.getText();
+    }
+
+    public String getObraAlto() {
+        return obraAlto.getText();
+    }
+
+    public String getObraAncho() {
+        return obraAncho.getText();
+    }
+
+    public String getObraRangoTemperatura() {
+        return obraRangoTemperatura.getText();
+    }
+
+    public String getObraTemperaturaMin() {
+        String rango = obraRangoTemperatura.getText();
+        String[] valores = rango.split("-");
+        return valores[0];
+    }
+
+    public String getObraTemperaturaMax() {
+        String rango = obraRangoTemperatura.getText();
+        String[] valores = rango.split("-");
+        return valores[1];
+    }
+
+    public String getObraHumedadMin() {
+        String rango = obraRangoHumedad.getText();
+        String[] valores = rango.split("-");
+        return valores[0];
+    }
+
+    public String getObraHumedadMax() {
+        String rango = obraRangoHumedad.getText();
+        String[] valores = rango.split("-");
+        return valores[1];
+    }
+
+    public String getObraRangoHumedad() {
+        return obraRangoHumedad.getText();
     }
 
     public void setControlador(ActionListener cGuardar, ActionListener cCancelar) {

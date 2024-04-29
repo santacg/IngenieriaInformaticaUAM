@@ -1,7 +1,10 @@
 package GUI.vistas;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+
+import org.bouncycastle.crypto.engines.HC128Engine;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.*;
@@ -16,48 +19,51 @@ public class ClientePrincipal extends JPanel {
     private JButton comprarBoton;
     private JTable tablaExposiciones;
 
+    
     private JPanel sorteos;
 
+    private JPanel notificaciones;
+    private JTable tablaNotificaciones;
+    
     private JPanel perfil;
     private JCheckBox checkBoxPublicidad;
     private JButton actualizarBoton;
     private JTextField fieldContrasena;
     private JTextField fieldContrasenaConfirmar;
 
+    private JButton cerrarSesionBoton;
+    
     public ClientePrincipal() {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
         this.buscarExposiciones = new JPanel();
         buscarExposiciones.setLayout(new BorderLayout());
+
+        this.notificaciones = new JPanel();
+        notificaciones.setLayout(new BorderLayout());
+
         this.sorteos = new JPanel();
+
         this.perfil = new JPanel();
 
-        tabbedPane.add("Exposiciones", buscarExposiciones);
-        tabbedPane.add("Sorteos", sorteos);
-        tabbedPane.add("Perfil", perfil);
+        JPanel panelCerrarSesion = new JPanel();
+        panelCerrarSesion.setLayout(new BorderLayout());
+        cerrarSesionBoton = new JButton("Cerrar Sesión");
+        panelCerrarSesion.add(cerrarSesionBoton, BorderLayout.EAST);
 
+        tabbedPane.add("Exposiciones",buscarExposiciones);
+        tabbedPane.add("Sorteos",sorteos);
+        tabbedPane.add("Perfil",perfil);
+        tabbedPane.add("Notificaciones",notificaciones);
+        add(panelCerrarSesion, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
 
     }
 
-    public void addTablaExposiciones(Expofy expofy) {
+    public void addTablaExposiciones(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Descripcion", "Fecha Inicio", "Fecha Fin", "Precio", "Nombre Centro",
                 "Localizacion" };
 
-        ArrayList<Object[]> data = new ArrayList<>();
-        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-            for (Exposicion exposicion : centro.getExposiciones()) {
-                data.add(new Object[] {
-                        exposicion.getNombre(),
-                        exposicion.getDescripcion(),
-                        exposicion.getFechaInicio(),
-                        exposicion.getFechaFin(),
-                        exposicion.getPrecio(),
-                        centro.getNombre(),
-                        centro.getLocalizacion()
-                });
-            }
-        }
         Object[][] datos = data.toArray(new Object[0][]);
         tablaExposiciones = new JTable(new DefaultTableModel(datos, titulos) {
             @Override
@@ -71,13 +77,29 @@ public class ClientePrincipal extends JPanel {
         tablaExposiciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaExposiciones.setFillsViewportHeight(true);
 
-        tablaExposiciones.getSelectedRow();
         panelBoton.add(comprarBoton);
         buscarExposiciones.add(panelBoton, BorderLayout.SOUTH);
         this.buscarExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
-    public void addPerfil(ClienteRegistrado cliente) {
+    public void addTablaNotificaciones(ArrayList<Object[]> data) {
+        String[] titulos = { "Fecha", "Mensaje"};
+
+        Object[][] datos = data.toArray(new Object[0][]);
+        tablaNotificaciones = new JTable(new DefaultTableModel(datos, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        tablaNotificaciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tablaNotificaciones.setFillsViewportHeight(true);
+
+        this.notificaciones.add(new JScrollPane(tablaNotificaciones), BorderLayout.CENTER);
+    }
+
+    public void addPerfil(String clienteNIF, String clienteContrasena, boolean clientePublicidad) {
         perfil.setLayout(new BorderLayout());
         JPanel perfil_actualizar = new JPanel();
         perfil_actualizar.setLayout(new GridBagLayout());
@@ -91,7 +113,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 0;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
-
+        
         perfil_data.add(titleLabel);
 
         JLabel labelUser = new JLabel("DNI/NIF: ");
@@ -100,7 +122,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil_data.add(labelUser, constraints);
 
-        JLabel name = new JLabel(cliente.getNIF());
+        JLabel name = new JLabel(clienteNIF);
         constraints.gridx = 1;
         constraints.gridy = 1;
         perfil_data.add(name, constraints);
@@ -111,7 +133,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil_data.add(labelPassword, constraints);
 
-        JLabel password = new JLabel(cliente.getContrasenia());
+        JLabel password = new JLabel(clienteContrasena);
         constraints.gridx = 1;
         constraints.gridy = 2;
         perfil_data.add(password, constraints);
@@ -123,10 +145,12 @@ public class ClientePrincipal extends JPanel {
         perfil_data.add(labelPublicidad, constraints);
 
         checkBoxPublicidad = new JCheckBox();
+        checkBoxPublicidad.setSelected(clientePublicidad);
         constraints.gridx = 1;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
         perfil_data.add(checkBoxPublicidad, constraints);
+        
 
         JLabel lablelChangePassword = new JLabel("Nueva Contraseña: ");
         constraints.gridx = 0;
@@ -156,28 +180,28 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil_actualizar.add(actualizarBoton, constraints);
 
-        perfil.add(perfil_data, BorderLayout.CENTER);
-        perfil.add(perfil_actualizar, BorderLayout.SOUTH);
+        perfil.add(perfil_data,BorderLayout.CENTER);
+        perfil.add(perfil_actualizar,BorderLayout.SOUTH);
     }
 
-    public void setControlador(ActionListener cComprar, ActionListener cActualizar) {
+    public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion) {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
+        cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 
-    public JTable getTablaExposiciones() {
+    public JTable getTablaExposiciones(){
         return tablaExposiciones;
     }
 
-    public JCheckBox getCheckBoxPublicidad() {
+    public JCheckBox getCheckBoxPublicidad(){
         return checkBoxPublicidad;
     }
 
-    public String getFieldContrasena() {
+    public String getFieldContrasena(){
         return fieldContrasena.getText();
     }
-
-    public String getFieldContrasenaConfirmar() {
+    public String getFieldContrasenaConfirmar(){
         return fieldContrasenaConfirmar.getText();
     }
 }

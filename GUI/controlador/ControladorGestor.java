@@ -109,7 +109,7 @@ public class ControladorGestor {
 
     private ActionListener agregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            ControladorObraFormulario controladorObraFormulario = new ControladorObraFormulario(vista);
+            ControladorObraFormulario controladorObraFormulario = new ControladorObraFormulario(vista, centro);
             vista.setControladorObraFormulario(controladorObraFormulario);
         }
     };

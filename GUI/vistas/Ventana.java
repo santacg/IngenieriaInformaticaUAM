@@ -13,6 +13,8 @@ public class Ventana extends JFrame {
 
 	private final static String LOGINGESTOR = "logInGestor";
 	private final static String LOGINEMPLEADO = "logInEmpleado";
+	private final static String ENVIARMENSAJES = "enviarMensajes";
+	private final static String AJUSTARCLIMATIZACION = "ajustarClimatizacion";
 	private final static String EXPOSICIONES = "exposiciones";
 	private final static String REGISTRO = "registro";
 	private final static String PANELPRINCIPAL = "panelPrincipal";
@@ -25,6 +27,10 @@ public class Ventana extends JFrame {
 
 	private LoginEmpleado vistaLoginEmpleado;
 	private ControladorLoginEmpleado controladorLoginEmpleado;
+
+	private EnviarMensajes vistaEnviarMensajes;
+	private ControladorEmpleado controladorEmpleado;
+	private AjustarClimatizacion AjustarClimatizacion;
 
 	private LoginGestor vistaLoginGestor;
 	private ControladorLoginGestor controladorLoginGestor;
@@ -53,6 +59,12 @@ public class Ventana extends JFrame {
 
 		this.vistaLoginEmpleado = new LoginEmpleado();
 		cartas.add(vistaLoginEmpleado, LOGINEMPLEADO);
+
+		this.vistaEnviarMensajes = new EnviarMensajes();
+		cartas.add(vistaEnviarMensajes, ENVIARMENSAJES);
+
+		this.AjustarClimatizacion = new AjustarClimatizacion();
+		cartas.add(AjustarClimatizacion, AJUSTARCLIMATIZACION);
 
 		this.vistaLoginGestor = new LoginGestor();
 		cartas.add(vistaLoginGestor, LOGINGESTOR);
@@ -120,7 +132,23 @@ public class Ventana extends JFrame {
 		return vistaLoginEmpleado;
 	}
 
-	public EmpleadoPrincipal getVistEmpleadoPrincipal() {
+	public EnviarMensajes getVistaEnviarMensajes() {
+		return vistaEnviarMensajes;
+	}
+
+	public AjustarClimatizacion getVistaAjustarClimatizacion() {
+		return AjustarClimatizacion;
+	}
+
+	public String getEnviarMensajes() {
+		return ENVIARMENSAJES;
+	}
+
+	public String getAjustarClimatizacion() {
+		return AJUSTARCLIMATIZACION;
+	}
+
+	public EmpleadoPrincipal getVistaEmpleadoPrincipal() {
 		return vistaEmpleadoPrincipal;
 	}
 
@@ -140,12 +168,19 @@ public class Ventana extends JFrame {
 
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
-		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener(), controladorGestor.getAgregarListener());
+		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener(),
+				controladorGestor.getAgregarListener());
 	}
 
 	public void setControladorCliente(ControladorCliente controlador) {
 		this.controladorCliente = controlador;
-		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(), controladorCliente.getActualizarDatos());
+		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(),
+				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion());
+	}
+
+	public void setControladorEmpleado(ControladorEmpleado controlador) {
+		this.controladorEmpleado = controlador;
+		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(), controlador.getClimatizacionListener());
 	}
 
 	public void setControlador(Controlador controlador) {
@@ -166,7 +201,8 @@ public class Ventana extends JFrame {
 				controladorLoginGestor.getAtrasListener());
 
 		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
-		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(), controladorLoginEmpleado.getAtrasListener());
+		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
+				controladorLoginEmpleado.getAtrasListener());
 	}
 
 	public void mostrarPanel(String carta) {
