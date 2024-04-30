@@ -10,6 +10,7 @@ public class Controlador {
 	private ControladorLoginGestor controladorLogInGestor;
 	private ControladorLoginEmpleado controladorLoginEmpleado;
 	private ControladorGestor controladorGestor;
+	private ControladorBusquedaExposiciones controladorBusquedaExposiciones;
 	private Ventana frame;
 	private Expofy expofy;
 
@@ -20,6 +21,7 @@ public class Controlador {
 		this.controladorRegistro = new ControladorRegistro(frame, expofy);
 		this.controladorLogInGestor	= new ControladorLoginGestor(frame, expofy);
 		this.controladorLoginEmpleado = new ControladorLoginEmpleado(frame, expofy);
+		this.controladorBusquedaExposiciones = new ControladorBusquedaExposiciones(frame, expofy);
 	}
 
 	public ControladorPantallaPrincipal getControladorPantallaPrincipal() {
@@ -40,6 +42,10 @@ public class Controlador {
 
 	public ControladorGestor getControladorGestor() {
 		return this.controladorGestor;
+	}
+
+	public ControladorBusquedaExposiciones getControladorBusquedaExposiciones() {
+		return this.controladorBusquedaExposiciones;
 	}
 
 }
