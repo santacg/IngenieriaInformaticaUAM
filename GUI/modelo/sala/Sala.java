@@ -43,9 +43,9 @@ public class Sala implements Serializable {
      * instancia de {@code Sala} y ambos tienen el mismo nombre.
      * 
      * @param obj el objeto con el que se compara esta {@code Sala} para la
-     * igualdad.
+     *            igualdad.
      * @return {@code true} si el objeto proporcionado es igual a esta sala;
-     * {@code false} en caso contrario.
+     *         {@code false} en caso contrario.
      */
     @Override
     public boolean equals(Object obj) {
@@ -274,21 +274,17 @@ public class Sala implements Serializable {
     }
 
     /**
-     * Elimina la última subsala añadida a esta sala. Si no hay subSalas, no realiza
-     * ninguna acción.
+     * Elimina esta subsala de la sala padre. Si la subsala no tiene sala padre, no
+     * se
+     * elimina.
      */
     public void removeSubsala() {
-        if (subSalas.size() == 0) {
-            System.out.println("No hay subSalas que eliminar.");
-            return;
-        }
 
-        Sala subSala = subSalas.get(subSalas.size() - 1);
-        this.aforo += subSala.getAforo();
-        this.ancho += subSala.getAncho();
-        this.largo += subSala.getLargo();
-        this.tomasElectricidad += subSala.getTomasElectricidad();
-        subSalas.remove(subSala);
+        this.salaPadre.aforo += this.aforo;
+        this.salaPadre.ancho += this.ancho;
+        this.salaPadre.largo += this.largo;
+        this.salaPadre.tomasElectricidad += this.tomasElectricidad;
+        this.salaPadre.subSalas.remove(this);
     }
 
     /**
@@ -311,7 +307,6 @@ public class Sala implements Serializable {
         System.out.println("No se ha encontrado la subsala con nombre " + name);
     }
 
-
     /**
      * Elimina todas las subSalas asociadas a esta sala.
      * 
@@ -326,6 +321,12 @@ public class Sala implements Serializable {
         subSalas.clear();
     }
 
+    /**
+     * Obtiene una subSala con el nombre dado.
+     * 
+     * @param name El nombre de la subSala a obtener.
+     * @return La subSala con el nombre dado, o null si no se encuentra.
+     */
     public Sala getSubSalaPorNombre(String name) {
         for (Sala subSala : subSalas) {
             if (subSala.getNombre().equals(name)) {

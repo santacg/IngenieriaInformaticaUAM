@@ -323,17 +323,24 @@ public class CentroExposicion implements Serializable {
         return null;
     }
 
-    /**
-     * Obtiene una sub-sala por su nombre.
-     * @param nombre el nombre de la sub-sala a buscar
-     * @return la sub-sala con el nombre proporcionado, o null si no existe
-     */
     public Sala getSubSalaPorNombre(String nombre) {
         for (Sala sala : salas) {
-            for (Sala subSala : sala.getSubSalas()) {
-                if (subSala.getNombre().equals(nombre)) {
-                    return subSala;
-                }
+            Sala resultado = buscarSalaRecursiva(sala, nombre);
+            if (resultado != null) {
+                return resultado;
+            }
+        }
+        return null;
+    }
+
+    private Sala buscarSalaRecursiva(Sala sala, String nombreBuscado) {
+        if (sala.getNombre().equals(nombreBuscado)) {
+            return sala;
+        }
+        for (Sala subSala : sala.getSubSalas()) {
+            Sala resultado = buscarSalaRecursiva(subSala, nombreBuscado);
+            if (resultado != null) {
+                return resultado;
             }
         }
         return null;
@@ -527,14 +534,13 @@ public class CentroExposicion implements Serializable {
         addSorteo(sorteo);
     }
 
-
     public void confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
         SorteoExpo sorteo = new SorteoExpo(exposicion, fechaSorteo, n_entradas);
         addSorteo(sorteo);
     }
 
-
-    public void confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,LocalDate fechaInicio, LocalDate fechaFin) {
+    public void confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,
+            LocalDate fechaInicio, LocalDate fechaFin) {
         SorteoFechas sorteo = new SorteoFechas(exposicion, fechaSorteo, n_entradas, fechaInicio, fechaFin);
         addSorteo(sorteo);
     }
@@ -651,7 +657,7 @@ public class CentroExposicion implements Serializable {
         return empleados;
     }
 
-        /**
+    /**
      * Obtiene un empleado del centro de exposición a partir de su NIF.
      *
      * @return El empleado o null si no existe.

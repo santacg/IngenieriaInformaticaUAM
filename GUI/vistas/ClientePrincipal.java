@@ -188,14 +188,14 @@ public class ClientePrincipal extends JPanel {
         cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 
-    public CompraFormulario getVistaCompraFormulario(String exposicionNombre) {
-        this.vistaCompraFormulario = new CompraFormulario(exposicionNombre);
+    public CompraFormulario getVistaCompraFormulario(String exposicionNombre, double precio) {
+        this.vistaCompraFormulario = new CompraFormulario(exposicionNombre, precio);
         return this.vistaCompraFormulario;
     }
 
     public void setCompraFormularioControlador(ControladorCompraFormulario controlador){
         this.controladorCompraFormulario = controlador;
-        this.vistaCompraFormulario.setControlador(null, null);
+        this.vistaCompraFormulario.setControlador(controladorCompraFormulario.getSiguienteListener(), controladorCompraFormulario.getCancelarListener());
     }
 
     public JTable getTablaExposiciones(){

@@ -24,7 +24,7 @@ public class ControladorCompraFormulario {
         this.exposicion = exposicion;
         this.frame = frame;
         this.cliente = cliente;
-        this.vista = frame.getVistaCompraFormulario(exposicion.getNombre());
+        this.vista = frame.getVistaCompraFormulario(exposicion.getNombre(), exposicion.getPrecio());
 
     }
 

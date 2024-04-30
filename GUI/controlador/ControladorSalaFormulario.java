@@ -53,7 +53,8 @@ public class ControladorSalaFormulario {
                 case "Añadir Subsala":
                     int selectedRow = frame.getTablaSalas().getSelectedRow();
 
-                    if (selectedRow >= 0) {
+                    if (selectedRow != -1) {
+                        frame.getTablaSalas().clearSelection();
                         String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
                         Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
                         // Esto es muy inificiente, habría que replantear salas y subsalas posiblemente
@@ -71,20 +72,43 @@ public class ControladorSalaFormulario {
                                     JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
-                        // Actualizacion
                         frame.actualizarTablaSalas(centroExposicion);
-
                     } else {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir una subsala.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
                     JOptionPane.showMessageDialog(vista, "Subsala añadida correctamente.", "Subsala añadida",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Eliminar Sala":
                     selectedRow = frame.getTablaSalas().getSelectedRow();
+
+                    if (selectedRow != -1) {
+                        frame.getTablaSalas().clearSelection();
+                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
+
+                        // Si es null es una subsala
+                        if (salaSeleccionada == null) {
+                            salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
+                            salaSeleccionada.removeSubsala();
+                        } else { 
+                            if (centroExposicion.removeSala(salaSeleccionada) == false) {
+                            JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                            }
+                        }
+                        frame.actualizarTablaSalas(centroExposicion);
+                    } else {
+                        JOptionPane.showMessageDialog(vista, "Selecciona una sala para eliminar.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    JOptionPane.showMessageDialog(vista, "Sala eliminada correctamente.", "Sala eliminada",
+                            JOptionPane.INFORMATION_MESSAGE);
                     break;
             }
             vista.dispose();

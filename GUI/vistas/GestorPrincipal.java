@@ -111,7 +111,7 @@ public class GestorPrincipal extends JPanel {
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala",
-                "Eliminar Subsala", "Eliminar Subsalas" });
+                "Eliminar Subsalas" });
         this.salaEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));

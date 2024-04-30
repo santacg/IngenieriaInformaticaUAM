@@ -7,29 +7,24 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class CompraFormulario extends JDialog {
+public class ConfirmarCompra extends JDialog {
 
     private JLabel exposicionNombre;
-    private JLabel precioPorEntrada;
-    private JComboBox<Integer> nEntradas;
+    private JLabel fechaExpo;
+    private JLabel hora;
 
-    private JComboBox<Integer> diaExpo;
-    private JComboBox<String> mesExpo;
-    private JComboBox<Integer> anioExpo;
-    private JComboBox<String> hora;
+    private JLabel numeroTarjetadeCredito;
+    private JLabel fechaTarj;
+    private JLabel cvv;
 
-    private JTextField numeroTarjetadeCredito;
-    private JComboBox<Integer> diaTarj;
-    private JComboBox<String> mesTarj;
-    private JComboBox<Integer> anioTarj;
-    private JTextField cvv;
+    private JLabel codigoSorteo;
 
-    private JTextField codigoSorteo;
+    private JLabel precioFinal;
 
-    private JButton siguienteBtn;
-    private JButton cancelarBtn;
+    private JButton confirmarBtn;
+    private JButton atrasBtn;
 
-    public CompraFormulario(String nombreExposicion, double precio) {
+    public ConfirmarCompra(String nombreExposicion) {
         setTitle("Comprar entrada");
         setSize(700, 600);
         setLocationRelativeTo(null); // Centrar el formulario
@@ -39,17 +34,8 @@ public class CompraFormulario extends JDialog {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
-
-        // Creación del JComboBox para los meses
-        hora = new JComboBox<>();
-        String[] horas = { "9:00", "10:00", "11:00", "12:00", "13:00", "14:00",
-                "15:00", "16:00", "17:00", "18:00", "18:00", "19:00", "20:00" };
-        for (String h : horas) {
-            hora.addItem(h);
-        }
-
+        /*
         addCampo("Exposición:", exposicionNombre = new JLabel(nombreExposicion), panelFormulario, constraints, 0, 1);
-        addCampo("Precio:", precioPorEntrada = new JLabel(String.valueOf(precio)), panelFormulario, constraints, 0, 1);
         addCampoFecha("Fecha:", diaExpo, mesExpo, anioExpo, panelFormulario, constraints, 1);
         addCampo("Hora:", hora, panelFormulario, constraints, 2, 1);
         addCampo("Numero de tarjeta de credito:", numeroTarjetadeCredito = new JTextField(32), panelFormulario,
@@ -63,6 +49,7 @@ public class CompraFormulario extends JDialog {
 
         addBotones(panelFormulario, constraints, gridy);
         add(panelFormulario);
+        */
     }
 
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy, int gridwidth) {
@@ -113,7 +100,7 @@ public class CompraFormulario extends JDialog {
         constraints.gridy = gridy;
         panel.add(aniosBox, constraints);
     }
-
+    /*
     private void addCampoFechaTarjeta(String label, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
         constraints.gridx = 0;
@@ -155,10 +142,11 @@ public class CompraFormulario extends JDialog {
     public String getexposicionNombre() {
         return exposicionNombre.getText();
     }
+    */
 
-    public void setControlador(ActionListener cSiguiente, ActionListener cCancelar) {
-        this.siguienteBtn.addActionListener(cSiguiente);
-        this.cancelarBtn.addActionListener(cCancelar);
+    public void setControlador(ActionListener cConfirmar, ActionListener cAtras) {
+        this.confirmarBtn.addActionListener(cConfirmar);
+        this.atrasBtn.addActionListener(cAtras);
         setVisible(true);
     }
 

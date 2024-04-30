@@ -17,7 +17,7 @@ public class Main {
 					Controlador controlador = new Controlador(frame, expofy);
 					frame.setControlador(controlador);
 					frame.mostrarPanel(frame.getPanelPrincipal());
-					frame.setLocationRelativeTo(null);
+					frame.setLocation(150,50);
 					frame.setSize(1280, 720); 
 					frame.setVisible(true);
 					

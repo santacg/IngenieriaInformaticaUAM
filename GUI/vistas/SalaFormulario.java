@@ -19,7 +19,6 @@ public class SalaFormulario extends JDialog {
     private JButton cancelarBtn;
 
     public SalaFormulario(String accion) {
-        setTitle("Agregar sala");
         setSize(600, 700);
         setLocationRelativeTo(null); // Centrar el formulario
         setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
@@ -35,6 +34,9 @@ public class SalaFormulario extends JDialog {
                 break;
             case "Añadir Subsala":
                 formularioAñadirSubsala(panelFormulario, constraints);
+                break;
+            case "Eliminar Sala":
+                confirmarEliminacion(panelFormulario, constraints);
                 break;
         }
 
@@ -59,6 +61,10 @@ public class SalaFormulario extends JDialog {
         addCampo("Ancho: ", ancho = new JTextField(20), panelFormulario, constraints, 2);
         addCampo("Largo: ", largo = new JTextField(20), panelFormulario, constraints, 3);
     }
+
+    public void confirmarEliminacion(JPanel panelFormulario, GridBagConstraints constraints) {
+        panelFormulario.add(new JLabel("¿Estás seguro de que quieres eliminar esta sala?"), constraints);
+    }
     
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
@@ -76,7 +82,7 @@ public class SalaFormulario extends JDialog {
         constraints.gridx = 0;
         constraints.gridy = gridy;
         constraints.gridwidth = 2;
-        this.aceptarBtn = new JButton("Guardar");
+        this.aceptarBtn = new JButton("Aceptar");
         this.cancelarBtn = new JButton("Cancelar");
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
