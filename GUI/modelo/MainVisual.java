@@ -11,6 +11,15 @@ import java.time.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Clase MainVisual.
+ * Esta clase se encarga de crear un entorno visual de la aplicación Expofy
+ * estableciendo un centro de exposición con un gestor, un empleado, una sala,
+ * una exposición y una obra. Además, se registrará un cliente y se enviarán
+ * notificaciones a dicho cliente.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class MainVisual {
         public static void main(String[] args) {
                 Expofy expofy = Expofy.getInstance();
@@ -29,8 +38,8 @@ public class MainVisual {
                 sala1.addSubsala(7.0, 5.0, 4, 35);
 
                 // Empleado
-                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", true, false, false, "AnorLondo");
-
+                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", true, false, false,
+                                "AnorLondo");
 
                 CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                                 LocalTime.of(21, 0, 0), "Madrid",
@@ -61,6 +70,8 @@ public class MainVisual {
                 for (Obra obra : centroExposicion1.getObras()) {
                         salaExposicion1.addObra(obra);
                 }
+
+                centroExposicion1.confgiurarSorteoExposicion(exposicion2, LocalDate.of(2030,5,2),2);
 
                 exposicion1.expoPublicar();
                 exposicion2.expoPublicar();

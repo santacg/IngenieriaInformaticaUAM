@@ -38,12 +38,23 @@ public class ControladorExposicionFormulario {
         this.centroExposicion = centroExposicion;
         this.exposicion = exposicion;
         this.accion = accion;
+
     }
 
     public ControladorExposicionFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;
         this.vista = frame.getVistaExposicionFormulario("Agregar Exposicion");
         this.centroExposicion = centroExposicion;
+        mostrarObras();
+        mostrarSalas();
+    }
+
+    public void mostrarObras() {
+        vista.mostrarObras(centroExposicion);
+    }
+
+    public void mostrarSalas() {
+        vista.mostrarSalas(centroExposicion);
     }
 
     /**
@@ -56,7 +67,7 @@ public class ControladorExposicionFormulario {
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
                             vista.getFechaFin(), vista.getDescripcion(), null, vista.getTipoExpo(), vista.getPrecio());
                     if (centroExposicion.addExposicion(expoNueva))
-                    break;
+                        break;
                 case "Cancelar Exposicion":
                     if (exposicion.expoCancelar(vista.getFechaInicio()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede cancelar la exposición.", "Error",

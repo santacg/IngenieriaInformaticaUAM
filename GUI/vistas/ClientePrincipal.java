@@ -12,7 +12,7 @@ import GUI.controlador.ControladorCompraFormulario;
 /**
  * Clase ClientePrincipal.
  * Implementa la interfaz de la vista principal del cliente.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class ClientePrincipal extends JPanel {
@@ -24,9 +24,11 @@ public class ClientePrincipal extends JPanel {
     private ControladorCompraFormulario controladorCompraFormulario;
 
     private JPanel sorteos;
+    private JTable tablaSorteos;
 
     private JPanel notificaciones;
     private JTable tablaNotificaciones;
+    private JButton inscribirseBoton;
 
     private JPanel perfil;
     private JCheckBox checkBoxPublicidad;
@@ -49,6 +51,7 @@ public class ClientePrincipal extends JPanel {
         notificaciones.setLayout(new BorderLayout());
 
         this.sorteos = new JPanel();
+        sorteos.setLayout(new BorderLayout());
 
         this.perfil = new JPanel();
 
@@ -96,7 +99,8 @@ public class ClientePrincipal extends JPanel {
     /**
      * Método que añade una tabla de notificaciones a la vista.
      * 
-     * @param data ArrayList de objetos que contiene los datos de las notificaciones.
+     * @param data ArrayList de objetos que contiene los datos de las
+     *             notificaciones.
      */
     public void addTablaNotificaciones(ArrayList<Object[]> data) {
         String[] titulos = { "Fecha", "Mensaje" };
@@ -116,11 +120,40 @@ public class ClientePrincipal extends JPanel {
     }
 
     /**
+     * Método que añade una tabla de sorteos a la vista.
+     * 
+     * @param data ArrayList de objetos que contiene los datos de las
+     *             sorteos.
+     */
+    public void addTablaSorteos(ArrayList<Object[]> data) {
+        String[] titulos = { "Fecha de inscripción", "Exposición", "Descripcion", "Fecha Inicio", "Fecha Fin",
+                "Nombre Centro", "Localizacion" };
+
+        Object[][] datos = data.toArray(new Object[0][]);
+        tablaSorteos = new JTable(new DefaultTableModel(datos, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        JPanel panelBoton = new JPanel();
+        inscribirseBoton = new JButton("Inscribirse");
+        tablaSorteos.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tablaSorteos.setFillsViewportHeight(true);
+
+        panelBoton.add(inscribirseBoton);
+        sorteos.add(panelBoton, BorderLayout.SOUTH);
+        this.sorteos.add(new JScrollPane(tablaSorteos), BorderLayout.CENTER);
+    }
+
+    /**
      * Método que añade un perfil a la vista.
      * 
-     * @param clienteNIF DNI/NIF del cliente.
+     * @param clienteNIF        DNI/NIF del cliente.
      * @param clienteContrasena Contraseña del cliente.
-     * @param clientePublicidad Booleano que indica si el cliente quiere recibir publicidad.
+     * @param clientePublicidad Booleano que indica si el cliente quiere recibir
+     *                          publicidad.
      */
     public void addPerfil(String clienteNIF, String clienteContrasena, boolean clientePublicidad) {
         perfil.setLayout(new BorderLayout());
@@ -209,21 +242,23 @@ public class ClientePrincipal extends JPanel {
     /**
      * Método que establece los controladores de los botones de la vista.
      * 
-     * @param cComprar Controlador del botón de comprar.
-     * @param cActualizar Controlador del botón de actualizar.
+     * @param cComprar      Controlador del botón de comprar.
+     * @param cActualizar   Controlador del botón de actualizar.
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
+     * @param cInscribirse  Controlador del botón de inscribirse.
      */
-    public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion) {
+    public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion, ActionListener cInscribirse) {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
+        inscribirseBoton.addActionListener(cInscribirse);
     }
 
     /**
      * Método que devuelve la vista de compra de entradas.
      * 
      * @param exposicionNombre Nombre de la exposición.
-     * @param precio Precio de la entrada.
+     * @param precio           Precio de la entrada.
      * @return Vista de compra de entradas.
      */
     public CompraFormulario getVistaCompraFormulario(String exposicionNombre, double precio) {
@@ -246,20 +281,48 @@ public class ClientePrincipal extends JPanel {
                 controladorCompraFormulario.getHoraListener());
     }
 
-    /+*
-    
+    /**
+     * Método que devuelve la tabla de exposiciones.
+     * 
+     * @return Tabla de exposiciones.
+     */
     public JTable getTablaExposiciones() {
         return tablaExposiciones;
     }
 
+    /**
+     * Método que devuelve la tabla de sorteos.
+     * 
+     * @return Tabla de sorteos.
+     */
+    public JTable getTablaSorteos() {
+        return tablaSorteos;
+    }
+
+    /**
+     * Método que devuelve la CheckBox de publicidad.
+     * 
+     * @return CheckBox de publicidad.
+     */
     public JCheckBox getCheckBoxPublicidad() {
         return checkBoxPublicidad;
     }
 
+    /**
+     * Método que devuelve la contraseña introducida en el campo de texto.
+     * 
+     * @return Contraseña introducida en el campo de texto.
+     */
     public String getFieldContrasena() {
         return fieldContrasena.getText();
     }
 
+    /**
+     * Método que devuelve la confirmación de la contraseña introducida en el campo
+     * de texto.
+     * 
+     * @return Confirmación de la contraseña introducida en el campo de texto.
+     */
     public String getFieldContrasenaConfirmar() {
         return fieldContrasenaConfirmar.getText();
     }

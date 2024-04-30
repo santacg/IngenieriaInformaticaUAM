@@ -12,7 +12,6 @@ import GUI.modelo.sala.Sala;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -377,7 +376,8 @@ public class GestorPrincipal extends JPanel {
      * @param cObrasEjecutar        Controlador de ejecutar acciones de obras.
      * @param cObrasAgregar         Controlador de agregar obras.
      * @param cSalasEjecutar        Controlador de ejecutar acciones de salas.
-     * @param cExposicionesEjecutar Controlador de ejecutar acciones de exposiciones.
+     * @param cExposicionesEjecutar Controlador de ejecutar acciones de
+     *                              exposiciones.
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar) {

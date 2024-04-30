@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * Clase SalaFormulario
  * Implementa la interfaz gráfica de un formulario para añadir o eliminar salas
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class SalaFormulario extends JDialog {
@@ -59,7 +59,8 @@ public class SalaFormulario extends JDialog {
      * Método que crea el formulario para añadir una sala
      * 
      * @param panelFormulario JPanel en el que se añadirán los campos
-     * @param constraints GridBagConstraints que definen la posición de los campos
+     * @param constraints     GridBagConstraints que definen la posición de los
+     *                        campos
      */
     public void formularioAñadirSala(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Nombre:", nombre = new JTextField(20), panelFormulario, constraints, 0);
@@ -76,7 +77,8 @@ public class SalaFormulario extends JDialog {
      * Método que crea el formulario para añadir una subsala
      * 
      * @param panelFormulario JPanel en el que se añadirán los campos
-     * @param constraints GridBagConstraints que definen la posición de los campos
+     * @param constraints     GridBagConstraints que definen la posición de los
+     *                        campos
      */
     public void formularioAñadirSubsala(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Aforo: ", aforo = new JTextField(20), panelFormulario, constraints, 0);
@@ -89,20 +91,21 @@ public class SalaFormulario extends JDialog {
      * Método que crea el formulario para confirmar la eliminación de una sala
      * 
      * @param panelFormulario JPanel en el que se añadirán los campos
-     * @param constraints GridBagConstraints que definen la posición de los campos
+     * @param constraints     GridBagConstraints que definen la posición de los
+     *                        campos
      */
     public void confirmarEliminacion(JPanel panelFormulario, GridBagConstraints constraints) {
         panelFormulario.add(new JLabel("¿Estás seguro de que quieres eliminar esta sala?"), constraints);
     }
-    
+
     /**
      * Método que añade un campo al formulario
      * 
-     * @param label String que indica el nombre del campo
-     * @param comp Component que se añadirá al formulario
-     * @param panel JPanel en el que se añadirá el campo
+     * @param label       String que indica el nombre del campo
+     * @param comp        Component que se añadirá al formulario
+     * @param panel       JPanel en el que se añadirá el campo
      * @param constraints GridBagConstraints que definen la posición del campo
-     * @param gridy int que indica la fila en la que se añadirá el campo
+     * @param gridy       int que indica la fila en la que se añadirá el campo
      */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
@@ -119,9 +122,9 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que añade los botones de aceptar y cancelar al formulario
      * 
-     * @param panel JPanel en el que se añadirán los botones
+     * @param panel       JPanel en el que se añadirán los botones
      * @param constraints GridBagConstraints que definen la posición de los botones
-     * @param gridy int que indica la fila en la que se añadirán los botones
+     * @param gridy       int que indica la fila en la que se añadirán los botones
      */
     private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
         constraints.gridx = 0;
@@ -213,7 +216,7 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que establece los controladores de los botones del formulario
      * 
-     * @param cAceptar ActionListener que se añadirá al botón de aceptar
+     * @param cAceptar  ActionListener que se añadirá al botón de aceptar
      * @param cCancelar ActionListener que se añadirá al botón de cancelar
      */
     public void setControlador(ActionListener cAceptar, ActionListener cCancelar) {

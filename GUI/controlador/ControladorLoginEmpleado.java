@@ -21,7 +21,7 @@ public class ControladorLoginEmpleado {
     /**
      * Constructor de la clase ControladorLoginEmpleado.
      * 
-     * @param frame Ventana
+     * @param frame  Ventana
      * @param expofy Expofy
      */
     public ControladorLoginEmpleado(Ventana frame, Expofy expofy) {
@@ -38,7 +38,8 @@ public class ControladorLoginEmpleado {
             String usuario = vista.getUsuario();
             String password = vista.getPassword();
             if (usuario.equals("") || password.equals("")) {
-                JOptionPane.showMessageDialog(frame, "Debes introducir el número de la Seguridad Social y una contraseña.", "Error",
+                JOptionPane.showMessageDialog(frame,
+                        "Debes introducir el número de la Seguridad Social y una contraseña.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }

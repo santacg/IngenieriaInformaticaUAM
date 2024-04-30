@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 /**
  * Clase RegistroUsuario.
  * Actúa como la vista de registro de usuario.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class RegistroUsuario extends JPanel {
     private JTextField fieldUsuario;
     private JPasswordField fieldContrasena;
     private JCheckBox chkPublicidad;
-    private JButton registrarBtn; 
+    private JButton registrarBtn;
     private JButton cancelarBtn;
 
     /**
@@ -48,6 +48,7 @@ public class RegistroUsuario extends JPanel {
         constraints.anchor = GridBagConstraints.CENTER;
         add(titleLabel, constraints);
     }
+
     /**
      * Añade el campo de texto para el usuario.
      * 
@@ -118,7 +119,7 @@ public class RegistroUsuario extends JPanel {
      * Añade los controladores a los botones.
      * 
      * @param cRegistrar Controlador del botón de registro.
-     * @param cCancelar Controlador del botón de cancelar.
+     * @param cCancelar  Controlador del botón de cancelar.
      */
     public void setControlador(ActionListener cRegistrar, ActionListener cCancelar) {
         this.registrarBtn.addActionListener(cRegistrar);

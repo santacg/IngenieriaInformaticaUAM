@@ -20,7 +20,7 @@ public class ControladorPantallaPrincipal {
     /**
      * Constructor de la clase ControladorPantallaPrincipal
      * 
-     * @param frame Ventana de la aplicación
+     * @param frame  Ventana de la aplicación
      * @param expofy Modelo de la aplicación
      */
     public ControladorPantallaPrincipal(Ventana frame, Expofy expofy) {
@@ -44,7 +44,7 @@ public class ControladorPantallaPrincipal {
      */
     private ActionListener gestorListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            vista.update(); 
+            vista.update();
             frame.mostrarPanel(frame.getLogInGestor());
         }
     };

@@ -410,7 +410,7 @@ public class Expofy implements Serializable {
 
         try {
             TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),
-                    "." + File.separator + "tmp");
+                    "." + File.separator + "GUI" +  File.separator + "resources");
         } catch (NonExistentFileException e) {
             return false;
         } catch (UnsupportedImageTypeException e) {

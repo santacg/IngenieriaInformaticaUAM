@@ -34,7 +34,7 @@ public class ControladorGestor {
     /**
      * Constructor de la clase ControladorGestor.
      * 
-     * @param frame Ventana principal de la aplicación.
+     * @param frame  Ventana principal de la aplicación.
      * @param centro Centro de exposición.
      */
     public ControladorGestor(Ventana frame, CentroExposicion centro) {
@@ -69,7 +69,8 @@ public class ControladorGestor {
     }
 
     /**
-     * Método que actualiza la vista de las exposiciones segun la ejecucion que se haya realizado.
+     * Método que actualiza la vista de las exposiciones segun la ejecucion que se
+     * haya realizado.
      */
     private ActionListener exposicionEjecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -85,7 +86,8 @@ public class ControladorGestor {
 
             for (Exposicion exposicion : centro.getExposiciones()) {
                 if (exposicion.getNombre().equals(tabla.getValueAt(selectedRow, 0))) {
-                    ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista, centro, exposicion, accion);
+                    ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(
+                            vista, centro, exposicion, accion);
                     vista.setControladorExposicionFormulario(controladorExposicionFormulario);
                     break;
                 }
@@ -95,7 +97,8 @@ public class ControladorGestor {
     };
 
     /**
-     * Método que actualiza la vista de las obras segun la ejecucion que se haya realizado.
+     * Método que actualiza la vista de las obras segun la ejecucion que se haya
+     * realizado.
      */
     private ActionListener obraEjecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -182,7 +185,8 @@ public class ControladorGestor {
 
     private ActionListener exposicionAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista, centro);
+            ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista,
+                    centro);
             vista.setControladorExposicionFormulario(controladorExposicionFormulario);
         }
     };
@@ -200,7 +204,7 @@ public class ControladorGestor {
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
     }
-    
+
     /**
      * Método que obtiene el listener de ejecucion de salas.
      */
@@ -214,7 +218,7 @@ public class ControladorGestor {
     public ActionListener getExposicionEjecutarListener() {
         return exposicionEjecutarListener;
     }
-    
+
     /**
      * Método que obtiene el listener de agregar exposiciones.
      */

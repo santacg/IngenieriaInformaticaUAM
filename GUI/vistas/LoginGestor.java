@@ -32,8 +32,10 @@ public class LoginGestor extends JPanel {
         addButtons(constraints);
 
     }
+
     /**
      * Método que añade el título a la vista
+     * 
      * @param constraints
      */
     private void addTitle(GridBagConstraints constraints) {
@@ -49,6 +51,7 @@ public class LoginGestor extends JPanel {
 
     /**
      * Método que añade el campo de contraseña a la vista
+     * 
      * @param constraints
      */
     private void addPasswordField(GridBagConstraints constraints) {
@@ -65,6 +68,7 @@ public class LoginGestor extends JPanel {
 
     /**
      * Método que añade los botones a la vista
+     * 
      * @param constraints
      */
     public void addButtons(GridBagConstraints constraints) {
@@ -89,6 +93,7 @@ public class LoginGestor extends JPanel {
 
     /**
      * Método que establece los controladores de los botones
+     * 
      * @param cAceptar
      * @param cAtras
      */
@@ -99,6 +104,7 @@ public class LoginGestor extends JPanel {
 
     /**
      * Método que devuelve la contraseña introducida
+     * 
      * @return String
      */
     public String getPassword() {

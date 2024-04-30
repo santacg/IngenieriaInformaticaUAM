@@ -23,7 +23,7 @@ import GUI.vistas.*;
  * Actúa como controlador de la vista CompraFormulario. Se encarga de gestionar
  * los eventos de la vista y de realizar las operaciones necesarias para
  * completar la compra de entradas.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class ControladorCompraFormulario {
@@ -47,10 +47,10 @@ public class ControladorCompraFormulario {
     /**
      * Constructor de la clase ControladorCompraFormulario
      * 
-     * @param frame       ClientePrincipal
-     * @param expofy      Expofy
-     * @param exposicion  Exposicion
-     * @param cliente     ClienteRegistrado
+     * @param frame      ClientePrincipal
+     * @param expofy     Expofy
+     * @param exposicion Exposicion
+     * @param cliente    ClienteRegistrado
      */
     public ControladorCompraFormulario(ClientePrincipal frame, Expofy expofy, Exposicion exposicion,
             ClienteRegistrado cliente) {
@@ -109,7 +109,6 @@ public class ControladorCompraFormulario {
                 JOptionPane.showMessageDialog(frame, "La tarjeta introducida está caducada.");
                 return;
             }
-            System.out.println(hora);
             if (nEntradas <= 0 || nEntradas >= exposicion.getHora(fecha, hora).getnEntradasDisp()) {
                 JOptionPane.showMessageDialog(frame, "No hay ese número de entradas disponibles para la exposición.");
                 return;
@@ -146,13 +145,16 @@ public class ControladorCompraFormulario {
      */
     private ActionListener confirmarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (expofy.comprarEntrada(cliente, exposicion, fecha, exposicion.getHora(fechaTarj, hora), nEntradas,
+            if (expofy.comprarEntrada(cliente, exposicion, fecha, exposicion.getHora(fecha, hora), nEntradas,
                     new TarjetaDeCredito(numeroTarjetadeCredito, fechaTarj, cvv), codigoSorteo)) {
-                JOptionPane.showMessageDialog(vista, "La compra se ha realizado con éxito");
+                JOptionPane.showMessageDialog(vista,
+                        "La compra se ha realizado con éxito, encontrará el pdf con su entrada en la carpeta tmp");
             } else {
-                JOptionPane.showMessageDialog(vista, "Ha habido un error en la compra", "Error", JOptionPane.ERROR_MESSAGE);
-                vistConfirmarCompra.dispose();
+                JOptionPane.showMessageDialog(vista, "Ha habido un error en la compra", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
+            vistConfirmarCompra.dispose();
+            vista.dispose();
         }
     };
 
@@ -208,7 +210,7 @@ public class ControladorCompraFormulario {
         public void actionPerformed(ActionEvent e) {
             anioExpo = (Integer) anioExpoCombo.getSelectedItem();
         }
-    }; 
+    };
 
     /**
      * Método que devuelve el ActionListener del botón del año de la exposición

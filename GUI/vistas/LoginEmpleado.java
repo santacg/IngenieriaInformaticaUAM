@@ -111,7 +111,8 @@ public class LoginEmpleado extends JPanel {
     }
 
     /**
-     * Método que devuelve el Nº de Seguridad Social introducido en el campo de texto.
+     * Método que devuelve el Nº de Seguridad Social introducido en el campo de
+     * texto.
      * 
      * @return Nº de Seguridad Social introducido.
      */
@@ -132,9 +133,9 @@ public class LoginEmpleado extends JPanel {
      * Método que establece los controladores de los botones de la vista.
      * 
      * @param cAceptar Controlador del botón de aceptar.
-     * @param cAtras Controlador del botón de atrás.
+     * @param cAtras   Controlador del botón de atrás.
      */
-    public void setControlador(ActionListener cAceptar, ActionListener cAtras){
+    public void setControlador(ActionListener cAceptar, ActionListener cAtras) {
         aceptarBoton.addActionListener(cAceptar);
         atrasBoton.addActionListener(cAtras);
     }
@@ -146,5 +147,5 @@ public class LoginEmpleado extends JPanel {
         textUser.setText("");
         fieldPassword.setText("");
     }
-    
+
 }

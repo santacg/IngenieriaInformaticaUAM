@@ -48,7 +48,8 @@ public class Ticket implements ITicketInfo {
     }
 
     public double getDiscount() {
-        return this.exposicion.getDescuento().getDescuento();
+        //return this.exposicion.getDescuento().getDescuento();
+        return 0.0;
     }
 
     public double getPayedPrice() {

@@ -42,7 +42,8 @@ public class ConfirmarCompra extends JDialog {
                 1);
         addCampo("Fecha:", this.fechaExpo = new JLabel(fechaExpo), panelFormulario, constraints, 2, 1);
         addCampo("Hora:", this.hora = new JLabel(hora), panelFormulario, constraints, 3, 1);
-        addCampo("Numero de tarjeta de credito:", this.numeroTarjetadeCredito = new JLabel(numeroTarjetadeCredito), panelFormulario,
+        addCampo("Numero de tarjeta de credito:", this.numeroTarjetadeCredito = new JLabel(numeroTarjetadeCredito),
+                panelFormulario,
                 constraints, 4, 5);
         addCampo("Fecha de expiración de la tarjeta:", this.fechaTarj = new JLabel(fechaTarj), panelFormulario,
                 constraints, 5, 1);

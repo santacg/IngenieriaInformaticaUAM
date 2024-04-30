@@ -23,7 +23,7 @@ public class ControladorRegistro {
     /**
      * Constructor de la clase ControladorRegistro.
      * 
-     * @param frame Ventana principal de la aplicación.
+     * @param frame  Ventana principal de la aplicación.
      * @param expofy Objeto de la clase Expofy.
      */
     public ControladorRegistro(Ventana frame, Expofy expofy) {

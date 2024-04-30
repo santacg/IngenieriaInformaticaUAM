@@ -54,6 +54,7 @@ public class AjustarClimatizacion extends JPanel {
 
     /**
      * Método que añade la tabla de salas a la vista
+     * 
      * @param centro CentroExposicion
      */
     public void addTemperaturaHumedad(CentroExposicion centro) {
@@ -66,6 +67,7 @@ public class AjustarClimatizacion extends JPanel {
 
     /**
      * Método que actualiza los datos de la tabla de salas
+     * 
      * @param centro CentroExposicion
      */
     private Object[][] construirDatosSalas(CentroExposicion centroExposicion) {
@@ -78,6 +80,7 @@ public class AjustarClimatizacion extends JPanel {
 
     /**
      * Método que añade las salas recursivamente a la tabla
+     * 
      * @param data List<Object[]>
      * @param sala Sala
      */

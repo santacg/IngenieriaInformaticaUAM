@@ -23,9 +23,9 @@ public class ControladorSalaFormulario {
     /**
      * Constructor de la clase ControladorSalaFormulario
      * 
-     * @param frame GestorPrincipal
+     * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion
-     * @param accion String
+     * @param accion           String
      */
     public ControladorSalaFormulario(GestorPrincipal frame, CentroExposicion centroExposicion, String accion) {
         this.frame = frame;

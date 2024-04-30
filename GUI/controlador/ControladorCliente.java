@@ -1,6 +1,6 @@
 package GUI.controlador;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
+import GUI.modelo.centroExposicion.*;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.vistas.ClientePrincipal;
@@ -24,23 +24,26 @@ public class ControladorCliente {
     private ClientePrincipal vista;
     private Expofy expofy;
     private ClienteRegistrado cliente;
+    private ArrayList<Sorteo> sorteos;
 
     /**
      * Constructor de la clase ControladorCliente.
      * 
-     * @param frame Ventana principal de la aplicación.
-     * @param expofy Instancia de la aplicación.
+     * @param frame   Ventana principal de la aplicación.
+     * @param expofy  Instancia de la aplicación.
      * @param cliente Cliente registrado.
      */
     public ControladorCliente(Ventana frame, Expofy expofy, ClienteRegistrado cliente) {
         this.frame = frame;
         this.cliente = cliente;
         this.expofy = expofy;
+        this.sorteos = new ArrayList<>();
         this.vista = frame.getVistaClientePrincipal();
 
         mostrarExposiciones();
         mostrarPerfil();
         mostrarNotificaciones();
+        mostrarSorteos();
     }
 
     /**
@@ -79,11 +82,34 @@ public class ControladorCliente {
     }
 
     /**
+     * Método que muestra los sorteos en la vista.
+     */
+    public void mostrarSorteos() {
+        ArrayList<Object[]> data = new ArrayList<>();
+        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
+            for (Sorteo sorteo : centro.getSorteos()) {
+                Exposicion exposicion = sorteo.getExposicion();
+                data.add(new Object[] {
+                        sorteo.getFechaSorteo(),
+                        exposicion.getNombre(),
+                        exposicion.getDescripcion(),
+                        exposicion.getFechaInicio(),
+                        exposicion.getFechaFin(),
+                        centro.getNombre(),
+                        centro.getLocalizacion()
+                });
+                sorteos.add(sorteo);
+            }
+        }
+        vista.addTablaSorteos(data);
+    }
+
+    /**
      * Método que muestra el perfil del cliente en la vista.
      */
     public void mostrarPerfil() {
         vista.addPerfil(cliente.getNIF(), cliente.getContrasenia(), cliente.getPublicidad());
-    }   
+    }
 
     /**
      * Método que devuelve el ActionListener para comprar una entrada.
@@ -121,14 +147,14 @@ public class ControladorCliente {
             if (selectedRow >= 0) {
                 vista.getTablaExposiciones().clearSelection();
                 String nombreExposicion = (String) vista.getTablaExposiciones().getValueAt(selectedRow, 0);
-                 JOptionPane.showMessageDialog(frame,
+                JOptionPane.showMessageDialog(frame,
                         "Rellene el siguiente formulario para la compra de entradas para la exposición: "
                                 + nombreExposicion);
                 Exposicion exposicion = expofy.getExposicionPorNombre(nombreExposicion);
                 ControladorCompraFormulario controladorCompraFormulario = new ControladorCompraFormulario(vista, expofy,
                         exposicion, cliente);
                 vista.setCompraFormularioControlador(controladorCompraFormulario);
-                
+
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona una exposición.");
             }
@@ -175,6 +201,33 @@ public class ControladorCliente {
             expofy.logOut(cliente);
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
+        }
+    };
+
+    /**
+     * Método que devuelve el ActionListener para cerrar la sesión del cliente.
+     * 
+     * @return ActionListener para cerrar la sesión del cliente.
+     */
+    public ActionListener getInscribirse() {
+        return inscribirseListener;
+    }
+
+    /**
+     * ActionListener para cerrar la sesión del cliente.
+     */
+    private ActionListener inscribirseListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            int selectedRow = vista.getTablaSorteos().getSelectedRow();
+            if (selectedRow >= 0) {
+                Sorteo sorteo = sorteos.get(selectedRow);
+                vista.getTablaExposiciones().clearSelection();
+                cliente.inscribirse(sorteo, 1);
+                JOptionPane.showMessageDialog(frame,
+                        "Usted se ha inscrito al sorteo");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Por favor, selecciona un sorteo.");
+            }
         }
     };
 }

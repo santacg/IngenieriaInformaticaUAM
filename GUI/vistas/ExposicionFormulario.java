@@ -7,9 +7,12 @@ import java.time.LocalDate;
 import javax.imageio.plugins.tiff.TIFFDirectory;
 import javax.swing.*;
 
+import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.*;
+import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Clase ExposicionFormulario.
@@ -25,8 +28,9 @@ public class ExposicionFormulario extends JDialog {
     private JTextField descipcion;
     private JList<TipoExpo> tipoExpo;
     private JTextField precio;
-    private JComboBox<Sala> salas;
+    private JComboBox<String> salas;
     private List<JCheckBox> obras;
+    private JPanel panelObras;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
 
@@ -60,18 +64,89 @@ public class ExposicionFormulario extends JDialog {
                 formularioExposicionTemporal(panelFormulario, constraints);
                 break;
             case "Agregar Exposicion":
-                addCampo("Nombre:", nombre = new JTextField(20), panelFormulario, constraints, 0);
-                addCampo("Fecha inicio (yyyy-mm-dd):", fechaInicio = new JTextField(20), panelFormulario, constraints, 1);
-                addCampo("Fecha fin (yyyy-mm-dd):", fechaFin = new JTextField(20), panelFormulario, constraints, 2);
-                addCampo("Descripción:", descipcion = new JTextField(20), panelFormulario, constraints, 3);
-                addCampo("Tipo de exposición:", tipoExpo = new JList<TipoExpo>(TipoExpo.values()), panelFormulario,
-                        constraints, 4);
-                addCampo("Precio:", precio = new JTextField(20), panelFormulario, constraints, 5);
-                break;
+                JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+
+                // Panel de formulario (West)
+                JPanel panelFormulario1 = new JPanel();
+                panelFormulario1.setLayout(new BoxLayout(panelFormulario1, BoxLayout.Y_AXIS));
+                panelFormulario1.setBorder(BorderFactory.createTitledBorder("Detalles de la Exposición"));
+                inicializarCamposFormulario(panelFormulario1);
+
+                // Panel de obras (Center)
+                panelObras = new JPanel(new GridLayout(0, 1));
+                JScrollPane scrollObras = new JScrollPane(panelObras);
+                scrollObras.setBorder(BorderFactory.createTitledBorder("Obras"));
+                scrollObras.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                scrollObras.setPreferredSize(new Dimension(250, 600));
+
+                // Panel de salas (East)
+                JPanel panelSalas = new JPanel(new BorderLayout());
+                salas = new JComboBox<>();
+                JScrollPane scrollSalas = new JScrollPane(salas);
+                scrollSalas.setBorder(BorderFactory.createTitledBorder("Salas"));
+                scrollSalas.setPreferredSize(new Dimension(200, 200));
+                panelSalas.add(scrollSalas);
+
+                // Panel de botones (South)
+                JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                aceptarBtn = new JButton("Aceptar");
+                cancelarBtn = new JButton("Cancelar");
+                panelBotones.add(aceptarBtn);
+                panelBotones.add(cancelarBtn);
+
+                panelPrincipal.add(panelFormulario1, BorderLayout.WEST);
+                panelPrincipal.add(scrollObras, BorderLayout.CENTER);
+                panelPrincipal.add(panelSalas, BorderLayout.EAST);
+                panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+                add(panelPrincipal);
+                return;
         }
 
-        addBotones(panelFormulario, constraints, 6);
+        addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
+    }
+
+    private void inicializarCamposFormulario(JPanel panel) {
+        nombre = new JTextField(20);
+        fechaInicio = new JTextField(20);
+        fechaFin = new JTextField(20);
+        descipcion = new JTextField(20);
+        precio = new JTextField(20);
+        tipoExpo = new JList<>(TipoExpo.values());
+
+        addField("Nombre:", nombre, panel);
+        addField("Fecha inicio (yyyy-mm-dd):", fechaInicio, panel);
+        addField("Fecha fin (yyyy-mm-dd):", fechaFin, panel);
+        addField("Descripción:", descipcion, panel);
+        addField("Tipo de exposición:", tipoExpo, panel);
+        addField("Precio:", precio, panel);
+    }
+
+    private void addField(String label, JComponent field, Container container) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.add(new JLabel(label));
+        panel.add(field);
+        container.add(panel);
+    }
+
+    public void mostrarObras(CentroExposicion centroExposicion) {
+        Set<Obra> obras = centroExposicion.getObras();
+        panelObras.removeAll();
+        for (Obra obra : obras) {
+            JCheckBox checkBox = new JCheckBox(obra.getNombre());
+            panelObras.add(checkBox);
+        }
+        panelObras.revalidate();
+        panelObras.repaint();
+    }
+
+    public void mostrarSalas(CentroExposicion centroExposicion) {
+        Set<Sala> salasDisponibles = centroExposicion.getSalas();
+        salas.removeAllItems();
+        for (Sala sala : salasDisponibles) {
+            salas.addItem(sala.getNombre());
+        }
     }
 
     /**

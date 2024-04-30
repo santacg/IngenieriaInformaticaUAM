@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-public class ModeloTablaObras extends AbstractTableModel{
+public class ModeloTablaObras extends AbstractTableModel {
     private String[] titulos;
     private Object[][] filas;
 
@@ -20,7 +20,7 @@ public class ModeloTablaObras extends AbstractTableModel{
      * Constructor de la clase ModeloTablaObras.
      * 
      * @param columnNames Nombres de las columnas.
-     * @param data Datos de las filas.
+     * @param data        Datos de las filas.
      */
     public ModeloTablaObras(String[] columnNames, Object[][] data) {
         this.titulos = columnNames;
@@ -68,7 +68,7 @@ public class ModeloTablaObras extends AbstractTableModel{
      */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 0; 
+        return columnIndex == 0;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ModeloTablaObras extends AbstractTableModel{
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         if (columnIndex == 0)
-            return Boolean.class; 
+            return Boolean.class;
         return String.class;
     }
 }

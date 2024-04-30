@@ -26,7 +26,7 @@ public class BusquedaExposiciones extends JPanel {
         setLayout(new BorderLayout());
         tabla = new JPanel();
         tabla.setLayout(new BorderLayout());
-        
+
         JPanel panelBoton = new JPanel();
         atrasBoton = new JButton("Atrás");
 

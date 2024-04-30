@@ -22,7 +22,7 @@ public class ControladorObraFormulario {
     /**
      * Constructor de la clase ControladorObraFormulario
      * 
-     * @param frame GestorPrincipal
+     * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion
      */
     public ControladorObraFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {

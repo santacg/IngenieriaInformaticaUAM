@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 /**
  * Clase PantallaPrincipal.
  * Implementa la vista de la pantalla principal de la aplicación.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class PantallaPrincipal extends JPanel {
@@ -84,7 +84,7 @@ public class PantallaPrincipal extends JPanel {
         constraints.gridy = 2;
         add(fieldPassword, constraints);
     }
-    
+
     /**
      * Añade los botones de la pantalla principal.
      * 
@@ -119,10 +119,10 @@ public class PantallaPrincipal extends JPanel {
     /**
      * Establece los controladores de los botones de la pantalla principal.
      * 
-     * @param cBuscar Controlador del botón de buscar exposición.
-     * @param cAceptar Controlador del botón de aceptar.
-     * @param cGestor Controlador del botón de gestor.
-     * @param cEmpleado Controlador del botón de empleado.
+     * @param cBuscar    Controlador del botón de buscar exposición.
+     * @param cAceptar   Controlador del botón de aceptar.
+     * @param cGestor    Controlador del botón de gestor.
+     * @param cEmpleado  Controlador del botón de empleado.
      * @param cRegistrar Controlador del botón de registrarse.
      */
     public void setControlador(ActionListener cBuscar, ActionListener cAceptar, ActionListener cGestor,
@@ -158,5 +158,5 @@ public class PantallaPrincipal extends JPanel {
     public void update() {
         this.textUser.setText("");
         this.fieldPassword.setText("");
-    }  
+    }
 }

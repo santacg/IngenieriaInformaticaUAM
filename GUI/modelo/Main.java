@@ -56,7 +56,7 @@ public class Main {
             // Gestor
             Gestor gestor1 = new Gestor("456123");
             Gestor gestor2 = new Gestor("216548");
-            
+
             // Salas
             // Centro1
             Set<Sala> salas1 = new HashSet<>();
@@ -94,7 +94,7 @@ public class Main {
             centroExposicion2.loginGestor("216548");
 
             // Empleado edita su perfil
-            
+
             // Notificaciones
             // Enviamos una notificación a todos los usuarios
             expofy.enviarNotificacionAll("Bienvenidos a expofy");
@@ -135,7 +135,7 @@ public class Main {
                         60,
                         40,
                         "Óleo",
-                        "Kojima, Hideo");        
+                        "Kojima, Hideo");
             salaExposicion1.addObra(cuadro);
 
             // Leemos obras de un archivo y lo añadimos a una sala de una de las
@@ -149,7 +149,7 @@ public class Main {
             // Cliente registrado desactiva recepción de publicidad
             cliente.setPublicidad(false);
 
-            for (Obra obra: centroExposicion1.getObras()) {
+            for (Obra obra : centroExposicion1.getObras()) {
                   salaExposicion2.addObra(obra);
             }
             // Publicación de exposiciones
@@ -161,7 +161,8 @@ public class Main {
             expofy.getClienteRegistrado("123456789").inscribirse(sorteo, 2);
 
             // Empleado vende entradas para el mismo día
-            // centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(), LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
+            // centroExposicion1.venderEntrada(exposicion2, new Hora(LocalDate.now(),
+            // LocalTime.of(9,0,0), LocalTime.of(10,0,0), 10, 25.00), 3);
 
             // Gestor cambia el estado de una obra
             cuadro.restaurarObra();
@@ -171,30 +172,33 @@ public class Main {
             centroExposicion1.setSancion(10);
 
             // Gestor asigna un descuento a una exposicion
-            exposicion1.configurarDescuentoDia(15, 20);     
+            exposicion1.configurarDescuentoDia(15, 20);
             // Gestor realiza un sorteo una vez finalizado el periodo de inscripcion
             sorteo.realizarSorteo();
             // Obtener código ganador Sorteo
             String codigo_ganador = null;
             ClienteRegistrado ganador = null;
-            for (Inscripcion inscripcion: sorteo.getInscripciones()) {
+            for (Inscripcion inscripcion : sorteo.getInscripciones()) {
                   for (String codigo : inscripcion.getCodigos()) {
-                        if (codigo != null){
+                        if (codigo != null) {
                               ganador = inscripcion.getCliente();
                               codigo_ganador = codigo;
-                              break;}
+                              break;
+                        }
                   }
 
             }
             // Cliente registrado compra entrada con código de Sorteo
-            boolean resultadocompra = expofy.comprarEntrada(ganador, exposicion1, LocalDate.of(2021,1,2), 
-            new Hora(LocalDate.of(2021,1,2), LocalTime.of(9,0,0), 
-            LocalTime.of(10,0,0), 10, 25.00), 3, new TarjetaDeCredito("1234123412341234", LocalDate.of(2050,5,5), 243), codigo_ganador);
+            boolean resultadocompra = expofy.comprarEntrada(ganador, exposicion1, LocalDate.of(2021, 1, 2),
+                        new Hora(LocalDate.of(2021, 1, 2), LocalTime.of(9, 0, 0),
+                                    LocalTime.of(10, 0, 0), 10, 25.00),
+                        3, new TarjetaDeCredito("1234123412341234", LocalDate.of(2050, 5, 5), 243), codigo_ganador);
 
             System.out.println("Resultado de la compra: " + resultadocompra);
-            
-            Ticket ticket = new Ticket(exposicion1, 5.0, 2, LocalDate.of(2050,5,5), new Hora(LocalDate.of(2021,1,2), LocalTime.of(9,0,0), 
-            LocalTime.of(10,0,0), 10, 25.00));
+
+            Ticket ticket = new Ticket(exposicion1, 5.0, 2, LocalDate.of(2050, 5, 5),
+                        new Hora(LocalDate.of(2021, 1, 2), LocalTime.of(9, 0, 0),
+                                    LocalTime.of(10, 0, 0), 10, 25.00));
             System.out.println(ticket.dataTicket());
             TicketSystem.createTicket(ticket, "." + File.separator + "tmp");
 
@@ -207,19 +211,19 @@ public class Main {
             centroExposicion2.setHoraCierre(LocalTime.of(22, 0, 0));
 
             // Cliente registrado busca exposiciones con filtros
-            for (Exposicion e : centroExposicion1.getExposicionesPorFecha(LocalDate.of(2021, 4, 4), LocalDate.now().plusMonths(2))) {
+            for (Exposicion e : centroExposicion1.getExposicionesPorFecha(LocalDate.of(2021, 4, 4),
+                        LocalDate.now().plusMonths(2))) {
                   System.out.println(e.toString());
             }
-            for (Exposicion e: centroExposicion1.getExposicionesPermanentes()) {
+            for (Exposicion e : centroExposicion1.getExposicionesPermanentes()) {
                   System.out.println(e.toString());
             }
-            for (Exposicion e: centroExposicion1.getExposicionesTemporales()) {
+            for (Exposicion e : centroExposicion1.getExposicionesTemporales()) {
                   System.out.println(e.toString());
             }
             for (Exposicion e : centroExposicion1.getExposicionesPorTipoObra(Cuadro.class)) {
                   System.out.println(e.toString());
             }
-
 
             System.out.println(expofy.toString());
             expofy.persistirExpofy();

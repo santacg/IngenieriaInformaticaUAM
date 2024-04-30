@@ -16,7 +16,7 @@ public class CompraFormulario extends JDialog {
     private JComboBox<String> hora = new JComboBox<>();
 
     private JTextField numeroTarjetadeCredito;
-    private JComboBox<Integer> diaTarj  = new JComboBox<>();
+    private JComboBox<Integer> diaTarj = new JComboBox<>();
     private JComboBox<Integer> mesTarj = new JComboBox<>();
     private JComboBox<Integer> anioTarj = new JComboBox<>();
     private JTextField cvv;
@@ -60,14 +60,14 @@ public class CompraFormulario extends JDialog {
                 constraints, 6);
         addCampo("CVV:", cvv = new JTextField(32), panelFormulario, constraints, 7, 1);
         addCampo("Código de sorteo:", codigoSorteo = new JTextField(32), panelFormulario, constraints, 8, 1);
-        
+
         diaExpo.setSelectedIndex(0);
         mesExpo.setSelectedIndex(0);
         anioExpo.setSelectedIndex(0);
         diaTarj.setSelectedIndex(0);
         mesTarj.setSelectedIndex(0);
         anioTarj.setSelectedIndex(0);
-        
+
         Integer gridy = 11;
 
         addBotones(panelFormulario, constraints, gridy);

@@ -1,6 +1,5 @@
 package GUI.controlador;
 
-
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
@@ -24,7 +23,8 @@ public class ControladorBusquedaExposiciones {
 
     /**
      * Constructor de la clase ControladorBusquedaExposiciones
-     * @param frame Ventana principal
+     * 
+     * @param frame  Ventana principal
      * @param expofy Modelo de datos de la aplicación
      */
     public ControladorBusquedaExposiciones(Ventana frame, Expofy expofy) {
@@ -67,6 +67,7 @@ public class ControladorBusquedaExposiciones {
 
     /**
      * Devuelve el listener para el botón de volver atrás
+     * 
      * @return ActionListener
      */
     public ActionListener getAtrasListener() {

@@ -33,7 +33,7 @@ public class EnviarMensajes extends JPanel {
         addMensaje(constraints);
         addButtons(constraints);
     }
-    
+
     /**
      * Añade el título de la vista.
      * 
@@ -116,7 +116,7 @@ public class EnviarMensajes extends JPanel {
      * Establece los controladores de los botones.
      * 
      * @param cEnviar Controlador del botón de enviar.
-     * @param cAtras Controlador del botón de atrás.
+     * @param cAtras  Controlador del botón de atrás.
      */
     public void setControlador(ActionListener cEnviar, ActionListener cAtras) {
         this.enviarBoton.addActionListener(cEnviar);
@@ -139,7 +139,7 @@ public class EnviarMensajes extends JPanel {
      */
     public String getDestinatario() {
         return this.destinatario.getText();
-    }   
+    }
 
     /**
      * Actualiza y limpia los campos de texto de la vista.

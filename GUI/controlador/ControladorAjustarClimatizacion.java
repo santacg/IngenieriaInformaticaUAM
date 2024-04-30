@@ -21,7 +21,7 @@ public class ControladorAjustarClimatizacion {
     /**
      * Constructor de la clase ControladorAjustarClimatizacion.
      * 
-     * @param frame Ventana en la que se muestra la vista.
+     * @param frame  Ventana en la que se muestra la vista.
      * @param centro Centro de exposición que se va a modificar.
      */
     public ControladorAjustarClimatizacion(Ventana frame, CentroExposicion centro) {
@@ -40,9 +40,11 @@ public class ControladorAjustarClimatizacion {
     }
 
     /**
-     * Devuelve un ActionListener que ajusta la temperatura y humedad del centro de exposición.
+     * Devuelve un ActionListener que ajusta la temperatura y humedad del centro de
+     * exposición.
      * 
-     * @return ActionListener que ajusta la temperatura y humedad del centro de exposición.
+     * @return ActionListener que ajusta la temperatura y humedad del centro de
+     *         exposición.
      */
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -51,9 +53,11 @@ public class ControladorAjustarClimatizacion {
     };
 
     /**
-     * Devuelve un ActionListener que ajusta la temperatura y humedad del centro de exposición.
+     * Devuelve un ActionListener que ajusta la temperatura y humedad del centro de
+     * exposición.
      * 
-     * @return ActionListener que ajusta la temperatura y humedad del centro de exposición.
+     * @return ActionListener que ajusta la temperatura y humedad del centro de
+     *         exposición.
      */
     public ActionListener getAtrasListener() {
         return atrasListener;

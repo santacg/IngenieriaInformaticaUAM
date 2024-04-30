@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * Clase ObraFormulario.
  * Implementa la interfaz gráfica para el formulario de añadir una obra.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class ObraFormulario extends JDialog {
@@ -65,7 +65,7 @@ public class ObraFormulario extends JDialog {
         addCampo("Ancho", obraAncho = new JTextField(32), panelFormulario, constraints, 8);
 
         if (tipoObraSeleccionada.equals("Escultura") || tipoObraSeleccionada.equals("Cuadro")
-            || tipoObraSeleccionada.equals("Fotografia")) {
+                || tipoObraSeleccionada.equals("Fotografia")) {
             addCampo("Rango temperatura", obraRangoTemperatura = new JTextField(32), panelFormulario, constraints, 9);
             addCampo("Rango Humedad", obraRangoHumedad = new JTextField(32), panelFormulario, constraints, 10);
         }
@@ -77,7 +77,8 @@ public class ObraFormulario extends JDialog {
                 break;
             case "Escultura":
                 addCampo("Material", esculturaMaterial = new JTextField(32), panelFormulario, constraints, gridy++);
-                addCampo("Profundidad", esculturaProfundidad = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Profundidad", esculturaProfundidad = new JTextField(32), panelFormulario, constraints,
+                        gridy++);
                 break;
             case "Fotografia":
                 addCampo("Color", fotografiaColor = new JCheckBox(), panelFormulario, constraints, gridy++);
@@ -115,11 +116,11 @@ public class ObraFormulario extends JDialog {
     /**
      * Añade un campo al formulario.
      * 
-     * @param label Etiqueta del campo.
-     * @param comp Componente del campo.
-     * @param panel Panel donde se añade el campo.
+     * @param label       Etiqueta del campo.
+     * @param comp        Componente del campo.
+     * @param panel       Panel donde se añade el campo.
      * @param constraints Restricciones del GridBagLayout.
-     * @param gridy Posición en el grid.
+     * @param gridy       Posición en el grid.
      */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
@@ -136,9 +137,9 @@ public class ObraFormulario extends JDialog {
     /**
      * Añade los botones de guardar y cancelar al formulario.
      * 
-     * @param panel Panel donde se añaden los botones.
+     * @param panel       Panel donde se añaden los botones.
      * @param constraints Restricciones del GridBagLayout.
-     * @param gridy Posición en el grid.
+     * @param gridy       Posición en el grid.
      */
     private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
         constraints.gridx = 0;
@@ -262,6 +263,7 @@ public class ObraFormulario extends JDialog {
     public boolean getFotografiaColor() {
         return fotografiaColor.isSelected();
     }
+
     /**
      * Devuelve la duración del audiovisual introducida en el formulario.
      * 
@@ -279,7 +281,7 @@ public class ObraFormulario extends JDialog {
     public String getAudiovisualIdioma() {
         return audiovisualIdioma.getText();
     }
-    
+
     /**
      * Devuelve el alto de la obra introducido en el formulario.
      * 
@@ -363,7 +365,7 @@ public class ObraFormulario extends JDialog {
     /**
      * Establece los controladores para los botones de guardar y cancelar.
      * 
-     * @param cGuardar Controlador del botón de guardar.
+     * @param cGuardar  Controlador del botón de guardar.
      * @param cCancelar Controlador del botón de cancelar.
      */
     public void setControlador(ActionListener cGuardar, ActionListener cCancelar) {

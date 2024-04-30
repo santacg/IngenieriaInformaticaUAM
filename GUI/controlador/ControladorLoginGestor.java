@@ -24,7 +24,7 @@ public class ControladorLoginGestor {
     /**
      * Constructor de la clase ControladorLoginGestor.
      * 
-     * @param frame Ventana principal de la aplicación.
+     * @param frame  Ventana principal de la aplicación.
      * @param expofy Objeto de la clase Expofy.
      */
     public ControladorLoginGestor(Ventana frame, Expofy expofy) {

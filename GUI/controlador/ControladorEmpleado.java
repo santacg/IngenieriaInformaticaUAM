@@ -27,9 +27,9 @@ public class ControladorEmpleado {
     /**
      * Constructor de la clase ControladorEmpleado.
      * 
-     * @param frame Ventana
-     * @param expofy Expofy
-     * @param centro CentroExposicion
+     * @param frame   Ventana
+     * @param expofy  Expofy
+     * @param centro  CentroExposicion
      * @param usuario String
      */
     public ControladorEmpleado(Ventana frame, Expofy expofy, CentroExposicion centro, String usuario) {
@@ -46,13 +46,16 @@ public class ControladorEmpleado {
      */
     private ActionListener cambiarClimatizacionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(empleado.getPermisoControl()==false){
-                JOptionPane.showMessageDialog(frame, "Actualmente no tienes permiso para cambiar la climatización. Solicita al gestor que modifique tu permiso.", "Error",
+            if (empleado.getPermisoControl() == false) {
+                JOptionPane.showMessageDialog(frame,
+                        "Actualmente no tienes permiso para cambiar la climatización. Solicita al gestor que modifique tu permiso.",
+                        "Error",
                         JOptionPane.ERROR_MESSAGE);
-                        return;
+                return;
             }
-            ControladorAjustarClimatizacion controladorAjustarClimatizacion = new ControladorAjustarClimatizacion(frame, centro);
-            frame.setControladorAjustarClimatizacion(controladorAjustarClimatizacion); 
+            ControladorAjustarClimatizacion controladorAjustarClimatizacion = new ControladorAjustarClimatizacion(frame,
+                    centro);
+            frame.setControladorAjustarClimatizacion(controladorAjustarClimatizacion);
             frame.mostrarPanel(frame.getAjustarClimatizacion());
         }
     };
@@ -65,20 +68,23 @@ public class ControladorEmpleado {
     public ActionListener getClimatizacionListener() {
         return cambiarClimatizacionListener;
     }
-    
+
     /**
      * Método que inicializa el controlador enviarMsjListener.
      */
     private ActionListener enviarMsjListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(empleado.getPermisoMensajes()==false){
-                JOptionPane.showMessageDialog(frame, "Actualmente no tienes permiso para enviar mensajes. Solicita al gestor que modifique tu permiso.", "Error",
+            if (empleado.getPermisoMensajes() == false) {
+                JOptionPane.showMessageDialog(frame,
+                        "Actualmente no tienes permiso para enviar mensajes. Solicita al gestor que modifique tu permiso.",
+                        "Error",
                         JOptionPane.ERROR_MESSAGE);
-                        return;
-                        
+                return;
+
             }
-            ControladorEnviarMensajes controladorEnviarMensajes = new ControladorEnviarMensajes(frame, expofy, empleado);
-            frame.setControladorEnviarMensajes(controladorEnviarMensajes);           
+            ControladorEnviarMensajes controladorEnviarMensajes = new ControladorEnviarMensajes(frame, expofy,
+                    empleado);
+            frame.setControladorEnviarMensajes(controladorEnviarMensajes);
             frame.mostrarPanel(frame.getEnviarMensajes());
         }
     };
@@ -97,11 +103,11 @@ public class ControladorEmpleado {
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            //expofy.logOut(empleado);
+            // expofy.logOut(empleado);
             JOptionPane.showMessageDialog(frame, "Sesión cerrada correctamente");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
-    }; 
+    };
 
     /**
      * Método que devuelve el listener del botón de cerrar sesión.

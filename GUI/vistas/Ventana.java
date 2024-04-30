@@ -10,7 +10,7 @@ import GUI.controlador.*;
  * Clase Ventana
  * Esta clase es la encargada de gestionar las distintas ventanas de la
  * aplicación.
- *  
+ * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class Ventana extends JFrame {
@@ -267,8 +267,10 @@ public class Ventana extends JFrame {
 	public void setControladorCliente(ControladorCliente controlador) {
 		this.controladorCliente = controlador;
 		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(),
-				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion());
+				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion(),
+				controladorCliente.getInscribirse());
 	}
+
 
 	/**
 	 * Establece el controlador de la vista de empleado principal

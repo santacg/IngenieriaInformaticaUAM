@@ -85,18 +85,17 @@ public class EmpleadoPrincipal extends JPanel {
     }
 
     /**
-    * Método que establece los controladores de la vista.
-    *
-    * @param cMensaje Controlador del botón de envío de mensajes.
-    * @param cClimatizacion Controlador del botón de cambio de climatización.
-    * @param cCerrarSesion Controlador del botón de cierre de sesión.
-    */
+     * Método que establece los controladores de la vista.
+     *
+     * @param cMensaje       Controlador del botón de envío de mensajes.
+     * @param cClimatizacion Controlador del botón de cambio de climatización.
+     * @param cCerrarSesion  Controlador del botón de cierre de sesión.
+     */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cCerrarSesion) {
-        
+
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
-
 
 }
