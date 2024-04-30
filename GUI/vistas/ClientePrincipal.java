@@ -13,6 +13,8 @@ public class ClientePrincipal extends JPanel {
     private JButton comprarBoton;
     private JTable tablaExposiciones;
 
+    private CompraFormulario vistaCompraFormulario;
+    private ControladorCompraFormulario controladorCompraFormulario;
     
     private JPanel sorteos;
 
@@ -182,6 +184,15 @@ public class ClientePrincipal extends JPanel {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
+    }
+
+    public CompraFormulario getVistaCompraFormulario() {
+        this.vistaCompraFormulario = new CompraFormulario();
+        return this.vistaCompraFormulario;
+    }
+
+    public void setCompraFormularioControlador(ControladorCompraFormulario controlador){
+        this.controladorCompraFormulario = controlador;
     }
 
     public JTable getTablaExposiciones(){
