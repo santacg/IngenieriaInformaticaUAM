@@ -6,11 +6,19 @@ import java.awt.*;
 
 import GUI.controlador.*;
 
+/**
+ * Clase Ventana
+ * Esta clase es la encargada de gestionar las distintas ventanas de la
+ * aplicación.
+ *  
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class Ventana extends JFrame {
-
+	// Cartas
 	private JPanel cartas;
 	private String cartaPrevia, cartaActual;
 
+	// Nombres de las cartas
 	private final static String LOGINGESTOR = "logInGestor";
 	private final static String LOGINEMPLEADO = "logInEmpleado";
 	private final static String ENVIARMENSAJES = "enviarMensajes";
@@ -22,6 +30,7 @@ public class Ventana extends JFrame {
 	private final static String EMPLEADOPRINCIPAL = "empleadoPrincipal";
 	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
 
+	// Vistas y controladores
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
 	private PantallaPrincipal vistaPantallaPrincipal;
 
@@ -53,6 +62,9 @@ public class Ventana extends JFrame {
 	private ControladorAjustarClimatizacion controladorAjustarClimatizacion;
 	private AjustarClimatizacion vistaAjustarClimatizacion;
 
+	/**
+	 * Constructor de la clase Ventana
+	 */
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -89,75 +101,128 @@ public class Ventana extends JFrame {
 		setContentPane(cartas);
 	}
 
+	/**
+	 * Devuelve el nombre del panel principal
+	 */
 	public String getPanelPrincipal() {
 		return PANELPRINCIPAL;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de logInGestor
+	 */
 	public String getLogInGestor() {
 		return LOGINGESTOR;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de logInEmpleado
+	 */
 	public String getLogInEmpleado() {
 		return LOGINEMPLEADO;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de exposiciones
+	 */
 	public String getExposiciones() {
 		return EXPOSICIONES;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de registro
+	 */
 	public String getRegistro() {
 		return REGISTRO;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de empleado principal
+	 */
 	public String getEmpleadoPrincipal() {
 		return EMPLEADOPRINCIPAL;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de cliente principal
+	 */
 	public String getClientePrincipal() {
 		return CLIENTEPRINCIPAL;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de gestor principal
+	 */
 	public String getGestorPrincipal() {
 		return GESTORPRINCIPAL;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de enviar mensajes
+	 */
 	public String getEnviarMensajes() {
 		return ENVIARMENSAJES;
 	}
 
+	/**
+	 * Devuelve el nombre del panel de ajustar climatización
+	 */
 	public String getAjustarClimatizacion() {
 		return AJUSTARCLIMATIZACION;
 	}
 
+	/**
+	 * Devuelve la vista de la pantalla principal
+	 */
 	public PantallaPrincipal getVistaPantallaPrincipal() {
 		return vistaPantallaPrincipal;
 	}
 
+	/**
+	 * Devuelve la vista de registro
+	 */
 	public RegistroUsuario getVistaRegistro() {
 		return vistaRegistro;
 	}
 
+	/**
+	 * Devuelve la vista de logInGestor
+	 */
 	public LoginGestor getVistaLogInGestor() {
 		return vistaLoginGestor;
 	}
 
+	/**
+	 * Devuelve la vista de logInEmpleado
+	 */
 	public LoginEmpleado getVistaLoginEmpleado() {
 		return vistaLoginEmpleado;
 	}
 
+	/**
+	 * Devuelve la vista de enviar mensajes
+	 */
 	public EnviarMensajes getVistaEnviarMensajes() {
 		return vistaEnviarMensajes;
 	}
 
+	/**
+	 * Devuelve la vista de ajustar climatización
+	 */
 	public AjustarClimatizacion getVistaAjustarClimatizacion() {
 		return vistaAjustarClimatizacion;
 	}
 
-
+	/**
+	 * Devuelve la vista de empleado principal
+	 */
 	public EmpleadoPrincipal getVistaEmpleadoPrincipal() {
 		return vistaEmpleadoPrincipal;
 	}
 
+	/**
+	 * Devuelve la vista de gestor principal
+	 */
 	public GestorPrincipal getVistaGestorPrincipal() {
 		if (this.vistaGestorPrincipal != null) {
 			return vistaGestorPrincipal;
@@ -168,48 +233,89 @@ public class Ventana extends JFrame {
 		return vistaGestorPrincipal;
 	}
 
+	/**
+	 * Devuelve la vista de cliente principal
+	 */
 	public ClientePrincipal getVistaClientePrincipal() {
 		return vistaClientePrincipal;
 	}
 
+	/**
+	 * Devuelve la vista de busqueda de exposiciones
+	 */
 	public BusquedaExposiciones getVistaBusquedaExposiciones() {
 		return vistaBusquedaExposiciones;
 	}
 
+	/**
+	 * Establece el controlador de la vista de gestor principal
+	 * 
+	 * @param controlador ControladorGestor
+	 */
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
 		this.vistaGestorPrincipal.setControlador(controladorGestor.getObraEjecutarListener(),
-				controladorGestor.getObraAgregarListener(), controladorGestor.getSalaEjecutarListener());
+				controladorGestor.getObraAgregarListener(), controladorGestor.getSalaEjecutarListener(),
+				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener());
 	}
 
+	/**
+	 * Establece el controlador de la vista de cliente principal
+	 * 
+	 * @param controlador ControladorCliente
+	 */
 	public void setControladorCliente(ControladorCliente controlador) {
 		this.controladorCliente = controlador;
 		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(),
 				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion());
 	}
 
+	/**
+	 * Establece el controlador de la vista de empleado principal
+	 * 
+	 * @param controlador ControladorEmpleado
+	 */
 	public void setControladorEmpleado(ControladorEmpleado controlador) {
 		this.controladorEmpleado = controlador;
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
 				controlador.getClimatizacionListener(), controlador.getCerrarSesionListener());
 	}
 
+	/**
+	 * Establece el controlador para la busqueda de exposiciones
+	 * 
+	 * @param controlador ControladorBusquedaExposiciones
+	 */
 	public void setControladorBusquedaExposiciones(ControladorBusquedaExposiciones controlador) {
 		this.controladorBusquedaExposiciones = controlador;
 		this.vistaBusquedaExposiciones.setControlador(controlador.getAtrasListener());
 	}
 
-
+	/**
+	 * Establece el controlador para enviar mensajes
+	 * 
+	 * @param controlador ControladorEnviarMensajes
+	 */
 	public void setControladorEnviarMensajes(ControladorEnviarMensajes controlador) {
 		this.controladorEnviarMensajes = controlador;
 		this.vistaEnviarMensajes.setControlador(controlador.getEnviarListener(), controlador.getAtrasListener());
 	}
 
+	/**
+	 * Establece el controlador para ajustar climatización
+	 * 
+	 * @param controlador ControladorAjustarClimatizacion
+	 */
 	public void setControladorAjustarClimatizacion(ControladorAjustarClimatizacion controlador) {
 		this.controladorAjustarClimatizacion = controlador;
 		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener());
 	}
 
+	/**
+	 * Establece el controlador general de la aplicación
+	 * 
+	 * @param controlador El controlador de Expofy
+	 */
 	public void setControlador(Controlador controlador) {
 		this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
 		this.vistaPantallaPrincipal.setControlador(
@@ -235,6 +341,11 @@ public class Ventana extends JFrame {
 		this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
 	}
 
+	/**
+	 * Muestra el panel indicado
+	 * 
+	 * @param carta El nombre del panel a mostrar
+	 */
 	public void mostrarPanel(String carta) {
 		cartaPrevia = cartaActual;
 		cartaActual = carta;
@@ -243,6 +354,9 @@ public class Ventana extends JFrame {
 		l.show(cartas, carta);
 	}
 
+	/**
+	 * Muestra el panel previo, util para ir hacia atrás.
+	 */
 	public void mostrarPanelPrevio() {
 		if (cartaPrevia != null) {
 			mostrarPanel(cartaPrevia);

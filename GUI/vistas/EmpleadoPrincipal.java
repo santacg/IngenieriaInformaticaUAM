@@ -6,6 +6,12 @@ import java.awt.event.ActionListener;
 
 import GUI.modelo.centroExposicion.Empleado;
 
+/**
+ * Clase EmpleadoPrincipal.
+ * Implementa la interfaz de la vista principal de un empleado.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class EmpleadoPrincipal extends JPanel {
     private JButton enviarMensajeBoton;
     private JButton cambiarClimatizacionBoton;
@@ -13,6 +19,9 @@ public class EmpleadoPrincipal extends JPanel {
     private JPanel panelPrincipal;
     private JButton cerrarSesionBoton;
 
+    /**
+     * Constructor de la clase EmpleadoPrincipal.
+     */
     public EmpleadoPrincipal() {
         setLayout(new BorderLayout());
         panelPrincipal = new JPanel();
@@ -35,6 +44,11 @@ public class EmpleadoPrincipal extends JPanel {
         add(panelCerrarSesion, BorderLayout.NORTH);
     }
 
+    /**
+     * Método que añade el título a la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addTitle(GridBagConstraints constraints) {
         JLabel titleLabel = new JLabel("Bienvenido, [NOMBRE EMPLEADO]");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
@@ -46,6 +60,12 @@ public class EmpleadoPrincipal extends JPanel {
         panelPrincipal.add(titleLabel, constraints);
 
     }
+
+    /**
+     * Método que añade los botones a la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     public void addButtons(GridBagConstraints constraints) {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -64,6 +84,13 @@ public class EmpleadoPrincipal extends JPanel {
         panelPrincipal.add(buttonPanel, constraints);
     }
 
+    /**
+    * Método que establece los controladores de la vista.
+    *
+    * @param cMensaje Controlador del botón de envío de mensajes.
+    * @param cClimatizacion Controlador del botón de cambio de climatización.
+    * @param cCerrarSesion Controlador del botón de cierre de sesión.
+    */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cCerrarSesion) {
         
         this.enviarMensajeBoton.addActionListener(cMensaje);

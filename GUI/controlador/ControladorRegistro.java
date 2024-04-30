@@ -9,17 +9,32 @@ import GUI.modelo.expofy.Expofy;
 import GUI.vistas.RegistroUsuario;
 import GUI.vistas.Ventana;
 
+/**
+ * Clase ControladorRegistro.
+ * Actúa como controlador de la vista RegistroUsuario.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorRegistro {
     private Ventana frame;
     private RegistroUsuario vistaRegistro;
     private Expofy expofy;
 
+    /**
+     * Constructor de la clase ControladorRegistro.
+     * 
+     * @param frame Ventana principal de la aplicación.
+     * @param expofy Objeto de la clase Expofy.
+     */
     public ControladorRegistro(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
         this.vistaRegistro = frame.getVistaRegistro();
     }
 
+    /**
+     * Listener del botón de registro.
+     */
     private ActionListener registrarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String usuario = vistaRegistro.getUsuario();
@@ -44,6 +59,9 @@ public class ControladorRegistro {
         }
     };
 
+    /**
+     * Listener del botón de cancelar.
+     */
     public ActionListener cancelarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vistaRegistro.update();
@@ -51,10 +69,20 @@ public class ControladorRegistro {
         }
     };
 
+    /**
+     * Getter del listener del botón de registro.
+     * 
+     * @return ActionListener Listener del botón de registro.
+     */
     public ActionListener getRegistrarListener() {
         return registrarListener;
     }
 
+    /**
+     * Getter del listener del botón de cancelar.
+     * 
+     * @return ActionListener Listener del botón de cancelar.
+     */
     public ActionListener getCancelarListener() {
         return cancelarListener;
     }

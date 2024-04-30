@@ -5,23 +5,28 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.vistas.BusquedaExposiciones;
-import GUI.vistas.ClientePrincipal;
 import GUI.vistas.Ventana;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import java.awt.event.*;
-import javax.swing.*;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Clase ControladorBusquedaExposiciones
+ * Implementa el control de la vista BusquedaExposiciones.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorBusquedaExposiciones {
     private Ventana frame;
     private BusquedaExposiciones vista;
     private Expofy expofy;
 
+    /**
+     * Constructor de la clase ControladorBusquedaExposiciones
+     * @param frame Ventana principal
+     * @param expofy Modelo de datos de la aplicación
+     */
     public ControladorBusquedaExposiciones(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
@@ -30,6 +35,9 @@ public class ControladorBusquedaExposiciones {
         mostrarExposiciones();
     }
 
+    /**
+     * Muestra las exposiciones en la tabla de la vista
+     */
     public void mostrarExposiciones() {
         ArrayList<Object[]> data = new ArrayList<>();
         for (CentroExposicion centro : expofy.getCentrosExposicion()) {
@@ -48,12 +56,19 @@ public class ControladorBusquedaExposiciones {
         vista.addTablaExposiciones(data);
     }
 
+    /**
+     * Listener para el botón de volver atrás
+     */
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             frame.mostrarPanelPrevio();
         }
     };
 
+    /**
+     * Devuelve el listener para el botón de volver atrás
+     * @return ActionListener
+     */
     public ActionListener getAtrasListener() {
         return atrasListener;
     }

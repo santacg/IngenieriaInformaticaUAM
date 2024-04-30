@@ -29,8 +29,8 @@ public class MainVisual {
                 sala1.addSubsala(7.0, 5.0, 4, 35);
 
                 // Empleado
-                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", false, false, false,
-                                "AnorLondo");
+                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", true, false, false, "AnorLondo");
+
 
                 CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                                 LocalTime.of(21, 0, 0), "Madrid",

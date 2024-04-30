@@ -4,12 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Clase LoginEmpleado.
+ * Implementación de la interfaz gráfica de la vista de login de empleados.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class LoginEmpleado extends JPanel {
     private JTextField textUser;
     private JPasswordField fieldPassword;
     private JButton atrasBoton;
     private JButton aceptarBoton;
 
+    /**
+     * Constructor de la clase LoginEmpleado.
+     */
     public LoginEmpleado() {
         setLayout(new GridBagLayout());
 
@@ -24,6 +33,11 @@ public class LoginEmpleado extends JPanel {
         addButtons(constraints);
     }
 
+    /**
+     * Método que añade el título a la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addTitle(GridBagConstraints constraints) {
         JLabel titleLabel = new JLabel("Login de empleados");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
@@ -36,6 +50,11 @@ public class LoginEmpleado extends JPanel {
 
     }
 
+    /**
+     * Método que añade el campo de texto para el Nº de Seguridad Social.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addNSS(GridBagConstraints constraints) {
         JLabel labelUser = new JLabel("Nº Seguridad Social:");
         constraints.gridx = 0;
@@ -49,6 +68,11 @@ public class LoginEmpleado extends JPanel {
         add(textUser, constraints);
     }
 
+    /**
+     * Método que añade el campo de texto para la contraseña.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addPasswordField(GridBagConstraints constraints) {
         JLabel labelPassword = new JLabel("Contraseña:");
         constraints.gridx = 0;
@@ -61,6 +85,11 @@ public class LoginEmpleado extends JPanel {
         add(fieldPassword, constraints);
     }
 
+    /**
+     * Método que añade los botones de la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     public void addButtons(GridBagConstraints constraints) {
         aceptarBoton = new JButton("Aceptar");
         constraints.gridx = 0;
@@ -81,19 +110,38 @@ public class LoginEmpleado extends JPanel {
         add(buttonPanel, constraints);
     }
 
+    /**
+     * Método que devuelve el Nº de Seguridad Social introducido en el campo de texto.
+     * 
+     * @return Nº de Seguridad Social introducido.
+     */
     public String getUsuario() {
         return this.textUser.getText();
     }
 
+    /**
+     * Método que devuelve la contraseña introducida en el campo de texto.
+     * 
+     * @return Contraseña introducida.
+     */
     public String getPassword() {
         return new String(this.fieldPassword.getPassword());
     }
 
+    /**
+     * Método que establece los controladores de los botones de la vista.
+     * 
+     * @param cAceptar Controlador del botón de aceptar.
+     * @param cAtras Controlador del botón de atrás.
+     */
     public void setControlador(ActionListener cAceptar, ActionListener cAtras){
         aceptarBoton.addActionListener(cAceptar);
         atrasBoton.addActionListener(cAtras);
     }
 
+    /**
+     * Método que limpia los campos de texto de la vista.
+     */
     public void update() {
         textUser.setText("");
         fieldPassword.setText("");

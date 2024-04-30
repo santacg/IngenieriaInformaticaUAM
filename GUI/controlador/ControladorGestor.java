@@ -2,25 +2,41 @@ package GUI.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
+import GUI.modelo.exposicion.Exposicion;
 import GUI.modelo.obra.Estado;
 import GUI.modelo.obra.Obra;
 import GUI.vistas.GestorPrincipal;
 import GUI.vistas.ModeloTablaObras;
 import GUI.vistas.Ventana;
 
+/**
+ * Clase ControladorGestor.
+ * Implementa el controlador de la vista del gestor.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorGestor {
 
     private Ventana frame;
     private GestorPrincipal vista;
     private CentroExposicion centro;
 
+    /**
+     * Constructor de la clase ControladorGestor.
+     * 
+     * @param frame Ventana principal de la aplicación.
+     * @param centro Centro de exposición.
+     */
     public ControladorGestor(Ventana frame, CentroExposicion centro) {
         this.frame = frame;
         this.centro = centro;
@@ -31,19 +47,56 @@ public class ControladorGestor {
         mostrarObras();
     }
 
+    /**
+     * Método que muestra la vista del gestor.
+     */
     public void mostrarExposiciones() {
-        vista.addTablaExposiciones(centro);
+        vista.addPanelExposiciones(centro);
     }
 
+    /**
+     * Método que muestra la vista de las salas.
+     */
     public void mostrarSalas() {
         vista.addPanelSalas(centro);
     }
 
+    /**
+     * Método que muestra la vista de las obras.
+     */
     public void mostrarObras() {
         vista.addPanelObras(centro);
     }
 
-    // Obras 
+    /**
+     * Método que actualiza la vista de las exposiciones segun la ejecucion que se haya realizado.
+     */
+    private ActionListener exposicionEjecutarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String accion = vista.getExposicionAccionSeleccionada();
+            JTable tabla = vista.getTablaExposiciones();
+
+            int selectedRow = tabla.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(frame, "Debes seleccionar una exposición.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            for (Exposicion exposicion : centro.getExposiciones()) {
+                if (exposicion.getNombre().equals(tabla.getValueAt(selectedRow, 0))) {
+                    ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista, centro, exposicion, accion);
+                    vista.setControladorExposicionFormulario(controladorExposicionFormulario);
+                    break;
+                }
+            }
+
+        }
+    };
+
+    /**
+     * Método que actualiza la vista de las obras segun la ejecucion que se haya realizado.
+     */
     private ActionListener obraEjecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String accion = vista.getObraAccionSeleccionada();
@@ -106,6 +159,9 @@ public class ControladorGestor {
         }
     };
 
+    /**
+     * Método que actualiza la vista de las obras incializando un listener.
+     */
     private ActionListener obraAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             ControladorObraFormulario controladorObraFormulario = new ControladorObraFormulario(vista, centro);
@@ -113,6 +169,9 @@ public class ControladorGestor {
         }
     };
 
+    /**
+     * Método que inicializa un listener para ejecutar las salas.
+     */
     private ActionListener salaEjecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String accion = vista.getSalaAccionSeleccionada();
@@ -121,16 +180,46 @@ public class ControladorGestor {
         }
     };
 
+    private ActionListener exposicionAgregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista, centro);
+            vista.setControladorExposicionFormulario(controladorExposicionFormulario);
+        }
+    };
+
+    /**
+     * Método que obtiene el listener de de ejecucion de obras.
+     */
     public ActionListener getObraEjecutarListener() {
         return obraEjecutarListener;
     }
 
+    /**
+     * Método que obtiene el listener de agregar obras.
+     */
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
     }
-
+    
+    /**
+     * Método que obtiene el listener de ejecucion de salas.
+     */
     public ActionListener getSalaEjecutarListener() {
         return salaEjecutarListener;
+    }
+
+    /**
+     * Método que obtiene el listener de ejecucion de exposiciones.
+     */
+    public ActionListener getExposicionEjecutarListener() {
+        return exposicionEjecutarListener;
+    }
+    
+    /**
+     * Método que obtiene el listener de agregar exposiciones.
+     */
+    public ActionListener getExposicionAgregarListener() {
+        return exposicionAgregarListener;
     }
 
 }

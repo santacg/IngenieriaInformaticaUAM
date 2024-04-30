@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Clase PantallaPrincipal.
+ * Implementa la vista de la pantalla principal de la aplicación.
+ *  
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class PantallaPrincipal extends JPanel {
     private JButton aceptarBoton;
     private JButton buscarBoton;
@@ -13,6 +19,9 @@ public class PantallaPrincipal extends JPanel {
     private JTextField textUser;
     private JPasswordField fieldPassword;
 
+    /**
+     * Construye la vista de la pantalla principal de la aplicación.
+     */
     public PantallaPrincipal() {
         setLayout(new GridBagLayout());
 
@@ -26,6 +35,11 @@ public class PantallaPrincipal extends JPanel {
         addButtons(constraints);
     }
 
+    /**
+     * Añade el título de la pantalla principal.
+     * 
+     * @param constraints Restricciones de la cuadrícula.
+     */
     private void addTitle(GridBagConstraints constraints) {
         JLabel titleLabel = new JLabel("Expofy");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
@@ -36,6 +50,11 @@ public class PantallaPrincipal extends JPanel {
         add(titleLabel, constraints);
     }
 
+    /**
+     * Añade los campos de texto para el usuario.
+     * 
+     * @param constraints Restricciones de la cuadrícula.
+     */
     private void addUserFields(GridBagConstraints constraints) {
         JLabel labelUser = new JLabel("Usuario:");
         constraints.gridx = 0;
@@ -49,6 +68,11 @@ public class PantallaPrincipal extends JPanel {
         add(textUser, constraints);
     }
 
+    /**
+     * Añade el campo de texto para la contraseña.
+     * 
+     * @param constraints Restricciones de la cuadrícula.
+     */
     private void addPasswordField(GridBagConstraints constraints) {
         JLabel labelPassword = new JLabel("Contraseña:");
         constraints.gridx = 0;
@@ -60,7 +84,12 @@ public class PantallaPrincipal extends JPanel {
         constraints.gridy = 2;
         add(fieldPassword, constraints);
     }
-
+    
+    /**
+     * Añade los botones de la pantalla principal.
+     * 
+     * @param constraints Restricciones de la cuadrícula.
+     */
     public void addButtons(GridBagConstraints constraints) {
         this.aceptarBoton = new JButton("Aceptar");
         constraints.gridx = 0;
@@ -87,6 +116,15 @@ public class PantallaPrincipal extends JPanel {
         add(buttonPanel, constraints);
     }
 
+    /**
+     * Establece los controladores de los botones de la pantalla principal.
+     * 
+     * @param cBuscar Controlador del botón de buscar exposición.
+     * @param cAceptar Controlador del botón de aceptar.
+     * @param cGestor Controlador del botón de gestor.
+     * @param cEmpleado Controlador del botón de empleado.
+     * @param cRegistrar Controlador del botón de registrarse.
+     */
     public void setControlador(ActionListener cBuscar, ActionListener cAceptar, ActionListener cGestor,
             ActionListener cEmpleado, ActionListener cRegistrar) {
         this.buscarBoton.addActionListener(cBuscar);
@@ -96,14 +134,27 @@ public class PantallaPrincipal extends JPanel {
         this.registrarBoton.addActionListener(cRegistrar);
     }
 
+    /**
+     * Devuelve el usuario introducido en el campo de texto.
+     * 
+     * @return Usuario introducido.
+     */
     public String getUsuario() {
         return this.textUser.getText();
     }
 
+    /**
+     * Devuelve la contraseña introducida en el campo de texto.
+     * 
+     * @return Contraseña introducida.
+     */
     public String getPassword() {
         return new String(this.fieldPassword.getPassword());
     }
 
+    /**
+     * Limpia los campos de texto de la pantalla principal.
+     */
     public void update() {
         this.textUser.setText("");
         this.fieldPassword.setText("");

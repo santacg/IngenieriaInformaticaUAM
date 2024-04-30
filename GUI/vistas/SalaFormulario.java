@@ -5,6 +5,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Clase SalaFormulario
+ * Implementa la interfaz gráfica de un formulario para añadir o eliminar salas
+ *  
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class SalaFormulario extends JDialog {
 
     private JTextField nombre;
@@ -18,6 +24,11 @@ public class SalaFormulario extends JDialog {
     private JButton aceptarBtn;
     private JButton cancelarBtn;
 
+    /**
+     * Constructor de la clase SalaFormulario
+     * 
+     * @param accion String que indica la acción a realizar
+     */
     public SalaFormulario(String accion) {
         setSize(600, 700);
         setLocationRelativeTo(null); // Centrar el formulario
@@ -44,6 +55,12 @@ public class SalaFormulario extends JDialog {
         add(panelFormulario);
     }
 
+    /**
+     * Método que crea el formulario para añadir una sala
+     * 
+     * @param panelFormulario JPanel en el que se añadirán los campos
+     * @param constraints GridBagConstraints que definen la posición de los campos
+     */
     public void formularioAñadirSala(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Nombre:", nombre = new JTextField(20), panelFormulario, constraints, 0);
         addCampo("Aforo:", aforo = new JTextField(20), panelFormulario, constraints, 1);
@@ -55,6 +72,12 @@ public class SalaFormulario extends JDialog {
         addCampo("Largo:", largo = new JTextField(20), panelFormulario, constraints, 7);
     }
 
+    /**
+     * Método que crea el formulario para añadir una subsala
+     * 
+     * @param panelFormulario JPanel en el que se añadirán los campos
+     * @param constraints GridBagConstraints que definen la posición de los campos
+     */
     public void formularioAñadirSubsala(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Aforo: ", aforo = new JTextField(20), panelFormulario, constraints, 0);
         addCampo("Tomas de electricidad: ", tomasElectricidad = new JTextField(20), panelFormulario, constraints, 1);
@@ -62,10 +85,25 @@ public class SalaFormulario extends JDialog {
         addCampo("Largo: ", largo = new JTextField(20), panelFormulario, constraints, 3);
     }
 
+    /**
+     * Método que crea el formulario para confirmar la eliminación de una sala
+     * 
+     * @param panelFormulario JPanel en el que se añadirán los campos
+     * @param constraints GridBagConstraints que definen la posición de los campos
+     */
     public void confirmarEliminacion(JPanel panelFormulario, GridBagConstraints constraints) {
         panelFormulario.add(new JLabel("¿Estás seguro de que quieres eliminar esta sala?"), constraints);
     }
     
+    /**
+     * Método que añade un campo al formulario
+     * 
+     * @param label String que indica el nombre del campo
+     * @param comp Component que se añadirá al formulario
+     * @param panel JPanel en el que se añadirá el campo
+     * @param constraints GridBagConstraints que definen la posición del campo
+     * @param gridy int que indica la fila en la que se añadirá el campo
+     */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
         constraints.gridx = 0;
@@ -78,6 +116,13 @@ public class SalaFormulario extends JDialog {
         panel.add(comp, constraints);
     }
 
+    /**
+     * Método que añade los botones de aceptar y cancelar al formulario
+     * 
+     * @param panel JPanel en el que se añadirán los botones
+     * @param constraints GridBagConstraints que definen la posición de los botones
+     * @param gridy int que indica la fila en la que se añadirán los botones
+     */
     private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
         constraints.gridx = 0;
         constraints.gridy = gridy;
@@ -93,38 +138,84 @@ public class SalaFormulario extends JDialog {
         panel.add(buttonPanel, constraints);
     }
 
+    /**
+     * Método que devuelve el nombre introducido en el formulario
+     * 
+     * @return String con el nombre introducido
+     */
     public String getNombre() {
         return nombre.getText();
     }
 
+    /**
+     * Método que devuelve el aforo introducido en el formulario
+     * 
+     * @return Integer con el aforo introducido
+     */
     public Integer getAforo() {
         return Integer.parseInt(aforo.getText());
     }
 
+    /**
+     * Método que devuelve la humedad introducida en el formulario
+     * 
+     * @return Integer con la humedad introducida
+     */
     public Integer getHumedad() {
         return Integer.parseInt(humedad.getText());
     }
 
+    /**
+     * Método que devuelve la temperatura introducida en el formulario
+     * 
+     * @return Integer con la temperatura introducida
+     */
     public Integer getTemperatura() {
         return Integer.parseInt(temperatura.getText());
     }
 
+    /**
+     * Método que devuelve si el climatizador está seleccionado en el formulario
+     * 
+     * @return Boolean que indica si el climatizador está seleccionado
+     */
     public boolean getClimatizador() {
         return climatizador.isSelected();
     }
 
+    /**
+     * Método que devuelve las tomas de electricidad introducidas en el formulario
+     * 
+     * @return Integer con las tomas de electricidad introducidas
+     */
     public Integer getTomasElectricidad() {
         return Integer.parseInt(tomasElectricidad.getText());
     }
 
+    /**
+     * Método que devuelve el ancho introducido en el formulario
+     * 
+     * @return Double con el ancho introducido
+     */
     public Double getAncho() {
         return Double.parseDouble(ancho.getText());
     }
 
+    /**
+     * Método que devuelve el largo introducido en el formulario
+     * 
+     * @return Double con el largo introducido
+     */
     public Double getLargo() {
         return Double.parseDouble(largo.getText());
     }
 
+    /**
+     * Método que establece los controladores de los botones del formulario
+     * 
+     * @param cAceptar ActionListener que se añadirá al botón de aceptar
+     * @param cCancelar ActionListener que se añadirá al botón de cancelar
+     */
     public void setControlador(ActionListener cAceptar, ActionListener cCancelar) {
         aceptarBtn.addActionListener(cAceptar);
         cancelarBtn.addActionListener(cCancelar);

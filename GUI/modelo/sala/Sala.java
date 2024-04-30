@@ -25,6 +25,32 @@ public class Sala implements Serializable {
     private Sala salaPadre = null;
 
     /**
+     * Constructor que inicializa una nueva sala con sus propiedades específicas.
+     *
+     * @param nombre            El nombre de la sala.
+     * @param aforo             El aforo máximo permitido en la sala.
+     * @param humedad           El nivel de humedad en la sala.
+     * @param temperatura       La temperatura en la sala.
+     * @param climatizador      Si la sala tiene o no climatizador.
+     * @param tomasElectricidad El número de tomas de electricidad disponibles en la
+     *                          sala.
+     * @param ancho             El ancho de la sala.
+     * @param largo             El largo de la sala.
+     */
+    public Sala(String nombre, Integer aforo, Integer temperatura, Integer humedad, Boolean climatizador,
+            Integer tomasElectricidad, Double ancho, Double largo) {
+        this.nombre = nombre;
+        this.aforo = aforo;
+        this.humedad = humedad;
+        this.temperatura = temperatura;
+        this.climatizador = climatizador;
+        this.tomasElectricidad = tomasElectricidad;
+        this.ancho = ancho;
+        this.largo = largo;
+        this.subSalas = new ArrayList<>();
+    }
+
+    /**
      * Genera un código hash para esta sala.
      * 
      * @return El código hash de esta sala.
@@ -62,32 +88,6 @@ public class Sala implements Serializable {
         } else if (!nombre.equals(other.nombre))
             return false;
         return true;
-    }
-
-    /**
-     * Constructor que inicializa una nueva sala con sus propiedades específicas.
-     *
-     * @param nombre            El nombre de la sala.
-     * @param aforo             El aforo máximo permitido en la sala.
-     * @param humedad           El nivel de humedad en la sala.
-     * @param temperatura       La temperatura en la sala.
-     * @param climatizador      Si la sala tiene o no climatizador.
-     * @param tomasElectricidad El número de tomas de electricidad disponibles en la
-     *                          sala.
-     * @param ancho             El ancho de la sala.
-     * @param largo             El largo de la sala.
-     */
-    public Sala(String nombre, Integer aforo, Integer temperatura, Integer humedad, Boolean climatizador,
-            Integer tomasElectricidad, Double ancho, Double largo) {
-        this.nombre = nombre;
-        this.aforo = aforo;
-        this.humedad = humedad;
-        this.temperatura = temperatura;
-        this.climatizador = climatizador;
-        this.tomasElectricidad = tomasElectricidad;
-        this.ancho = ancho;
-        this.largo = largo;
-        this.subSalas = new ArrayList<>();
     }
 
     /**

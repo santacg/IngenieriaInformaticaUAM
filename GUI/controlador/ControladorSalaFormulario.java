@@ -8,14 +8,25 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.sala.Sala;
 import GUI.vistas.*;
 
-import java.util.*;
-
+/**
+ * Clase ControladorSalaFormulario
+ * Implementa el controlador de la vista SalaFormulario.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorSalaFormulario {
     private SalaFormulario vista;
     private GestorPrincipal frame;
     private CentroExposicion centroExposicion;
     private String accion;
 
+    /**
+     * Constructor de la clase ControladorSalaFormulario
+     * 
+     * @param frame GestorPrincipal
+     * @param centroExposicion CentroExposicion
+     * @param accion String
+     */
     public ControladorSalaFormulario(GestorPrincipal frame, CentroExposicion centroExposicion, String accion) {
         this.frame = frame;
         this.vista = frame.getVistaSalaFormulario(accion);
@@ -23,6 +34,9 @@ public class ControladorSalaFormulario {
         this.accion = accion;
     }
 
+    /**
+     * Método que inicializa el listener del botón aceptar
+     */
     private ActionListener aceptarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
@@ -57,8 +71,6 @@ public class ControladorSalaFormulario {
                         frame.getTablaSalas().clearSelection();
                         String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
                         Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
-                        // Esto es muy inificiente, habría que replantear salas y subsalas posiblemente
-                        // (Carlos)
                         // Si no se ha encontrado sala con ese nombre es que es una subsala
                         if (salaSeleccionada == null) {
                             salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
@@ -94,11 +106,11 @@ public class ControladorSalaFormulario {
                         if (salaSeleccionada == null) {
                             salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
                             salaSeleccionada.removeSubsala();
-                        } else { 
+                        } else {
                             if (centroExposicion.removeSala(salaSeleccionada) == false) {
-                            JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
+                                JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                return;
                             }
                         }
                         frame.actualizarTablaSalas(centroExposicion);
@@ -115,16 +127,29 @@ public class ControladorSalaFormulario {
         }
     };
 
+    /**
+     * Método que inicializa el listener del botón cancelar
+     */
     private ActionListener cancelarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.dispose();
         }
     };
 
+    /**
+     * Método que devuelve el listener del botón aceptar
+     * 
+     * @return ActionListener
+     */
     public ActionListener getAceptarListener() {
         return aceptarListener;
     }
 
+    /**
+     * Método que devuelve el listener del botón cancelar
+     * 
+     * @return ActionListener
+     */
     public ActionListener getCancelarListener() {
         return cancelarListener;
     }

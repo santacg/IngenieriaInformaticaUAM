@@ -1,6 +1,7 @@
 package GUI.modelo.exposicion;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
@@ -46,7 +47,7 @@ public class Exposicion implements Serializable {
      */
     public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
             Set<SalaExposicion> salas, TipoExpo tipo, Double precio) {
-
+        LocalDate fechaAux;
         if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) {
             System.out.println("La fecha de inicio no puede ser posterior o igual a la fecha de fin");
             return;
@@ -64,6 +65,13 @@ public class Exposicion implements Serializable {
             this.fechaFin = LocalDate.MAX;
         } else {
             this.fechaFin = fechaFin;
+        }
+
+        for (fechaAux = fechaInicio; fechaAux.isBefore(fechaAux); fechaAux.plusDays(1)) {
+            for (int i = 0; i < 11; i++) {
+                horario.add(new Hora(fechaAux, LocalTime.of(9, 0, 0).plusHours(i),
+                        LocalTime.of(9, 0, 0).plusHours(i).plusMinutes(50), 40, precio));
+            }
         }
         this.descripcion = descripcion;
         this.salas = salas;
@@ -403,6 +411,11 @@ public class Exposicion implements Serializable {
      * Cambia el tipo de la exposición a temporal.
      */
     public boolean expoTemporal(LocalDate fechaFin) {
+        if (this.tipo == TipoExpo.TEMPORAL) {
+            System.out.println("La exposición ya es temporal");
+            return false;
+        }
+
         if (setFechaFin(fechaFin) == false) {
             System.out.println(
                     "No se puede cambiar el tipo de la exposición a temporal con una fecha de fin anterior a la actual");
@@ -453,6 +466,15 @@ public class Exposicion implements Serializable {
         }
 
         return true;
+    }
+
+    public Hora getHora(LocalDate fecha, int hora_num){
+        for (Hora hora : horario) {
+            if (hora.getFecha().isEqual(fecha) && hora_num == hora.getHoraInicio().getHour()) {
+                return hora;
+            }
+        }
+        return new Hora(fecha, LocalTime.of(hora_num, 0, 0), LocalTime.of(hora_num, 59, 0), 40, precio);
     }
 
     /**

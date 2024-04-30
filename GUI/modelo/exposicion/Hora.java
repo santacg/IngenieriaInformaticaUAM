@@ -19,6 +19,23 @@ public class Hora implements Serializable {
     private Integer countEntradas;
 
     /**
+     * Constructor para crear un nuevo horario con detalles específicos.
+     * 
+     * @param fecha      La fecha de la actividad.
+     * @param horaInicio La hora de inicio de la actividad.
+     * @param horaFin    La hora de fin de la actividad.
+     * @param nEntradas  El número total de entradas disponibles para la actividad.
+     * @param precio     El precio por entrada.
+     */
+    public Hora(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas, Double precio) {
+        this.fecha = fecha;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.nEntradas = nEntradas;
+        countEntradas = nEntradas;
+    }
+
+    /**
      * Añade una entrada al conjunto de entradas para este horario.
      * 
      * @param entrada La entrada a añadir.
@@ -46,22 +63,7 @@ public class Hora implements Serializable {
         countEntradas = 0;
     }
 
-    /**
-     * Constructor para crear un nuevo horario con detalles específicos.
-     * 
-     * @param fecha      La fecha de la actividad.
-     * @param horaInicio La hora de inicio de la actividad.
-     * @param horaFin    La hora de fin de la actividad.
-     * @param nEntradas  El número total de entradas disponibles para la actividad.
-     * @param precio     El precio por entrada.
-     */
-    public Hora(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas, Double precio) {
-        this.fecha = fecha;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
-        this.nEntradas = nEntradas;
-        countEntradas = nEntradas;
-    }
+
 
     /**
      * Obtiene la fecha del tramo horario.

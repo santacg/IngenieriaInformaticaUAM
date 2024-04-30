@@ -351,7 +351,7 @@ public class Expofy implements Serializable {
         }
 
         // Asegura que la fecha y la hora de la visita coincidan.
-        if (!fecha.equals(hora.getFecha())) {
+        if (!fecha.isEqual(hora.getFecha())) {
             System.out.println("La fecha no coincide con la fecha de la hora");
             return false;
         }
@@ -484,22 +484,21 @@ public class Expofy implements Serializable {
      * @return {@code true} si el código es válido y pertenece al cliente,
      *         {@code false} en caso contrario.
      */
-    private boolean validezCodigo(String codigo, ClienteRegistrado cliente) {
-        if (codigo == null)
-            for (CentroExposicion centroExposicion : centrosExposicion) {
-                for (Sorteo sorteo : centroExposicion.getSorteos()) {
-                    for (Inscripcion inscripcion : sorteo.getInscripciones()) {
-                        if (inscripcion.getCliente().equals(cliente)) {
-                            for (String codigo_c : inscripcion.getCodigos()) {
-                                if (codigo_c.compareTo(codigo) == 0) {
-                                    inscripcion.removeCodigo(codigo);
-                                    return true;
-                                }
+    public boolean validezCodigo(String codigo, ClienteRegistrado cliente) {
+        for (CentroExposicion centroExposicion : centrosExposicion) {
+            for (Sorteo sorteo : centroExposicion.getSorteos()) {
+                for (Inscripcion inscripcion : sorteo.getInscripciones()) {
+                    if (inscripcion.getCliente().equals(cliente)) {
+                        for (String codigo_c : inscripcion.getCodigos()) {
+                            if (codigo_c.compareTo(codigo) == 0) {
+                                inscripcion.removeCodigo(codigo);
+                                return true;
                             }
                         }
                     }
                 }
             }
+        }
         return false;
     }
 
@@ -509,7 +508,7 @@ public class Expofy implements Serializable {
      * @param nombreExposicion el nombre de la exposición a buscar.
      * @return la exposición con el nombre.
      */
-    public Exposicion getExposicionPorNombre(String nombreExposicion){
+    public Exposicion getExposicionPorNombre(String nombreExposicion) {
         for (CentroExposicion centro : centrosExposicion) {
             for (Exposicion exposicion : centro.getExposiciones()) {
                 if (nombreExposicion.equals(exposicion.getNombre())) {

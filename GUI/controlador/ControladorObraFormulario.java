@@ -8,18 +8,32 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.obra.*;
 import GUI.vistas.*;
 
+/**
+ * Clase ControladorObraFormulario
+ * Implementa el controlador de la vista ObraFormulario.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorObraFormulario {
     private ObraFormulario vista;
     private GestorPrincipal frame;
     private CentroExposicion centroExposicion;
-    private ModeloTablaObras modeloTablaObras;
 
+    /**
+     * Constructor de la clase ControladorObraFormulario
+     * 
+     * @param frame GestorPrincipal
+     * @param centroExposicion CentroExposicion
+     */
     public ControladorObraFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;
         this.vista = frame.getVistaObraFormulario();
         this.centroExposicion = centroExposicion;
     }
 
+    /**
+     * Método que inicializa el listener del botón de guardar.
+     */
     private ActionListener guardarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String tipoDeObra = vista.getTipoDeObra();
@@ -124,16 +138,29 @@ public class ControladorObraFormulario {
         }
     };
 
+    /**
+     * Método que inicializa el listener del botón de cancelar.
+     */
     private ActionListener cancelarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.dispose();
         }
     };
 
+    /**
+     * Método que devuelve el listener del botón de guardar.
+     * 
+     * @return ActionListener
+     */
     public ActionListener getGuardarListener() {
         return guardarListener;
     }
 
+    /**
+     * Método que devuelve el listener del botón de cancelar.
+     * 
+     * @return ActionListener
+     */
     public ActionListener getCancelarListener() {
         return cancelarListener;
     }

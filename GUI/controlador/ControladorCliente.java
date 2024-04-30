@@ -12,6 +12,12 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+/**
+ * Clase ControladorCliente.
+ * Este controlador se encarga de gestionar la vista del cliente registrado.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorCliente {
 
     private Ventana frame;
@@ -19,6 +25,13 @@ public class ControladorCliente {
     private Expofy expofy;
     private ClienteRegistrado cliente;
 
+    /**
+     * Constructor de la clase ControladorCliente.
+     * 
+     * @param frame Ventana principal de la aplicación.
+     * @param expofy Instancia de la aplicación.
+     * @param cliente Cliente registrado.
+     */
     public ControladorCliente(Ventana frame, Expofy expofy, ClienteRegistrado cliente) {
         this.frame = frame;
         this.cliente = cliente;
@@ -30,6 +43,9 @@ public class ControladorCliente {
         mostrarNotificaciones();
     }
 
+    /**
+     * Método que muestra las exposiciones en la vista.
+     */
     public void mostrarExposiciones() {
         ArrayList<Object[]> data = new ArrayList<>();
         for (CentroExposicion centro : expofy.getCentrosExposicion()) {
@@ -48,6 +64,9 @@ public class ControladorCliente {
         vista.addTablaExposiciones(data);
     }
 
+    /**
+     * Método que muestra las notificaciones en la vista.
+     */
     public void mostrarNotificaciones() {
         ArrayList<Object[]> data = new ArrayList<>();
         for (Notificacion notificacion : cliente.getNotificaciones()) {
@@ -59,22 +78,43 @@ public class ControladorCliente {
         vista.addTablaNotificaciones(data);
     }
 
+    /**
+     * Método que muestra el perfil del cliente en la vista.
+     */
     public void mostrarPerfil() {
         vista.addPerfil(cliente.getNIF(), cliente.getContrasenia(), cliente.getPublicidad());
-    }
+    }   
 
+    /**
+     * Método que devuelve el ActionListener para comprar una entrada.
+     * 
+     * @return ActionListener para comprar una entrada.
+     */
     public ActionListener getComprarListener() {
         return comprarListener;
     }
 
+    /**
+     * Método que devuelve el ActionListener para actualizar los datos del cliente.
+     * 
+     * @return ActionListener para actualizar los datos del cliente.
+     */
     public ActionListener getActualizarDatos() {
         return actualizarDatosListener;
     }
 
+    /**
+     * Método que devuelve el ActionListener para cerrar la sesión del cliente.
+     * 
+     * @return ActionListener para cerrar la sesión del cliente.
+     */
     public ActionListener getCerrarSesion() {
         return cerrarSesionListener;
     }
 
+    /**
+     * ActionListener para comprar una entrada.
+     */
     private ActionListener comprarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = vista.getTablaExposiciones().getSelectedRow();
@@ -85,7 +125,7 @@ public class ControladorCliente {
                         "Rellene el siguiente formulario para la compra de entradas para la exposición: "
                                 + nombreExposicion);
                 Exposicion exposicion = expofy.getExposicionPorNombre(nombreExposicion);
-                ControladorCompraFormulario controladorCompraFormulario = new ControladorCompraFormulario(vista,
+                ControladorCompraFormulario controladorCompraFormulario = new ControladorCompraFormulario(vista, expofy,
                         exposicion, cliente);
                 vista.setCompraFormularioControlador(controladorCompraFormulario);
                 
@@ -95,6 +135,9 @@ public class ControladorCliente {
         }
     };
 
+    /**
+     * ActionListener para actualizar los datos del cliente.
+     */
     private ActionListener actualizarDatosListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (vista.getCheckBoxPublicidad().isSelected() && cliente.getPublicidad() == false) {
@@ -124,6 +167,9 @@ public class ControladorCliente {
         }
     };
 
+    /**
+     * ActionListener para cerrar la sesión del cliente.
+     */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             expofy.logOut(cliente);

@@ -7,17 +7,32 @@ import GUI.modelo.expofy.Expofy;
 import GUI.modelo.centroExposicion.*;
 import GUI.vistas.*;
 
+/**
+ * Clase ControladorLoginEmpleado.
+ * Implementa el controlador de la vista LoginEmpleado.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorLoginEmpleado {
     private Ventana frame;
     private LoginEmpleado vista;
     private Expofy expofy;
 
+    /**
+     * Constructor de la clase ControladorLoginEmpleado.
+     * 
+     * @param frame Ventana
+     * @param expofy Expofy
+     */
     public ControladorLoginEmpleado(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
         this.vista = frame.getVistaLoginEmpleado();
     }
 
+    /**
+     * Método que inicializa el listener del botón de aceptar.
+     */
     private ActionListener acceptListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String usuario = vista.getUsuario();
@@ -42,6 +57,9 @@ public class ControladorLoginEmpleado {
         }
     };
 
+    /**
+     * Método que inicializa el listener del botón de atrás.
+     */
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
@@ -49,10 +67,20 @@ public class ControladorLoginEmpleado {
         }
     };
 
+    /**
+     * Método que devuelve el listener del botón de aceptar.
+     * 
+     * @return ActionListener
+     */
     public ActionListener getAcceptListener() {
         return acceptListener;
     }
 
+    /**
+     * Método que devuelve el listener del botón de atrás.
+     * 
+     * @return ActionListener
+     */
     public ActionListener getAtrasListener() {
         return atrasListener;
     }

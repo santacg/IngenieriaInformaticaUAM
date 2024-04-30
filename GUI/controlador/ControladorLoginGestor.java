@@ -10,17 +10,32 @@ import GUI.modelo.expofy.Expofy;
 import GUI.vistas.LoginGestor;
 import GUI.vistas.Ventana;
 
+/**
+ * Clase ControladorLoginGestor
+ * Actúa como controlador de la vista LoginGestor.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorLoginGestor {
     private Ventana frame;
     private LoginGestor vista;
     private Expofy expofy;
 
+    /**
+     * Constructor de la clase ControladorLoginGestor.
+     * 
+     * @param frame Ventana principal de la aplicación.
+     * @param expofy Objeto de la clase Expofy.
+     */
     public ControladorLoginGestor(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
         this.vista = frame.getVistaLogInGestor();
     }
 
+    /**
+     * Método que inicializa el listener del botón de aceptar.
+     */
     private ActionListener aceptarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String password = vista.getPassword();
@@ -47,6 +62,9 @@ public class ControladorLoginGestor {
         }
     };
 
+    /**
+     * Método que inicializa el listener del botón de atrás.
+     */
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
@@ -54,10 +72,20 @@ public class ControladorLoginGestor {
         }
     };
 
+    /**
+     * Método que devuelve el listener del botón de aceptar.
+     * 
+     * @return Listener del botón de aceptar.
+     */
     public ActionListener getAceptarListener() {
         return aceptarListener;
     }
 
+    /**
+     * Método que devuelve el listener del botón de atrás.
+     * 
+     * @return Listener del botón de atrás.
+     */
     public ActionListener getAtrasListener() {
         return atrasListener;
     }

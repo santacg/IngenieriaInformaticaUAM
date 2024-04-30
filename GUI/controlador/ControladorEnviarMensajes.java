@@ -5,24 +5,39 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.centroExposicion.Empleado;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.EnviarMensajes;
 import GUI.vistas.Ventana;
 
+/**
+ * Clase ControladorEnviarMensajes
+ * Actúa como controlador de la vista EnviarMensajes.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorEnviarMensajes {
     private Ventana frame;
     private EnviarMensajes vistaEnviarMensajes;
     private Expofy expofy;
     private Empleado empleado;
 
+    /**
+     * Constructor de la clase ControladorEnviarMensajes
+     * @param frame Ventana en la que se muestra la vista
+     * @param expofy Expofy que contiene los datos de la aplicación
+     * @param empleado Empleado que está utilizando la aplicación
+     */
     public ControladorEnviarMensajes(Ventana frame, Expofy expofy, Empleado empleado) {
         this.frame = frame;
         this.expofy = expofy;
         this.vistaEnviarMensajes = frame.getVistaEnviarMensajes();
         this.empleado = empleado;
     }
+    
+    /**
+     * Inicializa el controlador enviarListener.
+     */
     private ActionListener enviarListener = new ActionListener() {        
         public void actionPerformed(ActionEvent e) {
             String destinatario = vistaEnviarMensajes.getDestinatario();
@@ -41,15 +56,29 @@ public class ControladorEnviarMensajes {
             }
         }
     };
+
+    /**
+     * Inicializa el controlador atrasListener.
+     */
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vistaEnviarMensajes.update();
             frame.mostrarPanelPrevio();
         }
     };
+
+    /**
+     * Devuelve el ActionListener del botón atras.
+     * @return atrasListener
+     */
     public ActionListener getAtrasListener() {
         return atrasListener;
-    }
+    }  
+
+    /**
+     * Devuelve el ActionListener del botón enviar.
+     * @return enviarListener
+     */
     public ActionListener getEnviarListener() {
         return enviarListener;
     }

@@ -56,8 +56,7 @@ public class Ticket implements ITicketInfo {
     }
 
     public String getPicture() {
-        return ("." + File.separator + "resources" + File.separator + "centrocentro.jpg");
-
+        return ("." + File.separator + "GUI" +  File.separator + "resources" + File.separator + "centrocentro.jpg");
     }
 
     public String dataTicket() {

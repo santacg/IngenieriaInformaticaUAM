@@ -6,17 +6,32 @@ import javax.swing.*;
 import GUI.modelo.expofy.*;
 import GUI.vistas.*;
 
+/**
+ * Clase ControladorPantallaPrincipal
+ * Implementa el controlador de la pantalla principal de la aplicación.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ControladorPantallaPrincipal {
     private Ventana frame;
     private PantallaPrincipal vista;
     private Expofy expofy;
 
+    /**
+     * Constructor de la clase ControladorPantallaPrincipal
+     * 
+     * @param frame Ventana de la aplicación
+     * @param expofy Modelo de la aplicación
+     */
     public ControladorPantallaPrincipal(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
         this.vista = frame.getVistaPantallaPrincipal();
     }
 
+    /**
+     * Inicializa el listener de búsqueda de la pantalla principal
+     */
     private ActionListener buscaListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
@@ -24,6 +39,9 @@ public class ControladorPantallaPrincipal {
         }
     };
 
+    /**
+     * Inicializa el listener de gestor de la pantalla principal
+     */
     private ActionListener gestorListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update(); 
@@ -31,6 +49,9 @@ public class ControladorPantallaPrincipal {
         }
     };
 
+    /**
+     * Inicializa el listener de empleado de la pantalla principal
+     */
     private ActionListener empleadoListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
@@ -38,6 +59,9 @@ public class ControladorPantallaPrincipal {
         }
     };
 
+    /**
+     * Inicializa el listener de registro de la pantalla principal
+     */
     private ActionListener registrarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
@@ -45,6 +69,9 @@ public class ControladorPantallaPrincipal {
         }
     };
 
+    /**
+     * Inicializa el listener de aceptar de la pantalla principal
+     */
     private ActionListener acceptListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String usuario = vista.getUsuario();
@@ -69,22 +96,47 @@ public class ControladorPantallaPrincipal {
         }
     };
 
+    /**
+     * Devuelve el listener de búsqueda de la pantalla principal
+     * 
+     * @return ActionListener Listener de búsqueda
+     */
     public ActionListener getBuscaListener() {
         return buscaListener;
     }
 
+    /**
+     * Devuelve el listener de gestor de la pantalla principal
+     * 
+     * @return ActionListener Listener de gestor
+     */
     public ActionListener getGestorListener() {
         return gestorListener;
     }
 
+    /**
+     * Devuelve el listener de empleado de la pantalla principal
+     * 
+     * @return ActionListener Listener de empleado
+     */
     public ActionListener getEmpleadoListener() {
         return empleadoListener;
     }
 
+    /**
+     * Devuelve el listener de registro de la pantalla principal
+     * 
+     * @return ActionListener Listener de registro
+     */
     public ActionListener getRegistrarListener() {
         return registrarListener;
     }
 
+    /**
+     * Devuelve el listener de aceptar de la pantalla principal
+     * 
+     * @return ActionListener Listener de aceptar
+     */
     public ActionListener getAcceptListener() {
         return acceptListener;
     }

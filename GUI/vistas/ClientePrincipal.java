@@ -3,13 +3,18 @@ package GUI.vistas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import GUI.controlador.ControladorCompraFormulario;
 
+/**
+ * Clase ClientePrincipal.
+ * Implementa la interfaz de la vista principal del cliente.
+ *  
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
@@ -17,12 +22,12 @@ public class ClientePrincipal extends JPanel {
 
     private CompraFormulario vistaCompraFormulario;
     private ControladorCompraFormulario controladorCompraFormulario;
-    
+
     private JPanel sorteos;
 
     private JPanel notificaciones;
     private JTable tablaNotificaciones;
-    
+
     private JPanel perfil;
     private JCheckBox checkBoxPublicidad;
     private JButton actualizarBoton;
@@ -30,7 +35,10 @@ public class ClientePrincipal extends JPanel {
     private JTextField fieldContrasenaConfirmar;
 
     private JButton cerrarSesionBoton;
-    
+
+    /**
+     * Constructor de la clase ClientePrincipal.
+     */
     public ClientePrincipal() {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -49,15 +57,20 @@ public class ClientePrincipal extends JPanel {
         cerrarSesionBoton = new JButton("Cerrar Sesión");
         panelCerrarSesion.add(cerrarSesionBoton, BorderLayout.EAST);
 
-        tabbedPane.add("Exposiciones",buscarExposiciones);
-        tabbedPane.add("Sorteos",sorteos);
-        tabbedPane.add("Perfil",perfil);
-        tabbedPane.add("Notificaciones",notificaciones);
+        tabbedPane.add("Exposiciones", buscarExposiciones);
+        tabbedPane.add("Sorteos", sorteos);
+        tabbedPane.add("Perfil", perfil);
+        tabbedPane.add("Notificaciones", notificaciones);
         add(panelCerrarSesion, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
 
     }
 
+    /**
+     * Método que añade una tabla de exposiciones a la vista.
+     * 
+     * @param data ArrayList de objetos que contiene los datos de las exposiciones.
+     */
     public void addTablaExposiciones(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Descripcion", "Fecha Inicio", "Fecha Fin", "Precio", "Nombre Centro",
                 "Localizacion" };
@@ -80,8 +93,13 @@ public class ClientePrincipal extends JPanel {
         this.buscarExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
+    /**
+     * Método que añade una tabla de notificaciones a la vista.
+     * 
+     * @param data ArrayList de objetos que contiene los datos de las notificaciones.
+     */
     public void addTablaNotificaciones(ArrayList<Object[]> data) {
-        String[] titulos = { "Fecha", "Mensaje"};
+        String[] titulos = { "Fecha", "Mensaje" };
 
         Object[][] datos = data.toArray(new Object[0][]);
         tablaNotificaciones = new JTable(new DefaultTableModel(datos, titulos) {
@@ -97,6 +115,13 @@ public class ClientePrincipal extends JPanel {
         this.notificaciones.add(new JScrollPane(tablaNotificaciones), BorderLayout.CENTER);
     }
 
+    /**
+     * Método que añade un perfil a la vista.
+     * 
+     * @param clienteNIF DNI/NIF del cliente.
+     * @param clienteContrasena Contraseña del cliente.
+     * @param clientePublicidad Booleano que indica si el cliente quiere recibir publicidad.
+     */
     public void addPerfil(String clienteNIF, String clienteContrasena, boolean clientePublicidad) {
         perfil.setLayout(new BorderLayout());
         JPanel perfil_actualizar = new JPanel();
@@ -111,7 +136,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 0;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
-        
+
         perfil_data.add(titleLabel);
 
         JLabel labelUser = new JLabel("DNI/NIF: ");
@@ -148,7 +173,6 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 3;
         constraints.gridwidth = 1;
         perfil_data.add(checkBoxPublicidad, constraints);
-        
 
         JLabel lablelChangePassword = new JLabel("Nueva Contraseña: ");
         constraints.gridx = 0;
@@ -178,38 +202,65 @@ public class ClientePrincipal extends JPanel {
         constraints.gridwidth = 1;
         perfil_actualizar.add(actualizarBoton, constraints);
 
-        perfil.add(perfil_data,BorderLayout.CENTER);
-        perfil.add(perfil_actualizar,BorderLayout.SOUTH);
+        perfil.add(perfil_data, BorderLayout.CENTER);
+        perfil.add(perfil_actualizar, BorderLayout.SOUTH);
     }
 
+    /**
+     * Método que establece los controladores de los botones de la vista.
+     * 
+     * @param cComprar Controlador del botón de comprar.
+     * @param cActualizar Controlador del botón de actualizar.
+     * @param cCerrarSesion Controlador del botón de cerrar sesión.
+     */
     public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion) {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 
+    /**
+     * Método que devuelve la vista de compra de entradas.
+     * 
+     * @param exposicionNombre Nombre de la exposición.
+     * @param precio Precio de la entrada.
+     * @return Vista de compra de entradas.
+     */
     public CompraFormulario getVistaCompraFormulario(String exposicionNombre, double precio) {
         this.vistaCompraFormulario = new CompraFormulario(exposicionNombre, precio);
         return this.vistaCompraFormulario;
     }
 
-    public void setCompraFormularioControlador(ControladorCompraFormulario controlador){
+    /**
+     * Método que establece el controlador de la vista de compra de entradas.
+     * 
+     * @param controlador Controlador de la vista de compra de entradas.
+     */
+    public void setCompraFormularioControlador(ControladorCompraFormulario controlador) {
         this.controladorCompraFormulario = controlador;
-        this.vistaCompraFormulario.setControlador(controladorCompraFormulario.getSiguienteListener(), controladorCompraFormulario.getCancelarListener());
+        this.vistaCompraFormulario.setControlador(controladorCompraFormulario.getSiguienteListener(),
+                controladorCompraFormulario.getCancelarListener(), controladorCompraFormulario.getdiaExpoListener(),
+                controladorCompraFormulario.getMesExpoListener(), controladorCompraFormulario.getAnioExpoListener(),
+                controladorCompraFormulario.getdiaTarjListener(), controladorCompraFormulario.getMesTarjListener(),
+                controladorCompraFormulario.getAnioTarjListener(), controladorCompraFormulario.getNentradasListener(),
+                controladorCompraFormulario.getHoraListener());
     }
 
-    public JTable getTablaExposiciones(){
+    /+*
+    
+    public JTable getTablaExposiciones() {
         return tablaExposiciones;
     }
 
-    public JCheckBox getCheckBoxPublicidad(){
+    public JCheckBox getCheckBoxPublicidad() {
         return checkBoxPublicidad;
     }
 
-    public String getFieldContrasena(){
+    public String getFieldContrasena() {
         return fieldContrasena.getText();
     }
-    public String getFieldContrasenaConfirmar(){
+
+    public String getFieldContrasenaConfirmar() {
         return fieldContrasenaConfirmar.getText();
     }
 }

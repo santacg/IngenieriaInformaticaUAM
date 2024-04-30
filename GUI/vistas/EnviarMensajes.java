@@ -5,12 +5,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Clase EnviarMensajes.
+ * Implementa la interfaz de la vista principal de un empleado.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class EnviarMensajes extends JPanel {
     private JTextField mensaje;
     private JTextField destinatario;
     private JButton atrasBoton;
     private JButton enviarBoton;
 
+    /**
+     * Constructor de la clase EnviarMensajes.
+     */
     public EnviarMensajes() {
         setLayout(new GridBagLayout());
 
@@ -25,6 +34,11 @@ public class EnviarMensajes extends JPanel {
         addButtons(constraints);
     }
     
+    /**
+     * Añade el título de la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addTitle(GridBagConstraints constraints) {
         JLabel titleLabel = new JLabel("Envío de mensajes");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
@@ -36,6 +50,11 @@ public class EnviarMensajes extends JPanel {
         add(titleLabel, constraints);
     }
 
+    /**
+     * Añade el campo de texto para el destinatario.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addDestinatario(GridBagConstraints constraints) {
         JLabel labelDestinatario = new JLabel("NIF del destinatario:");
         constraints.gridx = 0;
@@ -54,6 +73,12 @@ public class EnviarMensajes extends JPanel {
         constraints.gridy = 1;
         add(destinatario, constraints);
     }
+
+    /**
+     * Añade el campo de texto para el mensaje.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addMensaje(GridBagConstraints constraints) {
         JLabel labelMensaje = new JLabel("Mensaje:");
         constraints.gridx = 0;
@@ -66,6 +91,11 @@ public class EnviarMensajes extends JPanel {
         add(mensaje, constraints);
     }
 
+    /**
+     * Añade los botones de la vista.
+     * 
+     * @param constraints Constraints para el GridBagLayout.
+     */
     private void addButtons(GridBagConstraints constraints) {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -82,18 +112,38 @@ public class EnviarMensajes extends JPanel {
         add(buttonPanel, constraints);
     }
 
+    /**
+     * Establece los controladores de los botones.
+     * 
+     * @param cEnviar Controlador del botón de enviar.
+     * @param cAtras Controlador del botón de atrás.
+     */
     public void setControlador(ActionListener cEnviar, ActionListener cAtras) {
         this.enviarBoton.addActionListener(cEnviar);
         this.atrasBoton.addActionListener(cAtras);
     }
 
+    /**
+     * Devuelve el mensaje introducido por el usuario.
+     * 
+     * @return Mensaje introducido por el usuario.
+     */
     public String getMensaje() {
         return this.mensaje.getText();
     }
 
+    /**
+     * Devuelve el destinatario introducido por el usuario.
+     * 
+     * @return Destinatario introducido por el usuario.
+     */
     public String getDestinatario() {
         return this.destinatario.getText();
-    }
+    }   
+
+    /**
+     * Actualiza y limpia los campos de texto de la vista.
+     */
     public void update() {
         mensaje.setText("");
         destinatario.setText("");
