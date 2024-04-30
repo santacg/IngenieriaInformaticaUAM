@@ -222,6 +222,12 @@ public class ControladorCliente {
             if (selectedRow >= 0) {
                 Sorteo sorteo = sorteos.get(selectedRow);
                 vista.getTablaExposiciones().clearSelection();
+                if (cliente.getSancionado()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Su cuenta está sancionada para la participación en sorteos hasta la fecha "
+                                    + cliente.getSancionadoHasta());
+                    return;
+                }
                 cliente.inscribirse(sorteo, 1);
                 JOptionPane.showMessageDialog(frame,
                         "Usted se ha inscrito al sorteo");

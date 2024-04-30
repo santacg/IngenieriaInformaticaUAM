@@ -25,7 +25,7 @@ public class ExposicionFormulario extends JDialog {
     private JTextField nombre;
     private JTextField fechaInicio;
     private JTextField fechaFin;
-    private JTextField descipcion;
+    private JTextField descripcion;
     private JList<TipoExpo> tipoExpo;
     private JTextField precio;
     private JComboBox<String> salas;
@@ -64,71 +64,13 @@ public class ExposicionFormulario extends JDialog {
                 formularioExposicionTemporal(panelFormulario, constraints);
                 break;
             case "Agregar Exposicion":
-                JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
-
-                // Panel de formulario (West)
-                JPanel panelFormulario1 = new JPanel();
-                panelFormulario1.setLayout(new BoxLayout(panelFormulario1, BoxLayout.Y_AXIS));
-                panelFormulario1.setBorder(BorderFactory.createTitledBorder("Detalles de la Exposición"));
-                inicializarCamposFormulario(panelFormulario1);
-
-                // Panel de obras (Center)
-                panelObras = new JPanel(new GridLayout(0, 1));
-                JScrollPane scrollObras = new JScrollPane(panelObras);
-                scrollObras.setBorder(BorderFactory.createTitledBorder("Obras"));
-                scrollObras.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                scrollObras.setPreferredSize(new Dimension(250, 600));
-
-                // Panel de salas (East)
-                JPanel panelSalas = new JPanel(new BorderLayout());
-                salas = new JComboBox<>();
-                JScrollPane scrollSalas = new JScrollPane(salas);
-                scrollSalas.setBorder(BorderFactory.createTitledBorder("Salas"));
-                scrollSalas.setPreferredSize(new Dimension(200, 200));
-                panelSalas.add(scrollSalas);
-
-                // Panel de botones (South)
-                JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-                aceptarBtn = new JButton("Aceptar");
-                cancelarBtn = new JButton("Cancelar");
-                panelBotones.add(aceptarBtn);
-                panelBotones.add(cancelarBtn);
-
-                panelPrincipal.add(panelFormulario1, BorderLayout.WEST);
-                panelPrincipal.add(scrollObras, BorderLayout.CENTER);
-                panelPrincipal.add(panelSalas, BorderLayout.EAST);
-                panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
-
-                add(panelPrincipal);
-                return;
+                break;
         }
 
         addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
     }
 
-    private void inicializarCamposFormulario(JPanel panel) {
-        nombre = new JTextField(20);
-        fechaInicio = new JTextField(20);
-        fechaFin = new JTextField(20);
-        descipcion = new JTextField(20);
-        precio = new JTextField(20);
-        tipoExpo = new JList<>(TipoExpo.values());
-
-        addField("Nombre:", nombre, panel);
-        addField("Fecha inicio (yyyy-mm-dd):", fechaInicio, panel);
-        addField("Fecha fin (yyyy-mm-dd):", fechaFin, panel);
-        addField("Descripción:", descipcion, panel);
-        addField("Tipo de exposición:", tipoExpo, panel);
-        addField("Precio:", precio, panel);
-    }
-
-    private void addField(String label, JComponent field, Container container) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.add(new JLabel(label));
-        panel.add(field);
-        container.add(panel);
-    }
 
     public void mostrarObras(CentroExposicion centroExposicion) {
         Set<Obra> obras = centroExposicion.getObras();
@@ -256,7 +198,7 @@ public class ExposicionFormulario extends JDialog {
      * @return String con la descripción de la exposición.
      */
     public String getDescripcion() {
-        return descipcion.getText();
+        return descripcion.getText();
     }
 
     /**

@@ -97,6 +97,9 @@ public class ControladorCompraFormulario {
             if (expofy.validezCodigo(codigoSorteo, cliente)) {
                 precioFinal = (exposicion.getPrecio() * (double) nEntradas) - exposicion.getPrecio();
             }
+            else{
+                precioFinal = (exposicion.getPrecio() * (double) nEntradas);
+            }
 
             fecha = LocalDate.of(anioExpo, mesExpo, diaExpo);
             if (fecha.isBefore(LocalDate.now()) || fecha.isBefore(exposicion.getFechaInicio())
@@ -115,7 +118,7 @@ public class ControladorCompraFormulario {
             }
 
             vistConfirmarCompra = new ConfirmarCompra(exposicionNombre, String.valueOf(nEntradas),
-                    fecha.toString(), String.valueOf(hora) + "0:00", numeroTarjetadeCredito, fechaTarj.toString(),
+                    fecha.toString(), String.valueOf(hora) + ":00", numeroTarjetadeCredito, fechaTarj.toString(),
                     String.valueOf(cvv), String.valueOf(precioFinal));
             vistConfirmarCompra.setControlador(confirmarListener, atrasListener);
 

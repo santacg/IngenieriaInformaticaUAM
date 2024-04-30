@@ -1,6 +1,9 @@
 package GUI.main;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import GUI.controlador.Controlador;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.Ventana;
@@ -26,6 +29,13 @@ public class Main {
 					frame.setLocation(150, 50);
 					frame.setSize(1280, 720);
 					frame.setVisible(true);
+
+					frame.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent e) {
+							expofy.persistirExpofy();
+						}
+					});
 
 				} catch (Exception e) {
 					e.printStackTrace();
