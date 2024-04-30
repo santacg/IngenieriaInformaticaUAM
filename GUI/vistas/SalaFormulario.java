@@ -20,7 +20,7 @@ public class SalaFormulario extends JDialog {
 
     public SalaFormulario(String accion) {
         setTitle("Agregar sala");
-        setSize(500, 400);
+        setSize(600, 700);
         setLocationRelativeTo(null); // Centrar el formulario
         setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
 
@@ -33,6 +33,9 @@ public class SalaFormulario extends JDialog {
             case "Añadir Sala":
                 formularioAñadirSala(panelFormulario, constraints);
                 break;
+            case "Añadir Subsala":
+                formularioAñadirSubsala(panelFormulario, constraints);
+                break;
         }
 
         addBotones(panelFormulario, constraints, 8);
@@ -40,16 +43,23 @@ public class SalaFormulario extends JDialog {
     }
 
     public void formularioAñadirSala(JPanel panelFormulario, GridBagConstraints constraints) {
-        addCampo("Nombre:", nombre = new JTextField(32), panelFormulario, constraints, 0);
-        addCampo("Aforo:", aforo = new JTextField(32), panelFormulario, constraints, 1);
-        addCampo("Humedad:", humedad = new JTextField(32), panelFormulario, constraints, 2);
-        addCampo("Temperatura:", temperatura = new JTextField(32), panelFormulario, constraints, 3);
+        addCampo("Nombre:", nombre = new JTextField(20), panelFormulario, constraints, 0);
+        addCampo("Aforo:", aforo = new JTextField(20), panelFormulario, constraints, 1);
+        addCampo("Humedad:", humedad = new JTextField(20), panelFormulario, constraints, 2);
+        addCampo("Temperatura:", temperatura = new JTextField(20), panelFormulario, constraints, 3);
         addCampo("Climatizador:", climatizador = new JCheckBox(), panelFormulario, constraints, 4);
-        addCampo("Tomas de electricidad:", tomasElectricidad = new JTextField(32), panelFormulario, constraints, 5);
-        addCampo("Ancho:", ancho = new JTextField(32), panelFormulario, constraints, 6);
-        addCampo("Largo:", largo = new JTextField(32), panelFormulario, constraints, 7);
+        addCampo("Tomas de electricidad:", tomasElectricidad = new JTextField(20), panelFormulario, constraints, 5);
+        addCampo("Ancho:", ancho = new JTextField(20), panelFormulario, constraints, 6);
+        addCampo("Largo:", largo = new JTextField(20), panelFormulario, constraints, 7);
     }
 
+    public void formularioAñadirSubsala(JPanel panelFormulario, GridBagConstraints constraints) {
+        addCampo("Aforo: ", aforo = new JTextField(20), panelFormulario, constraints, 0);
+        addCampo("Tomas de electricidad: ", tomasElectricidad = new JTextField(20), panelFormulario, constraints, 1);
+        addCampo("Ancho: ", ancho = new JTextField(20), panelFormulario, constraints, 2);
+        addCampo("Largo: ", largo = new JTextField(20), panelFormulario, constraints, 3);
+    }
+    
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
         JLabel jlabel = new JLabel(label);
         constraints.gridx = 0;

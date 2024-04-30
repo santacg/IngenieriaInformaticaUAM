@@ -23,21 +23,21 @@ public class ControladorLoginEmpleado {
             String usuario = vista.getUsuario();
             String password = vista.getPassword();
             if (usuario.equals("") || password.equals("")) {
-                JOptionPane.showMessageDialog(frame, "Debes introducir un NIF y una contraseña.", "Error",
+                JOptionPane.showMessageDialog(frame, "Debes introducir el número de la Seguridad Social y una contraseña.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
             for (CentroExposicion centro : expofy.getCentrosExposicion()) {
                 if (centro.loginEmpleado(usuario, password) == true) {
                     JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
-                    ControladorEmpleado controladorEmpleado = new ControladorEmpleado(frame, centro);
+                    ControladorEmpleado controladorEmpleado = new ControladorEmpleado(frame, expofy, centro, usuario);
                     frame.setControladorEmpleado(controladorEmpleado);
                     vista.update();
                     frame.mostrarPanel(frame.getEmpleadoPrincipal());
                     return;
                 }
             }
-            JOptionPane.showMessageDialog(frame, "NIF o contraseña incorrectos.", "Error",
+            JOptionPane.showMessageDialog(frame, "Número de la Seguridad Social o contraseña incorrectos.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     };

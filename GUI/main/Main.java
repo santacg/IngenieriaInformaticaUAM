@@ -1,13 +1,6 @@
 package GUI.main;
 
 import java.awt.EventQueue;
-
-/*
-Imports para pantalla completa:
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-*/
-
 import GUI.controlador.Controlador;
 import GUI.modelo.expofy.Expofy;
 import GUI.vistas.Ventana;
@@ -24,16 +17,8 @@ public class Main {
 					Controlador controlador = new Controlador(frame, expofy);
 					frame.setControlador(controlador);
 					frame.mostrarPanel(frame.getPanelPrincipal());
-					
-					frame.setSize(900, 750); // Tamaño de la ventana
-
-					/* 
-					Las tres líneas sirven para mostrar la ventana en pantalla completa:
-					GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-					GraphicsDevice device = env.getDefaultScreenDevice();
-					device.setFullScreenWindow(frame);
-					*/
-
+					frame.setLocationRelativeTo(null);
+					frame.setSize(1280, 720); 
 					frame.setVisible(true);
 					
 				} catch (Exception e) {

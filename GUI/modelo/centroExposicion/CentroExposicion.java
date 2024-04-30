@@ -309,6 +309,37 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
+     * Obtiene una sala por su nombre.
+     * 
+     * @param nombre el nombre de la sala a buscar
+     * @return la sala con el nombre proporcionado, o null si no existe
+     */
+    public Sala getSalaPorNombre(String nombre) {
+        for (Sala sala : salas) {
+            if (sala.getNombre().equals(nombre)) {
+                return sala;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Obtiene una sub-sala por su nombre.
+     * @param nombre el nombre de la sub-sala a buscar
+     * @return la sub-sala con el nombre proporcionado, o null si no existe
+     */
+    public Sala getSubSalaPorNombre(String nombre) {
+        for (Sala sala : salas) {
+            for (Sala subSala : sala.getSubSalas()) {
+                if (subSala.getNombre().equals(nombre)) {
+                    return subSala;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Obtiene las exposiciones totales en el centro.
      * 
      * @return un conjunto de las exposiciones totales
@@ -618,6 +649,20 @@ public class CentroExposicion implements Serializable {
      */
     public Set<Empleado> getEmpleados() {
         return empleados;
+    }
+
+        /**
+     * Obtiene un empleado del centro de exposición a partir de su NIF.
+     *
+     * @return El empleado o null si no existe.
+     */
+    public Empleado getEmpleado(String NIF) {
+        for (Empleado empleado : empleados) {
+            if (empleado.getNIF().equals(NIF)) {
+                return empleado;
+            }
+        }
+        return null;
     }
 
     /**

@@ -37,11 +37,17 @@ public class EnviarMensajes extends JPanel {
     }
 
     private void addDestinatario(GridBagConstraints constraints) {
-        JLabel labelDestinatario = new JLabel("Destinatario:");
+        JLabel labelDestinatario = new JLabel("NIF del destinatario:");
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
         add(labelDestinatario, constraints);
+
+        JLabel labelTodos = new JLabel("(Vacío para enviar a todos)");
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        add(labelTodos, constraints);
 
         this.destinatario = new JTextField(30);
         constraints.gridx = 1;
@@ -51,12 +57,12 @@ public class EnviarMensajes extends JPanel {
     private void addMensaje(GridBagConstraints constraints) {
         JLabel labelMensaje = new JLabel("Mensaje:");
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         add(labelMensaje, constraints);
 
         this.mensaje = new JTextField(30);
         constraints.gridx = 1;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         add(mensaje, constraints);
     }
 
@@ -70,15 +76,15 @@ public class EnviarMensajes extends JPanel {
         buttonPanel.add(this.enviarBoton);
 
         constraints.gridx = 0;
-        constraints.gridy = 4;
+        constraints.gridy = 5;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.LAST_LINE_END;
         add(buttonPanel, constraints);
     }
 
     public void setControlador(ActionListener cEnviar, ActionListener cAtras) {
-        this.atrasBoton.addActionListener(cAtras);
         this.enviarBoton.addActionListener(cEnviar);
+        this.atrasBoton.addActionListener(cAtras);
     }
 
     public String getMensaje() {
@@ -89,7 +95,7 @@ public class EnviarMensajes extends JPanel {
         return this.destinatario.getText();
     }
     public void update() {
-        this.mensaje.setText("");
-        this.destinatario.setText("");
+        mensaje.setText("");
+        destinatario.setText("");
     }
 }

@@ -297,7 +297,7 @@ public class Sala implements Serializable {
      * 
      * @param name El nombre de la subsala a eliminar.
      */
-    public void removeSubsalaI(String name) {
+    public void removeSubsalaPorNombre(String name) {
         for (Sala subSala : subSalas) {
             if (subSala.getNombre().equals(name)) {
                 this.aforo += subSala.getAforo();
@@ -324,6 +324,15 @@ public class Sala implements Serializable {
             this.tomasElectricidad += subSala.getTomasElectricidad();
         }
         subSalas.clear();
+    }
+
+    public Sala getSubSalaPorNombre(String name) {
+        for (Sala subSala : subSalas) {
+            if (subSala.getNombre().equals(name)) {
+                return subSala;
+            }
+        }
+        return null;
     }
 
     /**

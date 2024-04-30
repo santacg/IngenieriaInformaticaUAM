@@ -79,15 +79,16 @@ public class ControladorCliente {
         public void actionPerformed(ActionEvent e) {
             int selectedRow = vista.getTablaExposiciones().getSelectedRow();
             if (selectedRow >= 0) {
+                vista.getTablaExposiciones().clearSelection();
                 String nombreExposicion = (String) vista.getTablaExposiciones().getValueAt(selectedRow, 0);
-                JOptionPane.showMessageDialog(frame, "Mostrando horarios para la exposición: " + nombreExposicion);
                  JOptionPane.showMessageDialog(frame,
                         "Rellene el siguiente formulario para la compra de entradas para la exposición: "
                                 + nombreExposicion);
                 Exposicion exposicion = expofy.getExposicionPorNombre(nombreExposicion);
                 ControladorCompraFormulario controladorCompraFormulario = new ControladorCompraFormulario(vista,
-                        exposicion);
+                        exposicion, cliente);
                 vista.setCompraFormularioControlador(controladorCompraFormulario);
+                
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona una exposición.");
             }

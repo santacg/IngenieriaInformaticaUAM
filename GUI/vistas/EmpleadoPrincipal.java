@@ -4,13 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import GUI.modelo.centroExposicion.Empleado;
+
 public class EmpleadoPrincipal extends JPanel {
     private JButton enviarMensajeBoton;
     private JButton cambiarClimatizacionBoton;
     private JButton venderEntradaBoton;
+    private JPanel panelPrincipal;
+    private JButton cerrarSesionBoton;
 
     public EmpleadoPrincipal() {
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
+        panelPrincipal = new JPanel();
+        panelPrincipal.setLayout(new GridBagLayout());
+
+        JPanel panelCerrarSesion = new JPanel();
+        panelCerrarSesion.setLayout(new BorderLayout());
+        cerrarSesionBoton = new JButton("Cerrar Sesión");
+        panelCerrarSesion.add(cerrarSesionBoton, BorderLayout.EAST);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -19,6 +30,9 @@ public class EmpleadoPrincipal extends JPanel {
         // Componentes del formulario
         addTitle(constraints);
         addButtons(constraints);
+
+        add(panelPrincipal, BorderLayout.CENTER);
+        add(panelCerrarSesion, BorderLayout.NORTH);
     }
 
     private void addTitle(GridBagConstraints constraints) {
@@ -29,7 +43,7 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.CENTER;
 
-        add(titleLabel, constraints);
+        panelPrincipal.add(titleLabel, constraints);
 
     }
     public void addButtons(GridBagConstraints constraints) {
@@ -47,10 +61,15 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.gridy = 4;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.LAST_LINE_END;
-        add(buttonPanel, constraints);
+        panelPrincipal.add(buttonPanel, constraints);
     }
-    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion) {
+
+    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cCerrarSesion) {
+        
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
+        this.cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
+
+
 }

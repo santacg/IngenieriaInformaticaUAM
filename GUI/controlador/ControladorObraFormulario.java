@@ -107,13 +107,18 @@ public class ControladorObraFormulario {
                 JOptionPane.showMessageDialog(vista, "Error al crear la obra.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             if (centroExposicion.addObra(obra) == false) {
                 JOptionPane.showMessageDialog(vista, "Error al añadir la obra.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
-            } 
+            }
 
-            frame.actualizarTablaObras(centroExposicion);
+            Object[] obraData = new Object[] { false, obra.getNombre(), obra.getAutores(), obra.getDescripcion(),
+                    obra.getAnio(), obra.getExterna(), obra.getCuantiaSeguro(), obra.getNumeroSeguro(),
+                    obra.getEstado(),
+                    obra.getTipoObra() };
+
+            frame.añadirFilaTablaObras(obraData);
             JOptionPane.showMessageDialog(vista, "Obra añadida correctamente.");
             vista.dispose();
         }

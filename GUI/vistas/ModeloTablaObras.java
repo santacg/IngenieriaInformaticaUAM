@@ -1,5 +1,9 @@
 package GUI.vistas;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 public class ModeloTablaObras extends AbstractTableModel{
@@ -9,6 +13,13 @@ public class ModeloTablaObras extends AbstractTableModel{
     public ModeloTablaObras(String[] columnNames, Object[][] data) {
         this.titulos = columnNames;
         this.filas = data;
+    }
+
+    public void addRow(Object[] rowData) {
+        List<Object[]> filasList = new ArrayList<>(Arrays.asList(filas));
+        filasList.add(rowData);
+        filas = filasList.toArray(new Object[0][]);
+        fireTableDataChanged();
     }
 
     @Override
@@ -35,10 +46,6 @@ public class ModeloTablaObras extends AbstractTableModel{
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         filas[rowIndex][columnIndex] = value;
         fireTableCellUpdated(rowIndex, columnIndex);
-    }
-
-    public void addData(Object[][] data) {
-        this.filas = data;
     }
 
     @Override

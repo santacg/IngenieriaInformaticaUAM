@@ -39,6 +39,7 @@ public class GestorPrincipal extends JPanel {
     // Salas atributos
     private JButton salaEjecutarBtn;
     private JComboBox<String> salaComboAcciones;
+    private JTable tablaSalas;
 
     public GestorPrincipal() {
         setLayout(new BorderLayout());
@@ -104,7 +105,7 @@ public class GestorPrincipal extends JPanel {
         String[] titulos = { "Nombre", "Aforo", "Climatizador", "Tomas de corriente", "Ancho", "Largo" };
         Object[][] datos = construirDatosSalas(centro);
 
-        JTable tablaSalas = new JTable(new DefaultTableModel(datos, titulos));
+        this.tablaSalas = new JTable(new DefaultTableModel(datos, titulos));
         this.gestionSalas.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
 
         // Lista acciones y botones
@@ -123,20 +124,30 @@ public class GestorPrincipal extends JPanel {
     private Object[][] construirDatosSalas(CentroExposicion centroExposicion) {
         List<Object[]> data = new ArrayList<>();
         for (Sala sala : centroExposicion.getSalas()) {
-            data.add(new Object[] {
-                    sala.getNombre(),
-                    sala.getAforo(),
-                    sala.getClimatizador(),
-                    sala.getTomasElectricidad(),
-                    sala.getAncho(),
-                    sala.getLargo()
-            });
+            addSalasRecursivo(data, sala);
         }
         return data.toArray(new Object[0][]);
     }
 
-    public void actualizarTablaSalas(CentroExposicion centroExposicion) {
-        Object[][] datos = construirDatosSalas(centroExposicion);
+    private void addSalasRecursivo(List<Object[]> data, Sala sala) {
+        data.add(new Object[] {
+                sala.getNombre(),
+                sala.getAforo(),
+                sala.getClimatizador(),
+                sala.getTomasElectricidad(),
+                sala.getAncho(),
+                sala.getLargo()
+        });
+
+        for (Sala subSala : sala.getSubSalas()) {
+            addSalasRecursivo(data, subSala);
+        }
+    }
+
+    public void añadirFilaTablaSalas(Object[] salaData) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaSalas.getModel();
+        modelo.addRow(salaData);
+        modelo.fireTableDataChanged();
     }
 
     // Obras
@@ -184,12 +195,23 @@ public class GestorPrincipal extends JPanel {
         return data.toArray(new Object[0][]);
     }
 
-    public void actualizarTablaObras(CentroExposicion centroExposicion) {
-        Object[][] datos = construirDatosObras(centroExposicion);
-        ModeloTablaObras modeloTablaObras = (ModeloTablaObras) this.tablaObras.getModel();
-        modeloTablaObras.addData(datos);
-        modeloTablaObras.fireTableDataChanged();
+    public void añadirFilaTablaObras(Object[] obraData) {
+        ModeloTablaObras modelo = (ModeloTablaObras) this.tablaObras.getModel();
+        modelo.addRow(obraData);
+        modelo.fireTableDataChanged();
     }
+
+    public void actualizarTablaSalas(CentroExposicion centroExposicion) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaSalas.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosSalas(centroExposicion);
+        for (Object[] salaData : datos) {
+            modelo.addRow(salaData);
+        }
+        modelo.fireTableDataChanged();
+    }
+
+    // Misc
 
     public String getObraAccionSeleccionada() {
         return this.obraComboAcciones.getSelectedItem().toString();
@@ -203,13 +225,18 @@ public class GestorPrincipal extends JPanel {
         return this.tablaObras;
     }
 
+    public JTable getTablaSalas() {
+        return this.tablaSalas;
+    }
+
     public void deseleccionarTabla() {
         for (int i = 0; i < this.tablaObras.getRowCount(); i++) {
             this.tablaObras.setValueAt(false, i, 0);
         }
     }
 
-    public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar, ActionListener cSalasEjecutar) {
+    public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
+            ActionListener cSalasEjecutar) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.salaEjecutarBtn.addActionListener(cSalasEjecutar);

@@ -19,7 +19,7 @@ public class LoginEmpleado extends JPanel {
 
         // Componentes del formulario
         addTitle(constraints);
-        addNIF(constraints);
+        addNSS(constraints);
         addPasswordField(constraints);
         addButtons(constraints);
     }
@@ -36,8 +36,8 @@ public class LoginEmpleado extends JPanel {
 
     }
 
-    private void addNIF(GridBagConstraints constraints) {
-        JLabel labelUser = new JLabel("DNI/NIF:");
+    private void addNSS(GridBagConstraints constraints) {
+        JLabel labelUser = new JLabel("Nº Seguridad Social:");
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;

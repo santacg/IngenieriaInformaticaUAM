@@ -2,10 +2,12 @@ package GUI.vistas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.sala.Sala;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AjustarClimatizacion extends JPanel{
     private JPanel gestionTemperatura;
     private JPanel gestionHumedad;
+    private JButton atrasBoton;
     
     public AjustarClimatizacion() {
         setLayout(new BorderLayout());
@@ -30,23 +33,19 @@ public class AjustarClimatizacion extends JPanel{
         this.gestionHumedad = new JPanel();
         gestionHumedad.setLayout(new BorderLayout());
 
+        JPanel panelBoton = new JPanel();
+        this.atrasBoton = new JButton("Atrás");
+
+        panelBoton.add(atrasBoton);
         tabbedPane.addTab("Temperatura", gestionTemperatura);
         tabbedPane.addTab("Humedad", gestionHumedad);
 
+        add(panelBoton, BorderLayout.SOUTH);
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    public void addTemperatura(CentroExposicion centro) {
+    public void addTemperatura(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Climatizador", "Temperatura" };
-
-        List<Object[]> data = new ArrayList<>();
-        for (Sala sala : centro.getSalas()) {
-            data.add(new Object[] {
-                    sala.getNombre(),
-                    sala.getClimatizador(),
-                    sala.getTemperatura()
-            });
-        }
 
         Object[][] datos = data.toArray(new Object[0][]);
         JTable tablaTemperatura = new JTable(new DefaultTableModel(datos, titulos) {
@@ -62,17 +61,8 @@ public class AjustarClimatizacion extends JPanel{
         this.gestionTemperatura.add(new JScrollPane(tablaTemperatura), BorderLayout.CENTER);
     }
 
-    public void addHumedad(CentroExposicion centro) {
+    public void addHumedad(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Climatizador", "Humedad" };
-
-        List<Object[]> data = new ArrayList<>();
-        for (Sala sala : centro.getSalas()) {
-            data.add(new Object[] {
-                    sala.getNombre(),
-                    sala.getClimatizador(),
-                    sala.getHumedad()
-            });
-        }
 
         Object[][] datos = data.toArray(new Object[0][]);
         JTable tablaHumedad = new JTable(new DefaultTableModel(datos, titulos) {
@@ -87,4 +77,9 @@ public class AjustarClimatizacion extends JPanel{
 
         this.gestionHumedad.add(new JScrollPane(tablaHumedad), BorderLayout.CENTER);
     }
+
+    public void setControlador(ActionListener cAtras) {
+        atrasBoton.addActionListener(cAtras);
+    }
+
 }

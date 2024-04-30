@@ -45,9 +45,13 @@ public class Ventana extends JFrame {
 	private GestorPrincipal vistaGestorPrincipal;
 	private ControladorGestor controladorGestor;
 
+	private ControladorEnviarMensajes controladorEnviarMensajes;
 	private EnviarMensajes vistaEnviarMensajes;
+
 	private ControladorEmpleado controladorEmpleado;
-	private AjustarClimatizacion AjustarClimatizacion;
+
+	private ControladorAjustarClimatizacion controladorAjustarClimatizacion;
+	private AjustarClimatizacion vistaAjustarClimatizacion;
 
 	public Ventana() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,8 +68,8 @@ public class Ventana extends JFrame {
 		this.vistaEnviarMensajes = new EnviarMensajes();
 		cartas.add(vistaEnviarMensajes, ENVIARMENSAJES);
 
-		this.AjustarClimatizacion = new AjustarClimatizacion();
-		cartas.add(AjustarClimatizacion, AJUSTARCLIMATIZACION);
+		this.vistaAjustarClimatizacion = new AjustarClimatizacion();
+		cartas.add(vistaAjustarClimatizacion, AJUSTARCLIMATIZACION);
 
 		this.vistaLoginGestor = new LoginGestor();
 		cartas.add(vistaLoginGestor, LOGINGESTOR);
@@ -146,7 +150,7 @@ public class Ventana extends JFrame {
 	}
 
 	public AjustarClimatizacion getVistaAjustarClimatizacion() {
-		return AjustarClimatizacion;
+		return vistaAjustarClimatizacion;
 	}
 
 
@@ -187,12 +191,23 @@ public class Ventana extends JFrame {
 	public void setControladorEmpleado(ControladorEmpleado controlador) {
 		this.controladorEmpleado = controlador;
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
-				controlador.getClimatizacionListener());
+				controlador.getClimatizacionListener(), controlador.getCerrarSesionListener());
 	}
 
 	public void setControladorBusquedaExposiciones(ControladorBusquedaExposiciones controlador) {
 		this.controladorBusquedaExposiciones = controlador;
 		this.vistaBusquedaExposiciones.setControlador(controlador.getAtrasListener());
+	}
+
+
+	public void setControladorEnviarMensajes(ControladorEnviarMensajes controlador) {
+		this.controladorEnviarMensajes = controlador;
+		this.vistaEnviarMensajes.setControlador(controlador.getEnviarListener(), controlador.getAtrasListener());
+	}
+
+	public void setControladorAjustarClimatizacion(ControladorAjustarClimatizacion controlador) {
+		this.controladorAjustarClimatizacion = controlador;
+		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener());
 	}
 
 	public void setControlador(Controlador controlador) {

@@ -8,6 +8,8 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.sala.Sala;
 import GUI.vistas.*;
 
+import java.util.*;
+
 public class ControladorSalaFormulario {
     private SalaFormulario vista;
     private GestorPrincipal frame;
@@ -35,12 +37,57 @@ public class ControladorSalaFormulario {
                         return;
                     }
 
-                    frame.actualizarTablaSalas(centroExposicion);
+                    Object[] salaData = new Object[] {
+                            sala.getNombre(),
+                            sala.getAforo(),
+                            sala.getClimatizador(),
+                            sala.getTomasElectricidad(),
+                            sala.getAncho(),
+                            sala.getLargo()
+                    };
+
+                    frame.añadirFilaTablaSalas(salaData);
                     JOptionPane.showMessageDialog(vista, "Sala añadida correctamente.", "Sala añadida",
                             JOptionPane.INFORMATION_MESSAGE);
-                    vista.dispose();
+                    break;
+                case "Añadir Subsala":
+                    int selectedRow = frame.getTablaSalas().getSelectedRow();
+
+                    if (selectedRow >= 0) {
+                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
+                        // Esto es muy inificiente, habría que replantear salas y subsalas posiblemente
+                        // (Carlos)
+                        // Si no se ha encontrado sala con ese nombre es que es una subsala
+                        if (salaSeleccionada == null) {
+                            salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
+                        }
+
+                        if (salaSeleccionada.addSubsala(vista.getAncho(), vista.getLargo(),
+                                vista.getTomasElectricidad(), vista.getAforo()) == false) {
+                            JOptionPane.showMessageDialog(vista,
+                                    "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // Actualizacion
+                        frame.actualizarTablaSalas(centroExposicion);
+
+                    } else {
+                        JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir una subsala.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    JOptionPane.showMessageDialog(vista, "Subsala añadida correctamente.", "Subsala añadida",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Eliminar Sala":
+                    selectedRow = frame.getTablaSalas().getSelectedRow();
                     break;
             }
+            vista.dispose();
         }
     };
 

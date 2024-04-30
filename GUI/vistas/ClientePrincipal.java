@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import GUI.controlador.ControladorCompraFormulario;
+
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
@@ -186,13 +188,14 @@ public class ClientePrincipal extends JPanel {
         cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 
-    public CompraFormulario getVistaCompraFormulario() {
-        this.vistaCompraFormulario = new CompraFormulario();
+    public CompraFormulario getVistaCompraFormulario(String exposicionNombre) {
+        this.vistaCompraFormulario = new CompraFormulario(exposicionNombre);
         return this.vistaCompraFormulario;
     }
 
     public void setCompraFormularioControlador(ControladorCompraFormulario controlador){
         this.controladorCompraFormulario = controlador;
+        this.vistaCompraFormulario.setControlador(null, null);
     }
 
     public JTable getTablaExposiciones(){

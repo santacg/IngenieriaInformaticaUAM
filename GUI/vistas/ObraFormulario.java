@@ -30,7 +30,7 @@ public class ObraFormulario extends JDialog {
 
     public ObraFormulario() {
         setTitle("Agregar obra");
-        setSize(500, 400);
+        setSize(600, 700);
         setLocationRelativeTo(null); // Centrar el formulario
         setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
 
