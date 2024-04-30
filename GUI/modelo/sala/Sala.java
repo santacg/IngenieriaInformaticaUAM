@@ -77,7 +77,7 @@ public class Sala implements Serializable {
      * @param ancho             El ancho de la sala.
      * @param largo             El largo de la sala.
      */
-    public Sala(String nombre, Integer aforo, Integer humedad, Integer temperatura, Boolean climatizador,
+    public Sala(String nombre, Integer aforo, Integer temperatura, Integer humedad, Boolean climatizador,
             Integer tomasElectricidad, Double ancho, Double largo) {
         this.nombre = nombre;
         this.aforo = aforo;

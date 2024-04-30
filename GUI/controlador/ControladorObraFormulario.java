@@ -10,14 +10,17 @@ import GUI.vistas.*;
 
 public class ControladorObraFormulario {
     private ObraFormulario vista;
+    private GestorPrincipal frame;
     private CentroExposicion centroExposicion;
+    private ModeloTablaObras modeloTablaObras;
 
     public ControladorObraFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
+        this.frame = frame;
         this.vista = frame.getVistaObraFormulario();
         this.centroExposicion = centroExposicion;
     }
 
-    private ActionListener aceptarListener = new ActionListener() {
+    private ActionListener guardarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String tipoDeObra = vista.getTipoDeObra();
 
@@ -100,7 +103,17 @@ public class ControladorObraFormulario {
                     break;
             }
 
-            centroExposicion.addObra(obra); 
+            if (obra == null) {
+                JOptionPane.showMessageDialog(vista, "Error al crear la obra.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (centroExposicion.addObra(obra) == false) {
+                JOptionPane.showMessageDialog(vista, "Error al añadir la obra.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } 
+
+            frame.actualizarTablaObras(centroExposicion);
             JOptionPane.showMessageDialog(vista, "Obra añadida correctamente.");
             vista.dispose();
         }
@@ -112,8 +125,8 @@ public class ControladorObraFormulario {
         }
     };
 
-    public ActionListener getAceptarListener() {
-        return aceptarListener;
+    public ActionListener getGuardarListener() {
+        return guardarListener;
     }
 
     public ActionListener getCancelarListener() {

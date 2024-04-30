@@ -16,7 +16,6 @@ import java.awt.event.*;
 import javax.swing.event.*;
 import java.awt.*;
 
-
 public class ControladorCliente {
 
     private Ventana frame;
@@ -85,12 +84,14 @@ public class ControladorCliente {
             int selectedRow = vista.getTablaExposiciones().getSelectedRow();
             if (selectedRow >= 0) {
                 String nombreExposicion = (String) vista.getTablaExposiciones().getValueAt(selectedRow, 0);
-                JOptionPane.showMessageDialog(frame, "Mostrando horarios para la exposición: " + nombreExposicion);
-                // exposicion = expofy.getExposicionPorNombre(nombreExposicion);
-                // ControladorHorario controladorHorario = new ControladorHorario(exposicion);
-                // frame.setHorarioControlador(controladorHorario);
-                // vista.update();
-                // frame.mostrarPanel(frame.getHorario());
+                JOptionPane.showMessageDialog(frame,
+                        "Rellene el siguiente formulario para la comra de entradas para la exposición: "
+                                + nombreExposicion);
+                Exposicion exposicion = expofy.getExposicionPorNombre(nombreExposicion);
+                ControladorCompraFormulario controladorCompraFormulario = new ControladorCompraFormulario(vista,
+                        exposicion);
+                vista.setCompraFormularioControlador(controladorCompraFormulario);
+                
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona una exposición.");
             }

@@ -36,7 +36,7 @@ public class ControladorGestor {
     }
 
     public void mostrarSalas() {
-        vista.addTablaSalas(centro);
+        vista.addPanelSalas(centro);
     }
 
     public void mostrarObras() {
@@ -44,9 +44,9 @@ public class ControladorGestor {
     }
 
     // Obras 
-    private ActionListener ejecutarListener = new ActionListener() {
+    private ActionListener obraEjecutarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String accion = vista.getAccionSeleccionada();
+            String accion = vista.getObraAccionSeleccionada();
             JTable tabla = vista.getTablaObras();
             ModeloTablaObras modelo = (ModeloTablaObras) tabla.getModel();
             List<Obra> obras = new ArrayList<>();
@@ -95,7 +95,6 @@ public class ControladorGestor {
                                     }
                                     modelo.setValueAt(Estado.RESTAURACION, i, 8);
                                     break;
-                                default:
                             }
                             break;
                         }
@@ -107,18 +106,31 @@ public class ControladorGestor {
         }
     };
 
-    private ActionListener agregarListener = new ActionListener() {
+    private ActionListener obraAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             ControladorObraFormulario controladorObraFormulario = new ControladorObraFormulario(vista, centro);
             vista.setControladorObraFormulario(controladorObraFormulario);
         }
     };
 
-    public ActionListener getEjecutarListener() {
-        return ejecutarListener;
+    private ActionListener salaEjecutarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String accion = vista.getSalaAccionSeleccionada();
+            ControladorSalaFormulario controladorSalaFormulario = new ControladorSalaFormulario(vista, centro, accion);
+            vista.setControladorSalaFormulario(controladorSalaFormulario);
+        }
+    };
+
+    public ActionListener getObraEjecutarListener() {
+        return obraEjecutarListener;
     }
 
-    public ActionListener getAgregarListener() {
-        return agregarListener;
+    public ActionListener getObraAgregarListener() {
+        return obraAgregarListener;
     }
+
+    public ActionListener getSalaEjecutarListener() {
+        return salaEjecutarListener;
+    }
+
 }

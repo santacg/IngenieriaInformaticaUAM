@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class ObraFormulario extends JDialog {
+public class CompraFormulario extends JDialog {
 
     private JTextField obraNombre;
     private JTextField obraAutores;
@@ -28,7 +28,7 @@ public class ObraFormulario extends JDialog {
     private JButton guardarBtn;
     private JButton cancelarBtn;
 
-    public ObraFormulario() {
+    public CompraFormulario() {
         setTitle("Agregar obra");
         setSize(500, 400);
         setLocationRelativeTo(null); // Centrar el formulario

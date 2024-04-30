@@ -37,6 +37,10 @@ public class ModeloTablaObras extends AbstractTableModel{
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
+    public void addData(Object[][] data) {
+        this.filas = data;
+    }
+
     @Override
     public String getColumnName(int column) {
         return titulos[column];

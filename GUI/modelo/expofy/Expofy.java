@@ -504,6 +504,23 @@ public class Expofy implements Serializable {
     }
 
     /**
+     * Obtiene una exposición por su nombre.
+     * 
+     * @param nombreExposicion el nombre de la exposición a buscar.
+     * @return la exposición con el nombre.
+     */
+    public Exposicion getExposicionPorNombre(String nombreExposicion){
+        for (CentroExposicion centro : centrosExposicion) {
+            for (Exposicion exposicion : centro.getExposiciones()) {
+                if (nombreExposicion.equals(exposicion.getNombre())) {
+                    return exposicion;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Genera una representación en cadena de la instancia de Expofy, incluyendo
      * centros de exposición, notificaciones y clientes registrados.
      * 

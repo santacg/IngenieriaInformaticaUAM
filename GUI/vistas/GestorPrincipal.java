@@ -4,10 +4,9 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
-import GUI.controlador.ControladorObraFormulario;
+import GUI.controlador.*;
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.obra.Estado;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 
@@ -28,24 +27,18 @@ public class GestorPrincipal extends JPanel {
     private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;
 
+    private SalaFormulario vistaSalaFormulario;
+    private ControladorSalaFormulario controladorSalaFormulario;
+
     // Obras atributos
     private JButton obraEjecutarBtn;
     private JComboBox<String> obraComboAcciones;
     private JTable tablaObras;
     private JButton obraAgregarBtn;
 
-    // Atributos formulario obra
-    private JTextField obraNombre;
-    private JTextField obraAutores;
-    private JTextField obraDescripcion;
-    private JTextField obraAnio;
-    private JCheckBox obraExterna;
-    private JTextField obraCuantiaSeguro;
-    private JTextField obraNumeroSeguro;
-    private JComboBox<Estado> obraEstado;
-    private JComboBox<String> obraTipoObra;
-
-    //
+    // Salas atributos
+    private JButton salaEjecutarBtn;
+    private JComboBox<String> salaComboAcciones;
 
     public GestorPrincipal() {
         setLayout(new BorderLayout());
@@ -76,6 +69,8 @@ public class GestorPrincipal extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
+    // Exposiciones
+
     public void addTablaExposiciones(CentroExposicion centro) {
         String[] titulos = { "Nombre", "Descripcion", "Fecha Inicio", "Fecha Fin", "Precio", "Estado",
                 "Tipo Exposicion" };
@@ -94,12 +89,7 @@ public class GestorPrincipal extends JPanel {
         }
 
         Object[][] datos = data.toArray(new Object[0][]);
-        JTable tablaExposiciones = new JTable(new DefaultTableModel(datos, titulos) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return true;
-            }
-        });
+        JTable tablaExposiciones = new JTable(new DefaultTableModel(datos, titulos));
 
         tablaExposiciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaExposiciones.setFillsViewportHeight(true);
@@ -107,13 +97,32 @@ public class GestorPrincipal extends JPanel {
         this.gestionExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
 
-    // Exposiciones
+    // Salas
 
-    public void addTablaSalas(CentroExposicion centro) {
+    public void addPanelSalas(CentroExposicion centro) {
+        // Tabla
         String[] titulos = { "Nombre", "Aforo", "Climatizador", "Tomas de corriente", "Ancho", "Largo" };
+        Object[][] datos = construirDatosSalas(centro);
 
+        JTable tablaSalas = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionSalas.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
+
+        // Lista acciones y botones
+        JPanel panelAcciones = new JPanel();
+        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala",
+                "Eliminar Subsala", "Eliminar Subsalas" });
+        this.salaEjecutarBtn = new JButton("Ejecutar accion");
+
+        panelAcciones.add(new JLabel("Acciones: "));
+        panelAcciones.add(this.salaComboAcciones);
+        panelAcciones.add(salaEjecutarBtn);
+
+        this.gestionSalas.add(panelAcciones, BorderLayout.SOUTH);
+    }
+
+    private Object[][] construirDatosSalas(CentroExposicion centroExposicion) {
         List<Object[]> data = new ArrayList<>();
-        for (Sala sala : centro.getSalas()) {
+        for (Sala sala : centroExposicion.getSalas()) {
             data.add(new Object[] {
                     sala.getNombre(),
                     sala.getAforo(),
@@ -123,19 +132,11 @@ public class GestorPrincipal extends JPanel {
                     sala.getLargo()
             });
         }
+        return data.toArray(new Object[0][]);
+    }
 
-        Object[][] datos = data.toArray(new Object[0][]);
-        JTable tablaSalas = new JTable(new DefaultTableModel(datos, titulos) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return true;
-            }
-        });
-
-        tablaSalas.getTableHeader().setBackground(Color.LIGHT_GRAY);
-        tablaSalas.setFillsViewportHeight(true);
-
-        this.gestionSalas.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
+    public void actualizarTablaSalas(CentroExposicion centroExposicion) {
+        Object[][] datos = construirDatosSalas(centroExposicion);
     }
 
     // Obras
@@ -183,8 +184,19 @@ public class GestorPrincipal extends JPanel {
         return data.toArray(new Object[0][]);
     }
 
-    public String getAccionSeleccionada() {
+    public void actualizarTablaObras(CentroExposicion centroExposicion) {
+        Object[][] datos = construirDatosObras(centroExposicion);
+        ModeloTablaObras modeloTablaObras = (ModeloTablaObras) this.tablaObras.getModel();
+        modeloTablaObras.addData(datos);
+        modeloTablaObras.fireTableDataChanged();
+    }
+
+    public String getObraAccionSeleccionada() {
         return this.obraComboAcciones.getSelectedItem().toString();
+    }
+
+    public String getSalaAccionSeleccionada() {
+        return this.salaComboAcciones.getSelectedItem().toString();
     }
 
     public JTable getTablaObras() {
@@ -197,9 +209,10 @@ public class GestorPrincipal extends JPanel {
         }
     }
 
-    public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar) {
+    public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar, ActionListener cSalasEjecutar) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
+        this.salaEjecutarBtn.addActionListener(cSalasEjecutar);
     }
 
     public ObraFormulario getVistaObraFormulario() {
@@ -207,16 +220,25 @@ public class GestorPrincipal extends JPanel {
         return this.vistaObraFormulario;
     }
 
+    public SalaFormulario getVistaSalaFormulario(String accion) {
+        this.vistaSalaFormulario = new SalaFormulario(accion);
+        return this.vistaSalaFormulario;
+    }
+
     public void setControladorObraFormulario(ControladorObraFormulario controlador) {
         this.controladorObraFormulario = controlador;
+        if (controlador.getGuardarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaObraFormulario.setControlador(controlador.getGuardarListener(), controlador.getCancelarListener());
+    }
+
+    public void setControladorSalaFormulario(ControladorSalaFormulario controlador) {
+        this.controladorSalaFormulario = controlador;
         if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
             return;
         }
-        this.vistaObraFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
-    }
-
-    public void mostrarObraFormulario() {
-
+        this.vistaSalaFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
     }
 
 }

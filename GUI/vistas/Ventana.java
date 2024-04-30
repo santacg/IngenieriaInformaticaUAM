@@ -116,6 +116,14 @@ public class Ventana extends JFrame {
 		return GESTORPRINCIPAL;
 	}
 
+	public String getEnviarMensajes() {
+		return ENVIARMENSAJES;
+	}
+
+	public String getAjustarClimatizacion() {
+		return AJUSTARCLIMATIZACION;
+	}
+
 	public PantallaPrincipal getVistaPantallaPrincipal() {
 		return vistaPantallaPrincipal;
 	}
@@ -140,13 +148,6 @@ public class Ventana extends JFrame {
 		return AjustarClimatizacion;
 	}
 
-	public String getEnviarMensajes() {
-		return ENVIARMENSAJES;
-	}
-
-	public String getAjustarClimatizacion() {
-		return AJUSTARCLIMATIZACION;
-	}
 
 	public EmpleadoPrincipal getVistaEmpleadoPrincipal() {
 		return vistaEmpleadoPrincipal;
@@ -168,8 +169,8 @@ public class Ventana extends JFrame {
 
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
-		this.vistaGestorPrincipal.setControlador(controladorGestor.getEjecutarListener(),
-				controladorGestor.getAgregarListener());
+		this.vistaGestorPrincipal.setControlador(controladorGestor.getObraEjecutarListener(),
+				controladorGestor.getObraAgregarListener(), controladorGestor.getSalaEjecutarListener());
 	}
 
 	public void setControladorCliente(ControladorCliente controlador) {

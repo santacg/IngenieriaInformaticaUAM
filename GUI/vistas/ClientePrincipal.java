@@ -1,24 +1,19 @@
 package GUI.vistas;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
-
-import org.bouncycastle.crypto.engines.HC128Engine;
-
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.Exposicion;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import GUI.controlador.ControladorCompraFormulario;
 
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
     private JTable tablaExposiciones;
-
+    private CompraFormulario vistaCompraFormulario;
+    private ControladorCompraFormulario controladorCompraFormulario;
     
     private JPanel sorteos;
 
@@ -138,7 +133,7 @@ public class ClientePrincipal extends JPanel {
         constraints.gridy = 2;
         perfil_data.add(password, constraints);
 
-        JLabel labelPublicidad = new JLabel("Publicidad: ");
+        JLabel labelPublicidad = new JLabel("Deseo recibir publicidad: ");
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
@@ -188,6 +183,15 @@ public class ClientePrincipal extends JPanel {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
+    }
+    
+    public CompraFormulario getVistaCompraFormulario() {
+        this.vistaCompraFormulario = new CompraFormulario();
+        return this.vistaCompraFormulario;
+    }
+
+    public void setCompraFormularioControlador(ControladorCompraFormulario controlador){
+        this.controladorCompraFormulario = controlador;
     }
 
     public JTable getTablaExposiciones(){
