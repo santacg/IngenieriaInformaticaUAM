@@ -51,6 +51,7 @@ public class ControladorExposicionFormulario {
     public ControladorExposicionFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;
         this.vista = frame.getVistaExposicionFormulario("Agregar Exposicion");
+        this.accion = "Agregar Exposicion";
         this.centroExposicion = centroExposicion;
         mostrarObras();
         mostrarSalas();
