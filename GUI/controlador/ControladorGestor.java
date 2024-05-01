@@ -45,6 +45,7 @@ public class ControladorGestor {
         mostrarObras();
         mostrarEmpleados();
         mostrarSorteos();
+        mostrarDescuentos();
     }
 
     /**
@@ -81,6 +82,13 @@ public class ControladorGestor {
      */
     public void mostrarSorteos() {
         vista.addPanelSorteos(centro);
+    }
+
+    /**
+     * 
+     */
+    public void mostrarDescuentos() {
+        vista.addPanelDescuentos(centro);
     }
 
     /**

@@ -20,7 +20,6 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
      * @param data        Datos de las filas.
      * @param empleados   Lista de empleados.
      * 
-     * @return ModeloTablaEmpleados
      */
     public ModeloTablaEmpleados(String[] columnNames, Object[][] data, List<Empleado> empleados) {
         this.titulos = columnNames;
