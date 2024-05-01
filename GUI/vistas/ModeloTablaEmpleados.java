@@ -69,7 +69,7 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex >= 4 && columnIndex <= 6; 
+        return columnIndex >= 5 && columnIndex <= 7; 
     }
 
     /**
@@ -81,13 +81,13 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
         Empleado empleado = empleados.get(rowIndex);
 
         switch (columnIndex) {
-            case 4:
+            case 5:
                 empleado.setPermisoVenta((Boolean) value);
                 break;
-            case 5:
+            case 6:
                 empleado.setPermisoControl((Boolean) value);
                 break;
-            case 6:
+            case 7:
                 empleado.setPermisoMensajes((Boolean) value);
                 break;
         }

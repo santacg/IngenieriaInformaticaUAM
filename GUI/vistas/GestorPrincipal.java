@@ -357,7 +357,8 @@ public class GestorPrincipal extends JPanel {
      */
     public void addPanelEmpleados(CentroExposicion centro) {
         // Tabla
-        String[] titulos = { "Nombre", "Numero SS", "Numero de cuenta", "Direccion", "Permiso venta", "Permiso control",
+        String[] titulos = { "NIF", "Nombre", "Numero SS", "Numero de cuenta", "Direccion", "Permiso venta",
+                "Permiso control",
                 "Permiso mensajes" };
         Object[][] datos = construirDatosEmpleados(centro, titulos);
         List<Empleado> empleados = new ArrayList<>(centro.getEmpleados());
@@ -366,10 +367,11 @@ public class GestorPrincipal extends JPanel {
         this.tablaEmpleados = new JTable(modeloTablaEmpleados);
         // Para editar las checkboxes dinamicamente
         JCheckBox checkBox = new JCheckBox();
+        checkBox.setHorizontalAlignment(SwingConstants.CENTER);
         DefaultCellEditor checkBoxEditor = new DefaultCellEditor(checkBox);
-        tablaEmpleados.getColumnModel().getColumn(4).setCellEditor(checkBoxEditor);
         tablaEmpleados.getColumnModel().getColumn(5).setCellEditor(checkBoxEditor);
         tablaEmpleados.getColumnModel().getColumn(6).setCellEditor(checkBoxEditor);
+        tablaEmpleados.getColumnModel().getColumn(7).setCellEditor(checkBoxEditor);
 
         this.gestionEmpleados.add(new JScrollPane(tablaEmpleados), BorderLayout.CENTER);
 
@@ -392,6 +394,7 @@ public class GestorPrincipal extends JPanel {
         List<Object[]> data = new ArrayList<>();
         for (Empleado empleado : centro.getEmpleados()) {
             data.add(new Object[] {
+                    empleado.getNIF(),
                     empleado.getNombre(),
                     empleado.getNumSS(),
                     empleado.getNumCuenta(),
