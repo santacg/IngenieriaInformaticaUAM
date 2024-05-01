@@ -6,13 +6,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-/**
- * Clase ModeloTablaObras.
- * Implementa un modelo de tabla para la vista de obras.
- * 
- * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
- */
-public class ModeloTablaObras extends AbstractTableModel {
+public class ModeloTablaEmpleados extends AbstractTableModel {
     private String[] titulos;
     private Object[][] filas;
 
@@ -22,7 +16,7 @@ public class ModeloTablaObras extends AbstractTableModel {
      * @param columnNames Nombres de las columnas.
      * @param data        Datos de las filas.
      */
-    public ModeloTablaObras(String[] columnNames, Object[][] data) {
+    public ModeloTablaEmpleados(String[] columnNames, Object[][] data) {
         this.titulos = columnNames;
         this.filas = data;
     }
@@ -64,14 +58,6 @@ public class ModeloTablaObras extends AbstractTableModel {
     }
 
     /**
-     * Obtiene si la primera columna es editable.
-     */
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 0;
-    }
-
-    /**
      * Establece el valor de una celda.
      */
     @Override
@@ -89,12 +75,14 @@ public class ModeloTablaObras extends AbstractTableModel {
     }
 
     /**
-     * Obtiene la clase de una columna.
+     * Obtiene las clases de una columna (En este caso 3 checkboxes al final).
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 0)
+        int lastIndex = getColumnCount() - 1;
+        if (columnIndex == lastIndex || columnIndex == lastIndex - 1 || columnIndex == lastIndex - 2) {
             return Boolean.class;
+        }
         return String.class;
     }
 

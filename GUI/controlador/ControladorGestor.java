@@ -15,6 +15,7 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.modelo.obra.Estado;
 import GUI.modelo.obra.Obra;
+import GUI.modelo.utils.LectorCSVObras;
 import GUI.vistas.GestorPrincipal;
 import GUI.vistas.ModeloTablaObras;
 import GUI.vistas.Ventana;
@@ -45,6 +46,7 @@ public class ControladorGestor {
         mostrarExposiciones();
         mostrarSalas();
         mostrarObras();
+        mostrarEmpleados();
     }
 
     /**
@@ -66,6 +68,14 @@ public class ControladorGestor {
      */
     public void mostrarObras() {
         vista.addPanelObras(centro);
+    }
+
+
+    /**
+     * Metodo que muestra la vista de empleados
+     */
+    public void mostrarEmpleados() {
+        vista.addPanelEmpleados(centro);
     }
 
     /**
@@ -122,10 +132,12 @@ public class ControladorGestor {
                                         continue;
                                     }
                                     modelo.setValueAt(Estado.RETIRADA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra retirada correctamente.");
                                     break;
                                 case "Almacenar Obra":
                                     obra.almacenarObra();
                                     modelo.setValueAt(Estado.ALMACENADA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra almacenada correctamente.");
                                     break;
                                 case "Exponer Obra":
                                     if (obra.exponerObra() == false) {
@@ -134,6 +146,7 @@ public class ControladorGestor {
                                         continue;
                                     }
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
                                     break;
                                 case "Prestar Obra":
                                     if (obra.prestarObra() == false) {
@@ -142,6 +155,7 @@ public class ControladorGestor {
                                         continue;
                                     }
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra prestada correctamente.");
                                     break;
                                 case "Restaurar Obra":
                                     if (obra.restaurarObra() == false) {
@@ -150,6 +164,7 @@ public class ControladorGestor {
                                         continue;
                                     }
                                     modelo.setValueAt(Estado.RESTAURACION, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra puesta en restauracion correctamente.");
                                     break;
                             }
                             break;
@@ -157,8 +172,20 @@ public class ControladorGestor {
                     }
                 }
             }
-
             vista.deseleccionarTabla();
+        }
+    };
+
+
+    private ActionListener obraLeerCSVListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String fileName = JOptionPane.showInputDialog(vista, "Introduce el nombre del archivo CSV (debes incluir el .csv)");
+            if (LectorCSVObras.leerObras(centro, fileName) == false) {
+                JOptionPane.showMessageDialog(frame, "Error al leer las obras.");
+                return;
+            }
+            JOptionPane.showMessageDialog(frame, "Obras leídas correctamente.");
+            vista.actualizarTablaObras(centro);
         }
     };
 
@@ -211,6 +238,13 @@ public class ControladorGestor {
      */
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
+    }
+
+    /**
+     * Método que obtiene el listener de leer obras desde un CSV.
+     */
+    public ActionListener getObraLeerCSVListener() {
+        return obraLeerCSVListener;
     }
 
     /**

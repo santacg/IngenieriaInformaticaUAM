@@ -3,6 +3,7 @@ package GUI.modelo;
 import GUI.modelo.centroExposicion.*;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.*;
+import GUI.modelo.obra.Cuadro;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 import GUI.modelo.utils.LectorCSVObras;
@@ -66,7 +67,24 @@ public class MainVisual {
 
                 centroExposicion1.addExposicion(exposicion1);
                 centroExposicion1.addExposicion(exposicion2);
-                LectorCSVObras.leerObras(centroExposicion1);
+
+                Cuadro cuadro = new Cuadro(
+                                "La noche estrellada",
+                                1889,
+                                "Representación del paisaje visto desde la ventana del sanatorio donde estaba internado",
+                                false,
+                                2000.0,
+                                "456",
+                                73.7,
+                                92.1,
+                                25,
+                                15,
+                                60,
+                                40,
+                                "Óleo sobre lienzo",
+                                "Vincent van Gogh");
+
+                centroExposicion1.addObra(cuadro);
 
                 for (Obra obra : centroExposicion1.getObras()) {
                         salaExposicion1.addObra(obra);

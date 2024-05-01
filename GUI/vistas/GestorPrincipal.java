@@ -5,7 +5,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import GUI.controlador.*;
-import GUI.modelo.centroExposicion.CentroExposicion;
+import GUI.modelo.centroExposicion.*;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
@@ -45,6 +45,7 @@ public class GestorPrincipal extends JPanel {
     private JComboBox<String> obraComboAcciones;
     private JTable tablaObras;
     private JButton obraAgregarBtn;
+    private JButton leerObrasCSVBtn;
 
     // Salas atributos
     private JButton salaEjecutarBtn;
@@ -56,6 +57,10 @@ public class GestorPrincipal extends JPanel {
     private JComboBox<String> exposicionComboAcciones;
     private JTable tablaExposiciones;
     private JButton exposicionAgregarBtn;
+
+    // Empleados atributos
+    private JTable tablaEmpleados;
+    private JButton empleadoAgregarBtn;
 
     private JButton cerrarSesionBtn;
 
@@ -76,6 +81,7 @@ public class GestorPrincipal extends JPanel {
         gestionObras.setLayout(new BorderLayout());
 
         this.gestionEmpleados = new JPanel();
+        gestionEmpleados.setLayout(new BorderLayout());
 
         this.gestionSorteos = new JPanel();
 
@@ -248,6 +254,21 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Actualiza la tabla de salas.
+     * 
+     * @param centroExposicion Centro de exposiciones.
+     */
+    public void actualizarTablaSalas(CentroExposicion centroExposicion) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaSalas.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosSalas(centroExposicion);
+        for (Object[] salaData : datos) {
+            modelo.addRow(salaData);
+        }
+        modelo.fireTableDataChanged();
+    }
+
+    /**
      * Añade un panel de obras al gestor principal.
      * 
      * @param centroExposicion Centro de exposiciones.
@@ -268,11 +289,13 @@ public class GestorPrincipal extends JPanel {
                 new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra" });
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
         this.obraAgregarBtn = new JButton("Agregar obra");
+        this.leerObrasCSVBtn = new JButton("Leer Obras desde CSV");
 
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(this.obraComboAcciones);
         panelAcciones.add(obraEjecutarBtn);
         panelAcciones.add(obraAgregarBtn);
+        panelAcciones.add(leerObrasCSVBtn);
         this.gestionObras.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -317,14 +340,60 @@ public class GestorPrincipal extends JPanel {
      * 
      * @param centroExposicion Centro de exposiciones.
      */
-    public void actualizarTablaSalas(CentroExposicion centroExposicion) {
-        DefaultTableModel modelo = (DefaultTableModel) this.tablaSalas.getModel();
-        modelo.setRowCount(0);
-        Object[][] datos = construirDatosSalas(centroExposicion);
-        for (Object[] salaData : datos) {
-            modelo.addRow(salaData);
+    public void actualizarTablaObras(CentroExposicion centroExposicion) {
+        ModeloTablaObras modelo = (ModeloTablaObras) this.tablaObras.getModel();
+        modelo.setRowCountToNone();
+        Object[][] datos = construirDatosObras(centroExposicion);
+        for (Object[] obraData : datos) {
+            modelo.addRow(obraData);
         }
         modelo.fireTableDataChanged();
+    }
+
+    /**
+     * Añade un panel de empleados al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelEmpleados(CentroExposicion centro) {
+        // Tabla
+        String[] titulos = { "Nombre", "Numero SS", "Numero de cuenta", "Direccion", "Permiso venta", "Permiso control",
+                "Permiso mensajes" };
+        Object[][] datos = construirDatosEmpleados(centro, titulos);
+
+        AbstractTableModel modeloTablaEmpleados = new ModeloTablaEmpleados(titulos, datos);
+        this.tablaEmpleados = new JTable(modeloTablaEmpleados);
+        this.gestionEmpleados.add(new JScrollPane(tablaEmpleados), BorderLayout.CENTER);
+
+        // Lista acciones y botones
+        JPanel panelAcciones = new JPanel();
+        this.empleadoAgregarBtn = new JButton("Agregar empleado");
+
+        panelAcciones.add(empleadoAgregarBtn);
+        this.gestionEmpleados.add(panelAcciones, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Construye los datos de los empleados.
+     * 
+     * @param centro  Centro de exposiciones.
+     * @param titulos Titulos de las columnas.
+     * @return Datos de los empleados.
+     */
+    private Object[][] construirDatosEmpleados(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Empleado empleado : centro.getEmpleados()) {
+            data.add(new Object[] {
+                    empleado.getNombre(),
+                    empleado.getNumSS(),
+                    empleado.getNumCuenta(),
+                    empleado.getDireccion(),
+                    empleado.getPermisoVenta(),
+                    empleado.getPermisoControl(),
+                    empleado.getPermisoMensajes()
+            });
+        }
+        return data.toArray(new Object[0][]);
     }
 
     /**
@@ -388,9 +457,12 @@ public class GestorPrincipal extends JPanel {
      *                              exposiciones.
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
-            ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar, ActionListener cCerrarSesion) {
+            ActionListener cObrasLeerCSV,
+            ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
+            ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
+        this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
         this.salaEjecutarBtn.addActionListener(cSalasEjecutar);
         this.exposicionEjecutarBtn.addActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);

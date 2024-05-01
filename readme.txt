@@ -3,3 +3,5 @@ con los parametros físicos que eligiese, quedando la sala inicial como sala pad
 y la sala principal.
 
 Para usar la parte visual hemos implementado un mainVisual;
+
+El CSV siempre se lee de un archivo llamado obras.csv

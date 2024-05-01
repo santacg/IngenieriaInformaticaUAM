@@ -26,11 +26,11 @@ public class LectorCSVObras {
      *
      * @param sala La sala de exposición a la que se añadirán las obras leídas.
      */
-    public static void leerObras(CentroExposicion centroExposicion) {
+    public static boolean leerObras(CentroExposicion centroExposicion, String fileName) {
         String line = ""; // Variable para almacenar cada línea leída del archivo.
         String csvSeparador = ";"; // Define el separador utilizado en el archivo CSV.
 
-        try (BufferedReader br = new BufferedReader(new FileReader("obras.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             br.readLine(); // Salta la primera línea del archivo CSV, generalmente encabezados.
             while ((line = br.readLine()) != null) { // Itera sobre cada línea del archivo hasta el final.
                 String[] fields = line.split(csvSeparador); // Divide la línea en campos usando el separador.
@@ -104,12 +104,14 @@ public class LectorCSVObras {
                 if (obra != null) { 
                     if (centroExposicion.addObra(obra) == false) {
                         System.out.println("No se puede añadir la obra a la sala");
-                        return;
+                        return false;
                     } // Añade la obra al conjunto de obras.
                 }
             }
         } catch (IOException e) { // Captura cualquier excepción de E/S que pueda ocurrir.
             e.printStackTrace(); // Imprime el rastreo de la pila de excepciones.
+            return false;
         }
+        return true;
     }
 }

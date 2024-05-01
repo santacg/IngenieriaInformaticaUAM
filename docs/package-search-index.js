@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"GUI.modelo.CentroExposicion"},{"l":"GUI.modelo.Entrada"},{"l":"GUI.modelo.Expofy"},{"l":"GUI.modelo.Exposicion"},{"l":"GUI.modelo.Inscripcion"},{"l":"GUI.modelo.Obra"},{"l":"GUI.modelo.Sala"},{"l":"GUI.modelo.TarjetaDeCredito"},{"l":"GUI.modelo.Usuario"},{"l":"GUI.modelo.Utils"}];updateSearchResults();
