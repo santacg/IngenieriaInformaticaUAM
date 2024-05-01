@@ -226,4 +226,14 @@ public class ControladorGestor {
         return exposicionAgregarListener;
     }
 
+    /**
+     * Método que devuelve el ActionListener para cerrar la sesión del gestor.
+     * 
+     * @return ActionListener para cerrar la sesión del cliente.
+     */
+    public ActionListener getCerrarSesion() {
+        return null;
+    }
+
+
 }

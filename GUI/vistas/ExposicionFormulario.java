@@ -64,13 +64,58 @@ public class ExposicionFormulario extends JDialog {
                 formularioExposicionTemporal(panelFormulario, constraints);
                 break;
             case "Agregar Exposicion":
+                JPanel northPanel = new JPanel(new GridBagLayout());
+                GridBagConstraints constraintsAgregar = new GridBagConstraints();
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.insets = new Insets(10, 10, 10, 10);
+
+                nombre = new JTextField(10);
+                fechaInicio = new JTextField(10);
+                fechaFin = new JTextField(10);
+                descripcion = new JTextField(10);
+                precio = new JTextField(10);
+                tipoExpo = new JList<>(); // Aquí se debería configurar el modelo de la lista.
+                salas = new JComboBox<>();
+
+                int gridy = 0;
+                addCampo("Nombre:", nombre, northPanel, constraintsAgregar, gridy++);
+                addCampo("Fecha de Inicio:", fechaInicio, northPanel, constraintsAgregar, gridy++);
+                addCampo("Fecha de Fin:", fechaFin, northPanel, constraintsAgregar, gridy++);
+                addCampo("Descripción:", descripcion, northPanel, constraintsAgregar, gridy++);
+                addCampo("Tipo:", new JScrollPane(tipoExpo), northPanel, constraintsAgregar, gridy++);
+                addCampo("Precio:", precio, northPanel, constraintsAgregar, gridy++);
+
+                panelFormulario.add(northPanel, BorderLayout.NORTH);
+
+                panelObras = new JPanel();
+                panelObras.setLayout(new GridLayout(0, 1)); // Lista de checkboxes vertical
+                JScrollPane scrollPaneObras = new JScrollPane(panelObras);
+                scrollPaneObras.setPreferredSize(new Dimension(450, 0));
+
+                JPanel centerPanel = new JPanel(new BorderLayout());
+                centerPanel.add(scrollPaneObras, BorderLayout.CENTER);
+
+                JPanel eastPanel = new JPanel(new BorderLayout());
+                eastPanel.add(salas, BorderLayout.NORTH);
+                eastPanel.setPreferredSize(new Dimension(150, 0));
+
+                centerPanel.add(eastPanel, BorderLayout.EAST);
+
+                panelFormulario.add(centerPanel, BorderLayout.CENTER);
+
+                JPanel southPanel = new JPanel();
+                aceptarBtn = new JButton("Aceptar");
+                cancelarBtn = new JButton("Cancelar");
+                southPanel.add(aceptarBtn);
+                southPanel.add(cancelarBtn);
+
+                panelFormulario.add(southPanel, BorderLayout.SOUTH);
                 break;
         }
 
         addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
     }
-
 
     public void mostrarObras(CentroExposicion centroExposicion) {
         Set<Obra> obras = centroExposicion.getObras();
