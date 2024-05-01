@@ -6,7 +6,6 @@ import GUI.modelo.exposicion.*;
 import GUI.modelo.obra.Cuadro;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
-import GUI.modelo.utils.LectorCSVObras;
 
 import java.time.*;
 import java.util.HashSet;
@@ -39,18 +38,16 @@ public class MainVisual {
                 sala1.addSubsala(7.0, 5.0, 4, 35);
 
                 // Empleado
-                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", true, false, false,
-                                "AnorLondo");
+                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", "AnorLondo", true, false, false);
 
                 CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
                                 LocalTime.of(21, 0, 0), "Madrid",
                                 "123", "456", gestor1, salas);
 
-                centroExposicion1.loginGestor("123");
+                centroExposicion1.loginGestor("456");
                 centroExposicion1.addEmpleado(empleado1);
 
                 expofy.addCentroExposicion(centroExposicion1);
-                centroExposicion1.loginGestor("456");
 
                 // Exposicion
                 Set<SalaExposicion> salasExposicion = new HashSet<>();

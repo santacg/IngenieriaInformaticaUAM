@@ -2,14 +2,11 @@ package GUI.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
@@ -177,6 +174,9 @@ public class ControladorGestor {
     };
 
 
+    /**
+     * Método que inicializa un listener para leer las obras desde un CSV.
+     */
     private ActionListener obraLeerCSVListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String fileName = JOptionPane.showInputDialog(vista, "Introduce el nombre del archivo CSV (debes incluir el .csv)");
@@ -210,6 +210,9 @@ public class ControladorGestor {
         }
     };
 
+    /**
+     * Método que inicializa un listener para agregar exposiciones.
+     */
     private ActionListener exposicionAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             ControladorExposicionFormulario controladorExposicionFormulario = new ControladorExposicionFormulario(vista,
@@ -218,6 +221,19 @@ public class ControladorGestor {
         }
     };
 
+    /**
+     * Método que inicializa un listener para agregar empleados.
+     */
+    private ActionListener empleadoAgregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorEmpleadoFormulario controladorEmpleadoFormulario = new ControladorEmpleadoFormulario(vista, centro);
+            vista.setControladorEmpleadoFormulario(controladorEmpleadoFormulario);
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para cerrar sesion.
+     */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             centro.getGestor().logOut();
@@ -228,6 +244,8 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de de ejecucion de obras.
+     * 
+     * @return ActionListener para ejecutar obras.
      */
     public ActionListener getObraEjecutarListener() {
         return obraEjecutarListener;
@@ -235,6 +253,8 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de agregar obras.
+     * 
+     * @return ActionListener para agregar obras.
      */
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
@@ -242,6 +262,8 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de leer obras desde un CSV.
+     * 
+     * @return ActionListener para leer obras desde un CSV.
      */
     public ActionListener getObraLeerCSVListener() {
         return obraLeerCSVListener;
@@ -249,6 +271,8 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de ejecucion de salas.
+     * 
+     * @retunr ActionListener para ejecutar salas
      */
     public ActionListener getSalaEjecutarListener() {
         return salaEjecutarListener;
@@ -256,6 +280,8 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de ejecucion de exposiciones.
+     * 
+     * @return ActionListener para ejecutar exposiciones
      */
     public ActionListener getExposicionEjecutarListener() {
         return exposicionEjecutarListener;
@@ -263,9 +289,20 @@ public class ControladorGestor {
 
     /**
      * Método que obtiene el listener de agregar exposiciones.
+     * 
+     * @return ActionListener para agregar exposiciones
      */
     public ActionListener getExposicionAgregarListener() {
         return exposicionAgregarListener;
+    }
+
+    /**
+     * Metodo que devuelve el listener de agregar empleados
+     * 
+     * @return  ActionListener para agregar empleados 
+     */
+    public ActionListener getEmpleadoAgregarListener() {
+        return empleadoAgregarListener;
     }
 
     /**

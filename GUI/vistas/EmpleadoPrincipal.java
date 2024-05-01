@@ -89,12 +89,14 @@ public class EmpleadoPrincipal extends JPanel {
      *
      * @param cMensaje       Controlador del botón de envío de mensajes.
      * @param cClimatizacion Controlador del botón de cambio de climatización.
+     * @param cVentaEntradas Controlador del botón de venta de entradas.
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
-    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cCerrarSesion) {
+    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,ActionListener cCerrarSesion) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
+        this.venderEntradaBoton.addActionListener(cVentaEntradas);
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 

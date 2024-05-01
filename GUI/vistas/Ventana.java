@@ -29,6 +29,7 @@ public class Ventana extends JFrame {
 	private final static String GESTORPRINCIPAL = "gestorPrincipal";
 	private final static String EMPLEADOPRINCIPAL = "empleadoPrincipal";
 	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
+	private final static String VENTAENTRADAS = "ventaEntradas";
 
 	// Vistas y controladores
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
@@ -50,6 +51,9 @@ public class Ventana extends JFrame {
 
 	private ClientePrincipal vistaClientePrincipal;
 	private ControladorCliente controladorCliente;
+
+	private VentaEntradas vistaVentaEntradas;
+	private ControladorVentaEntradas controladorVentaEntradas;
 
 	private GestorPrincipal vistaGestorPrincipal;
 	private ControladorGestor controladorGestor;
@@ -97,6 +101,9 @@ public class Ventana extends JFrame {
 
 		this.vistaClientePrincipal = new ClientePrincipal();
 		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
+
+		this.vistaVentaEntradas = new VentaEntradas();
+		cartas.add(vistaVentaEntradas, VENTAENTRADAS);
 
 		setContentPane(cartas);
 	}
@@ -172,6 +179,13 @@ public class Ventana extends JFrame {
 	}
 
 	/**
+	 * Devuelve el nombre del panel de la venta de entradas
+	 */
+	public String getVentaEntradas() {
+		return VENTAENTRADAS;
+	}
+
+	/**
 	 * Devuelve la vista de la pantalla principal
 	 */
 	public PantallaPrincipal getVistaPantallaPrincipal() {
@@ -211,6 +225,13 @@ public class Ventana extends JFrame {
 	 */
 	public AjustarClimatizacion getVistaAjustarClimatizacion() {
 		return vistaAjustarClimatizacion;
+	}
+
+	/**
+	 * Devuelve la vista de la venta de entradas
+	 */
+	public VentaEntradas getVistaVentaEntradas() {
+		return vistaVentaEntradas;
 	}
 
 	/**
@@ -256,7 +277,7 @@ public class Ventana extends JFrame {
 		this.controladorGestor = controlador;
 		this.vistaGestorPrincipal.setControlador(controladorGestor.getObraEjecutarListener(),
 				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(), controladorGestor.getSalaEjecutarListener(),
-				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(), controladorGestor.getCerrarSesionListener());
+				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(), controladorGestor.getEmpleadoAgregarListener() ,controladorGestor.getCerrarSesionListener());
 	}
 
 	/**
@@ -280,7 +301,8 @@ public class Ventana extends JFrame {
 	public void setControladorEmpleado(ControladorEmpleado controlador) {
 		this.controladorEmpleado = controlador;
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
-				controlador.getClimatizacionListener(), controlador.getCerrarSesionListener());
+				controlador.getClimatizacionListener(), controlador.getVenderEntrada(),
+				controlador.getCerrarSesionListener());
 	}
 
 	/**
@@ -311,6 +333,16 @@ public class Ventana extends JFrame {
 	public void setControladorAjustarClimatizacion(ControladorAjustarClimatizacion controlador) {
 		this.controladorAjustarClimatizacion = controlador;
 		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener());
+	}
+
+	/**
+	 * Establece el controlador de la vista de ventas
+	 * 
+	 * @param controlador controladorVentaEntradas
+	 */
+	public void setControladorVentaEntradas(ControladorVentaEntradas controlador) {
+		this.controladorVentaEntradas = controlador;
+		this.vistaVentaEntradas.setControlador(controlador.getVentaListener(), controlador.getCerrarSesionListener());
 	}
 
 	/**
@@ -360,8 +392,10 @@ public class Ventana extends JFrame {
 	 * Muestra el panel previo, util para ir hacia atrás.
 	 */
 	public void mostrarPanelPrevio() {
+		cartaActual = cartaPrevia;
 		if (cartaPrevia != null) {
 			mostrarPanel(cartaPrevia);
 		}
+		
 	}
 }

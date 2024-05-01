@@ -103,7 +103,7 @@ public class ControladorEmpleado {
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            // expofy.logOut(empleado);
+            empleado.logOut();
             JOptionPane.showMessageDialog(frame, "Sesión cerrada correctamente");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
@@ -116,6 +116,35 @@ public class ControladorEmpleado {
      */
     public ActionListener getCerrarSesionListener() {
         return cerrarSesionListener;
+    }
+
+    /**
+     * Método que inicializa el controlador venderEntradaListener.
+     */
+    private ActionListener venderEntradaListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (empleado.getPermisoVenta() == false) {
+                JOptionPane.showMessageDialog(frame,
+                        "Actualmente no tienes permiso para la venta de entradas. Solicita al gestor que modifique tu permiso.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(frame,
+                        "Mostrando pantalla de venta de entradas.");
+            ControladorVentaEntradas controladorVentaEntradas = new ControladorVentaEntradas(frame, expofy, empleado);
+            frame.setControladorVentaEntradas(controladorVentaEntradas);
+            frame.mostrarPanel(frame.getVentaEntradas());
+        }
+    };
+
+    /**
+     * Método que devuelve el listener del botón de vender entradas.
+     * 
+     * @return ActionListener
+     */
+    public ActionListener getVenderEntrada() {
+        return venderEntradaListener;
     }
 
 }

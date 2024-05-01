@@ -150,7 +150,7 @@ public class ControladorObraFormulario {
     /**
      * Método que devuelve el listener del botón de guardar.
      * 
-     * @return ActionListener
+     * @return ActionListener para guardar la obra.
      */
     public ActionListener getGuardarListener() {
         return guardarListener;
@@ -159,7 +159,7 @@ public class ControladorObraFormulario {
     /**
      * Método que devuelve el listener del botón de cancelar.
      * 
-     * @return ActionListener
+     * @return ActionListener para cancelar la operación.
      */
     public ActionListener getCancelarListener() {
         return cancelarListener;

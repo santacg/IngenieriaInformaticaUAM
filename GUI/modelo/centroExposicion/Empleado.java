@@ -35,8 +35,8 @@ public class Empleado extends Usuario {
      * @param permisoMensajes Verdadero si el empleado puede enviar mensajes
      * @param direccion       La dirección del empleado
      */
-    public Empleado(String NIF, String nombre, String numSS, String numCuenta, Boolean permisoVenta,
-            Boolean permisoControl, Boolean permisoMensajes, String direccion) {
+    public Empleado(String NIF, String nombre, String numSS, String numCuenta, String direccion, Boolean permisoVenta,
+            Boolean permisoControl, Boolean permisoMensajes) {
         super(NIF);
         this.nombre = nombre;
         this.numSS = numSS;
@@ -203,6 +203,34 @@ public class Empleado extends Usuario {
      */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+ 
+    /**
+     * Método que devuelve el hash code del empleado.
+     * 
+     * @return hash code del empleado.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((super.getNIF() == null) ? 0 : super.getNIF().hashCode());
+        return result;
+    }
+
+    /**
+     * Método que compara dos empleados por el NIF.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        return true;
     }
 
     /**

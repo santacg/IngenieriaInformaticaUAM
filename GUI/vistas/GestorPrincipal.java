@@ -40,6 +40,9 @@ public class GestorPrincipal extends JPanel {
     private ExposicionFormulario vistaExposicionFormulario;
     private ControladorExposicionFormulario controladorExposicionFormulario;
 
+    private EmpleadoFormulario vistaEmpleadoFormulario;
+    private ControladorEmpleadoFormulario controladorEmpleadoFormulario;
+
     // Obras atributos
     private JButton obraEjecutarBtn;
     private JComboBox<String> obraComboAcciones;
@@ -408,6 +411,16 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Añade una fila a la tabla de empleados.
+     * @param empleadoData Datos del empleado.
+     */
+    public void añadirFilaTablaEmpleados(Object[] empleadoData) {
+        ModeloTablaEmpleados modelo = (ModeloTablaEmpleados) this.tablaEmpleados.getModel();
+        modelo.addRow(empleadoData);
+        modelo.fireTableDataChanged();
+    }
+
+    /**
      * Devuelve la obra seleccionada.
      */
     public String getObraAccionSeleccionada() {
@@ -470,18 +483,21 @@ public class GestorPrincipal extends JPanel {
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cCerrarSesion) {
+            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
         this.salaEjecutarBtn.addActionListener(cSalasEjecutar);
         this.exposicionEjecutarBtn.addActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);
+        this.empleadoAgregarBtn.addActionListener(cEmpleadoAgregar);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
     }
 
     /**
      * Devuelve la vista del formulario de obra.
+     * 
+     * @return Vista del formulario de obra.
      */
     public ObraFormulario getVistaObraFormulario() {
         this.vistaObraFormulario = new ObraFormulario();
@@ -490,6 +506,9 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la vista del formulario de sala.
+     * 
+     * @param accion Acción a realizar.
+     * @return Vista del formulario de sala.
      */
     public SalaFormulario getVistaSalaFormulario(String accion) {
         this.vistaSalaFormulario = new SalaFormulario(accion);
@@ -498,6 +517,9 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la vista del formulario de exposición.
+     * 
+     * @param accion Acción a realizar.
+     * @return Vista del formulario de exposición.
      */
     public ExposicionFormulario getVistaExposicionFormulario(String accion) {
         this.vistaExposicionFormulario = new ExposicionFormulario(accion);
@@ -505,7 +527,19 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Devuelve la vista del formulario de empleado.
+     * @return Vista del formulario de empleado.
+     */
+    public EmpleadoFormulario getVistaEmpleadoFormulario() {
+        this.vistaEmpleadoFormulario = new EmpleadoFormulario();
+        return this.vistaEmpleadoFormulario;
+    }
+
+    /**
      * Establece el controlador del formulario de obra.
+     * 
+     * @param controlador Controlador del formulario de obra.
+     * @return Controlador del formulario de obra.
      */
     public void setControladorObraFormulario(ControladorObraFormulario controlador) {
         this.controladorObraFormulario = controlador;
@@ -517,6 +551,9 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Establece el controlador del formulario de sala.
+     * 
+     * @param controlador Controlador del formulario de sala.
+     * @return Controlador del formulario de sala.
      */
     public void setControladorSalaFormulario(ControladorSalaFormulario controlador) {
         this.controladorSalaFormulario = controlador;
@@ -528,6 +565,9 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Establece el controlador del formulario de exposición.
+     * 
+     * @param controlador Controlador del formulario de exposición.
+     * @return Controlador del formulario de exposición.
      */
     public void setControladorExposicionFormulario(ControladorExposicionFormulario controlador) {
         this.controladorExposicionFormulario = controlador;
@@ -536,6 +576,21 @@ public class GestorPrincipal extends JPanel {
         }
         this.vistaExposicionFormulario.setControlador(controlador.getAceptarListener(),
                 controlador.getCancelarListener());
+    }
+
+
+    /**
+     * Establece el controlador del formulario de empleado.
+     * 
+     * @param controlador Controlador del formulario de empleado.
+     * @return Controlador del formulario de empleado.
+     */
+    public void setControladorEmpleadoFormulario(ControladorEmpleadoFormulario controlador) {
+        this.controladorEmpleadoFormulario = controlador;
+        if (controlador.getGuardarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaEmpleadoFormulario.setControlador(controlador.getGuardarListener(), controlador.getCancelarListener());
     }
 
 }
