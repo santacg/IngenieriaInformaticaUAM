@@ -203,6 +203,11 @@ public class Exposicion implements Serializable {
      * Cambia el estado de la exposición a PUBLICADA.
      */
     public boolean expoPublicar() {
+        if (this.estado != EstadoExposicion.EN_CREACION) {
+            System.out.println("No se puede publicar una exposición que no ha sido creada");
+            return false;
+        }
+
         for (SalaExposicion sala : this.salas) {
             for (Obra obra : sala.getObras()) {
                 obra.exponerObra();
@@ -231,7 +236,7 @@ public class Exposicion implements Serializable {
             return false;
         }
 
-        if (setFechaFin(fechaCancelacion) == false) {
+        if (fechaCancelacion.isAfter(this.fechaFin)) {
             System.out.println(
                     "No se puede cancelar la exposición con una fecha de fin anterior a la de inicio o la actual");
             return false;
@@ -249,7 +254,7 @@ public class Exposicion implements Serializable {
                 + ".Se ha reintegrado el importe de la entrada en tu cuenta bancaria", clientes);
 
         this.estado = EstadoExposicion.CANCELADA;
-        return false;
+        return true;
     }
 
     /**
@@ -262,8 +267,8 @@ public class Exposicion implements Serializable {
             System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
         }
 
-        if (setFechaFin(fechaFin) == false) {
-            System.out.println("No se puede prorrogar la exposición con una fecha de fin anterior a la actual");
+        if (fechaFin.isBefore(this.fechaFin) || fechaFin.isEqual(this.fechaFin)) {
+            System.out.println("No se puede prorrogar la exposición con una fecha de fin anterior o igual a la actual");
             return false;
         }
 

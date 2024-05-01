@@ -138,7 +138,7 @@ public class ControladorExposicionFormulario {
                             "Exposición prorrogada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
-                case "Cerrar Exposicion":
+                case "Cerrar Temporalmente":
                     if (exposicion.expoCerrarTemporalmente(vista.getFechaInicio(), vista.getFechaFin()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede cerrar la exposición temporalmente.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
