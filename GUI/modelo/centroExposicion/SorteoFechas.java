@@ -62,6 +62,12 @@ public class SorteoFechas extends Sorteo{
         this.fechaFin = fechaFin;
     }
 
+    /**
+     * Retorna la fecha límite de la exposición.
+     * 
+     * @return La fecha en la que la exposición finaliza.
+     * 
+     */
     public LocalDate getFechaLimite() {
         return fechaFin;
     } 

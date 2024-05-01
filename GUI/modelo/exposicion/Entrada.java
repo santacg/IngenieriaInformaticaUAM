@@ -43,6 +43,10 @@ public class Entrada implements Serializable {
         return IDEntrada;
     }
 
+    /**
+     * Obtiene la fecha de compra de la entrada.
+     * @return Fecha de compra de la entrada.
+     */
     public LocalDate getFechaDeCompra() {
         return this.fechaDeCompra;
     }

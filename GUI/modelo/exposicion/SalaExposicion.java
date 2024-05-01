@@ -58,6 +58,8 @@ public class SalaExposicion implements Serializable {
      * Establece el conjunto de obras de arte contenidas en esta sala de exposición.
      * 
      * @param obras El nuevo conjunto de obras de arte.
+     * 
+     * @return {@code true} si las obras se establecen correctamente, {@code false} en caso contrario.
      */
     public Boolean setObras(Set<Obra> obras) {
         for (Obra obra: obras) {
@@ -74,6 +76,8 @@ public class SalaExposicion implements Serializable {
      * exposición.
      * 
      * @param obra La obra de arte a añadir.
+     * 
+     * @return {@code true} si la obra se añade correctamente, {@code false} en caso contrario.
      */
     public Boolean addObra(Obra obra) {
         if (obras.contains(obra)) {

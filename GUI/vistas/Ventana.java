@@ -110,6 +110,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel principal
+	 * 
+	 * @return PanelPrincipal string PANELPRINCIPAL
 	 */
 	public String getPanelPrincipal() {
 		return PANELPRINCIPAL;
@@ -117,6 +119,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de logInGestor
+	 * 
+	 * @return LogInGestor string LOGINGESTOR
 	 */
 	public String getLogInGestor() {
 		return LOGINGESTOR;
@@ -124,6 +128,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de logInEmpleado
+	 * 
+	 * @return LoginEmpleado string LOGINEMPLEADO
 	 */
 	public String getLogInEmpleado() {
 		return LOGINEMPLEADO;
@@ -131,6 +137,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de exposiciones
+	 * 
+	 * @return Exposiciones string EXPOSICIONES
 	 */
 	public String getExposiciones() {
 		return EXPOSICIONES;
@@ -138,6 +146,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de registro
+	 * 
+	 * @return Registro string REGISTRO
 	 */
 	public String getRegistro() {
 		return REGISTRO;
@@ -145,6 +155,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de empleado principal
+	 * 
+	 * @return EmpleadoPrincipal string EMPLEADOPRINCIPAL
 	 */
 	public String getEmpleadoPrincipal() {
 		return EMPLEADOPRINCIPAL;
@@ -152,6 +164,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de cliente principal
+	 * 
+	 * @return ClientePrincipal string CLIENTEPRINCIPAL
 	 */
 	public String getClientePrincipal() {
 		return CLIENTEPRINCIPAL;
@@ -159,6 +173,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de gestor principal
+	 * 
+	 * @return GestorPrincipal string GESTORPRINCIPAL
 	 */
 	public String getGestorPrincipal() {
 		return GESTORPRINCIPAL;
@@ -166,6 +182,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de enviar mensajes
+	 * 
+	 * @return EnviarMensajes string ENVIARMENSAJES
 	 */
 	public String getEnviarMensajes() {
 		return ENVIARMENSAJES;
@@ -173,6 +191,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de ajustar climatización
+	 * 
+	 * @return AjustarClimatizacion string AJUSTARCLIMATIZACION
 	 */
 	public String getAjustarClimatizacion() {
 		return AJUSTARCLIMATIZACION;
@@ -180,6 +200,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve el nombre del panel de la venta de entradas
+	 * 
+	 * @return VentaEntradas string VENTAENTRADAS
 	 */
 	public String getVentaEntradas() {
 		return VENTAENTRADAS;
@@ -187,6 +209,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de la pantalla principal
+	 * 
+	 * @return PantallaPrincipal vistaPantallaPrincipal
 	 */
 	public PantallaPrincipal getVistaPantallaPrincipal() {
 		return vistaPantallaPrincipal;
@@ -194,6 +218,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de registro
+	 * 
+	 * @return RegistroUsuario vistaRegistro
 	 */
 	public RegistroUsuario getVistaRegistro() {
 		return vistaRegistro;
@@ -201,6 +227,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de logInGestor
+	 * 
+	 * @return LoginGestor vistaLoginGestor
 	 */
 	public LoginGestor getVistaLogInGestor() {
 		return vistaLoginGestor;
@@ -208,6 +236,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de logInEmpleado
+	 * 
+	 * @return LoginEmpleado vistaLoginEmpleado
 	 */
 	public LoginEmpleado getVistaLoginEmpleado() {
 		return vistaLoginEmpleado;
@@ -215,6 +245,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de enviar mensajes
+	 * 
+	 * @return EnviarMensajes vistaEnviarMensajes
 	 */
 	public EnviarMensajes getVistaEnviarMensajes() {
 		return vistaEnviarMensajes;
@@ -222,6 +254,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de ajustar climatización
+	 * 
+	 * @return AjustarClimatizacion vistaAjustarClimatizacion
 	 */
 	public AjustarClimatizacion getVistaAjustarClimatizacion() {
 		return vistaAjustarClimatizacion;
@@ -229,6 +263,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de la venta de entradas
+	 * 
+	 * @return VentaEntradas vistaVentaEntradas
 	 */
 	public VentaEntradas getVistaVentaEntradas() {
 		return vistaVentaEntradas;
@@ -236,6 +272,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de empleado principal
+	 * 
+	 * @return EmpleadoPrincipal vistaEmpleadoPrincipal
 	 */
 	public EmpleadoPrincipal getVistaEmpleadoPrincipal() {
 		return vistaEmpleadoPrincipal;
@@ -243,6 +281,8 @@ public class Ventana extends JFrame {
 
 	/**
 	 * Devuelve la vista de gestor principal
+	 * 
+	 * @return GestorPrincipal vistaGestorPrincipal
 	 */
 	public GestorPrincipal getVistaGestorPrincipal() {
 		if (this.vistaGestorPrincipal != null) {

@@ -153,28 +153,28 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que devuelve el aforo introducido en el formulario
      * 
-     * @return Integer con el aforo introducido
+     * @return String con el aforo introducido
      */
-    public Integer getAforo() {
-        return Integer.parseInt(aforo.getText());
+    public String getAforo() {
+        return aforo.getText();
     }
 
     /**
      * Método que devuelve la humedad introducida en el formulario
      * 
-     * @return Integer con la humedad introducida
+     * @return String con la humedad introducida
      */
-    public Integer getHumedad() {
-        return Integer.parseInt(humedad.getText());
+    public String getHumedad() {
+        return humedad.getText();
     }
 
     /**
      * Método que devuelve la temperatura introducida en el formulario
      * 
-     * @return Integer con la temperatura introducida
+     * @return String con la temperatura introducida
      */
-    public Integer getTemperatura() {
-        return Integer.parseInt(temperatura.getText());
+    public String getTemperatura() {
+        return temperatura.getText();
     }
 
     /**
@@ -189,28 +189,28 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que devuelve las tomas de electricidad introducidas en el formulario
      * 
-     * @return Integer con las tomas de electricidad introducidas
+     * @return String con las tomas de electricidad introducidas
      */
-    public Integer getTomasElectricidad() {
-        return Integer.parseInt(tomasElectricidad.getText());
+    public String getTomasElectricidad() {
+        return tomasElectricidad.getText();
     }
 
     /**
      * Método que devuelve el ancho introducido en el formulario
      * 
-     * @return Double con el ancho introducido
+     * @return String con el ancho introducido
      */
-    public Double getAncho() {
-        return Double.parseDouble(ancho.getText());
+    public String getAncho() {
+        return ancho.getText();
     }
 
     /**
      * Método que devuelve el largo introducido en el formulario
      * 
-     * @return Double con el largo introducido
+     * @return String con el largo introducido
      */
-    public Double getLargo() {
-        return Double.parseDouble(largo.getText());
+    public String getLargo() {
+        return largo.getText();
     }
 
     /**

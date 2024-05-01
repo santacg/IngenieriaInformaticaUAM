@@ -113,6 +113,7 @@ public class Exposicion implements Serializable {
      * Actualiza la fecha de inicio de la exposición.
      * 
      * @param fechaInicio La nueva fecha de inicio.
+     * @return true si se ha actualizado la fecha de inicio, false en caso contrario.
      */
     public boolean setFechaInicio(LocalDate fechaInicio) {
         if (this.fechaFin.isBefore(fechaInicio)) {
@@ -137,6 +138,8 @@ public class Exposicion implements Serializable {
      * Actualiza la fecha de fin de la exposición.
      * 
      * @param fechaFin La nueva fecha de fin.
+     * 
+     * @return true si se ha actualizado la fecha de fin, false en caso contrario.
      */
     public boolean setFechaFin(LocalDate fechaFin) {
         if (this.fechaInicio.isAfter(fechaFin)) {
@@ -202,6 +205,8 @@ public class Exposicion implements Serializable {
 
     /**
      * Cambia el estado de la exposición a PUBLICADA.
+     * 
+     * @return true si se ha publicado la exposición, false en caso contrario.
      */
     public boolean expoPublicar() {
         for (SalaExposicion sala : this.salas) {
@@ -220,6 +225,9 @@ public class Exposicion implements Serializable {
 
     /**
      * Cambia el estado de la exposición a CANCELADA.
+     * 
+     * @param fechaCancelacion La fecha de cancelación de la exposición.
+     * @return true si se ha cancelado la exposición, false en caso contrario.
      */
     public boolean expoCancelar(LocalDate fechaCancelacion) {
         if (this.estado == EstadoExposicion.EN_CREACION) {
@@ -257,6 +265,7 @@ public class Exposicion implements Serializable {
      * Prorroga la fecha de fin de la exposición.
      * 
      * @param fechaFin La nueva fecha de fin para la exposición.
+     * @return true si se ha prorrogado la exposición, false en caso contrario.
      */
     public boolean expoProrrogar(LocalDate fechaFin) {
         if (this.estado != EstadoExposicion.PUBLICADA) {
@@ -274,6 +283,11 @@ public class Exposicion implements Serializable {
 
     /**
      * Cierra temporalmente la exposición.
+     * 
+     * @param fechaInicioCierre La fecha de inicio del cierre temporal.
+     * @param fechaFinCierre    La fecha de fin del cierre temporal.
+     * 
+     * @return true si se ha cerrado temporalmente la exposición, false en caso
      */
     public boolean expoCerrarTemporalmente(LocalDate fechaInicioCierre, LocalDate fechaFinCierre) {
         if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {
@@ -325,6 +339,8 @@ public class Exposicion implements Serializable {
      * Añade una sala al conjunto de salas de la exposición.
      * 
      * @param sala La sala a añadir.
+     * 
+     * @return true si se ha añadido la sala, false en caso contrario.
      */
     public boolean addSala(SalaExposicion sala) {
         if (this.salas.add(sala) == false) {
@@ -338,6 +354,8 @@ public class Exposicion implements Serializable {
      * Elimina una sala del conjunto de salas de la exposición.
      * 
      * @param sala La sala a eliminar.
+     * 
+     * @return true si se ha eliminado la sala, false en caso contrario.
      */
     public boolean removeSala(SalaExposicion sala) {
         if (this.salas.contains(sala) == false) {
@@ -409,6 +427,10 @@ public class Exposicion implements Serializable {
 
     /**
      * Cambia el tipo de la exposición a temporal.
+     * 
+     * @param fechaFin La fecha de fin de la exposición.
+     * 
+     * @return true si se ha cambiado el tipo de la exposición, false en caso
      */
     public boolean expoTemporal(LocalDate fechaFin) {
         if (this.tipo == TipoExpo.TEMPORAL) {
@@ -454,11 +476,21 @@ public class Exposicion implements Serializable {
         this.descuento = descuento;
     }
 
+    /**
+     * Configura un descuento para la exposición basado en la cantidad de meses
+     * @param cantidadDescuento la cantidad de descuento que se quiere establecer
+     * @param meses el número de meses que se quiere establecer
+     */
     public void configurarDescuentoMes(double cantidadDescuento, int meses) {
         DescuentoMes descuento = new DescuentoMes(cantidadDescuento, meses);
         this.descuento = descuento;
     }
 
+    /**
+     * Devuelve el conjunto de entradas vendidas para la exposición.
+     * @param entrada la entrada a añadir
+     * @return true si se ha añadido la entrada, false en caso contrario.
+     */
     public boolean addEntrada(Entrada entrada) {
         if (this.entradas.add(entrada) == false) {
             System.out.println("La entrada ya existe");
@@ -468,6 +500,12 @@ public class Exposicion implements Serializable {
         return true;
     }
 
+    /**
+     * Elimina una entrada del conjunto de entradas vendidas para la exposición.
+     * @param fecha la fecha de la entrada a eliminar
+     * @param hora_num la hora de la entrada a eliminar
+     * @return la hora a obtener
+     */
     public Hora getHora(LocalDate fecha, int hora_num){
         for (Hora hora : horario) {
             if (hora.getFecha().isEqual(fecha) && hora_num == hora.getHoraInicio().getHour()) {

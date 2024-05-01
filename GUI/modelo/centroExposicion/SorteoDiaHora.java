@@ -67,6 +67,11 @@ public class SorteoDiaHora extends Sorteo{
         this.hora = hora;
     }
 
+    /**
+     * Retorna la fecha límite de la exposición.
+     * 
+     * @return La fecha en la que la exposición finaliza.
+     */
     public LocalDate getFechaLimite() {
         return dia;
     }

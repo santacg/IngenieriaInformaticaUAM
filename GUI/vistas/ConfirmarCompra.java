@@ -2,8 +2,6 @@ package GUI.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -57,6 +55,15 @@ public class ConfirmarCompra extends JDialog {
 
     }
 
+    /**
+     * Añade un campo al formulario.
+     * @param label Etiqueta del campo.
+     * @param comp Componente del campo.
+     * @param panel Panel donde se añade el campo.
+     * @param constraints Restricciones del GridBagLayout.
+     * @param gridy Posición en el grid. 
+     * @param gridwidth Ancho del campo.
+     */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy,
             int gridwidth) {
         JLabel jlabel = new JLabel(label);

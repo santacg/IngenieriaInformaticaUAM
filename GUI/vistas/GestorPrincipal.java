@@ -200,8 +200,7 @@ public class GestorPrincipal extends JPanel {
 
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
-        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala",
-                "Eliminar Subsalas" });
+        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala" });
         this.salaEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));
@@ -422,6 +421,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la obra seleccionada.
+     * 
+     * @return String con la obra seleccionada.
      */
     public String getObraAccionSeleccionada() {
         return this.obraComboAcciones.getSelectedItem().toString();
@@ -429,6 +430,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la sala seleccionada.
+     * 
+     * @return String con la sala seleccionada.
      */
     public String getSalaAccionSeleccionada() {
         return this.salaComboAcciones.getSelectedItem().toString();
@@ -436,6 +439,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la exposición seleccionada.
+     * 
+     * @return String con la exposición seleccionada.
      */
     public String getExposicionAccionSeleccionada() {
         return this.exposicionComboAcciones.getSelectedItem().toString();
@@ -443,6 +448,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la tabla de obras.
+     * 
+     * @return Tabla de obras.
      */
     public JTable getTablaObras() {
         return this.tablaObras;
@@ -450,6 +457,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelvela tabla de salas.
+     * 
+     * @return Tabla de salas.
      */
     public JTable getTablaSalas() {
         return this.tablaSalas;
@@ -457,6 +466,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la tabla de exposiciones.
+     * 
+     * @return Tabla de exposiciones.
      */
     public JTable getTablaExposiciones() {
         return this.tablaExposiciones;
@@ -464,6 +475,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Deselecciona todas las filas de la tabla.
+     * 
+     * @param tabla Tabla a deseleccionar.
      */
     public void deseleccionarTabla() {
         for (int i = 0; i < this.tablaObras.getRowCount(); i++) {

@@ -11,12 +11,10 @@ import GUI.modelo.exposicion.*;
 import GUI.modelo.inscripcion.Inscripcion;
 import GUI.modelo.tarjetaDeCredito.TarjetaDeCredito;
 import GUI.modelo.usuario.Usuario;
-import es.uam.eps.padsof.tickets.ITicketInfo;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
 import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
 
-import java.util.stream.Collectors;
 import es.uam.eps.padsof.telecard.*;
 
 /**
@@ -240,8 +238,7 @@ public class Expofy implements Serializable {
      * @param mensaje  El mensaje de la notificación a enviar.
      * @param NIF      El NIF del cliente al que se enviará la notificación.
      * @param empleado El empleado que intenta enviar la notificación.
-     * @return {@code true} si la notificación se envió con éxito, {@code false} en
-     *         caso contrario.
+     * @return true si la notificación se envió con éxito, false en caso contrario 
      */
     public boolean enviarNotificacionCliente(String mensaje, String NIF, Empleado empleado) {
         if (empleado.isLoged() == false || empleado.getPermisoMensajes() == false) {
@@ -481,8 +478,8 @@ public class Expofy implements Serializable {
      *
      * @param codigo  El código de inscripción a validar.
      * @param cliente El cliente al que pertenece el código.
-     * @return {@code true} si el código es válido y pertenece al cliente,
-     *         {@code false} en caso contrario.
+     * @return true si el código es válido y pertenece al cliente,
+     *        false en caso contrario.
      */
     public boolean validezCodigo(String codigo, ClienteRegistrado cliente) {
         for (CentroExposicion centroExposicion : centrosExposicion) {

@@ -24,6 +24,11 @@ public class SorteoExpo extends Sorteo{
         super(fechaSorteo, exposicion, n_entradas);
     }
 
+    /**
+     * Retorna la fecha límite de la exposición.
+     * 
+     * @return La fecha en la que la exposición finaliza.
+     */
     public LocalDate getFechaLimite() {
         return getExposicion().getFechaFin();
     }

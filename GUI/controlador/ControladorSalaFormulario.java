@@ -41,9 +41,16 @@ public class ControladorSalaFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Añadir Sala":
-                    Sala sala = new Sala(vista.getNombre(), vista.getAforo(), vista.getTemperatura(),
-                            vista.getHumedad(), vista.getClimatizador(), vista.getTomasElectricidad(), vista.getAncho(),
-                            vista.getLargo());
+                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getTemperatura().equals("")
+                            || vista.getHumedad().equals("")|| vista.getAncho().equals("") || vista.getLargo().equals("")) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), Integer.parseInt(vista.getTemperatura()),
+                            Integer.parseInt(vista.getHumedad()), vista.getClimatizador(), Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
+                            Double.parseDouble(vista.getLargo()));
 
                     if (centroExposicion.addSala(sala) == false) {
                         JOptionPane.showMessageDialog(vista, "Ya existe una sala con ese nombre.", "Error",
@@ -76,8 +83,8 @@ public class ControladorSalaFormulario {
                             salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
                         }
 
-                        if (salaSeleccionada.addSubsala(vista.getAncho(), vista.getLargo(),
-                                vista.getTomasElectricidad(), vista.getAforo()) == false) {
+                        if (salaSeleccionada.addSubsala(Double.parseDouble(vista.getAncho()), Double.parseDouble(vista.getLargo()),
+                                Integer.parseInt(vista.getTomasElectricidad()), Integer.parseInt(vista.getAforo())) == false) {
                             JOptionPane.showMessageDialog(vista,
                                     "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
                                     "Error",
