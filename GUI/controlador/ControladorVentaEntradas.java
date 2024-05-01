@@ -3,8 +3,6 @@ package GUI.controlador;
 import GUI.modelo.centroExposicion.*;
 import GUI.modelo.expofy.*;
 import GUI.modelo.exposicion.Exposicion;
-import GUI.vistas.ClientePrincipal;
-import GUI.vistas.EmpleadoPrincipal;
 import GUI.vistas.VentaEntradas;
 import GUI.vistas.Ventana;
 
