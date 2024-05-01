@@ -6,19 +6,26 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import GUI.modelo.centroExposicion.Empleado;
+
 public class ModeloTablaEmpleados extends AbstractTableModel {
     private String[] titulos;
     private Object[][] filas;
+    private List<Empleado> empleados;
 
     /**
-     * Constructor de la clase ModeloTablaObras.
+     * Constructor de la clase ModeloTablaEmpleados.
      * 
      * @param columnNames Nombres de las columnas.
      * @param data        Datos de las filas.
+     * @param empleados   Lista de empleados.
+     * 
+     * @return ModeloTablaEmpleados
      */
-    public ModeloTablaEmpleados(String[] columnNames, Object[][] data) {
+    public ModeloTablaEmpleados(String[] columnNames, Object[][] data, List<Empleado> empleados) {
         this.titulos = columnNames;
         this.filas = data;
+        this.empleados = empleados;
     }
 
     /**
@@ -58,11 +65,33 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
     }
 
     /**
+     * Obtiene si la 3 últimas columnas son editables.
+     */
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex >= 4 && columnIndex <= 6; 
+    }
+
+    /**
      * Establece el valor de una celda.
      */
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         filas[rowIndex][columnIndex] = value;
+        Empleado empleado = empleados.get(rowIndex);
+
+        switch (columnIndex) {
+            case 4:
+                empleado.setPermisoVenta((Boolean) value);
+                break;
+            case 5:
+                empleado.setPermisoControl((Boolean) value);
+                break;
+            case 6:
+                empleado.setPermisoMensajes((Boolean) value);
+                break;
+        }
+
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 

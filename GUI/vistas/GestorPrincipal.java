@@ -360,9 +360,17 @@ public class GestorPrincipal extends JPanel {
         String[] titulos = { "Nombre", "Numero SS", "Numero de cuenta", "Direccion", "Permiso venta", "Permiso control",
                 "Permiso mensajes" };
         Object[][] datos = construirDatosEmpleados(centro, titulos);
+        List<Empleado> empleados = new ArrayList<>(centro.getEmpleados());
 
-        AbstractTableModel modeloTablaEmpleados = new ModeloTablaEmpleados(titulos, datos);
+        AbstractTableModel modeloTablaEmpleados = new ModeloTablaEmpleados(titulos, datos, empleados);
         this.tablaEmpleados = new JTable(modeloTablaEmpleados);
+        // Para editar las checkboxes dinamicamente
+        JCheckBox checkBox = new JCheckBox();
+        DefaultCellEditor checkBoxEditor = new DefaultCellEditor(checkBox);
+        tablaEmpleados.getColumnModel().getColumn(4).setCellEditor(checkBoxEditor);
+        tablaEmpleados.getColumnModel().getColumn(5).setCellEditor(checkBoxEditor);
+        tablaEmpleados.getColumnModel().getColumn(6).setCellEditor(checkBoxEditor);
+
         this.gestionEmpleados.add(new JScrollPane(tablaEmpleados), BorderLayout.CENTER);
 
         // Lista acciones y botones
