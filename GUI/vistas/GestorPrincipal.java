@@ -152,6 +152,9 @@ public class GestorPrincipal extends JPanel {
         List<Object[]> data = new ArrayList<>();
         for (Exposicion exposicion : centro.getExposiciones()) {
             Descuento descuento = exposicion.getDescuento();
+            if (descuento == null) {
+                break;
+            }
                 data.add(new Object[] {
                         exposicion.getNombre(),
                         descuento.getDescuento(),
