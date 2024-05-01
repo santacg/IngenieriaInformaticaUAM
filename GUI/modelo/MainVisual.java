@@ -56,9 +56,10 @@ public class MainVisual {
                 SalaExposicion salaExposicion1 = new SalaExposicion(sala1);
                 salasExposicion.add(salaExposicion1);
 
-                Exposicion exposicion1 = new Exposicion("Exposicion1", LocalDate.of(2025, 1, 2),
+                Exposicion exposicion1 = new Exposicion("Picasso 1960", LocalDate.of(2025, 1, 2),
                                 LocalDate.now().plusYears(7),
-                                "Descripción", salasExposicion, TipoExpo.TEMPORAL, 10.0);
+                                "Vive en el prado esta espectacular experiencia recordando los últimos años de este gran artista ",
+                                salasExposicion, TipoExpo.TEMPORAL, 15.0);
                 Exposicion exposicion2 = new Exposicion("Exposicion2", LocalDate.of(2025, 1, 2),
                                 LocalDate.now().plusYears(7),
                                 "Descripción", salasExposicion, TipoExpo.TEMPORAL, 10.0);
@@ -71,15 +72,15 @@ public class MainVisual {
                         salaExposicion1.addObra(obra);
                 }
 
-                centroExposicion1.confgiurarSorteoExposicion(exposicion2, LocalDate.of(2030,5,2),2);
+                centroExposicion1.confgiurarSorteoExposicion(exposicion2, LocalDate.of(2030, 5, 2), 2);
 
                 exposicion1.expoPublicar();
                 exposicion2.expoPublicar();
                 expofy.enviarNotificacionUsuario(
                                 "Hola qué tal, esto es una Notificacion de prueba a un cliente en concreto",
                                 expofy.getClienteRegistrado("123"));
-                expofy.enviarNotificacionUsuario("Hola qué tal, esto es una Notificacion de prueba a un cliente",
-                                expofy.getClienteRegistrado("123"));
+                expofy.enviarNotificacionesClientesPublicidad(
+                                "Hola qué tal, esto es una Notificacion de prueba para cualquier cliente con la publicidad activada");
                 expofy.persistirExpofy();
                 System.out.println(expofy.toString());
         }

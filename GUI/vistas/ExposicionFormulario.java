@@ -4,8 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
-import javax.imageio.plugins.tiff.TIFFDirectory;
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.*;
@@ -25,14 +26,14 @@ public class ExposicionFormulario extends JDialog {
     private JTextField nombre;
     private JTextField fechaInicio;
     private JTextField fechaFin;
-    private JTextField descripcion;
+    private JTextField descipcion;
     private JList<TipoExpo> tipoExpo;
     private JTextField precio;
-    private JComboBox<String> salas;
     private List<JCheckBox> obras;
     private JPanel panelObras;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
+    private JTree treeSalas;
 
     /**
      * Constructor de la clase ExposicionFormulario.
@@ -64,75 +65,112 @@ public class ExposicionFormulario extends JDialog {
                 formularioExposicionTemporal(panelFormulario, constraints);
                 break;
             case "Agregar Exposicion":
-                JPanel northPanel = new JPanel(new GridBagLayout());
-                GridBagConstraints constraintsAgregar = new GridBagConstraints();
-                constraints.fill = GridBagConstraints.HORIZONTAL;
-                constraints.insets = new Insets(10, 10, 10, 10);
+                JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+                // Formulario
+                panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
+                panelFormulario.setBorder(BorderFactory.createTitledBorder("Detalles de la exposición"));
 
-                nombre = new JTextField(10);
-                fechaInicio = new JTextField(10);
-                fechaFin = new JTextField(10);
-                descripcion = new JTextField(10);
-                precio = new JTextField(10);
-                tipoExpo = new JList<>(); // Aquí se debería configurar el modelo de la lista.
-                salas = new JComboBox<>();
+                addCampoFlow("Nombre:", nombre = new JTextField(20), panelFormulario);
+                addCampoFlow("Fecha inicio (yyyy-mm-dd):", fechaInicio = new JTextField(20), panelFormulario);
+                addCampoFlow("Fecha fin (yyyy-mm-dd):", fechaFin = new JTextField(20), panelFormulario);
+                addCampoFlow("Descripción:", descipcion = new JTextField(20), panelFormulario);
+                addCampoFlow("Tipo de exposición:", tipoExpo = new JList<TipoExpo>(TipoExpo.values()), panelFormulario);
+                addCampoFlow("Precio:", precio = new JTextField(20), panelFormulario);
 
-                int gridy = 0;
-                addCampo("Nombre:", nombre, northPanel, constraintsAgregar, gridy++);
-                addCampo("Fecha de Inicio:", fechaInicio, northPanel, constraintsAgregar, gridy++);
-                addCampo("Fecha de Fin:", fechaFin, northPanel, constraintsAgregar, gridy++);
-                addCampo("Descripción:", descripcion, northPanel, constraintsAgregar, gridy++);
-                addCampo("Tipo:", new JScrollPane(tipoExpo), northPanel, constraintsAgregar, gridy++);
-                addCampo("Precio:", precio, northPanel, constraintsAgregar, gridy++);
-
-                panelFormulario.add(northPanel, BorderLayout.NORTH);
-
+                // Panel obras
                 panelObras = new JPanel();
-                panelObras.setLayout(new GridLayout(0, 1)); // Lista de checkboxes vertical
-                JScrollPane scrollPaneObras = new JScrollPane(panelObras);
-                scrollPaneObras.setPreferredSize(new Dimension(450, 0));
+                panelObras.setLayout(new GridLayout(0, 1));
+                JScrollPane scrollObras = new JScrollPane(panelObras);
+                scrollObras.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                scrollObras.setBorder(BorderFactory.createTitledBorder("Obras"));
 
-                JPanel centerPanel = new JPanel(new BorderLayout());
-                centerPanel.add(scrollPaneObras, BorderLayout.CENTER);
+                // Panel salas
+                JPanel salasPanel = new JPanel(new BorderLayout());
+                treeSalas = new JTree();
+                JScrollPane scrollSalas = new JScrollPane(treeSalas);
+                salasPanel.add(scrollSalas, BorderLayout.CENTER);
+                salasPanel.setBorder(BorderFactory.createTitledBorder("Salas"));
 
-                JPanel eastPanel = new JPanel(new BorderLayout());
-                eastPanel.add(salas, BorderLayout.NORTH);
-                eastPanel.setPreferredSize(new Dimension(150, 0));
-
-                centerPanel.add(eastPanel, BorderLayout.EAST);
-
-                panelFormulario.add(centerPanel, BorderLayout.CENTER);
-
-                JPanel southPanel = new JPanel();
+                // Panel botones
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 aceptarBtn = new JButton("Aceptar");
                 cancelarBtn = new JButton("Cancelar");
-                southPanel.add(aceptarBtn);
-                southPanel.add(cancelarBtn);
+                buttonPanel.add(aceptarBtn);
+                buttonPanel.add(cancelarBtn);
 
-                panelFormulario.add(southPanel, BorderLayout.SOUTH);
-                break;
+                panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
+                panelPrincipal.add(scrollObras, BorderLayout.CENTER);
+                panelPrincipal.add(salasPanel, BorderLayout.SOUTH);
+                add(panelPrincipal, BorderLayout.CENTER);
+                add(buttonPanel, BorderLayout.SOUTH);
+
+                return;
         }
 
         addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
     }
 
+    /**
+     * Añade un campo al formulario pero con FlowLayout.
+     * 
+     * @param label     La etiqueta del campo.
+     * @param field     El campo.
+     * @param container El contenedor.
+     */
+    private void addCampoFlow(String label, JComponent field, Container container) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.add(new JLabel(label));
+        panel.add(field);
+        container.add(panel);
+    }
+
+    /**
+     * Método que muestra las obras en el formulario.
+     * 
+     * @param centroExposicion CentroExposicion que contiene las obras.
+     */
     public void mostrarObras(CentroExposicion centroExposicion) {
         Set<Obra> obras = centroExposicion.getObras();
-        panelObras.removeAll();
+
         for (Obra obra : obras) {
             JCheckBox checkBox = new JCheckBox(obra.getNombre());
             panelObras.add(checkBox);
         }
-        panelObras.revalidate();
-        panelObras.repaint();
+
     }
 
+    /**
+     * Método que muestra las salas en el formulario.
+     * 
+     * @param centroExposicion CentroExposicion que contiene las salas.
+     */
     public void mostrarSalas(CentroExposicion centroExposicion) {
-        Set<Sala> salasDisponibles = centroExposicion.getSalas();
-        salas.removeAllItems();
-        for (Sala sala : salasDisponibles) {
-            salas.addItem(sala.getNombre());
+        Set<Sala> salas = centroExposicion.getSalas();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Salas");
+        for (Sala sala : salas) {
+            DefaultMutableTreeNode salaNode = new DefaultMutableTreeNode(sala.getNombre());
+            addSubSalas(sala, salaNode);
+            root.add(salaNode);
+        }
+        treeSalas.setModel(new DefaultTreeModel(root));
+    }
+
+    /**
+     * Método que añade las sub-salas al árbol de salas.
+     * 
+     * @param sala     Sala a la que se le añaden las sub-salas.
+     * @param salaNode Nodo de la sala.
+     */
+    private void addSubSalas(Sala sala, DefaultMutableTreeNode salaNode) {
+        // Me ha costa la vida esto, pero creo que esta bien
+        List<Sala> subSalas = sala.getSubSalas();
+        if (subSalas != null) {
+            for (Sala subSala : subSalas) {
+                DefaultMutableTreeNode subSalaNode = new DefaultMutableTreeNode(subSala.getNombre());
+                salaNode.add(subSalaNode);
+                addSubSalas(subSala, subSalaNode);
+            }
         }
     }
 
@@ -243,7 +281,7 @@ public class ExposicionFormulario extends JDialog {
      * @return String con la descripción de la exposición.
      */
     public String getDescripcion() {
-        return descripcion.getText();
+        return descipcion.getText();
     }
 
     /**
@@ -262,6 +300,15 @@ public class ExposicionFormulario extends JDialog {
      */
     public Double getPrecio() {
         return Double.parseDouble(precio.getText());
+    }
+
+    /**
+     * Metodo que devuelve el JTree de salas.
+     * 
+     * @return Arbol JTree de salas
+     */
+    public JTree getTreeSalas() {
+        return treeSalas;
     }
 
     /**

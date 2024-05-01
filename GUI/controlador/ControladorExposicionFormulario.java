@@ -3,9 +3,12 @@ package GUI.controlador;
 import java.awt.event.*;
 
 import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
+import GUI.modelo.exposicion.SalaExposicion;
+import GUI.modelo.sala.Sala;
 import GUI.vistas.*;
 
 /**
@@ -64,8 +67,23 @@ public class ControladorExposicionFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Agregar Exposicion":
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) vista.getTreeSalas().getLastSelectedPathComponent();
+                    if (selectedNode == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes seleccionar una sala.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    String nombreSala = (String) selectedNode.getUserObject();
+                    Sala sala = centroExposicion.getSalaPorNombre(nombreSala);
+                    if (sala == null) {
+                        sala = centroExposicion.getSubSalaPorNombre(nombreSala);
+                    }
+
+                    SalaExposicion salaExpo = new SalaExposicion(sala, );
+
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
-                            vista.getFechaFin(), vista.getDescripcion(), null, vista.getTipoExpo(), vista.getPrecio());
+                            vista.getFechaFin(), vista.getDescripcion(), sala, vista.getTipoExpo(), vista.getPrecio());
                     if (centroExposicion.addExposicion(expoNueva))
                         break;
                 case "Cancelar Exposicion":

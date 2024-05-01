@@ -57,6 +57,8 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaExposiciones;
     private JButton exposicionAgregarBtn;
 
+    private JButton cerrarSesionBtn;
+
     /**
      * Constructor de la clase GestorPrincipal.
      */
@@ -86,7 +88,13 @@ public class GestorPrincipal extends JPanel {
         tabbedPane.addTab("Sorteos", gestionSorteos);
         tabbedPane.addTab("Descuentos", gestionDescuentos);
 
+        JPanel panelCerrarSesion = new JPanel();
+        panelCerrarSesion.setLayout(new BorderLayout());
+        cerrarSesionBtn = new JButton("Cerrar Sesión");
+        panelCerrarSesion.add(cerrarSesionBtn, BorderLayout.EAST);
+
         add(tabbedPane, BorderLayout.CENTER);
+        add(panelCerrarSesion, BorderLayout.NORTH);
     }
 
     /**
@@ -380,12 +388,13 @@ public class GestorPrincipal extends JPanel {
      *                              exposiciones.
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
-            ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar) {
+            ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar, ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.salaEjecutarBtn.addActionListener(cSalasEjecutar);
         this.exposicionEjecutarBtn.addActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);
+        this.cerrarSesionBtn.addActionListener(cCerrarSesion);
     }
 
     /**

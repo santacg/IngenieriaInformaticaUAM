@@ -191,6 +191,14 @@ public class ControladorGestor {
         }
     };
 
+    private ActionListener cerrarSesionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            centro.getGestor().logOut();
+            JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
+            frame.mostrarPanel(frame.getPanelPrincipal());
+        }
+    };
+
     /**
      * Método que obtiene el listener de de ejecucion de obras.
      */
@@ -231,8 +239,8 @@ public class ControladorGestor {
      * 
      * @return ActionListener para cerrar la sesión del cliente.
      */
-    public ActionListener getCerrarSesion() {
-        return null;
+    public ActionListener getCerrarSesionListener() {
+        return cerrarSesionListener;
     }
 
 
