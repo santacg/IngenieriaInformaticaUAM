@@ -24,20 +24,23 @@ public class ControladorVentaEntradas {
 
     private Ventana frame;
     private VentaEntradas vista;
-    private Expofy expofy;
+    private CentroExposicion centro;
     private Empleado empleado;
+    private Expofy expofy;
 
     /**
      * Constructor de la clase ControladorCliente.
      * 
      * @param frame   Ventana principal de la aplicación.
      * @param expofy  Instancia de la apslicación.
-     * @param cliente Cliente registrado.
+     * @param centro  centro del empleado.
+     * @param empleado empleado activo.
      */
-    public ControladorVentaEntradas(Ventana frame, Expofy expofy, Empleado empleado) {
+    public ControladorVentaEntradas(Ventana frame, Expofy expofy, CentroExposicion centro, Empleado empleado) {
         this.frame = frame;
-        this.expofy = expofy;
+        this.centro = centro;
         this.empleado = empleado;
+        this.expofy = expofy;
         this.vista = frame.getVistaVentaEntradas();
 
         mostrarExposiciones();
@@ -48,18 +51,16 @@ public class ControladorVentaEntradas {
      */
     public void mostrarExposiciones() {
         ArrayList<Object[]> data = new ArrayList<>();
-        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-            for (Exposicion exposicion : centro.getExposiciones()) {
-                data.add(new Object[] {
-                        exposicion.getNombre(),
-                        exposicion.getDescripcion(),
-                        exposicion.getFechaInicio(),
-                        exposicion.getFechaFin(),
-                        exposicion.getPrecio(),
-                        centro.getNombre(),
-                        centro.getLocalizacion()
-                });
-            }
+        for (Exposicion exposicion : centro.getExposiciones()) {
+            data.add(new Object[] {
+                    exposicion.getNombre(),
+                    exposicion.getDescripcion(),
+                    exposicion.getFechaInicio(),
+                    exposicion.getFechaFin(),
+                    exposicion.getPrecio(),
+                    centro.getNombre(),
+                    centro.getLocalizacion()
+            });
         }
         vista.addTablaExposiciones(data);
     }
@@ -92,13 +93,12 @@ public class ControladorVentaEntradas {
                 vista.getTablaExposiciones().clearSelection();
                 String nombreExposicion = (String) vista.getTablaExposiciones().getValueAt(selectedRow, 0);
                 JOptionPane.showMessageDialog(frame,
-                        "La venta de entradas no se ha podido implementar por falta de tiempo, inicie sesión como cliente para comprar una entrada, funcionalidad que sí está correctamente implementada"
+                        "Mostrando formulario de venta de entradas"
                                 + nombreExposicion);
                 Exposicion exposicion = expofy.getExposicionPorNombre(nombreExposicion);
-                // ControladorCompraFormulario controladorCompraFormulario = new
-                // ControladorCompraFormulario(vista, expofy,
-                // exposicion, cliente);
-                // vista.setCompraFormularioControlador(controladorCompraFormulario);
+                ControladorVentaFormulario controladorVentaFormulario = new ControladorVentaFormulario(vista, centro,
+                        exposicion);
+                vista.setVentaFormularioControlador(controladorVentaFormulario);
 
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona una exposición.");
@@ -111,7 +111,7 @@ public class ControladorVentaEntradas {
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            // expofy.logOut(empleado);
+            // centro.logOut(empleado);
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }

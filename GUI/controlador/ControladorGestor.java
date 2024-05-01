@@ -44,6 +44,7 @@ public class ControladorGestor {
         mostrarSalas();
         mostrarObras();
         mostrarEmpleados();
+        mostrarSorteos();
     }
 
     /**
@@ -73,6 +74,13 @@ public class ControladorGestor {
      */
     public void mostrarEmpleados() {
         vista.addPanelEmpleados(centro);
+    }
+
+    /**
+     * Método que muestra la vista de los sorteos.
+     */
+    public void mostrarSorteos() {
+        vista.addPanelSorteos(centro);
     }
 
     /**

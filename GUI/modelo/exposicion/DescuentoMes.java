@@ -24,7 +24,7 @@ public class DescuentoMes extends Descuento{
 
     /**
      * Determina si un descuento es aplicable respecto a una fecha
-     * @param cantidad La nueva cantidad a establecer.
+     * @param fecha La fecha que se evalua.
      * @return boolean true si es aplicable, false si no
      */
     public boolean validezDescuento(LocalDate fecha){

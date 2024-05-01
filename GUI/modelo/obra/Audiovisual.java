@@ -24,7 +24,6 @@ public class Audiovisual extends Obra {
      * @param externa       Indica si la obra es externa o no.
      * @param cuantiaSeguro El valor del seguro de la obra audiovisual.
      * @param numeroSeguro  El número de la póliza del seguro.
-     * @param estado        El estado inicial de la obra audiovisual.
      * @param duracion      La duración de la obra audiovisual.
      * @param idioma        El idioma principal de la obra audiovisual.
      */

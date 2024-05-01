@@ -34,6 +34,7 @@ public abstract class Obra implements Serializable {
      * @param externa       Indica si la obra es externa o no.
      * @param cuantiaSeguro El valor del seguro de la obra.
      * @param numeroSeguro  El número de la póliza del seguro.
+     * @param autores       Los autores de la obra.
      */
     public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
             String numeroSeguro, String... autores) {
@@ -148,7 +149,7 @@ public abstract class Obra implements Serializable {
     /**
      * Obtiene el conjunto de autores asociados a la entidad.
      * 
-     * @return El conjunto de autores como Set<Autor>.
+     * @return El conjunto de autores como Set<String>.
      */
     public Set<String> getAutores() {
         return autores;
@@ -244,6 +245,8 @@ public abstract class Obra implements Serializable {
 
     /**
      * Cambia el estado de la obra a RETIRADA.
+     * 
+     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
     public Boolean retirarObra() {
         if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
@@ -257,6 +260,8 @@ public abstract class Obra implements Serializable {
 
     /**
      * Cambia el estado de la obra a PRESTADA.
+     * 
+     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
     public Boolean prestarObra() {
         if (this.externa == true) {
@@ -282,20 +287,25 @@ public abstract class Obra implements Serializable {
 
     /**
      * Cambia el estado de la obra a EXPUESTA.
+     * 
+     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
     public Boolean exponerObra() {
         if (this.estado != Estado.ALMACENADA) {
             System.out.println("No se puede exponer una obra que no está almacenada");
             return false;
         }
-        
+
         this.estado = Estado.EXPUESTA;
         return true;
     }
 
     /**
      * Cambia el estado de la obra a RESTAURACION.
+     * 
+     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
+
     public Boolean restaurarObra() {
         if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
             System.out.println("No se puede restaurar una obra que no está almacenada o expuesta");
@@ -306,6 +316,11 @@ public abstract class Obra implements Serializable {
         return true;
     }
 
+    /**
+     * Recibe el tipo de obra.
+     * 
+     * @return El tipo de obra
+     */
     public String getTipoObra() {
         return this.getClass().getSimpleName();
     }

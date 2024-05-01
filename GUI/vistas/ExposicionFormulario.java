@@ -312,7 +312,7 @@ public class ExposicionFormulario extends JDialog {
 
     /**
      * Método que devuelve las obras seleccionadas.
-     * @return List<String> con las obras seleccionadas.
+     * @return lista con las obras seleccionadas.
      */
     public List<String> getObras() {
         List<String> obrasSeleccionadas = new ArrayList<>();

@@ -115,7 +115,7 @@ public class AjustarClimatizacion extends JPanel {
 
     /**
      * Método que establece el controlador de la vista
-     * @param sala cAtras
+     * @param ActionListener cAtras
      */
     public void setControlador(ActionListener cAtras) {
         atrasBoton.addActionListener(cAtras);

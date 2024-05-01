@@ -288,8 +288,8 @@ public class Expofy implements Serializable {
     /**
      * Envía una notificación a un único usuario.
      * 
-     * @param mensaje  El mensaje de la notificación.
-     * @param usuarios Los usuarios que recibirán la notificación.
+     * @param mensaje   El mensaje de la notificación.
+     * @param usuario   El usuario qeu recibe la notificacion
      *
      */
     public void enviarNotificacionUsuario(String mensaje, Usuario usuario) {

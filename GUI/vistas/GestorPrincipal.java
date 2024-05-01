@@ -4,8 +4,11 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
+import org.bouncycastle.operator.jcajce.JcaAlgorithmParametersConverter;
+
 import GUI.controlador.*;
 import GUI.modelo.centroExposicion.*;
+import GUI.modelo.exposicion.Descuento;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
@@ -65,6 +68,14 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaEmpleados;
     private JButton empleadoAgregarBtn;
 
+    // Sorteos atributos
+    private JTable tablaSorteos;
+    private JButton sorteoAgregarBtn;
+
+    // Descuentos atributos
+    private JTable tablaDescuentos;
+    private JButton descuentoAgregarBtn;
+
     private JButton cerrarSesionBtn;
 
     /**
@@ -87,8 +98,10 @@ public class GestorPrincipal extends JPanel {
         gestionEmpleados.setLayout(new BorderLayout());
 
         this.gestionSorteos = new JPanel();
+        gestionSorteos.setLayout(new BorderLayout());
 
         this.gestionDescuentos = new JPanel();
+        gestionDescuentos.setLayout(new BorderLayout());
 
         tabbedPane.addTab("Exposiciones", gestionExposiciones);
         tabbedPane.addTab("Salas", gestionSalas);
@@ -104,6 +117,88 @@ public class GestorPrincipal extends JPanel {
 
         add(tabbedPane, BorderLayout.CENTER);
         add(panelCerrarSesion, BorderLayout.NORTH);
+    }
+
+    /**
+     * Añade un panel de descuentos al gestor principal.
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelDescuentos(CentroExposicion centro) {
+        String[] titulos = { "Exposición", "Descuento (%)", "Cantidad" };
+
+        // Construir datos para la tabla de descuentos
+        Object[][] datos = construirDatosDescuentos(centro, titulos);
+
+        this.tablaDescuentos = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionDescuentos.add(new JScrollPane(tablaDescuentos), BorderLayout.CENTER);
+
+        JPanel panelAcciones = new JPanel();
+        JButton descuentoAgregarBtn = new JButton("Agregar Descuento");
+        JButton descuentoEliminarBtn = new JButton("Eliminar Descuento");
+
+        panelAcciones.add(new JLabel("Acciones: "));
+        panelAcciones.add(descuentoAgregarBtn);
+        panelAcciones.add(descuentoEliminarBtn);
+        this.gestionDescuentos.add(panelAcciones, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Construye los datos de los descuentos.
+     * @param centro Centro de exposiciones.
+     * @param titulos Titulos de las columnas.
+     * @return Datos de los descuentos.
+     */
+    private Object[][] construirDatosDescuentos(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Exposicion exposicion : centro.getExposiciones()) {
+            Descuento descuento = exposicion.getDescuento();
+                data.add(new Object[] {
+                        exposicion.getNombre(),
+                        descuento.getDescuento(),
+                        descuento.getcantidad()
+                });
+            }
+        return data.toArray(new Object[0][]);
+    }
+
+    /**
+     * Añade un panel de sorteos al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelSorteos(CentroExposicion centro) {
+        String[] titulos = { "Fecha del Sorteo", "Exposición Relacionada", "Número de Entradas" };
+
+        Object[][] datos = construirDatosSorteos(centro, titulos);
+
+        this.tablaSorteos = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionSorteos.add(new JScrollPane(tablaSorteos), BorderLayout.CENTER);
+
+        JPanel panelAcciones = new JPanel();
+        this.sorteoAgregarBtn = new JButton("Agregar Sorteo");
+        JButton sorteoEliminarBtn = new JButton("Eliminar Sorteo");
+
+        panelAcciones.add(new JLabel("Acciones: "));
+        panelAcciones.add(sorteoAgregarBtn);
+        panelAcciones.add(sorteoEliminarBtn);
+        this.gestionSorteos.add(panelAcciones, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Construye los sorteos.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    private Object[][] construirDatosSorteos(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Sorteo sorteo : centro.getSorteos()) {
+            data.add(new Object[] {
+                    sorteo.getFechaSorteo().toString(),
+                    sorteo.getExposicion().getNombre(),
+                    sorteo.getN_entradas()
+            });
+        }
+        return data.toArray(new Object[0][]);
     }
 
     /**
@@ -411,6 +506,7 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Añade una fila a la tabla de empleados.
+     * 
      * @param empleadoData Datos del empleado.
      */
     public void añadirFilaTablaEmpleados(Object[] empleadoData) {
@@ -541,6 +637,7 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Devuelve la vista del formulario de empleado.
+     * 
      * @return Vista del formulario de empleado.
      */
     public EmpleadoFormulario getVistaEmpleadoFormulario() {
@@ -591,7 +688,6 @@ public class GestorPrincipal extends JPanel {
                 controlador.getCancelarListener());
     }
 
-
     /**
      * Establece el controlador del formulario de empleado.
      * 
@@ -603,7 +699,8 @@ public class GestorPrincipal extends JPanel {
         if (controlador.getGuardarListener() == null || controlador.getCancelarListener() == null) {
             return;
         }
-        this.vistaEmpleadoFormulario.setControlador(controlador.getGuardarListener(), controlador.getCancelarListener());
+        this.vistaEmpleadoFormulario.setControlador(controlador.getGuardarListener(),
+                controlador.getCancelarListener());
     }
 
 }

@@ -24,7 +24,6 @@ public class Cuadro extends ObraNoDigital {
      * @param externa           Indica si la obra es externa
      * @param cuantiaSeguro     El valor asegurado del cuadro.
      * @param numeroSeguro      El número de póliza de seguro asociado al cuadro.
-     * @param estado            El estado actual del cuadro
      * @param alto              La altura del cuadro en metros.
      * @param ancho             El ancho del cuadro en metros.
      * @param temperaturaMaxima La temperatura máxima para la conservación

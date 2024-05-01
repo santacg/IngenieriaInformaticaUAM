@@ -9,7 +9,7 @@ import javax.swing.*;
  * Clase EmpleadoFormulario
  * Implementa la vista de formulario de empleado.
  * 
- * @Author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class EmpleadoFormulario extends JDialog {
     private JTextField empleadoNIF;

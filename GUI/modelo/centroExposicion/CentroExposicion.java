@@ -327,6 +327,7 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Obtiene una sub-sala por su nombre.
+     * 
      * @param nombre el nombre de la sub-sala a buscar
      * @return la sub-sala con el nombre proporcionado, o null si no existe
      */
@@ -342,7 +343,8 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Busca una sala recursivamente.
-     * @param sala la sala a buscar
+     * 
+     * @param sala          la sala a buscar
      * @param nombreBuscado el nombre de la sala a buscar
      * @return la sala con el nombre proporcionado, o null si no existe
      */
@@ -447,8 +449,10 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Obtiene las exposiciones por tipo de obra.
+     * 
      * @param tipoObra el tipo de obra a buscar
-     * @return un conjunto de exposiciones que contienen obras del tipo proporcionado
+     * @return un conjunto de exposiciones que contienen obras del tipo
+     *         proporcionado
      */
     public Set<Exposicion> getExposicionesPorTipoObra(Class<? extends Obra> tipoObra) {
         Set<Exposicion> exposicionesPorTipoObra = new HashSet<>();
@@ -489,7 +493,8 @@ public class CentroExposicion implements Serializable {
      * Elimina una exposicion determinada de un centro de exposiciones.
      * 
      * @param exposicion la sala a eliminar
-     * @return true si la exposicion se elimina correctamente, false en caso contrario
+     * @return true si la exposicion se elimina correctamente, false en caso
+     *         contrario
      */
     public Boolean removeExposicion(Exposicion exposicion) {
         if (gestor.isLoged() == false) {
@@ -550,11 +555,12 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Configura un sorteo de tipo dia y hora.
-     * @param exposicion la exposicion de la que se quiere configurar el sorteo
+     * 
+     * @param exposicion  la exposicion de la que se quiere configurar el sorteo
      * @param fechaSorteo la fecha en la que se realizará el sorteo
-     * @param n_entradas el número de entradas que se sortearán
-     * @param dia el día en el que se realizará la exposición 
-     * @param hora  la hora en la que se realizará la exposición
+     * @param n_entradas  el número de entradas que se sortearán
+     * @param dia         el día en el que se realizará la exposición
+     * @param hora        la hora en la que se realizará la exposición
      */
     public void confgiurarSorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia,
             Hora hora) {
@@ -564,9 +570,10 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Configura un sorteo de tipo exposición.
-     * @param exposicion la exposicion de la que se quiere configurar el sorteo
+     * 
+     * @param exposicion  la exposicion de la que se quiere configurar el sorteo
      * @param fechaSorteo la fecha en la que se realizará el sorteo
-     * @param n_entradas el número de entradas que se sortearán
+     * @param n_entradas  el número de entradas que se sortearán
      */
     public void confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
         SorteoExpo sorteo = new SorteoExpo(exposicion, fechaSorteo, n_entradas);
@@ -574,12 +581,13 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
-     * Configura un sorteo de tipo fechas. 
-     * @param exposicion la exposicion de la que se quiere configurar el sorteo
-     * @param fechaSorteo la fecha en la que se realizará el sorteo 
-     * @param n_entradas el número de entradas que se sortearán 
+     * Configura un sorteo de tipo fechas.
+     * 
+     * @param exposicion  la exposicion de la que se quiere configurar el sorteo
+     * @param fechaSorteo la fecha en la que se realizará el sorteo
+     * @param n_entradas  el número de entradas que se sortearán
      * @param fechaInicio la fecha de inicio de la exposición
-     * @param fechaFin la fecha de fin de la exposición
+     * @param fechaFin    la fecha de fin de la exposición
      */
     public void confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,
             LocalDate fechaInicio, LocalDate fechaFin) {
@@ -626,7 +634,6 @@ public class CentroExposicion implements Serializable {
         return obras;
     }
 
-
     /**
      * Obtiene las obras almacenadas
      * 
@@ -644,6 +651,7 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Obtiene una obra del centro de exposición a partir de su nombre.
+     * 
      * @param nombre el nombre de la obra a buscar
      * @return la obra con el nombre proporcionado, o null si no existe
      */
@@ -655,7 +663,6 @@ public class CentroExposicion implements Serializable {
         }
         return null;
     }
-
 
     /**
      * Establece el conjunto de obras gestionadas por el centro de exposición.
@@ -805,7 +812,8 @@ public class CentroExposicion implements Serializable {
      * @param temperatura la temperatura a la que se quiere cambiar
      * @param sala        la sala a la que se le quiere cambiar la temperatura
      * 
-     * @return true si la temperatura se cambia correctamente, false en caso contrario
+     * @return true si la temperatura se cambia correctamente, false en caso
+     *         contrario
      * 
      */
     public Boolean setSalaTemperatura(Sala sala, Integer temperatura, Empleado empleado) {
@@ -890,7 +898,6 @@ public class CentroExposicion implements Serializable {
      * seguridad social y contraseña.
      *
      * @param NIF         El NIF del empleado.
-     * @param numSS       El número de seguridad social del empleado.
      * @param contrasenia La contraseña de acceso.
      * @return true si el login es exitoso, false en caso contrario.
      */
@@ -904,19 +911,15 @@ public class CentroExposicion implements Serializable {
         return false;
     }
 
-
     /**
      * Permite la venta de entradas para una exposición en un horario determinado.
      * 
      * @param exposicion la exposicion que se quiere vender
-     * @param hora      la hora en la que se quiere vender
-     * @param nEntradas el número de entradas que se quieren vender
+     * @param hora       la hora en la que se quiere vender
+     * @param nEntradas  el número de entradas que se quieren vender
      * @return true si la venta es exitosa, false en caso contrario
-     * @throws NonExistentFileException
-     * @throws UnsupportedImageTypeException
      */
-    public Boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas)
-            throws NonExistentFileException, UnsupportedImageTypeException {
+    public Boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas) {
         LocalDate fecha = LocalDate.now();
         Boolean horaDisponible = false;
 
@@ -930,7 +933,7 @@ public class CentroExposicion implements Serializable {
         // Verifica el estado de la exposición, solo procede si está Prorrogada o
         // Publicada.
         if (!exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)
-                || !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
+                && !exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)) {
             System.out.println("La exposición no está disponible");
             return false;
         }
@@ -938,20 +941,6 @@ public class CentroExposicion implements Serializable {
         // Asegura que la fecha y la hora de la visita coincidan.
         if (!fecha.equals(hora.getFecha())) {
             System.out.println("La fecha no coincide con la fecha de la hora");
-            return false;
-        }
-
-        // Verifica la disponibilidad de la hora elegida dentro del horario de la
-        // exposición.
-        for (Hora h : exposicion.getHorario()) {
-            if (hora.equals(h)) {
-                horaDisponible = true;
-                break;
-            }
-        }
-
-        if (horaDisponible == false) {
-            System.out.println("La hora no está dentro del rango de la exposición");
             return false;
         }
 
@@ -975,15 +964,21 @@ public class CentroExposicion implements Serializable {
             estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
 
-        TicketSystem.createTicket(new Ticket(exposicion, exposicion.getPrecio(), nEntradas, fecha, hora),
-                "." + File.separator + "tmp");
+        try {
+            TicketSystem.createTicket(
+                    new Ticket(exposicion, exposicion.getPrecio() * nEntradas, nEntradas, fecha, hora),
+                    "." + File.separator + "GUI" + File.separator + "resources");
+        } catch (NonExistentFileException e) {
+            return false;
+        } catch (UnsupportedImageTypeException e) {
+            return false;
+        }
         return true;
     }
 
     /**
      * Permite el login del gestor al sistema, verificando su NIF y contraseña.
      *
-     * @param NIF         El NIF del gestor.
      * @param contrasenia La contraseña del gestor.
      * @return true si el login es exitoso, false en caso contrario.
      */

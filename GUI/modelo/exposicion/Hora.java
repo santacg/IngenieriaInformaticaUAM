@@ -36,9 +36,8 @@ public class Hora implements Serializable {
     }
 
     /**
-     * Añade una entrada al conjunto de entradas para este horario.
+     * Añade una entrada.
      * 
-     * @param entrada La entrada a añadir.
      */
     public void addEntrada() {
         nEntradas++;
@@ -46,9 +45,8 @@ public class Hora implements Serializable {
     }
 
     /**
-     * Elimina una entrada del conjunto de entradas para este horario.
+     * Elimina una entrada.
      * 
-     * @param entrada La entrada a eliminar.
      */
     public void removeEntrada() {
         nEntradas--;

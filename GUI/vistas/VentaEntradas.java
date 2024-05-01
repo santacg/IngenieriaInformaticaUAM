@@ -12,15 +12,16 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 
-import GUI.controlador.ControladorCompraFormulario;
+import GUI.controlador.ControladorVentaFormulario;
+
 
 public class VentaEntradas extends JPanel{
     private JPanel buscarExposiciones;
     private JButton venderBoton;
     private JTable tablaExposiciones;
 
-    private CompraFormulario vistaCompraFormulario;
-    private ControladorCompraFormulario controladorCompraFormulario;
+    private VentaFormulario vistaVentaFormulario;
+    private ControladorVentaFormulario controladorVentaFormulario;
 
     private JButton cerrarSesionBoton;
 
@@ -89,9 +90,9 @@ public class VentaEntradas extends JPanel{
      * @param precio           Precio de la entrada.
      * @return Vista de compra de entradas.
      */
-    public CompraFormulario getVistaCompraFormulario(String exposicionNombre, double precio) {
-        this.vistaCompraFormulario = new CompraFormulario(exposicionNombre, precio);
-        return this.vistaCompraFormulario;
+    public VentaFormulario getVistaVentaFormulario(String exposicionNombre, double precio) {
+        this.vistaVentaFormulario = new VentaFormulario(exposicionNombre, precio);
+        return this.vistaVentaFormulario;
     }
 
     /**
@@ -99,14 +100,11 @@ public class VentaEntradas extends JPanel{
      * 
      * @param controlador Controlador de la vista de compra de entradas.
      */
-    public void setCompraFormularioControlador(ControladorCompraFormulario controlador) {
-        this.controladorCompraFormulario = controlador;
-        this.vistaCompraFormulario.setControlador(controladorCompraFormulario.getSiguienteListener(),
-                controladorCompraFormulario.getCancelarListener(), controladorCompraFormulario.getdiaExpoListener(),
-                controladorCompraFormulario.getMesExpoListener(), controladorCompraFormulario.getAnioExpoListener(),
-                controladorCompraFormulario.getdiaTarjListener(), controladorCompraFormulario.getMesTarjListener(),
-                controladorCompraFormulario.getAnioTarjListener(), controladorCompraFormulario.getNentradasListener(),
-                controladorCompraFormulario.getHoraListener());
+    public void setVentaFormularioControlador(ControladorVentaFormulario controlador) {
+        this.controladorVentaFormulario = controlador;
+        this.vistaVentaFormulario.setControlador(controladorVentaFormulario.getSiguienteListener(),
+                controladorVentaFormulario.getCancelarListener(), controladorVentaFormulario.getNentradasListener(),
+                controladorVentaFormulario.getHoraListener());
     }
 
     /**

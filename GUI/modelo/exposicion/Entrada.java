@@ -25,7 +25,8 @@ public class Entrada implements Serializable {
     /**
      * Constructor para crear una entrada con un identificador específico.
      * 
-     * @param IDEntrada Identificador único de la entrada.
+     * @param cliente cliente asociado a la entrada.
+     * @param tarjeta tarjeta asociado a la entrada.
      */
     public Entrada(ClienteRegistrado cliente, TarjetaDeCredito tarjeta) {
         this.IDEntrada = IDcount++;

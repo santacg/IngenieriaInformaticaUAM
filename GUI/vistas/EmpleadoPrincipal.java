@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import GUI.controlador.ControladorCompraFormulario;
 import GUI.modelo.centroExposicion.Empleado;
 
 /**
@@ -92,12 +93,15 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cVentaEntradas Controlador del botón de venta de entradas.
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
-    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,ActionListener cCerrarSesion) {
+    public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
+            ActionListener cCerrarSesion) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
         this.venderEntradaBoton.addActionListener(cVentaEntradas);
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
+
+    
 
 }

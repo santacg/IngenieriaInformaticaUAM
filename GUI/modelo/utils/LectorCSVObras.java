@@ -24,7 +24,8 @@ public class LectorCSVObras {
      * del seguro, el número de seguro, y detalles específicos dependiendo del tipo
      * de obra (por ejemplo, dimensiones, color, etc.).
      *
-     * @param sala La sala de exposición a la que se añadirán las obras leídas.
+     * @param centroExposicion Centro de exposicion que lee las obras.
+     * @param filename Archivo del que se leen las obras.
      */
     public static boolean leerObras(CentroExposicion centroExposicion, String fileName) {
         String line = ""; // Variable para almacenar cada línea leída del archivo.

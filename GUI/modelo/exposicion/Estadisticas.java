@@ -17,8 +17,6 @@ public class Estadisticas implements Serializable {
    /**
     * Constructor de la clase Estadísticas.
     * 
-    * @param ticketsVendidos Número de tickets vendidos.
-    * @param ingresosTotales Ingresos totales generados.
     */
    public Estadisticas() {
       ticketsVendidos = 0;

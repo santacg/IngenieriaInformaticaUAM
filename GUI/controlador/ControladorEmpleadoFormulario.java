@@ -12,7 +12,7 @@ import GUI.vistas.*;
  * Clase ControladorObraFormulario
  * Implementa el controlador de la vista ObraFormulario.
  * 
- * @Author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class ControladorEmpleadoFormulario {
     private EmpleadoFormulario vista;

@@ -132,7 +132,7 @@ public class ControladorEmpleado {
             }
             JOptionPane.showMessageDialog(frame,
                         "Mostrando pantalla de venta de entradas.");
-            ControladorVentaEntradas controladorVentaEntradas = new ControladorVentaEntradas(frame, expofy, empleado);
+            ControladorVentaEntradas controladorVentaEntradas = new ControladorVentaEntradas(frame,expofy, centro, empleado);
             frame.setControladorVentaEntradas(controladorVentaEntradas);
             frame.mostrarPanel(frame.getVentaEntradas());
         }
