@@ -96,10 +96,16 @@ public class ControladorExposicionFormulario {
                     Set<SalaExposicion> salasExpo = new HashSet<>();
                     SalaExposicion salaExpo = new SalaExposicion(sala);
                     for (Obra obra : obrasSeleccionadas) {
-                        salaExpo.addObra(obra);
+                        if (salaExpo.addObra(obra) == false) {
+                            JOptionPane.showMessageDialog(vista, "No se puede añadir la obra a la sala de exposicion.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                     }
 
                     salasExpo.add(salaExpo);
+
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
                             vista.getFechaFin(), vista.getDescripcion(), salasExpo, vista.getTipoExpo(),
                             vista.getPrecio());

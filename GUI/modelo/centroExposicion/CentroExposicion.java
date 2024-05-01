@@ -586,6 +586,21 @@ public class CentroExposicion implements Serializable {
 
 
     /**
+     * Obtiene las obras almacenadas
+     * 
+     * @return Un conjunto de obras almacenadas.
+     */
+    public Set<Obra> getObrasAlmacenadas() {
+        Set<Obra> obrasAlmacenadas = new HashSet<>();
+        for (Obra obra : obras) {
+            if (obra.getEstado().equals(Estado.ALMACENADA)) {
+                obrasAlmacenadas.add(obra);
+            }
+        }
+        return obrasAlmacenadas;
+    }
+
+    /**
      * Obtiene una obra del centro de exposición a partir de su nombre.
      * @param nombre el nombre de la obra a buscar
      * @return la obra con el nombre proporcionado, o null si no existe

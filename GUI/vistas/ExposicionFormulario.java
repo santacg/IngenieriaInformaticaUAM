@@ -133,7 +133,7 @@ public class ExposicionFormulario extends JDialog {
      * @param centroExposicion CentroExposicion que contiene las obras.
      */
     public void mostrarObras(CentroExposicion centroExposicion) {
-        Set<Obra> obras = centroExposicion.getObras();
+        Set<Obra> obras = centroExposicion.getObrasAlmacenadas();
         panelObras.removeAll();
         this.obras.clear();
 
