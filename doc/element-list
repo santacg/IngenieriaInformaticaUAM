@@ -1,0 +1,13 @@
+GUI.controlador
+GUI.main
+GUI.modelo
+GUI.modelo.centroExposicion
+GUI.modelo.expofy
+GUI.modelo.exposicion
+GUI.modelo.inscripcion
+GUI.modelo.obra
+GUI.modelo.sala
+GUI.modelo.tarjetaDeCredito
+GUI.modelo.usuario
+GUI.modelo.utils
+GUI.vistas
