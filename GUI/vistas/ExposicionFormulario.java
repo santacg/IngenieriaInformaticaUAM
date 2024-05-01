@@ -12,6 +12,8 @@ import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.*;
 import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +31,7 @@ public class ExposicionFormulario extends JDialog {
     private JTextField descipcion;
     private JList<TipoExpo> tipoExpo;
     private JTextField precio;
-    private List<JCheckBox> obras;
+    private List<JCheckBox> obras = new ArrayList<>();
     private JPanel panelObras;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
@@ -132,12 +134,17 @@ public class ExposicionFormulario extends JDialog {
      */
     public void mostrarObras(CentroExposicion centroExposicion) {
         Set<Obra> obras = centroExposicion.getObras();
+        panelObras.removeAll();
+        this.obras.clear();
 
         for (Obra obra : obras) {
             JCheckBox checkBox = new JCheckBox(obra.getNombre());
+            this.obras.add(checkBox);
             panelObras.add(checkBox);
         }
 
+        panelObras.revalidate();
+        panelObras.repaint();
     }
 
     /**
@@ -300,6 +307,21 @@ public class ExposicionFormulario extends JDialog {
      */
     public Double getPrecio() {
         return Double.parseDouble(precio.getText());
+    }
+
+
+    /**
+     * Método que devuelve las obras seleccionadas.
+     * @return List<String> con las obras seleccionadas.
+     */
+    public List<String> getObras() {
+        List<String> obrasSeleccionadas = new ArrayList<>();
+        for (JCheckBox obra : obras) {
+            if (obra.isSelected()) {
+                obrasSeleccionadas.add(obra.getText());
+            }
+        }
+        return obrasSeleccionadas;
     }
 
     /**

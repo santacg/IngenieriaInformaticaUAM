@@ -116,6 +116,10 @@ public class ControladorCompraFormulario {
                 JOptionPane.showMessageDialog(frame, "No hay ese número de entradas disponibles para la exposición.");
                 return;
             }
+            if (numeroTarjetadeCredito.length() != 16) {
+                JOptionPane.showMessageDialog(frame, "El número de la tarjeta de crédito no es válido.");
+                return;
+            }
 
             vistConfirmarCompra = new ConfirmarCompra(exposicionNombre, String.valueOf(nEntradas),
                     fecha.toString(), String.valueOf(hora) + ":00", numeroTarjetadeCredito, fechaTarj.toString(),

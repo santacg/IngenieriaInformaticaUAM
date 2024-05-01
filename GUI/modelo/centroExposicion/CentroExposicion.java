@@ -584,6 +584,22 @@ public class CentroExposicion implements Serializable {
         return obras;
     }
 
+
+    /**
+     * Obtiene una obra del centro de exposición a partir de su nombre.
+     * @param nombre el nombre de la obra a buscar
+     * @return la obra con el nombre proporcionado, o null si no existe
+     */
+    public Obra getObraPorNombre(String nombre) {
+        for (Obra obra : obras) {
+            if (obra.getNombre().equals(nombre)) {
+                return obra;
+            }
+        }
+        return null;
+    }
+
+
     /**
      * Establece el conjunto de obras gestionadas por el centro de exposición.
      *

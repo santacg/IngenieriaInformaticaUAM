@@ -1,6 +1,9 @@
 package GUI.controlador;
 
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -8,6 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import GUI.modelo.centroExposicion.CentroExposicion;
 import GUI.modelo.exposicion.Exposicion;
 import GUI.modelo.exposicion.SalaExposicion;
+import GUI.modelo.obra.Obra;
 import GUI.modelo.sala.Sala;
 import GUI.vistas.*;
 
@@ -67,7 +71,8 @@ public class ControladorExposicionFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Agregar Exposicion":
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) vista.getTreeSalas().getLastSelectedPathComponent();
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) vista.getTreeSalas()
+                            .getLastSelectedPathComponent();
                     if (selectedNode == null) {
                         JOptionPane.showMessageDialog(vista, "Debes seleccionar una sala.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -80,12 +85,33 @@ public class ControladorExposicionFormulario {
                         sala = centroExposicion.getSubSalaPorNombre(nombreSala);
                     }
 
-                    SalaExposicion salaExpo = new SalaExposicion(sala, );
+                    List<String> nombresObrasSeleccionadas = vista.getObras();
+                    Set<Obra> obrasSeleccionadas = new HashSet<>();
+                    for (String nombreObra : nombresObrasSeleccionadas) {
+                        Obra obra = centroExposicion.getObraPorNombre(nombreObra);
+                        obrasSeleccionadas.add(obra);
+                    }
 
+                    Set<SalaExposicion> salasExpo = new HashSet<>();
+                    SalaExposicion salaExpo = new SalaExposicion(sala);
+                    for (Obra obra : obrasSeleccionadas) {
+                        salaExpo.addObra(obra);
+                    }
+
+                    salasExpo.add(salaExpo);
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
-                            vista.getFechaFin(), vista.getDescripcion(), sala, vista.getTipoExpo(), vista.getPrecio());
-                    if (centroExposicion.addExposicion(expoNueva))
-                        break;
+                            vista.getFechaFin(), vista.getDescripcion(), salasExpo, vista.getTipoExpo(),
+                            vista.getPrecio());
+
+                    if (centroExposicion.addExposicion(expoNueva) == false) {
+                        JOptionPane.showMessageDialog(vista, "No se puede añadir la exposición.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    JOptionPane.showMessageDialog(vista, "Exposición añadida correctamente.", "Exposición añadida",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    break;
                 case "Cancelar Exposicion":
                     if (exposicion.expoCancelar(vista.getFechaInicio()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede cancelar la exposición.", "Error",

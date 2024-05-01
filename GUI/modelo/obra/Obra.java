@@ -34,7 +34,6 @@ public abstract class Obra implements Serializable {
      * @param externa       Indica si la obra es externa o no.
      * @param cuantiaSeguro El valor del seguro de la obra.
      * @param numeroSeguro  El número de la póliza del seguro.
-     * @param estado        El estado inicial de la obra.
      */
     public Obra(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
             String numeroSeguro, String... autores) {
