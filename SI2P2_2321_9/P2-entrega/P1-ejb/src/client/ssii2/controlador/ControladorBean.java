@@ -10,8 +10,6 @@ import ssii2.voto.*;
 import ssii2.interaccion.*;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.xml.ws.BindingProvider;
-import jakarta.xml.ws.WebServiceException;
 import jakarta.ejb.EJB;
 import ssii2.servicio.dao.VotoDAORemote;
 

@@ -10,9 +10,9 @@
  *
  */
 
-package ssii2.servicio.dao;
+package ssii2.voto.dao;
 
-import ssii2.servicio.*;
+import ssii2.voto.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
-import jakarta.ejb.Stateless;
-import ssii2.servicio.dao.VotoDAORemote;
+
 
 /**
  * @author jaime, daniel
  */
-@Stateless
-public class VotoDAOBean extends DBTester implements VotoDAORemote {
+
+@WebService
+public class VotoDAOWS extends DBTester {
 
   private boolean debug = false;
 
@@ -77,7 +77,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
   /**
    * Constructor de la clase
    */
-  public VotoDAOBean() {
+  public VotoDAOWS() {
     return;
   }
 
@@ -130,6 +130,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    *         en la tabla CENSO fue satisfactoria, false en caso contrario
    */
 
+  @WebMethod
   public boolean compruebaCenso(CensoBean censo) {
     Connection con = null;
     Statement stmt = null;
@@ -208,7 +209,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    * @param voto
    * @return
    */
-
+  @WebMethod
   public synchronized VotoBean registraVoto(VotoBean voto) {
     Connection con = null;
     Statement stmt = null;
@@ -333,12 +334,12 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    * @param idProcesoElectoral
    * @return
    */
-  public VotoBean[] getVotos(String idProcesoElectoral) {
+
+  public ArrayList<VotoBean> getVotos(String idProcesoElectoral) {
 
     PreparedStatement pstmt = null;
     Connection pcon = null;
     ResultSet rs = null;
-    VotoBean[] ret = null;
     ArrayList<VotoBean> votos = null;
     String qry = null;
 
@@ -373,11 +374,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
         votos.add(v);
       }
 
-      ret = new VotoBean[votos.size()];
-      ret = votos.toArray(ret);
-
       // Cerramos / devolvemos la conexion al pool
-
       pcon.close();
 
     } catch (Exception e) {
@@ -400,7 +397,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
       }
     }
 
-    return ret;
+    return votos;
   }
 
   // Borrar los votos asociados a un proceso electoral
@@ -465,10 +462,12 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    */
   /********************************************************/
 
+  @WebMethod
   public boolean isPrepared() {
     return prepared;
   }
 
+  @WebMethod
   public void setPrepared(boolean prepared) {
     this.prepared = prepared;
   }
@@ -479,6 +478,7 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    * @return the debug
    */
 
+  @WebMethod
   public boolean isDebug() {
     return debug;
   }
@@ -487,14 +487,19 @@ public class VotoDAOBean extends DBTester implements VotoDAORemote {
    * @param debug the debug to set
    */
 
+  @WebMethod
   public void setDebug(boolean debug) {
     this.debug = debug;
   }
 
+  @Override
+  @WebMethod
   public boolean isDirectConnection() {
     return super.isDirectConnection();
   }
 
+  @Override
+  @WebMethod
   public void setDirectConnection(boolean directConnection) {
     super.setDirectConnection(directConnection);
   }

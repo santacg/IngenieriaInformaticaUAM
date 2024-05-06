@@ -1,15 +1,17 @@
-package ssii2.servicio;
+package ssii2.voto;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import jakarta.inject.Inject;
 import java.io.Serializable;
-import ssii2.servicio.CensoBean;
+import ssii2.voto.CensoBean;
 
 /*
  * Managed Bean de ambito de sesion que recoge los datos del censo de la persona que vota.
  */
 
+@Named
+@SessionScoped
 public class VotoBean implements Serializable {
 
     private String idVoto;
@@ -19,6 +21,8 @@ public class VotoBean implements Serializable {
     private String nombreCandidatoVotado;
     private String codigoRespuesta;
     private String marcaTiempo;
+
+    @Inject
     CensoBean censo;
 
     public VotoBean() {

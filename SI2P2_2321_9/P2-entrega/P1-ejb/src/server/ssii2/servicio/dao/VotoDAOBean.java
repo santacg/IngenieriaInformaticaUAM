@@ -20,8 +20,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import jakarta.jws.WebMethod;
-import jakarta.jws.WebService;
 import jakarta.ejb.Stateless;
 import ssii2.servicio.dao.VotoDAORemote;
 

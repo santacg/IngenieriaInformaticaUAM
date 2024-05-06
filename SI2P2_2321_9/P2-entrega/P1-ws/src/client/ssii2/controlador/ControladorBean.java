@@ -8,12 +8,10 @@ import jakarta.faces.context.*;
 
 import ssii2.voto.*;
 import ssii2.interaccion.*;
+import ssii2.servicio.VotoDAOWSService; // Stub generado automáticamente
+import ssii2.servicio.VotoDAOWS; // Stub generado automáticamente
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.xml.ws.BindingProvider;
-import jakarta.xml.ws.WebServiceException;
-import jakarta.ejb.EJB;
-import ssii2.servicio.dao.VotoDAORemote;
 
 //
 /*
@@ -37,9 +35,6 @@ public class ControladorBean implements Serializable {
 
   @Inject
   private InteraccionBean interaccion;
-
-  @EJB(name = "VotoDAOBean", beanInterface = VotoDAORemote.class)
-  private VotoDAORemote dao;
 
   public ControladorBean() {
   }
@@ -71,6 +66,8 @@ public class ControladorBean implements Serializable {
 
     try {
       /* Instanciamos el objeto que presta la lógica de negocio de la aplicación */
+      VotoDAOWSService service = new VotoDAOWSService();
+      VotoDAOWS dao = service.getVotoDAOWSPort();
 
       dao.setDirectConnection(this.interaccion.getConexionDirecta());
       dao.setDebug(this.interaccion.getDebug());
@@ -134,6 +131,8 @@ public class ControladorBean implements Serializable {
   public String borrarVotos() {
     try {
       /* Instanciamos el objeto que presta la lógica de negocio de la aplicación */
+      VotoDAOWSService service = new VotoDAOWSService();
+      VotoDAOWS dao = service.getVotoDAOWSPort();
 
       // Borramos los votos
 
@@ -163,8 +162,10 @@ public class ControladorBean implements Serializable {
 
   public String consultarVotos() {
     try {
+      VotoDAOWSService service = new VotoDAOWSService();
+      VotoDAOWS dao = service.getVotoDAOWSPort();
 
-      ssii2.servicio.VotoBean[] votosServicio = dao.getVotos(this.voto.getIdProcesoElectoral());
+      List<ssii2.servicio.VotoBean> votosServicio = dao.getVotos(this.voto.getIdProcesoElectoral());
 
       ArrayList<VotoBean> votosList = new ArrayList<>();
       for (ssii2.servicio.VotoBean votos : votosServicio) {

@@ -19,7 +19,7 @@ public class VotoBean implements Serializable {
     private String nombreCandidatoVotado;
     private String codigoRespuesta;
     private String marcaTiempo;
-    CensoBean censo;
+    private CensoBean censo; 
 
     public VotoBean() {
     }
@@ -89,3 +89,4 @@ public class VotoBean implements Serializable {
     }
 
 }
+
