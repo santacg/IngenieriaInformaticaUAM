@@ -1,0 +1,62 @@
+2024-05-06 00:57:09,100 INFO o.a.j.u.JMeterUtils: Setting Locale to es_ES
+2024-05-06 00:57:09,146 INFO o.a.j.u.JMeterUtils: Could not find resources for 'es_ES', using 'es'
+2024-05-06 00:57:09,147 INFO o.a.j.JMeter: Loading user properties from: /home/eduardo/apache-jmeter/bin/user.properties
+2024-05-06 00:57:09,148 INFO o.a.j.JMeter: Loading system properties from: /home/eduardo/apache-jmeter/bin/system.properties
+2024-05-06 00:57:09,159 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2024-05-06 00:57:09,159 INFO o.a.j.JMeter: Version 5.6.3
+2024-05-06 00:57:09,159 INFO o.a.j.JMeter: java.version=21.0.2
+2024-05-06 00:57:09,159 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: os.name=Linux
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: os.arch=amd64
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: os.version=6.5.0-28-generic
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: file.encoding=UTF-8
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: java.awt.headless=null
+2024-05-06 00:57:09,160 INFO o.a.j.JMeter: Max memory     =2027945984
+2024-05-06 00:57:09,161 INFO o.a.j.JMeter: Available Processors =8
+2024-05-06 00:57:09,180 INFO o.a.j.JMeter: Default Locale=español (España)
+2024-05-06 00:57:09,181 INFO o.a.j.JMeter: JMeter  Locale=español (España)
+2024-05-06 00:57:09,181 INFO o.a.j.JMeter: JMeterHome=/home/eduardo/apache-jmeter
+2024-05-06 00:57:09,181 INFO o.a.j.JMeter: user.dir  =//home/eduardo/Escritorio/3º/CUATRI2/SI2/P3
+2024-05-06 00:57:09,181 INFO o.a.j.JMeter: PWD       =//home/eduardo/Escritorio/3º/CUATRI2/SI2/P3
+2024-05-06 00:57:09,182 INFO o.a.j.JMeter: IP: 127.0.1.1 Name: eduardo-Lenovo-Laptop FullName: eduardo-Lenovo-Laptop
+2024-05-06 00:57:09,204 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2024-05-06 00:57:09,576 INFO o.a.j.JMeterGuiLauncher: Setting LAF to: com.github.weisj.darklaf.DarkLaf:com.github.weisj.darklaf.theme.DarculaTheme
+2024-05-06 00:57:20,015 INFO o.a.j.s.FileServer: Default base='//home/eduardo/Escritorio/3º/CUATRI2/SI2/P3'
+2024-05-06 00:57:20,023 INFO o.a.j.g.a.Load: Loading file: //home/eduardo/Escritorio/3º/CUATRI2/SI2/P3/P3.jmx
+2024-05-06 00:57:20,023 INFO o.a.j.s.FileServer: Set new base='//home/eduardo/Escritorio/3º/CUATRI2/SI2/P3'
+2024-05-06 00:57:20,323 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2024-05-06 00:57:20,365 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2024-05-06 00:57:20,367 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2024-05-06 00:57:20,369 INFO o.a.j.s.SaveService: Loading file: //home/eduardo/Escritorio/3º/CUATRI2/SI2/P3/P3.jmx
+2024-05-06 00:57:20,425 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-05-06 00:57:20,425 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-05-06 00:57:20,426 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-05-06 00:57:20,426 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2024-05-06 00:57:20,426 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2024-05-06 00:57:20,426 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2024-05-06 00:57:20,989 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2024-05-06 00:57:20,989 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2024-05-06 00:57:20,989 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2024-05-06 00:57:20,989 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2024-05-06 00:57:21,242 INFO o.a.j.s.FileServer: Set new base='/home/eduardo/Escritorio/3º/CUATRI2/SI2/P3'
+2024-05-06 00:57:21,635 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2024-05-06 00:57:21,636 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2024-05-06 00:57:21,637 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2024-05-06 00:57:21,638 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2024-05-06 00:57:21,638 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2024-05-06 00:57:21,700 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2024-05-06 00:57:21,757 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : P3
+2024-05-06 00:57:21,758 INFO o.a.j.e.StandardJMeterEngine: Starting 1 threads for group P3.
+2024-05-06 00:57:21,758 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2024-05-06 00:57:21,758 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=1 ramp-up=5 delayedStart=false
+2024-05-06 00:57:21,764 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2024-05-06 00:57:21,764 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2024-05-06 00:57:21,769 INFO o.a.j.t.JMeterThread: Thread started: P3 1-1
+2024-05-06 00:57:21,772 INFO o.a.j.s.FileServer: Stored: datagen/fichero.csv
+2024-05-06 00:57:21,808 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = eduardo-Lenovo-Laptop
+2024-05-06 00:57:21,818 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2024-05-06 00:57:58,772 INFO o.a.j.t.JMeterThread: Thread is done: P3 1-1
+2024-05-06 00:57:58,773 INFO o.a.j.t.JMeterThread: Thread finished: P3 1-1
+2024-05-06 00:57:58,775 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2024-05-06 00:57:58,775 INFO o.a.j.s.FileServer: Close: datagen/fichero.csv
+2024-05-06 00:57:58,778 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
