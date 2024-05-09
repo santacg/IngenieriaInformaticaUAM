@@ -9,9 +9,8 @@ import ssii2.voto.CensoBean;
 /*
  * Managed Bean de ambito de sesion que recoge los datos del censo de la persona que vota.
  */
-
-@Named // Permite acceder al bean a traves del EL
-@SessionScoped  // Hace que el bean persista en la sessión
+@Named 
+@SessionScoped  
 public class VotoBean implements Serializable {
 
     private String idVoto;
@@ -24,9 +23,24 @@ public class VotoBean implements Serializable {
     private String ip;
     private String instancia;
 
-    @Inject CensoBean censo; // referencia al censo de la sesión obtenida por inyeccion
-
+    @Inject CensoBean censo;
+    
     public VotoBean() {
+    }
+    public String getIp() {
+        return this.ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getInstancia() {
+        return this.instancia;
+    }
+
+    public void setInstancia(String instancia) {
+        this.instancia = instancia;
     }
 
     public String getIdVoto() {
@@ -91,22 +105,6 @@ public class VotoBean implements Serializable {
 
     public void setCenso(CensoBean censo) {
         this.censo = censo;
-    }
-
-    public String getIp() {
-        return this.ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getInstancia() {
-        return this.instancia;
-    }
-
-    public void setInstancia(String instancia) {
-        this.instancia = instancia;
     }
 
 }

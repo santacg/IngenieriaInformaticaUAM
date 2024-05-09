@@ -27,8 +27,6 @@ nombreCandidatoVotado char(16) not null,
 codRespuesta   char(3)  not null default '000',
 numeroDNI char(9) not null references censo,
 marcaTiempo timestamp not null default current_timestamp,
-instancia varchar(50) not null,
-ip varchar(50) not null,
 --- restricción para evitar que una persona vote varias veces en un mismo proceso electoral, 
 CONSTRAINT     Registro_UC  unique(idProcesoElectoral, numeroDNI),
 PRIMARY KEY (idVoto)

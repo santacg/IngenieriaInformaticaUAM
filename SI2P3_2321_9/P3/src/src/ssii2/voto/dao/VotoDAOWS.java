@@ -10,7 +10,7 @@
  *
  */
 
-package ssii2.voto.dao;
+package src.client.ssii2.voto.dao;
 
 import ssii2.voto.*;
 import java.sql.Connection;
@@ -25,7 +25,7 @@ import jakarta.jws.WebService;
 
 
 /**
- * @author jaime, daniel
+ * @author Carlos y Eduardo
  */
 
 @WebService
@@ -64,8 +64,8 @@ public class VotoDAOWS extends DBTester {
       " and codigoAutorizacion=? ";
 
   private static final String INSERT_VOTO_QRY = "insert into voto(" +
-      "idCircunscripcion,idMesaElectoral,idProcesoElectoral,nombreCandidatoVotado,numeroDNI)" +
-      " values (?,?,?,?,?)";
+  "idCircunscripcion,idMesaElectoral,idProcesoElectoral,nombreCandidatoVotado,numeroDNI,instancia,ip)" +
+      " values (?,?,?,?,?,?,?)";
 
   private static final String SELECT_VOTO_TRANSACCION_QRY = "select idVoto, codRespuesta, marcaTiempo" +
       " from voto " +
@@ -100,13 +100,15 @@ public class VotoDAOWS extends DBTester {
     String qry = "insert into voto("
         + "idCircunscripcion,"
         + "idMesaElectoral,idProcesoElectoral,"
-        + "nombreCandidatoVotado, numeroDNI)"
+        + "nombreCandidatoVotado, numeroDNI, instancia, ip)"
         + " values ("
         + "'" + voto.getIdCircunscripcion() + "',"
         + "'" + voto.getIdMesaElectoral() + "',"
         + "'" + voto.getIdProcesoElectoral() + "',"
         + "'" + voto.getNombreCandidatoVotado() + "',"
-        + "'" + voto.getCenso().getNumeroDNI() + "')";
+        + "'" + voto.getCenso().getNumeroDNI() + "')"
+        + "'" + voto.getInstancia() + "',"
+        + "'" + voto.getIp() + "')";
     return qry;
   }
 
@@ -223,7 +225,8 @@ public class VotoDAOWS extends DBTester {
 
     if (voto.getIdCircunscripcion() == null || voto.getIdMesaElectoral() == null ||
         voto.getIdProcesoElectoral() == null || voto.getNombreCandidatoVotado() == null ||
-        voto.getCenso() == null || voto.getCenso().getNumeroDNI() == null) {
+        voto.getCenso() == null || voto.getCenso().getNumeroDNI() == null ||
+                voto.getInstancia() == null || voto.getIp() == null) {
       errorLog("¡El voto tiene campos vacíos!");
       return null;
     }
@@ -246,6 +249,8 @@ public class VotoDAOWS extends DBTester {
         pstmt.setString(3, voto.getIdProcesoElectoral());
         pstmt.setString(4, voto.getNombreCandidatoVotado());
         pstmt.setString(5, voto.getCenso().getNumeroDNI());
+        pstmt.setString(6, voto.getInstancia());
+                pstmt.setString(7, voto.getIp());
         ret = false;
 
         if (!pstmt.execute() && pstmt.getUpdateCount() == 1) {
