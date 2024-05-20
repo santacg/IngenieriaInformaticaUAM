@@ -1,7 +1,7 @@
 TARGET_EXEC := server
 
 CC := gcc
-CFLAGS := -g -Wall -pthread 
+CFLAGS := -g -Wall -Wextra -pthread 
 LDFLAGS := 
 
 SRC_DIR := src

@@ -1,0 +1,16 @@
+server PID: 28146
+Server listening on port: 8081
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Finishing by signal
+Server exited with status: 0

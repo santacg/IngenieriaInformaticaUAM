@@ -2,9 +2,8 @@
 #define UTILS_H
 
 #define SA struct sockaddr
-#define POLL struct pollfd
+#define MAX_BUFFER_SIZE 4096
 #define LINE_SIZE 64
-
 
 #include <stdio.h>
 #include <string.h>
@@ -16,10 +15,17 @@
 #include <signal.h>
 #include <pthread.h>
 #include <poll.h>
+#include <sys/poll.h>
+#include <fcntl.h>
 
 typedef enum {
   OK = 0,
   ERROR = -1 
 } status;
+
+typedef enum {
+  TRUE = 1,
+  FALSE = 0
+} boolean;
 
 #endif

@@ -4,6 +4,6 @@
 #include "server.h"
 #include "utils.h"
 
-status server_set_config(server_t *server);
+int server_set_config(server_t *server);
 
 #endif
