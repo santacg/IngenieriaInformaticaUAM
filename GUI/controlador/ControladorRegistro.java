@@ -55,6 +55,8 @@ public class ControladorRegistro {
             JOptionPane.showMessageDialog(frame, "Usuario registrado correctamente.", "Registro",
                     JOptionPane.INFORMATION_MESSAGE);
             vistaRegistro.update();
+            ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
+            frame.setControladorPantallaPrincipal(controlador);
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
     };
@@ -65,6 +67,8 @@ public class ControladorRegistro {
     public ActionListener cancelarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vistaRegistro.update();
+            ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
+            frame.setControladorPantallaPrincipal(controlador);
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
     };

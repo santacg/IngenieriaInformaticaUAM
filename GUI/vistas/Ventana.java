@@ -77,9 +77,6 @@ public class Ventana extends JFrame {
 		cartas = new JPanel();
 		cartas.setLayout(new CardLayout());
 
-		this.vistaPantallaPrincipal = new PantallaPrincipal();
-		cartas.add(vistaPantallaPrincipal, PANELPRINCIPAL);
-
 		this.vistaLoginEmpleado = new LoginEmpleado();
 		cartas.add(vistaLoginEmpleado, LOGINEMPLEADO);
 
@@ -98,8 +95,8 @@ public class Ventana extends JFrame {
 		this.vistaBusquedaExposiciones = new BusquedaExposiciones();
 		cartas.add(vistaBusquedaExposiciones, EXPOSICIONES);
 
-		//this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
-		//cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
+		// this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
+		// cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
 
 		/*
 		 * Esto está obsoleto, ahora se hace con un método setCartaClientePrincipal
@@ -223,6 +220,8 @@ public class Ventana extends JFrame {
 	 * @return PantallaPrincipal vistaPantallaPrincipal
 	 */
 	public PantallaPrincipal getVistaPantallaPrincipal() {
+		this.vistaPantallaPrincipal = new PantallaPrincipal();
+		cartas.add(vistaPantallaPrincipal, PANELPRINCIPAL);
 		return vistaPantallaPrincipal;
 	}
 
@@ -401,33 +400,43 @@ public class Ventana extends JFrame {
 	}
 
 	/**
+	 * Establece el controlador de la pantalla principal
+	 * 
+	 * @param controlador controladorPantallaPrincipal
+	 */
+	public void setControladorPantallaPrincipal(ControladorPantallaPrincipal controlador) {
+		this.controladorPantallaPrincipal = controlador;
+		this.vistaPantallaPrincipal.setControlador(
+				controladorPantallaPrincipal.getBuscaListener(),
+				controladorPantallaPrincipal.getAcceptListener(),
+				controladorPantallaPrincipal.getGestorListener(),
+				controladorPantallaPrincipal.getEmpleadoListener(),
+				controladorPantallaPrincipal.getRegistrarListener());
+	}
+
+	/**
 	 * Establece el controlador general de la aplicación
 	 * 
 	 * @param controlador El controlador de Expofy
 	 */
 	public void setControlador(Controlador controlador) {
-			this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
-			this.vistaPantallaPrincipal.setControlador(
-					controladorPantallaPrincipal.getBuscaListener(),
-					controladorPantallaPrincipal.getAcceptListener(),
-					controladorPantallaPrincipal.getGestorListener(),
-					controladorPantallaPrincipal.getEmpleadoListener(),
-					controladorPantallaPrincipal.getRegistrarListener());
+		this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
+		setControladorPantallaPrincipal(controladorPantallaPrincipal);
 
-			this.controladorRegistro = controlador.getControladorRegistro();
-			this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
-					controladorRegistro.getCancelarListener());
+		this.controladorRegistro = controlador.getControladorRegistro();
+		this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
+				controladorRegistro.getCancelarListener());
 
-			this.controladorLoginGestor = controlador.getControladorLoginGestor();
-			this.vistaLoginGestor.setControlador(controladorLoginGestor.getAceptarListener(),
-					controladorLoginGestor.getAtrasListener());
+		this.controladorLoginGestor = controlador.getControladorLoginGestor();
+		this.vistaLoginGestor.setControlador(controladorLoginGestor.getAceptarListener(),
+				controladorLoginGestor.getAtrasListener());
 
-			this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
-			this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
-					controladorLoginEmpleado.getAtrasListener());
+		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
+		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
+				controladorLoginEmpleado.getAtrasListener());
 
-			this.controladorBusquedaExposiciones = controlador.getControladorBusquedaExposiciones();
-			this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
+		this.controladorBusquedaExposiciones = controlador.getControladorBusquedaExposiciones();
+		this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
 
 	}
 
@@ -472,5 +481,9 @@ public class Ventana extends JFrame {
 	public void setCartaGestorPrincipal() {
 		this.vistaGestorPrincipal = new GestorPrincipal();
 		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
+	}
+
+	public void setCartaPantallaPrincipal() {
+
 	}
 }

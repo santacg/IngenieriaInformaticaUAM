@@ -18,6 +18,7 @@ import GUI.modelo.usuario.Usuario;
  */
 public class ClienteRegistrado extends Usuario {
     private Boolean publicidad;
+    private Boolean bloqueada;
     private String contrasenia;
     private Boolean sancionado;
     private LocalDate ultimaCompra;
@@ -37,6 +38,7 @@ public class ClienteRegistrado extends Usuario {
             LocalDate ultimaCompra, LocalDate sancionadoHasta) {
         super(NIF);
         this.publicidad = publicidad;
+        this.bloqueada = false;
         this.contrasenia = contrasenia;
         this.sancionado = sancionado;
         if (ultimaCompra == null) {
@@ -168,6 +170,18 @@ public class ClienteRegistrado extends Usuario {
         this.addNotificacion(notificacion);
     }
 
+    public void bloquearCuenta() {
+        this.bloqueada = true;
+    }
+
+    public void desbloquearCuenta() {
+        this.bloqueada = false;
+    }
+
+    public Boolean getBloqueada(){
+        return this.bloqueada;
+    }
+
     /**
      * Proporciona una representación en cadena de la información del cliente
      * registrado.
@@ -184,5 +198,17 @@ public class ClienteRegistrado extends Usuario {
         sb.append("Última Compra: ").append(ultimaCompra).append("\n");
         sb.append("Sancionado Hasta: ").append(sancionadoHasta).append("\n");
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ClienteRegistrado)) {
+            return false;
+        }
+        ClienteRegistrado cliente = (ClienteRegistrado) obj;
+        return (cliente.getNIF() == this.getNIF() && cliente.getContrasenia() == this.getContrasenia());
     }
 }

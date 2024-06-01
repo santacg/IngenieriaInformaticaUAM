@@ -108,6 +108,8 @@ public class ControladorEmpleado {
             empleado.logOut();
             vista.removeControlador(enviarMsjListener, cambiarClimatizacionListener, cambiarClimatizacionListener, cerrarSesionListener);
             vista.removeAll();
+            ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
+            frame.setControladorPantallaPrincipal(controlador);
             JOptionPane.showMessageDialog(frame, "Sesión cerrada correctamente");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }

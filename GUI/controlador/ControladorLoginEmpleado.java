@@ -64,6 +64,8 @@ public class ControladorLoginEmpleado {
     private ActionListener atrasListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
+            ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
+            frame.setControladorPantallaPrincipal(controlador);
             frame.mostrarPanelPrevio();
         }
     };

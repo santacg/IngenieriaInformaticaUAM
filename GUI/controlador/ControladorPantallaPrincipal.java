@@ -1,6 +1,8 @@
 package GUI.controlador;
 
 import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.*;
 
 import GUI.modelo.expofy.*;
@@ -16,6 +18,7 @@ public class ControladorPantallaPrincipal {
     private Ventana frame;
     private PantallaPrincipal vista;
     private Expofy expofy;
+    private Map<ClienteRegistrado, Integer> intentos = new LinkedHashMap<>();
 
     /**
      * Constructor de la clase ControladorPantallaPrincipal
@@ -26,6 +29,9 @@ public class ControladorPantallaPrincipal {
     public ControladorPantallaPrincipal(Ventana frame, Expofy expofy) {
         this.frame = frame;
         this.expofy = expofy;
+        for (ClienteRegistrado cliente : expofy.getClientesRegistrados()) {
+            intentos.put(cliente, 0);
+        }
         this.vista = frame.getVistaPantallaPrincipal();
     }
 
@@ -55,6 +61,7 @@ public class ControladorPantallaPrincipal {
     private ActionListener empleadoListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
+            vista.removeAll();
             frame.mostrarPanel(frame.getLogInEmpleado());
         }
     };
@@ -65,6 +72,7 @@ public class ControladorPantallaPrincipal {
     private ActionListener registrarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             vista.update();
+            vista.removeAll();
             frame.mostrarPanel(frame.getRegistro());
         }
     };
@@ -81,13 +89,36 @@ public class ControladorPantallaPrincipal {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            if (expofy.loginCliente(usuario, password) == false) {
-                JOptionPane.showMessageDialog(frame, "Usuario o contraseña incorrectos.", "Error",
+            ClienteRegistrado clienteRegistrado = expofy.getClienteRegistrado(usuario);
+            if (clienteRegistrado != null) {
+                if (clienteRegistrado.getBloqueada()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Esta cuenta se encuentra bloqueada, contacta con un empleado para que la desbloquee.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (expofy.loginCliente(usuario, password) == false) {
+                    intentos.put(clienteRegistrado, intentos.get(clienteRegistrado) + 1);
+                    JOptionPane.showMessageDialog(frame,
+                            "Contraseña incorrecta. Te quedan " + (3 - intentos.get(clienteRegistrado)) + " intentos.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    if (intentos.get(clienteRegistrado) == 3) {
+                        clienteRegistrado.bloquearCuenta();
+                        JOptionPane.showMessageDialog(frame,
+                            "Tu cuenta ha sido bloqueada, contacta con un empleado para que la desbloquee.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Usuario no registrado", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            ClienteRegistrado clienteRegistrado = expofy.getClienteRegistrado(usuario);
+
             ControladorCliente controladorCliente = new ControladorCliente(frame, expofy, clienteRegistrado);
             frame.setControladorCliente(controladorCliente);
             JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
