@@ -57,7 +57,7 @@ public class LoginGestor extends JPanel {
     private void addPasswordField(GridBagConstraints constraints) {
         JLabel labelPassword = new JLabel("Contraseña:");
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
         add(labelPassword, constraints);
 
         this.fieldPassword = new JPasswordField(30);

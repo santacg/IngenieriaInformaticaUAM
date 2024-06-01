@@ -35,6 +35,7 @@ public class ControladorCliente {
      */
     public ControladorCliente(Ventana frame, Expofy expofy, ClienteRegistrado cliente) {
         this.frame = frame;
+        this.frame.setCartaClientePrincipal();
         this.cliente = cliente;
         this.expofy = expofy;
         this.sorteos = new ArrayList<>();
@@ -199,6 +200,8 @@ public class ControladorCliente {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             expofy.logOut(cliente);
+            vista.removeControlador(comprarListener, actualizarDatosListener, cerrarSesionListener, inscribirseListener);
+            vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }

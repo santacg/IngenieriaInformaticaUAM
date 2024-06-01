@@ -2,6 +2,8 @@ package GUI.vistas;
 
 import javax.swing.*;
 
+import org.bouncycastle.crypto.examples.JPAKEExample;
+
 import java.awt.*;
 
 import GUI.controlador.*;
@@ -96,11 +98,19 @@ public class Ventana extends JFrame {
 		this.vistaBusquedaExposiciones = new BusquedaExposiciones();
 		cartas.add(vistaBusquedaExposiciones, EXPOSICIONES);
 
-		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
-		cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
+		//this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
+		//cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
 
-		this.vistaClientePrincipal = new ClientePrincipal();
-		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
+		/*
+		 * Esto está obsoleto, ahora se hace con un método setCartaClientePrincipal
+		 * a ese método se le llama en el controlador de Cliente principal y permite que
+		 * por cada
+		 * logueo se cree la instancia, este cambio hay que hacerlo también mínimo con
+		 * las cartas
+		 * de empleado y gestor
+		 */
+		// this.vistaClientePrincipal = new ClientePrincipal();
+		// cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
 
 		this.vistaVentaEntradas = new VentaEntradas();
 		cartas.add(vistaVentaEntradas, VENTAENTRADAS);
@@ -289,8 +299,6 @@ public class Ventana extends JFrame {
 			return vistaGestorPrincipal;
 		}
 
-		this.vistaGestorPrincipal = new GestorPrincipal();
-		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 		return vistaGestorPrincipal;
 	}
 
@@ -316,8 +324,11 @@ public class Ventana extends JFrame {
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
 		this.vistaGestorPrincipal.setControlador(controladorGestor.getObraEjecutarListener(),
-				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(), controladorGestor.getSalaEjecutarListener(),
-				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(), controladorGestor.getEmpleadoAgregarListener() ,controladorGestor.getCerrarSesionListener());
+				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(),
+				controladorGestor.getSalaEjecutarListener(),
+				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(),
+				controladorGestor.getEmpleadoAgregarListener(), controladorGestor.getCerrarSesionListener());
+
 	}
 
 	/**
@@ -330,8 +341,8 @@ public class Ventana extends JFrame {
 		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(),
 				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion(),
 				controladorCliente.getInscribirse());
-	}
 
+	}
 
 	/**
 	 * Establece el controlador de la vista de empleado principal
@@ -361,8 +372,10 @@ public class Ventana extends JFrame {
 	 * @param controlador ControladorEnviarMensajes
 	 */
 	public void setControladorEnviarMensajes(ControladorEnviarMensajes controlador) {
-		this.controladorEnviarMensajes = controlador;
-		this.vistaEnviarMensajes.setControlador(controlador.getEnviarListener(), controlador.getAtrasListener());
+		if (controladorEnviarMensajes == null) {
+			this.controladorEnviarMensajes = controlador;
+			this.vistaEnviarMensajes.setControlador(controlador.getEnviarListener(), controlador.getAtrasListener());
+		}
 	}
 
 	/**
@@ -373,6 +386,7 @@ public class Ventana extends JFrame {
 	public void setControladorAjustarClimatizacion(ControladorAjustarClimatizacion controlador) {
 		this.controladorAjustarClimatizacion = controlador;
 		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener());
+
 	}
 
 	/**
@@ -382,7 +396,8 @@ public class Ventana extends JFrame {
 	 */
 	public void setControladorVentaEntradas(ControladorVentaEntradas controlador) {
 		this.controladorVentaEntradas = controlador;
-		this.vistaVentaEntradas.setControlador(controlador.getVentaListener(), controlador.getCerrarSesionListener());
+		this.vistaVentaEntradas.setControlador(controlador.getVentaListener(),
+				controlador.getCerrarSesionListener());
 	}
 
 	/**
@@ -391,28 +406,29 @@ public class Ventana extends JFrame {
 	 * @param controlador El controlador de Expofy
 	 */
 	public void setControlador(Controlador controlador) {
-		this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
-		this.vistaPantallaPrincipal.setControlador(
-				controladorPantallaPrincipal.getBuscaListener(),
-				controladorPantallaPrincipal.getAcceptListener(),
-				controladorPantallaPrincipal.getGestorListener(),
-				controladorPantallaPrincipal.getEmpleadoListener(),
-				controladorPantallaPrincipal.getRegistrarListener());
+			this.controladorPantallaPrincipal = controlador.getControladorPantallaPrincipal();
+			this.vistaPantallaPrincipal.setControlador(
+					controladorPantallaPrincipal.getBuscaListener(),
+					controladorPantallaPrincipal.getAcceptListener(),
+					controladorPantallaPrincipal.getGestorListener(),
+					controladorPantallaPrincipal.getEmpleadoListener(),
+					controladorPantallaPrincipal.getRegistrarListener());
 
-		this.controladorRegistro = controlador.getControladorRegistro();
-		this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
-				controladorRegistro.getCancelarListener());
+			this.controladorRegistro = controlador.getControladorRegistro();
+			this.vistaRegistro.setControlador(controladorRegistro.getRegistrarListener(),
+					controladorRegistro.getCancelarListener());
 
-		this.controladorLoginGestor = controlador.getControladorLoginGestor();
-		this.vistaLoginGestor.setControlador(controladorLoginGestor.getAceptarListener(),
-				controladorLoginGestor.getAtrasListener());
+			this.controladorLoginGestor = controlador.getControladorLoginGestor();
+			this.vistaLoginGestor.setControlador(controladorLoginGestor.getAceptarListener(),
+					controladorLoginGestor.getAtrasListener());
 
-		this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
-		this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
-				controladorLoginEmpleado.getAtrasListener());
+			this.controladorLoginEmpleado = controlador.getControladorLoginEmpleado();
+			this.vistaLoginEmpleado.setControlador(controladorLoginEmpleado.getAcceptListener(),
+					controladorLoginEmpleado.getAtrasListener());
 
-		this.controladorBusquedaExposiciones = controlador.getControladorBusquedaExposiciones();
-		this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
+			this.controladorBusquedaExposiciones = controlador.getControladorBusquedaExposiciones();
+			this.vistaBusquedaExposiciones.setControlador(controladorBusquedaExposiciones.getAtrasListener());
+
 	}
 
 	/**
@@ -436,6 +452,25 @@ public class Ventana extends JFrame {
 		if (cartaPrevia != null) {
 			mostrarPanel(cartaPrevia);
 		}
-		
+
+	}
+
+	public JPanel getCartas() {
+		return cartas;
+	}
+
+	public void setCartaClientePrincipal() {
+		this.vistaClientePrincipal = new ClientePrincipal();
+		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
+	}
+
+	public void setCartaEmpleadoPrincipal() {
+		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
+		cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
+	}
+
+	public void setCartaGestorPrincipal() {
+		this.vistaGestorPrincipal = new GestorPrincipal();
+		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 	}
 }

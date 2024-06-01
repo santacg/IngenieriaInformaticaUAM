@@ -34,10 +34,12 @@ public class ControladorEmpleado {
      */
     public ControladorEmpleado(Ventana frame, Expofy expofy, CentroExposicion centro, String usuario) {
         this.frame = frame;
+        this.frame.setCartaEmpleadoPrincipal();
         this.expofy = expofy;
         this.centro = centro;
         this.vista = frame.getVistaEmpleadoPrincipal();
         this.empleado = centro.getEmpleado(usuario);
+        vista.addTitle(empleado.getNombre());
 
     }
 
@@ -104,6 +106,8 @@ public class ControladorEmpleado {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             empleado.logOut();
+            vista.removeControlador(enviarMsjListener, cambiarClimatizacionListener, cambiarClimatizacionListener, cerrarSesionListener);
+            vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Sesión cerrada correctamente");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }

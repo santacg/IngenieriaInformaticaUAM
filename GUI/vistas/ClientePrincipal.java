@@ -255,6 +255,21 @@ public class ClientePrincipal extends JPanel {
     }
 
     /**
+     * Método que borra los controladores de los botones de la vista.
+     * 
+     * @param cComprar      Controlador del botón de comprar.
+     * @param cActualizar   Controlador del botón de actualizar.
+     * @param cCerrarSesion Controlador del botón de cerrar sesión.
+     * @param cInscribirse  Controlador del botón de inscribirse.
+     */
+    public void removeControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion, ActionListener cInscribirse) {
+        comprarBoton.removeActionListener(cComprar);
+        actualizarBoton.removeActionListener(cActualizar);
+        cerrarSesionBoton.removeActionListener(cCerrarSesion);
+        inscribirseBoton.removeActionListener(cInscribirse);
+    }
+
+    /**
      * Método que devuelve la vista de compra de entradas.
      * 
      * @param exposicionNombre Nombre de la exposición.

@@ -607,6 +607,29 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Elimina los controladores de los botones.
+     * 
+     * @param cObrasEjecutar        Controlador de ejecutar acciones de obras.
+     * @param cObrasAgregar         Controlador de agregar obras.
+     * @param cSalasEjecutar        Controlador de ejecutar acciones de salas.
+     * @param cExposicionesEjecutar Controlador de ejecutar acciones de
+     *                              exposiciones.
+     */
+    public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
+            ActionListener cObrasLeerCSV,
+            ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
+            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion) {
+        this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
+        this.obraAgregarBtn.removeActionListener(cObrasAgregar);
+        this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
+        this.salaEjecutarBtn.removeActionListener(cSalasEjecutar);
+        this.exposicionEjecutarBtn.removeActionListener(cExposicionesEjecutar);
+        this.exposicionAgregarBtn.removeActionListener(cExposicionesAgregar);
+        this.empleadoAgregarBtn.removeActionListener(cEmpleadoAgregar);
+        this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
+    }
+
+    /**
      * Devuelve la vista del formulario de obra.
      * 
      * @return Vista del formulario de obra.

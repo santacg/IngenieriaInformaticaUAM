@@ -38,9 +38,8 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.insets = new Insets(10, 10, 10, 10);
 
         // Componentes del formulario
-        addTitle(constraints);
         addButtons(constraints);
-
+        // addTitle(constraints);
         add(panelPrincipal, BorderLayout.CENTER);
         add(panelCerrarSesion, BorderLayout.NORTH);
     }
@@ -50,8 +49,12 @@ public class EmpleadoPrincipal extends JPanel {
      * 
      * @param constraints Constraints para el GridBagLayout.
      */
-    private void addTitle(GridBagConstraints constraints) {
-        JLabel titleLabel = new JLabel("Bienvenido, [NOMBRE EMPLEADO]");
+    public void addTitle(String name) {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        
+        JLabel titleLabel = new JLabel("Bienvenido, " + name);
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -59,7 +62,6 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.anchor = GridBagConstraints.CENTER;
 
         panelPrincipal.add(titleLabel, constraints);
-
     }
 
     /**
@@ -102,6 +104,21 @@ public class EmpleadoPrincipal extends JPanel {
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
     }
 
-    
 
+    /**
+     * Método que borra los controladores de la vista.
+     *
+     * @param cMensaje       Controlador del botón de envío de mensajes.
+     * @param cClimatizacion Controlador del botón de cambio de climatización.
+     * @param cVentaEntradas Controlador del botón de venta de entradas.
+     * @param cCerrarSesion  Controlador del botón de cierre de sesión.
+     */
+    public void removeControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
+            ActionListener cCerrarSesion) {
+
+        this.enviarMensajeBoton.removeActionListener(cMensaje);
+        this.cambiarClimatizacionBoton.removeActionListener(cClimatizacion);
+        this.venderEntradaBoton.removeActionListener(cVentaEntradas);
+        this.cerrarSesionBoton.removeActionListener(cCerrarSesion);
+    }
 }

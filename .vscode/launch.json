@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "GUI.main.Main",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
+            "name": "MainVisual",
+            "request": "launch",
+            "mainClass": "GUI.modelo.MainVisual",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

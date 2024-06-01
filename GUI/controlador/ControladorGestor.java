@@ -37,6 +37,7 @@ public class ControladorGestor {
      */
     public ControladorGestor(Ventana frame, CentroExposicion centro) {
         this.frame = frame;
+        this.frame.setCartaGestorPrincipal();
         this.centro = centro;
         this.vista = frame.getVistaGestorPrincipal();
 
@@ -253,6 +254,8 @@ public class ControladorGestor {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             centro.getGestor().logOut();
+            vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener, obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener, cerrarSesionListener);
+            vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }
