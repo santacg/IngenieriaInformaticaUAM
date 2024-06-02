@@ -32,6 +32,7 @@ public class Ventana extends JFrame {
 	private final static String EMPLEADOPRINCIPAL = "empleadoPrincipal";
 	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
 	private final static String VENTAENTRADAS = "ventaEntradas";
+	private final static String DESBLOQUEOCLIENTES = "desbloqueoClientes";
 
 	// Vistas y controladores
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
@@ -68,6 +69,9 @@ public class Ventana extends JFrame {
 	private ControladorAjustarClimatizacion controladorAjustarClimatizacion;
 	private AjustarClimatizacion vistaAjustarClimatizacion;
 
+	private ControladorDesbloqueoClientes controladorDesbloqueoClientes;
+	private DesbloqueoClientes vistaDesbloqueoClientes;
+
 	/**
 	 * Constructor de la clase Ventana
 	 */
@@ -83,9 +87,6 @@ public class Ventana extends JFrame {
 		this.vistaEnviarMensajes = new EnviarMensajes();
 		cartas.add(vistaEnviarMensajes, ENVIARMENSAJES);
 
-		this.vistaAjustarClimatizacion = new AjustarClimatizacion();
-		cartas.add(vistaAjustarClimatizacion, AJUSTARCLIMATIZACION);
-
 		this.vistaLoginGestor = new LoginGestor();
 		cartas.add(vistaLoginGestor, LOGINGESTOR);
 
@@ -94,20 +95,6 @@ public class Ventana extends JFrame {
 
 		this.vistaBusquedaExposiciones = new BusquedaExposiciones();
 		cartas.add(vistaBusquedaExposiciones, EXPOSICIONES);
-
-		// this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
-		// cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
-
-		/*
-		 * Esto está obsoleto, ahora se hace con un método setCartaClientePrincipal
-		 * a ese método se le llama en el controlador de Cliente principal y permite que
-		 * por cada
-		 * logueo se cree la instancia, este cambio hay que hacerlo también mínimo con
-		 * las cartas
-		 * de empleado y gestor
-		 */
-		// this.vistaClientePrincipal = new ClientePrincipal();
-		// cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
 
 		this.vistaVentaEntradas = new VentaEntradas();
 		cartas.add(vistaVentaEntradas, VENTAENTRADAS);
@@ -206,6 +193,15 @@ public class Ventana extends JFrame {
 	}
 
 	/**
+	 * Devuelve el nombre del panel de desbloquo de clientes
+	 * 
+	 * @return DesbloquoClientes string DESBLOQUEOCLIENTES
+	 */
+	public String getDesbloqueoClientes() {
+		return DESBLOQUEOCLIENTES;
+	}
+
+	/**
 	 * Devuelve el nombre del panel de la venta de entradas
 	 * 
 	 * @return VentaEntradas string VENTAENTRADAS
@@ -268,6 +264,15 @@ public class Ventana extends JFrame {
 	 */
 	public AjustarClimatizacion getVistaAjustarClimatizacion() {
 		return vistaAjustarClimatizacion;
+	}
+
+	/**
+	 * Devuelve la vista de desbloqueo de clientes
+	 * 
+	 * @return DesbloqueoClientes vistaDesbloqueoClientes
+	 */
+	public DesbloqueoClientes getVistaDesbloqueoClientes() {
+		return vistaDesbloqueoClientes;
 	}
 
 	/**
@@ -352,7 +357,7 @@ public class Ventana extends JFrame {
 		this.controladorEmpleado = controlador;
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
 				controlador.getClimatizacionListener(), controlador.getVenderEntrada(),
-				controlador.getCerrarSesionListener());
+				controlador.getCerrarSesionListener(), controlador.getDesbloquearListener());
 	}
 
 	/**
@@ -384,7 +389,9 @@ public class Ventana extends JFrame {
 	 */
 	public void setControladorAjustarClimatizacion(ControladorAjustarClimatizacion controlador) {
 		this.controladorAjustarClimatizacion = controlador;
-		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener());
+		this.vistaAjustarClimatizacion.setControlador(controlador.getAtrasListener(),
+				controlador.getConfirmarListener(), controlador.getTemperaturaListener(),
+				controlador.getHumedadListener());
 
 	}
 
@@ -396,7 +403,18 @@ public class Ventana extends JFrame {
 	public void setControladorVentaEntradas(ControladorVentaEntradas controlador) {
 		this.controladorVentaEntradas = controlador;
 		this.vistaVentaEntradas.setControlador(controlador.getVentaListener(),
-				controlador.getCerrarSesionListener());
+				controlador.getCerrarSesionListener(), controlador.getAtrasListener());
+	}
+
+	/**
+	 * Establece el controlador de la vista de desbloquo de clientes
+	 * 
+	 * @param controlador controladorDesbloqueoClientes
+	 */
+	public void setControladorDesbloqueoClientes(ControladorDesbloqueoClientes controlador) {
+		this.controladorDesbloqueoClientes = controlador;
+		this.vistaDesbloqueoClientes.setControlador(controlador.getAtrasListener(),
+				controlador.getDesbloquearListener());
 	}
 
 	/**
@@ -481,6 +499,16 @@ public class Ventana extends JFrame {
 	public void setCartaGestorPrincipal() {
 		this.vistaGestorPrincipal = new GestorPrincipal();
 		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
+	}
+
+	public void setCartaAjustarClimatizacion() {
+		this.vistaAjustarClimatizacion = new AjustarClimatizacion();
+		cartas.add(vistaAjustarClimatizacion, AJUSTARCLIMATIZACION);
+	}
+
+	public void setCartaDesbloqueoClientes() {
+		this.vistaDesbloqueoClientes = new DesbloqueoClientes();
+		cartas.add(vistaDesbloqueoClientes, DESBLOQUEOCLIENTES);
 	}
 
 	public void setCartaPantallaPrincipal() {

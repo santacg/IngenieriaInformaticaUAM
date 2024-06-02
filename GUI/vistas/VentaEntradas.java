@@ -24,6 +24,7 @@ public class VentaEntradas extends JPanel{
     private ControladorVentaFormulario controladorVentaFormulario;
 
     private JButton cerrarSesionBoton;
+    private JButton atrasBoton;
 
     /**
      * Constructor de la clase ClientePrincipal.
@@ -65,6 +66,7 @@ public class VentaEntradas extends JPanel{
         tablaExposiciones.setFillsViewportHeight(true);
 
         panelBoton.add(venderBoton);
+        panelBoton.add(atrasBoton = new JButton("Atrás"));
         buscarExposiciones.add(panelBoton, BorderLayout.SOUTH);
         this.buscarExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
@@ -77,9 +79,10 @@ public class VentaEntradas extends JPanel{
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
      */
-    public void setControlador(ActionListener cVender, ActionListener cCerrarSesion) {
+    public void setControlador(ActionListener cVender, ActionListener cCerrarSesion, ActionListener cAtras) {
         venderBoton.addActionListener(cVender);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
+        atrasBoton.addActionListener(cAtras);
 
     }
 

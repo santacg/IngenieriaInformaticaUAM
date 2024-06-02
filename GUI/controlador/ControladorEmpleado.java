@@ -125,6 +125,28 @@ public class ControladorEmpleado {
     }
 
     /**
+     * Método que devuelve el listener del botón de desbloquear clientes.
+     * 
+     * @return ActionListener
+     */
+    public ActionListener getDesbloquearListener() {
+        return desbloquearListener;
+    }
+
+    /**
+     * Método que inicializa el controlador venderEntradaListener.
+     */
+    private ActionListener desbloquearListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(frame,
+                        "Mostrando pantalla de clientes bloqueados.");
+            ControladorDesbloqueoClientes controladorDesbloqueoClientes = new ControladorDesbloqueoClientes(frame,expofy);
+            frame.setControladorDesbloqueoClientes(controladorDesbloqueoClientes);
+            frame.mostrarPanel(frame.getDesbloqueoClientes());
+        }
+    };
+
+    /**
      * Método que inicializa el controlador venderEntradaListener.
      */
     private ActionListener venderEntradaListener = new ActionListener() {

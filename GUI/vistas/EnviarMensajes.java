@@ -62,7 +62,7 @@ public class EnviarMensajes extends JPanel {
         constraints.gridwidth = 1;
         add(labelDestinatario, constraints);
 
-        JLabel labelTodos = new JLabel("(Vacío para enviar a todos)");
+        JLabel labelTodos = new JLabel("(Vacío para enviar a todos los clientes que permitan publicidad)");
         constraints.gridx = 1;
         constraints.gridy = 2;
         constraints.gridwidth = 1;

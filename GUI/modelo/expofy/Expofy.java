@@ -100,6 +100,19 @@ public class Expofy implements Serializable {
     }
 
     /**
+     * Obtiene el conjunto de clientes con la cuenta bloqueada en Expofy.
+     * 
+     * @return Un conjunto de clientes bloqueados.
+     */
+    public Set<ClienteRegistrado> getClientesBloqueados() {
+        Set<ClienteRegistrado> clientesBloqueados = new HashSet<>();
+        for (ClienteRegistrado clienteRegistrado : clientesRegistrados) {
+            clientesBloqueados.add(clienteRegistrado);
+        }
+        return clientesBloqueados;
+    }
+
+    /**
      * Obtiene un cliente registrado en Expofy basándose en su NIF.
      * 
      * @param NIF El NIF del cliente a obtener.

@@ -82,6 +82,24 @@ public class ControladorVentaEntradas {
     }
 
     /**
+     * Método que devuelve el listener del botón de atrás.
+     * 
+     * @return ActionListener
+     */
+    public ActionListener getAtrasListener() {
+        return atrasListener;
+    }
+
+    /**
+     * Método que inicializa el listener del botón de atrás.
+     */
+    private ActionListener atrasListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            frame.mostrarPanelPrevio();
+        }
+    };
+
+    /**
      * ActionListener para Venta una entrada.
      */
     private ActionListener VentaListener = new ActionListener() {
@@ -110,6 +128,8 @@ public class ControladorVentaEntradas {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             // centro.logOut(empleado);
+            ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
+            frame.setControladorPantallaPrincipal(controlador);
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
         }

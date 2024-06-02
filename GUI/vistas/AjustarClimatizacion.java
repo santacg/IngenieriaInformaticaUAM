@@ -1,6 +1,7 @@
 package GUI.vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 
 import GUI.modelo.centroExposicion.CentroExposicion;
@@ -13,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.util.ArrayList;
@@ -28,97 +30,108 @@ public class AjustarClimatizacion extends JPanel {
     private JButton atrasBoton;
     private JTable tablaSalas;
     private JPanel gestionSalas;
-    private CentroExposicion centroExposicion;
+    private JPanel panelTabla;
+
+    private JButton confirmarBoton;
+
+    private JSlider temperaturaSlider;
+    private JSlider humedadSlider;
+
+    private JLabel temperaturaValue;
+    private JLabel humedadValue;
 
     /**
      * Constructor de la clase AjustarClimatizacion
      */
     public AjustarClimatizacion() {
         setLayout(new BorderLayout());
-        JTabbedPane tabbedPane = new JTabbedPane();
 
         this.gestionSalas = new JPanel();
         gestionSalas.setLayout(new BorderLayout());
 
-        JPanel panelBoton = new JPanel();
-        this.atrasBoton = new JButton("Atrás");
-
-        panelBoton.add(atrasBoton);
-        tabbedPane.addTab("Salas", gestionSalas);
+        this.panelTabla = new JPanel();
+        panelTabla.setLayout(new BorderLayout());
 
         addSliders();
 
-        add(panelBoton, BorderLayout.SOUTH);
-        add(tabbedPane, BorderLayout.CENTER);
+        add(gestionSalas, BorderLayout.SOUTH);
+        add(panelTabla, BorderLayout.CENTER);
     }
 
     /**
-     * Método que añade la tabla de salas a la vista
+     * Método que añade una tabla de sorteos a la vista.
      * 
-     * @param centro CentroExposicion
+     * @param data ArrayList de objetos que contiene los datos de las
+     *             sorteos.
      */
-    public void addTemperaturaHumedad(CentroExposicion centro) {
+    public void addTablaSalas(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Temperatura", "Humedad" };
-        Object[][] datos = construirDatosSalas(centro);
-
-        this.tablaSalas = new JTable(new DefaultTableModel(datos, titulos));
-        this.gestionSalas.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
-    }
-
-    /**
-     * Método que actualiza los datos de la tabla de salas
-     * 
-     * @param centro CentroExposicion
-     */
-    private Object[][] construirDatosSalas(CentroExposicion centroExposicion) {
-        List<Object[]> data = new ArrayList<>();
-        for (Sala sala : centroExposicion.getSalas()) {
-            addSalasRecursivo(data, sala);
-        }
-        return data.toArray(new Object[0][]);
-    }
-
-    /**
-     * Método que añade las salas recursivamente a la tabla
-     * 
-     * @param data List<Object[]>
-     * @param sala Sala
-     */
-    private void addSalasRecursivo(List<Object[]> data, Sala sala) {
-        data.add(new Object[] {
-                Boolean.FALSE,
-                sala.getNombre(),
-                sala.getTemperatura(),
-                sala.getHumedad()
+        Object[][] datos = data.toArray(new Object[0][]);
+        tablaSalas = new JTable(new DefaultTableModel(datos, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         });
 
-        for (Sala subSala : sala.getSubSalas()) {
-            addSalasRecursivo(data, subSala);
-        }
+        tablaSalas.getTableHeader().setBackground(Color.LIGHT_GRAY);
+        tablaSalas.setFillsViewportHeight(true);
+
+        this.panelTabla.add(new JScrollPane(tablaSalas), BorderLayout.CENTER);
     }
+
 
     /**
      * Método que añade los sliders de temperatura y humedad a la vista
      */
     private void addSliders() {
         JPanel slidersPanel = new JPanel();
-        JSlider temperaturaSlider = new JSlider(JSlider.HORIZONTAL, 0, 35, 20);
-        JSlider humedadSlider = new JSlider(JSlider.HORIZONTAL, 10, 90, 50);
+        temperaturaSlider = new JSlider(JSlider.HORIZONTAL, 0, 35, 20);
+        humedadSlider = new JSlider(JSlider.HORIZONTAL, 10, 90, 50);
 
         slidersPanel.add(new JLabel("Ajustar Temperatura:"));
         slidersPanel.add(temperaturaSlider);
+        slidersPanel.add(temperaturaValue = new JLabel("" + temperaturaSlider.getValue()));
         slidersPanel.add(new JLabel("Ajustar Humedad:"));
         slidersPanel.add(humedadSlider);
+        slidersPanel.add(humedadValue = new JLabel("" + humedadSlider.getValue()));
+        slidersPanel.add(confirmarBoton = new JButton("Confirmar"));
+        slidersPanel.add(atrasBoton = new JButton("Atrás"));
         this.gestionSalas.add(slidersPanel, BorderLayout.SOUTH);
 
     }
 
+    public void updateTemperatura() {
+        temperaturaValue.setText("" + temperaturaSlider.getValue());
+    }
+
+    public void updateHumedad() {
+        humedadValue.setText("" + humedadSlider.getValue());
+    }
+
     /**
      * Método que establece el controlador de la vista
+     * 
      * @param ActionListener cAtras
      */
-    public void setControlador(ActionListener cAtras) {
+    public void setControlador(ActionListener cAtras, ActionListener cConfirmar, ChangeListener cTemperatura,
+            ChangeListener cHumedad) {
         atrasBoton.addActionListener(cAtras);
+        confirmarBoton.addActionListener(cConfirmar);
+        temperaturaSlider.addChangeListener(cTemperatura);
+        humedadSlider.addChangeListener(cHumedad);
+    }
+
+    public JTable getTablaSalas() {
+        return tablaSalas;
+    }
+
+    public int getTemperatura(){
+        return temperaturaSlider.getValue();
+    }
+
+    public int getHumedad(){
+        return humedadSlider.getValue();
     }
 
 }

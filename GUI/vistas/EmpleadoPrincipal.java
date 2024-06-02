@@ -19,6 +19,7 @@ public class EmpleadoPrincipal extends JPanel {
     private JButton venderEntradaBoton;
     private JPanel panelPrincipal;
     private JButton cerrarSesionBoton;
+    private JButton desbloquearBoton;
 
     /**
      * Constructor de la clase EmpleadoPrincipal.
@@ -75,10 +76,12 @@ public class EmpleadoPrincipal extends JPanel {
         this.enviarMensajeBoton = new JButton("Envío de mensajes");
         this.cambiarClimatizacionBoton = new JButton("Cambiar Climatización");
         this.venderEntradaBoton = new JButton("Venta de entradas");
+        this.desbloquearBoton = new JButton("Clientes bloqueados");
 
         buttonPanel.add(this.enviarMensajeBoton);
         buttonPanel.add(this.cambiarClimatizacionBoton);
         buttonPanel.add(this.venderEntradaBoton);
+        buttonPanel.add(this.desbloquearBoton);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
@@ -96,12 +99,13 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
         this.venderEntradaBoton.addActionListener(cVentaEntradas);
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
+        this.desbloquearBoton.addActionListener(cDesbloquear);
     }
 
 
