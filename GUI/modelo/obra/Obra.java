@@ -1,4 +1,4 @@
-package GUI.modelo.obra;
+package gui.modelo.obra;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.*;
 import java.util.HashSet;
@@ -8,12 +8,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.exposicion.SalaExposicion;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.sala.Sala;
-import GUI.vistas.*;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.SalaExposicion;
+import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
+import gui.vistas.*;
 
 /**
  * Clase ControladorExposicionFormulario.

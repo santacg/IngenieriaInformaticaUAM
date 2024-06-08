@@ -1,12 +1,12 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.*;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.obra.*;
-import GUI.vistas.*;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.obra.*;
+import gui.vistas.*;
 
 /**
  * Clase ControladorObraFormulario

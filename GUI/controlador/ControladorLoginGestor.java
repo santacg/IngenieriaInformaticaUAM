@@ -1,14 +1,14 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.expofy.Expofy;
-import GUI.vistas.LoginGestor;
-import GUI.vistas.Ventana;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.LoginGestor;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorLoginGestor

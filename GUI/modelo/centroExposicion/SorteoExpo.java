@@ -1,8 +1,8 @@
-package GUI.modelo.centroExposicion;
+package gui.modelo.centroExposicion;
 
 import java.time.LocalDate;
 
-import GUI.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.Exposicion;
 
 /**
  * Clase SorteoExpo.

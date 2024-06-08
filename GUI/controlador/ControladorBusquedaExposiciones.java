@@ -1,14 +1,14 @@
-package GUI.controlador;
-
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.vistas.BusquedaExposiciones;
-import GUI.vistas.Ventana;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.expofy.*;
+import gui.modelo.exposicion.Exposicion;
+import gui.vistas.BusquedaExposiciones;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorBusquedaExposiciones

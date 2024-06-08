@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;

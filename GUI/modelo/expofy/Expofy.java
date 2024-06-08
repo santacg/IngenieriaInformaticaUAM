@@ -1,4 +1,4 @@
-package GUI.modelo.expofy;
+package gui.modelo.expofy;
 
 import java.io.*;
 import java.util.*;
@@ -6,15 +6,14 @@ import java.io.File;
 
 import java.time.LocalDate;
 
-import GUI.modelo.centroExposicion.*;
-import GUI.modelo.exposicion.*;
-import GUI.modelo.inscripcion.Inscripcion;
-import GUI.modelo.tarjetaDeCredito.TarjetaDeCredito;
-import GUI.modelo.usuario.Usuario;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
 import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
-
+import gui.modelo.centroExposicion.*;
+import gui.modelo.exposicion.*;
+import gui.modelo.inscripcion.Inscripcion;
+import gui.modelo.tarjetaDeCredito.TarjetaDeCredito;
+import gui.modelo.usuario.Usuario;
 import es.uam.eps.padsof.telecard.*;
 
 /**
@@ -420,7 +419,7 @@ public class Expofy implements Serializable {
 
         try {
             TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),
-                    "." + File.separator + "GUI" +  File.separator + "resources");
+                    "." + File.separator + "gui" +  File.separator + "resources");
         } catch (NonExistentFileException e) {
             return false;
         } catch (UnsupportedImageTypeException e) {

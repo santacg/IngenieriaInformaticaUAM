@@ -1,14 +1,14 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.centroExposicion.Empleado;
-import GUI.modelo.expofy.Expofy;
-import GUI.vistas.EnviarMensajes;
-import GUI.vistas.Ventana;
+import gui.modelo.centroExposicion.Empleado;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.EnviarMensajes;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorEnviarMensajes

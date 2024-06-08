@@ -1,11 +1,11 @@
-package GUI.modelo.utils;
+package gui.modelo.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.obra.*;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.obra.*;
 
 /**
  * Clase LectorCSVObras.

@@ -1,11 +1,8 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.sala.Sala;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,6 +13,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.sala.Sala;
 
 import java.util.ArrayList;
 import java.util.List;

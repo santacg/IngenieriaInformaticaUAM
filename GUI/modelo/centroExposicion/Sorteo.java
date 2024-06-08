@@ -1,16 +1,15 @@
-package GUI.modelo.centroExposicion;
+package gui.modelo.centroExposicion;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
-
-import GUI.modelo.expofy.ClienteRegistrado;
-import GUI.modelo.expofy.Expofy;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.inscripcion.Inscripcion;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import gui.modelo.expofy.ClienteRegistrado;
+import gui.modelo.expofy.Expofy;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.inscripcion.Inscripcion;
 
 /**
  * Clase Sorteo.

@@ -1,12 +1,12 @@
-package GUI.main;
+package gui.main;
 
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import GUI.controlador.Controlador;
-import GUI.modelo.expofy.Expofy;
-import GUI.vistas.Ventana;
+import gui.controlador.Controlador;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.Ventana;
 
 /**
  * Clase Main

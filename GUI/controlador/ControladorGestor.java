@@ -1,4 +1,4 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,15 +7,16 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.obra.Estado;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.utils.LectorCSVObras;
-import GUI.vistas.GestorPrincipal;
-import GUI.vistas.ModeloTablaObras;
-import GUI.vistas.Ventana;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.obra.Estado;
+import gui.modelo.obra.Obra;
+import gui.modelo.utils.LectorCSVObras;
+import gui.vistas.GestorPrincipal;
+import gui.vistas.ModeloTablaObras;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorGestor.
@@ -69,7 +70,6 @@ public class ControladorGestor {
     public void mostrarObras() {
         vista.addPanelObras(centro);
     }
-
 
     /**
      * Metodo que muestra la vista de empleados
@@ -190,13 +190,13 @@ public class ControladorGestor {
         }
     };
 
-
     /**
      * Método que inicializa un listener para leer las obras desde un CSV.
      */
     private ActionListener obraLeerCSVListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String fileName = JOptionPane.showInputDialog(vista, "Introduce el nombre del archivo CSV (debes incluir el .csv)");
+            String fileName = JOptionPane.showInputDialog(vista,
+                    "Introduce el nombre del archivo CSV (debes incluir el .csv)");
             if (LectorCSVObras.leerObras(centro, fileName) == false) {
                 JOptionPane.showMessageDialog(frame, "Error al leer las obras.");
                 return;
@@ -243,8 +243,44 @@ public class ControladorGestor {
      */
     private ActionListener empleadoAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            ControladorEmpleadoFormulario controladorEmpleadoFormulario = new ControladorEmpleadoFormulario(vista, centro);
+            ControladorEmpleadoFormulario controladorEmpleadoFormulario = new ControladorEmpleadoFormulario(vista,
+                    centro);
             vista.setControladorEmpleadoFormulario(controladorEmpleadoFormulario);
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para cambiar la contraseña de empleados.
+     */
+    private ActionListener empleadoContraseniaListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            vista.cambiarContraseniaEmpleado();
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para confirmar el cambio de la contraseña
+     * de empleados.
+     */
+    private ActionListener confirmarContraseniaListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String contrasenia = vista.getContraseniaEmpleado();
+            System.out.println(contrasenia);
+            if (contrasenia.equals("") || contrasenia.equals(null)) {
+                JOptionPane.showMessageDialog(frame, "No se puede determinar una contraseña vacia.");
+                vista.disposeCambioContrasenia();
+                return;
+            }
+            if (contrasenia.equals(centro.getContraseniaEmpleado())) {
+                JOptionPane.showMessageDialog(frame,
+                        "La contraseña que se está intentando confirgurar es la misma que la actual.");
+                vista.disposeCambioContrasenia();
+                return;
+            }
+            centro.setContraseniaEmpleado(contrasenia);
+            JOptionPane.showMessageDialog(frame,
+                    "Se ha cambiado con éxito la contraseña de los empleados, ahora accederán con " + contrasenia);
+            vista.disposeCambioContrasenia();
         }
     };
 
@@ -254,7 +290,9 @@ public class ControladorGestor {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             centro.getGestor().logOut();
-            vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener, obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener, cerrarSesionListener);
+            vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener,
+                    obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
+                    cerrarSesionListener, empleadoContraseniaListener, confirmarContraseniaListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -277,6 +315,25 @@ public class ControladorGestor {
      */
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
+    }
+
+    /**
+     * Método que obtiene el listener para el cambio de contraseña de empleado.
+     * 
+     * @return ActionListener para el cambio de contraseña de empleado.
+     */
+    public ActionListener getEmpleadoContraseniaListener() {
+        return empleadoContraseniaListener;
+    }
+
+    /**
+     * Método que obtiene el listener para confirmar el cambio de contraseña de
+     * empleado.
+     * 
+     * @return ActionListener para confirmar el cambio de contraseña de empleado.
+     */
+    public ActionListener getConfirmarContraseniaListener() {
+        return confirmarContraseniaListener;
     }
 
     /**
@@ -318,7 +375,7 @@ public class ControladorGestor {
     /**
      * Metodo que devuelve el listener de agregar empleados
      * 
-     * @return  ActionListener para agregar empleados 
+     * @return ActionListener para agregar empleados
      */
     public ActionListener getEmpleadoAgregarListener() {
         return empleadoAgregarListener;
@@ -332,6 +389,5 @@ public class ControladorGestor {
     public ActionListener getCerrarSesionListener() {
         return cerrarSesionListener;
     }
-
 
 }

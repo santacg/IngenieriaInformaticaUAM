@@ -1,4 +1,4 @@
-package GUI.modelo.exposicion;
+package gui.modelo.exposicion;
 /**
  * Clase EstadoExposicion.
  * Representa los posibles estados en los que puede encontrarse una exposición.

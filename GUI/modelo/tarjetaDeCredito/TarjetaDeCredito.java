@@ -1,4 +1,4 @@
-package GUI.modelo.tarjetaDeCredito;
+package gui.modelo.tarjetaDeCredito;
 
 import java.time.LocalDate;
 import java.io.Serializable;

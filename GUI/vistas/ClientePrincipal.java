@@ -1,13 +1,13 @@
-package GUI.vistas;
+package gui.vistas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import gui.controlador.ControladorCompraFormulario;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import GUI.controlador.ControladorCompraFormulario;
 
 /**
  * Clase ClientePrincipal.

@@ -1,7 +1,7 @@
-package GUI.controlador;
+package gui.controlador;
 
-import GUI.modelo.expofy.Expofy;
-import GUI.vistas.Ventana;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.Ventana;
 
 /**
  * Clase Controlador

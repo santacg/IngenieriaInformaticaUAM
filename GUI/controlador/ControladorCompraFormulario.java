@@ -1,4 +1,4 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.*;
-import GUI.modelo.tarjetaDeCredito.TarjetaDeCredito;
-import GUI.vistas.*;
+import gui.modelo.expofy.*;
+import gui.modelo.exposicion.*;
+import gui.modelo.tarjetaDeCredito.TarjetaDeCredito;
+import gui.vistas.*;
 
 /**
  * Clase ControladorCompraFormulario

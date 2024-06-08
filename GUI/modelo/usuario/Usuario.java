@@ -1,9 +1,9 @@
-package GUI.modelo.usuario;
+package gui.modelo.usuario;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import GUI.modelo.expofy.Notificacion;
+import gui.modelo.expofy.Notificacion;
 
 import java.io.Serializable;
 

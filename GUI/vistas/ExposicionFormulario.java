@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -8,10 +8,10 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.exposicion.*;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.sala.Sala;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.*;
+import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
 
 import java.util.ArrayList;
 import java.util.List;

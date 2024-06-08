@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.util.ArrayList;
 import java.util.Arrays;

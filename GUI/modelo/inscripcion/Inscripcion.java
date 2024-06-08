@@ -1,10 +1,10 @@
-package GUI.modelo.inscripcion;
+package gui.modelo.inscripcion;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import GUI.modelo.expofy.ClienteRegistrado;
+import gui.modelo.expofy.ClienteRegistrado;
 
 /**
  * Clase Inscripcion.

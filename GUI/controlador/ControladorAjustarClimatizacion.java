@@ -1,4 +1,4 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,14 +7,14 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import java.awt.event.ActionEvent;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.centroExposicion.Sorteo;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.sala.Sala;
+import gui.vistas.AjustarClimatizacion;
+import gui.vistas.Ventana;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.centroExposicion.Sorteo;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.sala.Sala;
-import GUI.vistas.AjustarClimatizacion;
-import GUI.vistas.Ventana;
+import java.awt.event.ActionEvent;
 
 /**
  * Clase ControladorAjustarClimatizacion

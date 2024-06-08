@@ -1,15 +1,15 @@
-package GUI.modelo;
-
-import GUI.modelo.centroExposicion.*;
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.*;
-import GUI.modelo.obra.Cuadro;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.sala.Sala;
+package gui.modelo;
 
 import java.time.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import gui.modelo.centroExposicion.*;
+import gui.modelo.expofy.*;
+import gui.modelo.exposicion.*;
+import gui.modelo.obra.Cuadro;
+import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
 
 /**
  * Clase MainVisual.

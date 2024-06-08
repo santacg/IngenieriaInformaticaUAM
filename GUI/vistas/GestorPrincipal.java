@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -6,12 +6,12 @@ import javax.swing.table.DefaultTableModel;
 
 import org.bouncycastle.operator.jcajce.JcaAlgorithmParametersConverter;
 
-import GUI.controlador.*;
-import GUI.modelo.centroExposicion.*;
-import GUI.modelo.exposicion.Descuento;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.sala.Sala;
+import gui.controlador.*;
+import gui.modelo.centroExposicion.*;
+import gui.modelo.exposicion.Descuento;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -67,6 +67,10 @@ public class GestorPrincipal extends JPanel {
     // Empleados atributos
     private JTable tablaEmpleados;
     private JButton empleadoAgregarBtn;
+    private JButton empleadoContraseniaBtn;
+    private JTextField empleadoContrasenia;
+    private JButton confirmarCambioBtn = new JButton("Confirmar");
+    private JDialog formularioContrasenia;
 
     // Sorteos atributos
     private JTable tablaSorteos;
@@ -121,6 +125,7 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Añade un panel de descuentos al gestor principal.
+     * 
      * @param centro Centro de exposiciones.
      */
     public void addPanelDescuentos(CentroExposicion centro) {
@@ -144,7 +149,8 @@ public class GestorPrincipal extends JPanel {
 
     /**
      * Construye los datos de los descuentos.
-     * @param centro Centro de exposiciones.
+     * 
+     * @param centro  Centro de exposiciones.
      * @param titulos Titulos de las columnas.
      * @return Datos de los descuentos.
      */
@@ -155,12 +161,12 @@ public class GestorPrincipal extends JPanel {
             if (descuento == null) {
                 break;
             }
-                data.add(new Object[] {
-                        exposicion.getNombre(),
-                        descuento.getDescuento(),
-                        descuento.getcantidad()
-                });
-            }
+            data.add(new Object[] {
+                    exposicion.getNombre(),
+                    descuento.getDescuento(),
+                    descuento.getcantidad()
+            });
+        }
         return data.toArray(new Object[0][]);
     }
 
@@ -478,8 +484,10 @@ public class GestorPrincipal extends JPanel {
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.empleadoAgregarBtn = new JButton("Agregar empleado");
+        this.empleadoContraseniaBtn = new JButton("Cambiar contraseña");
 
         panelAcciones.add(empleadoAgregarBtn);
+        panelAcciones.add(empleadoContraseniaBtn);
         this.gestionEmpleados.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -555,6 +563,15 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Devuelve la tabla de empleados.
+     * 
+     * @return Tabla de empleados.
+     */
+    public JTable getTablaEmpleados() {
+        return this.tablaEmpleados;
+    }
+
+    /**
      * Devuelvela tabla de salas.
      * 
      * @return Tabla de salas.
@@ -595,7 +612,8 @@ public class GestorPrincipal extends JPanel {
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion) {
+            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion, ActionListener cCambiarContrasenia,
+            ActionListener cConfirmarCambio) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -603,7 +621,10 @@ public class GestorPrincipal extends JPanel {
         this.exposicionEjecutarBtn.addActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);
         this.empleadoAgregarBtn.addActionListener(cEmpleadoAgregar);
+        this.empleadoContraseniaBtn.addActionListener(cCambiarContrasenia);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
+        this.confirmarCambioBtn.addActionListener(cConfirmarCambio);
+
     }
 
     /**
@@ -618,7 +639,8 @@ public class GestorPrincipal extends JPanel {
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion) {
+            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion, ActionListener cCambiarContrasenia,
+            ActionListener cConfirmarCambio) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
@@ -626,7 +648,10 @@ public class GestorPrincipal extends JPanel {
         this.exposicionEjecutarBtn.removeActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.removeActionListener(cExposicionesAgregar);
         this.empleadoAgregarBtn.removeActionListener(cEmpleadoAgregar);
+        this.empleadoContraseniaBtn.removeActionListener(cCambiarContrasenia);
         this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
+        this.confirmarCambioBtn.removeActionListener(cConfirmarCambio);
+
     }
 
     /**
@@ -715,6 +740,7 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * º
      * Establece el controlador del formulario de empleado.
      * 
      * @param controlador Controlador del formulario de empleado.
@@ -729,4 +755,41 @@ public class GestorPrincipal extends JPanel {
                 controlador.getCancelarListener());
     }
 
+    public void cambiarContraseniaEmpleado() {
+        formularioContrasenia = new JDialog();
+        formularioContrasenia.setTitle("Cambiar contraseña");
+        formularioContrasenia.setSize(600, 300);
+        formularioContrasenia.setLocationRelativeTo(null);
+        formularioContrasenia.setModal(true);
+
+        formularioContrasenia.setLayout(new BorderLayout());
+        JPanel panelFormulario = new JPanel(new GridBagLayout());
+
+        empleadoContrasenia = new JTextField(30);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        panelFormulario.add(new JLabel("Nueva contraseña: "), constraints);
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        panelFormulario.add(empleadoContrasenia, constraints);
+
+        constraints.gridy = 2;
+        panelFormulario.add(confirmarCambioBtn, constraints);
+
+        formularioContrasenia.add(panelFormulario);
+        formularioContrasenia.setVisible(true);
+
+    }
+
+    public String getContraseniaEmpleado(){
+        return empleadoContrasenia.getText();
+    }
+
+    public void disposeCambioContrasenia(){
+        formularioContrasenia.dispose();
+    }
 }

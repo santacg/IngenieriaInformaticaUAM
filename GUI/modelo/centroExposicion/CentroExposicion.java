@@ -1,16 +1,16 @@
-package GUI.modelo.centroExposicion;
+package gui.modelo.centroExposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.*;
-import GUI.modelo.obra.Estado;
-import GUI.modelo.obra.Obra;
-import GUI.modelo.sala.Sala;
 import es.uam.eps.padsof.tickets.NonExistentFileException;
 import es.uam.eps.padsof.tickets.TicketSystem;
 import es.uam.eps.padsof.tickets.UnsupportedImageTypeException;
+import gui.modelo.expofy.*;
+import gui.modelo.exposicion.*;
+import gui.modelo.obra.Estado;
+import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
 
 import java.io.File;
 
@@ -967,7 +967,7 @@ public class CentroExposicion implements Serializable {
         try {
             TicketSystem.createTicket(
                     new Ticket(exposicion, exposicion.getPrecio() * nEntradas, nEntradas, fecha, hora),
-                    "." + File.separator + "GUI" + File.separator + "resources");
+                    "." + File.separator + "gui" + File.separator + "resources");
         } catch (NonExistentFileException e) {
             return false;
         } catch (UnsupportedImageTypeException e) {

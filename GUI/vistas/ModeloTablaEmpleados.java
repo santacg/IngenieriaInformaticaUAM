@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import GUI.modelo.centroExposicion.Empleado;
+import gui.modelo.centroExposicion.Empleado;
 
 public class ModeloTablaEmpleados extends AbstractTableModel {
     private String[] titulos;

@@ -1,11 +1,11 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.*;
 import javax.swing.*;
 
-import GUI.modelo.expofy.Expofy;
-import GUI.modelo.centroExposicion.*;
-import GUI.vistas.*;
+import gui.modelo.centroExposicion.*;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.*;
 
 /**
  * Clase ControladorLoginEmpleado.

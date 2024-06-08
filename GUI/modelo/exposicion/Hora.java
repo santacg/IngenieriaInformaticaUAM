@@ -1,4 +1,4 @@
-package GUI.modelo.exposicion;
+package gui.modelo.exposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

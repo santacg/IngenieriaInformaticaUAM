@@ -1,4 +1,4 @@
-package GUI.modelo.expofy;
+package gui.modelo.expofy;
 
 import java.time.LocalDate;
 import java.io.Serializable;

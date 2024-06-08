@@ -1,10 +1,10 @@
-package GUI.modelo.expofy;
+package gui.modelo.expofy;
 
 import java.time.LocalDate;
 
-import GUI.modelo.centroExposicion.Sorteo;
-import GUI.modelo.inscripcion.Inscripcion;
-import GUI.modelo.usuario.Usuario;
+import gui.modelo.centroExposicion.Sorteo;
+import gui.modelo.inscripcion.Inscripcion;
+import gui.modelo.usuario.Usuario;
 
 /**
  * Clase ClienteRegistrado

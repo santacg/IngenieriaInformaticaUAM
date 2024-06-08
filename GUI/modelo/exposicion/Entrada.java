@@ -1,10 +1,10 @@
-package GUI.modelo.exposicion;
-
-import GUI.modelo.expofy.ClienteRegistrado;
-import GUI.modelo.tarjetaDeCredito.TarjetaDeCredito;
+package gui.modelo.exposicion;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import gui.modelo.expofy.ClienteRegistrado;
+import gui.modelo.tarjetaDeCredito.TarjetaDeCredito;
 
 /**
  * Clase Entrada.

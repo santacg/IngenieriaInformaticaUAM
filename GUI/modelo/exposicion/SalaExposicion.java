@@ -1,11 +1,12 @@
-package GUI.modelo.exposicion;
+package gui.modelo.exposicion;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.io.Serializable;
 
-import GUI.modelo.obra.*;
-import GUI.modelo.sala.Sala;
+import gui.modelo.obra.*;
+import gui.modelo.sala.Sala;
+
+import java.io.Serializable;
 
 /**
  * Clase SalaExposicion.

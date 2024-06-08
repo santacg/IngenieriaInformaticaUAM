@@ -1,6 +1,6 @@
-package GUI.modelo.centroExposicion;
+package gui.modelo.centroExposicion;
 
-import GUI.modelo.usuario.Usuario;
+import gui.modelo.usuario.Usuario;
 
 /**
  * Clase Empleado.

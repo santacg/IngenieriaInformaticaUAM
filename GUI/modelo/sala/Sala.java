@@ -1,4 +1,4 @@
-package GUI.modelo.sala;
+package gui.modelo.sala;
 
 import java.util.ArrayList;
 import java.util.List;

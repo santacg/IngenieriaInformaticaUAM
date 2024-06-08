@@ -1,16 +1,16 @@
-package GUI.controlador;
-
-import GUI.modelo.centroExposicion.*;
-import GUI.modelo.expofy.*;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.vistas.VentaEntradas;
-import GUI.vistas.Ventana;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
+import gui.modelo.centroExposicion.*;
+import gui.modelo.expofy.*;
+import gui.modelo.exposicion.Exposicion;
+import gui.vistas.VentaEntradas;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorCliente.

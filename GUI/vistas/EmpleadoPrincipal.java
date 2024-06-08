@@ -1,11 +1,12 @@
-package GUI.vistas;
+package gui.vistas;
 
 import javax.swing.*;
+
+import gui.controlador.ControladorCompraFormulario;
+import gui.modelo.centroExposicion.Empleado;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
-
-import GUI.controlador.ControladorCompraFormulario;
-import GUI.modelo.centroExposicion.Empleado;
 
 /**
  * Clase EmpleadoPrincipal.
@@ -54,7 +55,7 @@ public class EmpleadoPrincipal extends JPanel {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
-        
+
         JLabel titleLabel = new JLabel("Bienvenido, " + name);
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
         constraints.gridx = 0;
@@ -108,7 +109,6 @@ public class EmpleadoPrincipal extends JPanel {
         this.desbloquearBoton.addActionListener(cDesbloquear);
     }
 
-
     /**
      * Método que borra los controladores de la vista.
      *
@@ -124,5 +124,11 @@ public class EmpleadoPrincipal extends JPanel {
         this.cambiarClimatizacionBoton.removeActionListener(cClimatizacion);
         this.venderEntradaBoton.removeActionListener(cVentaEntradas);
         this.cerrarSesionBoton.removeActionListener(cCerrarSesion);
+    }
+
+    public void hideButtons(boolean msj, boolean clmtz, boolean venta) {
+        enviarMensajeBoton.setVisible(msj);
+        cambiarClimatizacionBoton.setVisible(clmtz);
+        venderEntradaBoton.setVisible(venta);
     }
 }

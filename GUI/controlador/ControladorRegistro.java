@@ -1,13 +1,13 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.expofy.Expofy;
-import GUI.vistas.RegistroUsuario;
-import GUI.vistas.Ventana;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.RegistroUsuario;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorRegistro.

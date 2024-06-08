@@ -1,15 +1,15 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import GUI.modelo.centroExposicion.CentroExposicion;
-import GUI.modelo.centroExposicion.Empleado;
-import GUI.vistas.EmpleadoPrincipal;
-import GUI.vistas.Ventana;
-import GUI.modelo.expofy.Expofy;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.centroExposicion.Empleado;
+import gui.modelo.expofy.Expofy;
+import gui.vistas.EmpleadoPrincipal;
+import gui.vistas.Ventana;
 
 /**
  * Clase ControladorEmpleado.
@@ -39,6 +39,7 @@ public class ControladorEmpleado {
         this.centro = centro;
         this.vista = frame.getVistaEmpleadoPrincipal();
         this.empleado = centro.getEmpleado(usuario);
+        this.vista.hideButtons(this.empleado.getPermisoMensajes(), this.empleado.getPermisoControl(),this.empleado.getPermisoVenta());
         vista.addTitle(empleado.getNombre());
 
     }

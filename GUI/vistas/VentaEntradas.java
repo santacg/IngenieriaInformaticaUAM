@@ -1,4 +1,4 @@
-package GUI.vistas;
+package gui.vistas;
 
 import java.util.ArrayList;
 
@@ -8,11 +8,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import gui.controlador.ControladorVentaFormulario;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
-
-
-import GUI.controlador.ControladorVentaFormulario;
 
 
 public class VentaEntradas extends JPanel{

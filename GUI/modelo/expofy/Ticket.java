@@ -1,8 +1,8 @@
-package GUI.modelo.expofy;
+package gui.modelo.expofy;
 
 import java.time.LocalDate;
 import es.uam.eps.padsof.tickets.ITicketInfo;
-import GUI.modelo.exposicion.*;
+import gui.modelo.exposicion.*;
 
 import java.io.File;
 
@@ -113,7 +113,7 @@ public class Ticket implements ITicketInfo {
      * @return imagen del centro de exposiciones
      */
     public String getPicture() {
-        return ("." + File.separator + "GUI" +  File.separator + "resources" + File.separator + "centrocentro.jpg");
+        return ("." + File.separator + "gui" +  File.separator + "resources" + File.separator + "centrocentro.jpg");
     }
 
     /**

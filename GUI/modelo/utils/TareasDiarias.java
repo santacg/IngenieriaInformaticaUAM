@@ -1,4 +1,4 @@
-package GUI.modelo.utils;
+package gui.modelo.utils;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

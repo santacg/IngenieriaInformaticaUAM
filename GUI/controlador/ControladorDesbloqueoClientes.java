@@ -1,4 +1,4 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,13 +7,13 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import java.awt.event.ActionEvent;
+import gui.modelo.expofy.ClienteRegistrado;
+import gui.modelo.expofy.Expofy;
+import gui.modelo.exposicion.Exposicion;
+import gui.vistas.DesbloqueoClientes;
+import gui.vistas.Ventana;
 
-import GUI.modelo.expofy.ClienteRegistrado;
-import GUI.modelo.expofy.Expofy;
-import GUI.modelo.exposicion.Exposicion;
-import GUI.vistas.DesbloqueoClientes;
-import GUI.vistas.Ventana;
+import java.awt.event.ActionEvent;
 
 /**
  * Clase ControladorDesbloqueoClientes

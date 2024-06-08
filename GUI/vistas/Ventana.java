@@ -1,12 +1,12 @@
-package GUI.vistas;
+package gui.vistas;
 
 import javax.swing.*;
 
 import org.bouncycastle.crypto.examples.JPAKEExample;
 
-import java.awt.*;
+import gui.controlador.*;
 
-import GUI.controlador.*;
+import java.awt.*;
 
 /**
  * Clase Ventana
@@ -331,7 +331,8 @@ public class Ventana extends JFrame {
 				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(),
 				controladorGestor.getSalaEjecutarListener(),
 				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(),
-				controladorGestor.getEmpleadoAgregarListener(), controladorGestor.getCerrarSesionListener());
+				controladorGestor.getEmpleadoAgregarListener(), controladorGestor.getCerrarSesionListener(),
+				controlador.getEmpleadoContraseniaListener(), controlador.getConfirmarContraseniaListener());
 
 	}
 

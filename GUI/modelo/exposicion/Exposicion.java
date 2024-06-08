@@ -1,14 +1,15 @@
-package GUI.modelo.exposicion;
+package gui.modelo.exposicion;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.io.Serializable;
 
-import GUI.modelo.obra.Obra;
-import GUI.modelo.usuario.Usuario;
-import GUI.modelo.expofy.*;
+import gui.modelo.expofy.*;
+import gui.modelo.obra.Obra;
+import gui.modelo.usuario.Usuario;
+
+import java.io.Serializable;
 
 /**
  * Clase Exposición.

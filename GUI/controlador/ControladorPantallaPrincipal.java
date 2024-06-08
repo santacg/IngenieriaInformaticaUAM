@@ -1,12 +1,12 @@
-package GUI.controlador;
+package gui.controlador;
 
 import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
 
-import GUI.modelo.expofy.*;
-import GUI.vistas.*;
+import gui.modelo.expofy.*;
+import gui.vistas.*;
 
 /**
  * Clase ControladorPantallaPrincipal
