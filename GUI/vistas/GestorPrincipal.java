@@ -67,6 +67,7 @@ public class GestorPrincipal extends JPanel {
     // Empleados atributos
     private JTable tablaEmpleados;
     private JButton empleadoAgregarBtn;
+    private JButton empleadoConfigurarContraseniaBtn;
 
     // Sorteos atributos
     private JTable tablaSorteos;
@@ -478,8 +479,10 @@ public class GestorPrincipal extends JPanel {
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.empleadoAgregarBtn = new JButton("Agregar empleado");
+        this.empleadoConfigurarContraseniaBtn = new JButton("Configurar contraseña");
 
         panelAcciones.add(empleadoAgregarBtn);
+        panelAcciones.add(empleadoConfigurarContraseniaBtn);
         this.gestionEmpleados.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -595,7 +598,7 @@ public class GestorPrincipal extends JPanel {
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion) {
+            ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia, ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -603,6 +606,7 @@ public class GestorPrincipal extends JPanel {
         this.exposicionEjecutarBtn.addActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);
         this.empleadoAgregarBtn.addActionListener(cEmpleadoAgregar);
+        this.empleadoConfigurarContraseniaBtn.addActionListener(cEmpleadoConfigurarContrasenia);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
     }
 

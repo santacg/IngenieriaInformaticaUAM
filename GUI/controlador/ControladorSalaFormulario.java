@@ -41,15 +41,13 @@ public class ControladorSalaFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Añadir Sala":
-                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getTemperatura().equals("")
-                            || vista.getHumedad().equals("")|| vista.getAncho().equals("") || vista.getLargo().equals("")) {
+                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getAncho().equals("") || vista.getLargo().equals("")) {
                         JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), Integer.parseInt(vista.getTemperatura()),
-                            Integer.parseInt(vista.getHumedad()), vista.getClimatizador(), Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
+                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), vista.getClimatizador(), Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
                             Double.parseDouble(vista.getLargo()));
 
                     if (centroExposicion.addSala(sala) == false) {

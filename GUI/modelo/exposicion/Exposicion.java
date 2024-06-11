@@ -253,6 +253,7 @@ public class Exposicion implements Serializable {
         expofy.enviarNotificacionUsuarios("Se ha cancelado la exposicion: " + this.nombre
                 + ".Se ha reintegrado el importe de la entrada en tu cuenta bancaria", clientes);
 
+        this.fechaFin = fechaCancelacion;
         this.estado = EstadoExposicion.CANCELADA;
         return true;
     }
@@ -265,6 +266,7 @@ public class Exposicion implements Serializable {
     public boolean expoProrrogar(LocalDate fechaFin) {
         if (this.estado != EstadoExposicion.PUBLICADA) {
             System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
+            return false;
         }
 
         if (fechaFin.isBefore(this.fechaFin) || fechaFin.isEqual(this.fechaFin)) {
@@ -272,6 +274,7 @@ public class Exposicion implements Serializable {
             return false;
         }
 
+        this.fechaFin = fechaFin;
         this.estado = EstadoExposicion.PRORROGADA;
         return true;
     }

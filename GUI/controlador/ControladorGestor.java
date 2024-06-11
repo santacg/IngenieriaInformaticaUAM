@@ -69,7 +69,6 @@ public class ControladorGestor {
         vista.addPanelObras(centro);
     }
 
-
     /**
      * Metodo que muestra la vista de empleados
      */
@@ -189,13 +188,13 @@ public class ControladorGestor {
         }
     };
 
-
     /**
      * Método que inicializa un listener para leer las obras desde un CSV.
      */
     private ActionListener obraLeerCSVListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String fileName = JOptionPane.showInputDialog(vista, "Introduce el nombre del archivo CSV (debes incluir el .csv)");
+            String fileName = JOptionPane.showInputDialog(vista,
+                    "Introduce el nombre del archivo CSV (debes incluir el .csv)");
             if (LectorCSVObras.leerObras(centro, fileName) == false) {
                 JOptionPane.showMessageDialog(frame, "Error al leer las obras.");
                 return;
@@ -242,8 +241,25 @@ public class ControladorGestor {
      */
     private ActionListener empleadoAgregarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            ControladorEmpleadoFormulario controladorEmpleadoFormulario = new ControladorEmpleadoFormulario(vista, centro);
+            ControladorEmpleadoFormulario controladorEmpleadoFormulario = new ControladorEmpleadoFormulario(vista,
+                    centro);
             vista.setControladorEmpleadoFormulario(controladorEmpleadoFormulario);
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para configurar la contraseña de un empleado.
+     */
+    private ActionListener empleadoConfigurarContraseniaListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String contrasenia = JOptionPane.showInputDialog(vista, "Introduce la nueva contraseña");
+            centro.setContraseniaEmpleado(contrasenia);
+            if (contrasenia == null || contrasenia.isEmpty()){
+                JOptionPane.showMessageDialog(frame, "No se ha actualizado la contraseña");
+                return;
+
+            }
+            JOptionPane.showMessageDialog(frame, "Contraseña actualizada correctamente");
         }
     };
 
@@ -315,10 +331,19 @@ public class ControladorGestor {
     /**
      * Metodo que devuelve el listener de agregar empleados
      * 
-     * @return  ActionListener para agregar empleados 
+     * @return ActionListener para agregar empleados
      */
     public ActionListener getEmpleadoAgregarListener() {
         return empleadoAgregarListener;
+    }
+
+    /**
+     * Método que devuelve el listener de configurar contraseña de empleado.
+     * 
+     * @return ActionListener para configurar contraseña de empleado.
+     */
+    public ActionListener getEmpleadoConfigurarContraseniaListener() {
+        return empleadoConfigurarContraseniaListener;
     }
 
     /**
@@ -329,6 +354,5 @@ public class ControladorGestor {
     public ActionListener getCerrarSesionListener() {
         return cerrarSesionListener;
     }
-
 
 }

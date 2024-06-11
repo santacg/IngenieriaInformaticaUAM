@@ -65,8 +65,6 @@ public class SalaFormulario extends JDialog {
     public void formularioAñadirSala(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Nombre:", nombre = new JTextField(20), panelFormulario, constraints, 0);
         addCampo("Aforo:", aforo = new JTextField(20), panelFormulario, constraints, 1);
-        addCampo("Humedad:", humedad = new JTextField(20), panelFormulario, constraints, 2);
-        addCampo("Temperatura:", temperatura = new JTextField(20), panelFormulario, constraints, 3);
         addCampo("Climatizador:", climatizador = new JCheckBox(), panelFormulario, constraints, 4);
         addCampo("Tomas de electricidad:", tomasElectricidad = new JTextField(20), panelFormulario, constraints, 5);
         addCampo("Ancho:", ancho = new JTextField(20), panelFormulario, constraints, 6);

@@ -316,8 +316,12 @@ public class Ventana extends JFrame {
 	public void setControladorGestor(ControladorGestor controlador) {
 		this.controladorGestor = controlador;
 		this.vistaGestorPrincipal.setControlador(controladorGestor.getObraEjecutarListener(),
-				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(), controladorGestor.getSalaEjecutarListener(),
-				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(), controladorGestor.getEmpleadoAgregarListener() ,controladorGestor.getCerrarSesionListener());
+				controladorGestor.getObraAgregarListener(), controladorGestor.getObraLeerCSVListener(),
+				controladorGestor.getSalaEjecutarListener(),
+				controladorGestor.getExposicionEjecutarListener(), controladorGestor.getExposicionAgregarListener(),
+				controladorGestor.getEmpleadoAgregarListener(),
+				controladorGestor.getEmpleadoConfigurarContraseniaListener(),
+				controladorGestor.getCerrarSesionListener());
 	}
 
 	/**
@@ -331,7 +335,6 @@ public class Ventana extends JFrame {
 				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion(),
 				controladorCliente.getInscribirse());
 	}
-
 
 	/**
 	 * Establece el controlador de la vista de empleado principal
@@ -436,6 +439,6 @@ public class Ventana extends JFrame {
 		if (cartaPrevia != null) {
 			mostrarPanel(cartaPrevia);
 		}
-		
+
 	}
 }

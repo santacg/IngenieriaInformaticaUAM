@@ -50,6 +50,18 @@ public class Sala implements Serializable {
         this.subSalas = new ArrayList<>();
     }
 
+    public Sala(String nombre, Integer aforo, Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo) {
+        this.nombre = nombre;
+        this.aforo = aforo;
+        this.humedad = 0;
+        this.temperatura = 0;
+        this.climatizador = climatizador;
+        this.tomasElectricidad = tomasElectricidad;
+        this.ancho = ancho;
+        this.largo = largo;
+        this.subSalas = new ArrayList<>();
+    }
+
     /**
      * Genera un código hash para esta sala.
      * 
