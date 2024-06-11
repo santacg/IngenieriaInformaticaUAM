@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.Exposicion;
@@ -298,24 +297,6 @@ public class ControladorGestor {
         return obraAgregarListener;
     }
 
-    /**
-     * Método que obtiene el listener para el cambio de contraseña de empleado.
-     * 
-     * @return ActionListener para el cambio de contraseña de empleado.
-     */
-    public ActionListener getEmpleadoContraseniaListener() {
-        return empleadoContraseniaListener;
-    }
-
-    /**
-     * Método que obtiene el listener para confirmar el cambio de contraseña de
-     * empleado.
-     * 
-     * @return ActionListener para confirmar el cambio de contraseña de empleado.
-     */
-    public ActionListener getConfirmarContraseniaListener() {
-        return confirmarContraseniaListener;
-    }
 
     /**
      * Método que obtiene el listener de leer obras desde un CSV.

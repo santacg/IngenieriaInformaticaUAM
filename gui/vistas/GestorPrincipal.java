@@ -633,8 +633,7 @@ public class GestorPrincipal extends JPanel {
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion, ActionListener cCambiarContrasenia,
-            ActionListener cConfirmarCambio) {
+            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion, ActionListener cCambiarContrasenia) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
