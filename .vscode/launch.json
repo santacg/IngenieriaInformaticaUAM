@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "gui.main.Main",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
+            "name": "MainVisual",
+            "request": "launch",
+            "mainClass": "gui.modelo.MainVisual",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -14,35 +28,35 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
-            "mainClass": "GUI.main.Main",
+            "mainClass": "gui.main.Main",
             "projectName": "PADSOF_b95ff5e7"
         },
         {
             "type": "java",
             "name": "Main(1)",
             "request": "launch",
-            "mainClass": "GUI.modelo.Main",
+            "mainClass": "gui.modelo.Main",
             "projectName": "PADSOF_b95ff5e7"
         },
         {
             "type": "java",
             "name": "MainVisual",
             "request": "launch",
-            "mainClass": "GUI.modelo.MainVisual",
+            "mainClass": "gui.modelo.MainVisual",
             "projectName": "PADSOF_b95ff5e7"
         },
         {
             "type": "java",
             "name": "Persistencia",
             "request": "launch",
-            "mainClass": "GUI.modelo.Persistencia",
+            "mainClass": "gui.modelo.Persistencia",
             "projectName": "PADSOF_b95ff5e7"
         },
         {
             "type": "java",
             "name": "TareasDiarias",
             "request": "launch",
-            "mainClass": "GUI.modelo.utils.TareasDiarias",
+            "mainClass": "gui.modelo.utils.TareasDiarias",
             "projectName": "PADSOF_b95ff5e7"
         }
     ]
