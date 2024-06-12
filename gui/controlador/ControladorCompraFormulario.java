@@ -83,7 +83,6 @@ public class ControladorCompraFormulario {
     private ActionListener siguienteListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String exposicionNombre = vista.getExposicionNombre();
-            String precioPorEntrada = vista.getPrecio();
             numeroTarjetadeCredito = vista.getNumeroTarjetadeCredito();
             cvv = vista.getCVV();
 

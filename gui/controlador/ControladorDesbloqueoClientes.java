@@ -4,12 +4,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import gui.modelo.expofy.ClienteRegistrado;
 import gui.modelo.expofy.Expofy;
-import gui.modelo.exposicion.Exposicion;
 import gui.vistas.DesbloqueoClientes;
 import gui.vistas.Ventana;
 

@@ -87,7 +87,7 @@ public class MainVisual {
                         salaExposicion1.addObra(obra);
                 }
 
-                centroExposicion1.confgiurarSorteoExposicion(exposicion2, LocalDate.of(2030, 5, 2), 2);
+                centroExposicion1.confgiurarSorteoExposicion(exposicion1, LocalDate.of(2025, 5, 2), 2);
 
                 exposicion1.expoPublicar();
                 exposicion2.expoPublicar();

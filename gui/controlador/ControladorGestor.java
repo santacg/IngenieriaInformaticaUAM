@@ -249,18 +249,40 @@ public class ControladorGestor {
     };
 
     /**
-     * Método que inicializa un listener para configurar la contraseña de un empleado.
+     * Método que inicializa un listener para configurar la contraseña de un
+     * empleado.
      */
     private ActionListener empleadoConfigurarContraseniaListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String contrasenia = JOptionPane.showInputDialog(vista, "Introduce la nueva contraseña");
             centro.setContraseniaEmpleado(contrasenia);
-            if (contrasenia == null || contrasenia.isEmpty()){
+            if (contrasenia == null || contrasenia.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No se ha actualizado la contraseña");
                 return;
 
             }
             JOptionPane.showMessageDialog(frame, "Contraseña actualizada correctamente");
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para agregar sorteos.
+     */
+    private ActionListener sorteoAgregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorSorteoFormulario controladorSorteoFormulario = new ControladorSorteoFormulario(vista, centro);
+            vista.setControladorSorteoFormulario(controladorSorteoFormulario);
+        }
+    };
+
+    /**
+     * Método que inicializa un listener para agregar descuentos.
+     */
+    private ActionListener descuentoAgregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorDescuentoFormulario controladorDescuentoFormulario = new ControladorDescuentoFormulario(vista,
+                    centro);
+            vista.setControladorDescuentoFormulario(controladorDescuentoFormulario);
         }
     };
 
@@ -272,7 +294,8 @@ public class ControladorGestor {
             centro.getGestor().logOut();
             vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener,
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
-                    empleadoConfigurarContraseniaListener, cerrarSesionListener);
+                    empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
+                    cerrarSesionListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -296,7 +319,6 @@ public class ControladorGestor {
     public ActionListener getObraAgregarListener() {
         return obraAgregarListener;
     }
-
 
     /**
      * Método que obtiene el listener de leer obras desde un CSV.
@@ -350,6 +372,24 @@ public class ControladorGestor {
      */
     public ActionListener getEmpleadoConfigurarContraseniaListener() {
         return empleadoConfigurarContraseniaListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para agregar sorteos.
+     * 
+     * @return ActionListener para agregar sorteos.
+     */
+    public ActionListener getSorteoAgregarListener() {
+        return sorteoAgregarListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para agregar descuentos.
+     * 
+     * @return ActionListener para agregar descuentos.
+     */
+    public ActionListener getDescuentoAgregarListener() {
+        return descuentoAgregarListener;
     }
 
     /**

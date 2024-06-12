@@ -8,8 +8,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import gui.modelo.centroExposicion.CentroExposicion;
-import gui.modelo.centroExposicion.Sorteo;
-import gui.modelo.exposicion.Exposicion;
 import gui.modelo.sala.Sala;
 import gui.vistas.AjustarClimatizacion;
 import gui.vistas.Ventana;

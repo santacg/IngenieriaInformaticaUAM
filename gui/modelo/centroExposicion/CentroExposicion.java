@@ -370,6 +370,15 @@ public class CentroExposicion implements Serializable {
         return exposiciones;
     }
 
+    public Exposicion getExposicionPorNombre(String nombre) {
+        for (Exposicion exposicion : exposiciones) {
+            if (exposicion.getNombre().equals(nombre)) {
+                return exposicion;
+            }
+        }
+        return null;
+    }
+
     /**
      * Obtiene un conjunto de exposiciones que están actualmente publicadas o
      * prorrogadas filtrando todas las exposiciones disponibles y retornando solo
@@ -544,13 +553,18 @@ public class CentroExposicion implements Serializable {
      * 
      * @param sorteo el sorteo a añadir
      */
-    public void addSorteo(Sorteo sorteo) {
+    public Boolean addSorteo(Sorteo sorteo) {
         if (gestor.isLoged() == false) {
             System.out.println("No puedes añadir sorteos si no eres el gestor");
-            return;
+            return false;
         }
 
-        this.sorteos.add(sorteo);
+        if (this.sorteos.add(sorteo) == false) {
+            System.out.println("El sorteo ya está en el centro de exposiciones");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -562,10 +576,37 @@ public class CentroExposicion implements Serializable {
      * @param dia         el día en el que se realizará la exposición
      * @param hora        la hora en la que se realizará la exposición
      */
-    public void confgiurarSorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia,
+    public Boolean confgiurarSorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia,
             Hora hora) {
+
+        if (exposicion == null) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        if (exposicion.getEstado().equals(EstadoExposicion.CANCELADA)
+                || exposicion.getEstado().equals(EstadoExposicion.CERRADATEMPORALMENTE)) {
+            System.out.println("No se puede sortear una exposición cancelada o cerrada temporalmente");
+            return false;
+        }
+
+        if (exposicion.getFechaFin().isBefore(fechaSorteo) || exposicion.getFechaInicio().isAfter(fechaSorteo)) {
+            System.out.println("La fecha de sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
+        if (dia.isAfter(exposicion.getFechaFin()) || dia.isBefore(exposicion.getFechaInicio())) {
+            System.out.println("El día del sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
         SorteoDiaHora sorteo = new SorteoDiaHora(exposicion, fechaSorteo, n_entradas, dia, hora);
-        addSorteo(sorteo);
+        if (addSorteo(sorteo) == false) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -575,9 +616,30 @@ public class CentroExposicion implements Serializable {
      * @param fechaSorteo la fecha en la que se realizará el sorteo
      * @param n_entradas  el número de entradas que se sortearán
      */
-    public void confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
+    public Boolean confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
+        if (exposicion == null) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        if (exposicion.getEstado().equals(EstadoExposicion.CANCELADA)
+                || exposicion.getEstado().equals(EstadoExposicion.CERRADATEMPORALMENTE)) {
+            System.out.println("No se puede sortear una exposición cancelada o cerrada temporalmente");
+            return false;
+        }
+
+        if (exposicion.getFechaFin().isBefore(fechaSorteo) || exposicion.getFechaInicio().isAfter(fechaSorteo)) {
+            System.out.println("La fecha de sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
         SorteoExpo sorteo = new SorteoExpo(exposicion, fechaSorteo, n_entradas);
-        addSorteo(sorteo);
+        if (addSorteo(sorteo) == false) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -589,10 +651,42 @@ public class CentroExposicion implements Serializable {
      * @param fechaInicio la fecha de inicio de la exposición
      * @param fechaFin    la fecha de fin de la exposición
      */
-    public void confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,
+    public Boolean confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,
             LocalDate fechaInicio, LocalDate fechaFin) {
+        if (exposicion == null) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        if (exposicion.getEstado().equals(EstadoExposicion.CANCELADA)
+                || exposicion.getEstado().equals(EstadoExposicion.CERRADATEMPORALMENTE)) {
+            System.out.println("No se puede sortear una exposición cancelada o cerrada temporalmente");
+            return false;
+        }
+
+        if (exposicion.getFechaFin().isBefore(fechaSorteo) || exposicion.getFechaInicio().isAfter(fechaSorteo)) {
+            System.out.println("La fecha de sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
+        if (fechaFin.isBefore(fechaInicio)) {
+            System.out.println("La fecha de fin no puede ser anterior a la fecha de inicio");
+            return false;
+        }
+
+        if (fechaInicio.isAfter(exposicion.getFechaFin()) || fechaFin.isBefore(exposicion.getFechaInicio())) {
+            System.out.println("El rango de fechas del sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
         SorteoFechas sorteo = new SorteoFechas(exposicion, fechaSorteo, n_entradas, fechaInicio, fechaFin);
-        addSorteo(sorteo);
+
+        if (addSorteo(sorteo) == false) {
+            System.out.println("No se ha podido añadir el sorteo");
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
-
 import gui.controlador.*;
 import gui.modelo.centroExposicion.*;
 import gui.modelo.exposicion.Descuento;
@@ -44,6 +43,12 @@ public class GestorPrincipal extends JPanel {
 
     private EmpleadoFormulario vistaEmpleadoFormulario;
     private ControladorEmpleadoFormulario controladorEmpleadoFormulario;
+
+    private SorteoFormulario vistaSorteoFormulario;
+    private ControladorSorteoFormulario controladorSorteoFormulario;
+
+    private DescuentoFormulario vistaDescuentoFormulario;
+    private ControladorDescuentoFormulario controladorDescuentoFormulario;
 
     // Obras atributos
     private JButton obraEjecutarBtn;
@@ -134,7 +139,7 @@ public class GestorPrincipal extends JPanel {
         this.gestionDescuentos.add(new JScrollPane(tablaDescuentos), BorderLayout.CENTER);
 
         JPanel panelAcciones = new JPanel();
-        JButton descuentoAgregarBtn = new JButton("Agregar Descuento");
+        this.descuentoAgregarBtn = new JButton("Agregar Descuento");
         JButton descuentoEliminarBtn = new JButton("Eliminar Descuento");
 
         panelAcciones.add(new JLabel("Acciones: "));
@@ -204,6 +209,22 @@ public class GestorPrincipal extends JPanel {
             });
         }
         return data.toArray(new Object[0][]);
+    }
+
+    /**
+     * Añade un panel de exposiciones al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void actualizarTablaSorteos(CentroExposicion centro) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaSorteos.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosSorteos(centro, new String[] { "Fecha del Sorteo", "Exposición Relacionada",
+                "Número de Entradas" });
+        for (Object[] sorteoData : datos) {
+            modelo.addRow(sorteoData);
+        }
+        modelo.fireTableDataChanged();
     }
 
     /**
@@ -586,6 +607,24 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Devuelve la tabla de sorteos.
+     * 
+     * @return Tabla de sorteos.
+     */
+    public JTable getTablaSorteos() {
+        return this.tablaSorteos;
+    }
+
+    /**
+     * Devuelve la tabla de descuentos.
+     * 
+     * @return Tabla de descuentos.
+     */
+    public JTable getTablaDescuentos() {
+        return this.tablaDescuentos;
+    }
+
+    /**
      * Deselecciona todas las filas de la tabla.
      * 
      * @param tabla Tabla a deseleccionar.
@@ -608,7 +647,8 @@ public class GestorPrincipal extends JPanel {
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia, ActionListener cCerrarSesion) {
+            ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia,
+            ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar, ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -617,6 +657,8 @@ public class GestorPrincipal extends JPanel {
         this.exposicionAgregarBtn.addActionListener(cExposicionesAgregar);
         this.empleadoAgregarBtn.addActionListener(cEmpleadoAgregar);
         this.empleadoConfigurarContraseniaBtn.addActionListener(cEmpleadoConfigurarContrasenia);
+        this.sorteoAgregarBtn.addActionListener(cSorteoAgregar);
+        this.descuentoAgregarBtn.addActionListener(cDescuentoAgregar);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
 
     }
@@ -633,7 +675,8 @@ public class GestorPrincipal extends JPanel {
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
-            ActionListener cEmpleadoAgregar, ActionListener cCerrarSesion, ActionListener cCambiarContrasenia) {
+            ActionListener cEmpleadoAgregar, ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar,
+            ActionListener cCerrarSesion, ActionListener cCambiarContrasenia) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
@@ -641,6 +684,8 @@ public class GestorPrincipal extends JPanel {
         this.exposicionEjecutarBtn.removeActionListener(cExposicionesEjecutar);
         this.exposicionAgregarBtn.removeActionListener(cExposicionesAgregar);
         this.empleadoAgregarBtn.removeActionListener(cEmpleadoAgregar);
+        this.sorteoAgregarBtn.removeActionListener(cSorteoAgregar);
+        this.descuentoAgregarBtn.removeActionListener(cDescuentoAgregar);
         this.empleadoConfigurarContraseniaBtn.removeActionListener(cCambiarContrasenia);
         this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
 
@@ -686,6 +731,26 @@ public class GestorPrincipal extends JPanel {
     public EmpleadoFormulario getVistaEmpleadoFormulario() {
         this.vistaEmpleadoFormulario = new EmpleadoFormulario();
         return this.vistaEmpleadoFormulario;
+    }
+    
+    /**
+     * Devuelve la vista del formulario de sorteo.
+     * 
+     * @return Vista del formulario de sorteo.
+     */
+    public SorteoFormulario getVistaSorteoFormulario() {
+        this.vistaSorteoFormulario = new SorteoFormulario();
+        return this.vistaSorteoFormulario;
+    }
+
+    /**
+     * Devuelve la vista del formulario de descuento.
+     * 
+     * @return Vista del formulario de descuento.
+     */
+    public DescuentoFormulario getVistaDescuentoFormulario() {
+        this.vistaDescuentoFormulario = new DescuentoFormulario();
+        return this.vistaDescuentoFormulario;
     }
 
     /**
@@ -745,5 +810,33 @@ public class GestorPrincipal extends JPanel {
         }
         this.vistaEmpleadoFormulario.setControlador(controlador.getGuardarListener(),
                 controlador.getCancelarListener());
+    }
+
+    /**
+     * Establece el controlador del formulario de sorteo.
+     * 
+     * @param controlador Controlador del formulario de sorteo.
+     * @return Controlador del formulario de sorteo.
+     */
+    public void setControladorSorteoFormulario(ControladorSorteoFormulario controlador) {
+        this.controladorSorteoFormulario = controlador;
+        if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaSorteoFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
+    }
+
+    /**
+     * Establece el controlador del formulario de descuento.
+     * 
+     * @param controlador Controlador del formulario de descuento.
+     * @return Controlador del formulario de descuento.
+     */
+    public void setControladorDescuentoFormulario(ControladorDescuentoFormulario controlador) {
+        this.controladorDescuentoFormulario = controlador;
+        if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaDescuentoFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
     }
 }
