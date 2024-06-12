@@ -177,30 +177,37 @@ public class ControladorGestor {
                                             null,
                                             exposicionesYSalas.keySet().toArray(),
                                             exposicionesYSalas.keySet().toArray()[0]);
+
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
                                     SalaExposicion[] salasArray = salas.toArray(new SalaExposicion[0]);
-                                    SalaExposicion salaSeleccionada = salasArray[0];
-                                    String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
-                                    salaSeleccionadaNombre = (String) JOptionPane.showInputDialog(frame,
+
+                                    SalaExposicion salaSeleccionada = (SalaExposicion) JOptionPane.showInputDialog(
+                                            frame,
                                             "Seleccione la sala donde quiere exponer la obra:",
                                             "Exponer Obra",
                                             JOptionPane.QUESTION_MESSAGE,
                                             null,
                                             salasArray,
-                                            salaSeleccionadaNombre);
+                                            null);
 
-                                    modelo.setValueAt(Estado.EXPUESTA, i, 8);
-                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente en "
-                                            + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
-
-                                    if (!obra.exponerObra()) {
+                                    if (salaSeleccionada == null) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se seleccionó ninguna sala.");
+                                        continue;
+                                    }
+                                    
+                                    if (salaSeleccionada.addObra(obra) == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede exponer la obra " + nombreObra);
                                         continue;
                                     }
 
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
-                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
+                                    String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
+
+                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente en "
+                                            + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
+
                                     break;
                                 case "Prestar Obra":
                                     if (obra.prestarObra() == false) {
