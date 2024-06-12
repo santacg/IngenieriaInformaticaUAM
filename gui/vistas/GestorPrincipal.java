@@ -149,6 +149,21 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Actualiza eñ panel de descuentos al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void actualizarTablaDescuentos(CentroExposicion centro) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaDescuentos.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosDescuentos(centro, new String[] { "Exposición", "Descuento (%)", "Cantidad" });
+        for (Object[] descuentoData : datos) {
+            modelo.addRow(descuentoData);
+        }
+        modelo.fireTableDataChanged();
+    }
+
+    /**
      * Construye los datos de los descuentos.
      * 
      * @param centro  Centro de exposiciones.
@@ -212,7 +227,7 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
-     * Añade un panel de exposiciones al gestor principal.
+     * Actualiza el panel de sorteos al gestor principal.
      * 
      * @param centro Centro de exposiciones.
      */

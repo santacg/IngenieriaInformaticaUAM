@@ -458,11 +458,31 @@ public class Exposicion implements Serializable {
      * @param dias
      */
     public void configurarDescuentoDia(double cantidadDescuento, int dias) {
+        if (cantidadDescuento <= 0) {
+            System.out.println("El descuento no puede ser negativo o nulo");
+            return;
+        }
+
+        if (dias <= 0) {
+            System.out.println("El número de días no puede ser negativo o nulo");
+            return;
+        }
+
         DescuentoDia descuento = new DescuentoDia(cantidadDescuento, dias);
         this.descuento = descuento;
     }
 
     public void configurarDescuentoMes(double cantidadDescuento, int meses) {
+        if (cantidadDescuento <= 0) {
+            System.out.println("El descuento no puede ser negativo o nulo");
+            return;
+        }
+
+        if (meses <= 0) {
+            System.out.println("El número de meses no puede ser negativo o nulo");
+            return;
+        }
+
         DescuentoMes descuento = new DescuentoMes(cantidadDescuento, meses);
         this.descuento = descuento;
     }

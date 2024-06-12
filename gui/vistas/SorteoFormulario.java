@@ -169,9 +169,9 @@ public class SorteoFormulario extends JDialog {
     }
 
     /**
-     * Método que devuelve el nombre introducido en el formulario
+     * Método que devuelve la fecha de sorteo introducida en el formulario
      * 
-     * @return String con el nombre introducido
+     * @return LocalDate con la fecha introducida
      */
     public LocalDate getFechaSorteo() {
         if (this.fechaSorteo.getText().equals("")) {
@@ -186,9 +186,9 @@ public class SorteoFormulario extends JDialog {
     }
 
     /**
-     * Método que devuelve el aforo introducido en el formulario
+     * Fecha que devuelve el número de entradas introducido en el formulario
      * 
-     * @return String con el aforo introducido
+     * @return Integer con el número de entradas introducido
      */
     public Integer getSorteoEntradas() {
         try {

@@ -2,11 +2,18 @@ package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Set;
+
 import javax.swing.*;
 
-public class DescuentoFormulario extends JDialog{
-    private JTextField fechaSorteo;
-    private JTextField n_entradas;
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.Exposicion;
+
+public class DescuentoFormulario extends JDialog {
+    private String tipoDescuento;
+    private JList<String> exposiciones;
+    private JTextField descuento;
+    private JTextField cantidad;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
 
@@ -20,25 +27,86 @@ public class DescuentoFormulario extends JDialog{
         setLocationRelativeTo(null); // Centrar el formulario
         setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
 
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+
         JPanel panelFormulario = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        addBotones(panelFormulario, constraints, 8);
-        add(panelFormulario);
+        this.tipoDescuento = formularioTipoDescuento();
+        if (tipoDescuento == null) {
+            dispose();
+            return;
+        }
+
+        formularioAñadirDescuento(panelFormulario, constraints);
+
+        this.exposiciones = new JList<>();
+        JScrollPane scrollExposiciones = new JScrollPane(this.exposiciones);
+        scrollExposiciones.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollExposiciones.setBorder(BorderFactory.createTitledBorder("Exposiciones"));
+
+        panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
+        panelPrincipal.add(scrollExposiciones, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        addBotones(buttonPanel);
+        panelPrincipal.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(panelPrincipal);
     }
 
     /**
-     * Método que crea el formulario para añadir una sala
+     * Método que crea el formulario para añadir un descuento
      * 
      * @param panelFormulario JPanel en el que se añadirán los campos
      * @param constraints     GridBagConstraints que definen la posición de los
      *                        campos
      */
-    public void formularioAñadirSorteo(JPanel panelFormulario, GridBagConstraints constraints) {
-        addCampo("Fecha del sorteo:", fechaSorteo = new JTextField(20), panelFormulario, constraints, 0);
-        addCampo("Numero de entradas:", n_entradas = new JTextField(20), panelFormulario, constraints, 7);
+    public void formularioAñadirDescuento(JPanel panelFormulario, GridBagConstraints constraints) {
+        addCampo("Descuento:", descuento = new JTextField(20), panelFormulario, constraints, 0);
+        addCampo("Cantidad en días o meses:", cantidad = new JTextField(20), panelFormulario, constraints, 1);
+    }
+
+    /**
+     * Método que crea un formulario para seleccionar el tipo de descuento
+     * 
+     * @return String con el tipo de descuento seleccionado
+     */
+    public String formularioTipoDescuento() {
+        String[] opcionesDescuento = { "Descuento por dia", "Descuento por mes" };
+        JComboBox<String> comboDescuento = new JComboBox<>(opcionesDescuento);
+
+        int seleccion = JOptionPane.showConfirmDialog(null, comboDescuento, "Seleccione el tipo de descuento",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (seleccion == JOptionPane.OK_OPTION) {
+            return (String) comboDescuento.getSelectedItem();
+        }
+
+        return null;
+    }
+
+    /**
+     * Método que muestra las exposiciones de un centro de exposición
+     * 
+     * @param centroExposicion CentroExposicion del que se mostrarán las
+     *                         exposiciones disponibles
+     */
+    public void mostrarExposiciones(CentroExposicion centroExposicion) {
+        Set<Exposicion> exposicionesSet = centroExposicion.getExposiciones();
+        DefaultListModel<String> model = new DefaultListModel<>();
+
+        if (exposicionesSet.isEmpty()) {
+            model.addElement("No hay exposiciones disponibles.");
+        } else {
+            for (Exposicion exposicion : exposicionesSet) {
+                model.addElement(exposicion.getNombre());
+            }
+        }
+
+        exposiciones.setModel(model);
     }
 
     /**
@@ -65,41 +133,66 @@ public class DescuentoFormulario extends JDialog{
     /**
      * Método que añade los botones de aceptar y cancelar al formulario
      * 
-     * @param panel       JPanel en el que se añadirán los botones
-     * @param constraints GridBagConstraints que definen la posición de los botones
-     * @param gridy       int que indica la fila en la que se añadirán los botones
+     * @param panel JPanel en el que se añadirán los botones
      */
-    private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
-        constraints.gridx = 0;
-        constraints.gridy = gridy;
-        constraints.gridwidth = 2;
+    private void addBotones(JPanel buttonPanel) {
         this.aceptarBtn = new JButton("Aceptar");
         this.cancelarBtn = new JButton("Cancelar");
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(aceptarBtn);
         buttonPanel.add(cancelarBtn);
-
-        constraints.anchor = GridBagConstraints.CENTER;
-        panel.add(buttonPanel, constraints);
     }
 
     /**
-     * Método que devuelve el nombre introducido en el formulario
+     * Método que devuelve el porcentaje de descuento
      * 
-     * @return String con el nombre introducido
+     * @return Double con el porcentaje de descuento
      */
-    public String getFechaSorteo() {
-        return fechaSorteo.getText();
+    public Double getDescuento() {
+        if (descuento.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(descuento.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
-     * Método que devuelve el aforo introducido en el formulario
+     * Método que devuelve la cantidad de descuento
      * 
-     * @return String con el aforo introducido
+     * @return Integer con la cantidad de descuento
      */
-    public String getSorteoEntradas() {
-        return n_entradas.getText();
+    public Integer getCantidad() {
+        if (cantidad.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Integer.parseInt(cantidad.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Método que devuelve el tipo de descuento seleccionado
+     * 
+     * @return String con el tipo de descuento seleccionado
+     */
+    public String getTipoDescuento() {
+        return tipoDescuento;
+    }
+
+    /**
+     * Método que devuelve la exposición seleccionada en el formulario
+     * 
+     * @return String con la exposición seleccionada
+     */
+    public String getSelectedExposicion() {
+        return exposiciones.getSelectedValue();
     }
 
     /**
@@ -113,6 +206,5 @@ public class DescuentoFormulario extends JDialog{
         cancelarBtn.addActionListener(cCancelar);
         setVisible(true);
     }
-
 
 }

@@ -29,6 +29,9 @@ public class ControladorSorteoFormulario {
         mostrarExpo();
     }
 
+    /**
+     * Método que muestra las exposiciones
+     */
     public void mostrarExpo() {
         vista.mostrarExposiciones(centroExposicion);
     }
