@@ -31,6 +31,7 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionEmpleados;
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
+    private JPanel gestionUtils;
 
     private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;
@@ -81,6 +82,10 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaDescuentos;
     private JButton descuentoAgregarBtn;
 
+    // Atributos de la vista
+    private JLabel nombreCentro;
+    private JLabel horaApertura;
+    private JLabel horaCierre;
     private JButton cerrarSesionBtn;
 
     /**
@@ -115,13 +120,33 @@ public class GestorPrincipal extends JPanel {
         tabbedPane.addTab("Sorteos", gestionSorteos);
         tabbedPane.addTab("Descuentos", gestionDescuentos);
 
-        JPanel panelCerrarSesion = new JPanel();
-        panelCerrarSesion.setLayout(new BorderLayout());
-        cerrarSesionBtn = new JButton("Cerrar Sesión");
-        panelCerrarSesion.add(cerrarSesionBtn, BorderLayout.EAST);
+        JPanel panelSuperior = addPanelInfo();;
 
         add(tabbedPane, BorderLayout.CENTER);
-        add(panelCerrarSesion, BorderLayout.NORTH);
+        add(panelSuperior, BorderLayout.NORTH);
+    }
+
+    public JPanel addPanelInfo() {
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        cerrarSesionBtn = new JButton("Cerrar Sesión");
+        panelSuperior.add(cerrarSesionBtn, BorderLayout.EAST);
+
+        JPanel panelInfo = new JPanel(new GridLayout(1, 3));
+        nombreCentro = new JLabel("Nombre del centro");
+        horaApertura = new JLabel("Hora de apertura");
+        horaCierre = new JLabel("Hora de cierre");
+        panelInfo.add(nombreCentro);
+        panelInfo.add(horaApertura);
+        panelInfo.add(horaCierre);
+
+        panelSuperior.add(panelInfo, BorderLayout.CENTER);
+        return panelSuperior;
+    }
+
+    public void actualizarInfo(CentroExposicion centro) {
+        nombreCentro.setText("Centro de Exposiciones: " + centro.getNombre());
+        horaApertura.setText("Hora de apertura: " + centro.getHoraApertura());
+        horaCierre.setText("Hora de cierre: " + centro.getHoraCierre());
     }
 
     /**

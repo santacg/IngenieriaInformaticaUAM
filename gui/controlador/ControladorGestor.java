@@ -47,6 +47,7 @@ public class ControladorGestor {
         mostrarEmpleados();
         mostrarSorteos();
         mostrarDescuentos();
+        mostrarInfo();
     }
 
     /**
@@ -85,10 +86,17 @@ public class ControladorGestor {
     }
 
     /**
-     * 
+     * Método que muestra la vista de los descuentos. 
      */
     public void mostrarDescuentos() {
         vista.addPanelDescuentos(centro);
+    }
+
+    /**
+     * Método que muestra la información del centro de exposición.
+     */
+    public void mostrarInfo() {
+        vista.actualizarInfo(centro);
     }
 
     /**
