@@ -2,6 +2,7 @@ package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -52,9 +53,9 @@ public class SorteoFormulario extends JDialog {
             addCampo("Dia del sorteo:", diaSorteo = new JTextField(20), panelFormulario, constraints, 2);
             addCampo("Hora del sorteo:", horaSorteo = new JTextField(20), panelFormulario, constraints, 3);
         } else if (tipoSorteo == "Sorteo por fechas") {
-            addCampo("Fecha inicio del sorteo (yyyy-mm-dd):", fechaInicioSorteo = new JTextField(20), panelFormulario, constraints,
+            addCampo("Fecha inicio (yyyy-mm-dd):", fechaInicioSorteo = new JTextField(20), panelFormulario, constraints,
                     2);
-            addCampo("Fecha fin del sorteo (yyyy-mm-dd):", fechaFinSorteo = new JTextField(20), panelFormulario, constraints, 3);
+            addCampo("Fecha fin (yyyy-mm-dd):", fechaFinSorteo = new JTextField(20), panelFormulario, constraints, 3);
         }
 
         this.exposiciones = new JList<>();
@@ -177,7 +178,11 @@ public class SorteoFormulario extends JDialog {
             return null;
         }
 
-        return LocalDate.parse(this.fechaSorteo.getText());
+        try {
+            return LocalDate.parse(this.fechaSorteo.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**
@@ -185,8 +190,12 @@ public class SorteoFormulario extends JDialog {
      * 
      * @return String con el aforo introducido
      */
-    public String getSorteoEntradas() {
-        return n_entradas.getText();
+    public Integer getSorteoEntradas() {
+        try {
+            return Integer.parseInt(n_entradas.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
@@ -199,7 +208,11 @@ public class SorteoFormulario extends JDialog {
             return null;
         }
 
-        return LocalDate.parse(this.diaSorteo.getText());
+        try {
+            return LocalDate.parse(this.diaSorteo.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**
@@ -221,7 +234,11 @@ public class SorteoFormulario extends JDialog {
             return null;
         }
 
-        return LocalDate.parse(this.fechaInicioSorteo.getText());
+        try {
+            return LocalDate.parse(this.fechaInicioSorteo.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**
@@ -234,7 +251,11 @@ public class SorteoFormulario extends JDialog {
             return null;
         }
 
-        return LocalDate.parse(this.fechaFinSorteo.getText());
+        try {
+            return LocalDate.parse(this.fechaFinSorteo.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**

@@ -12,6 +12,8 @@ import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
 import gui.modelo.sala.Sala;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 
 import java.io.Serializable;
@@ -664,18 +666,19 @@ public class CentroExposicion implements Serializable {
             return false;
         }
 
-        if (exposicion.getFechaFin().isBefore(fechaSorteo) || exposicion.getFechaInicio().isAfter(fechaSorteo)) {
-            System.out.println("La fecha de sorteo no está dentro del rango de fechas de la exposición");
-            return false;
-        }
-
         if (fechaFin.isBefore(fechaInicio)) {
             System.out.println("La fecha de fin no puede ser anterior a la fecha de inicio");
             return false;
         }
 
-        if (fechaInicio.isAfter(exposicion.getFechaFin()) || fechaFin.isBefore(exposicion.getFechaInicio())) {
+        if (fechaInicio.isAfter(exposicion.getFechaFin()) || fechaInicio.isBefore(exposicion.getFechaInicio())
+                || fechaFin.isBefore(exposicion.getFechaInicio()) || fechaFin.isAfter(exposicion.getFechaFin())) {
             System.out.println("El rango de fechas del sorteo no está dentro del rango de fechas de la exposición");
+            return false;
+        }
+
+        if (fechaInicio.isBefore(fechaSorteo)) {
+            System.out.println("La fecha de sorteo no es correcta");
             return false;
         }
 

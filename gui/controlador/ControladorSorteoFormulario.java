@@ -41,13 +41,19 @@ public class ControladorSorteoFormulario {
             String tipoSorteo = vista.getTipoSorteo();
 
             LocalDate fechaSorteo = vista.getFechaSorteo();
-            String nEntradas = vista.getSorteoEntradas();
-            
-            if (fechaSorteo == null || nEntradas.equals("")) {
-                JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
+            if (fechaSorteo == null) {
+                JOptionPane.showMessageDialog(vista, "Debes rellenar la fecha del sorteo o introducirla correctamente.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            Integer nEntradas = vista.getSorteoEntradas();
+            if (nEntradas == null || nEntradas <= 0) {
+                JOptionPane.showMessageDialog(vista, "Debes rellenar el número de entradas o introducir un número de entradas correcto.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             
             if (tipoSorteo.equals("Sorteo por día y hora") && (vista.getDiaSorteo() == null || vista.getHoraSorteo().equals(""))) {
                 JOptionPane.showMessageDialog(vista, "Debes rellenar el día y la hora del sorteo.", "Error",
@@ -71,13 +77,13 @@ public class ControladorSorteoFormulario {
             Boolean res = true;
             switch (tipoSorteo) {
                 case "Sorteo por día y hora":
-                    res = centroExposicion.confgiurarSorteoDiaHora(exposicion, fechaSorteo, Integer.parseInt(nEntradas), vista.getDiaSorteo(), null);
+                    res = centroExposicion.confgiurarSorteoDiaHora(exposicion, fechaSorteo, nEntradas, vista.getDiaSorteo(), null);
                     break;
                 case "Sorteo por fechas":
-                    res = centroExposicion.confgiurarSorteoFechas(exposicion, fechaSorteo, Integer.parseInt(nEntradas), vista.getFechaInicioSorteo(), vista.getFechaFinSorteo());
+                    res = centroExposicion.confgiurarSorteoFechas(exposicion, fechaSorteo, nEntradas, vista.getFechaInicioSorteo(), vista.getFechaFinSorteo());
                     break;
                 case "Sorteo por exposición":
-                    res = centroExposicion.confgiurarSorteoExposicion(exposicion, fechaSorteo, Integer.parseInt(nEntradas));
+                    res = centroExposicion.confgiurarSorteoExposicion(exposicion, fechaSorteo, nEntradas);
                     break;
             }
 
