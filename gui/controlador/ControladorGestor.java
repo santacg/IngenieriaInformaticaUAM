@@ -3,15 +3,20 @@ package gui.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
+import gui.modelo.sala.Sala;
 import gui.modelo.utils.LectorCSVObras;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.ModeloTablaObras;
@@ -86,7 +91,7 @@ public class ControladorGestor {
     }
 
     /**
-     * Método que muestra la vista de los descuentos. 
+     * Método que muestra la vista de los descuentos.
      */
     public void mostrarDescuentos() {
         vista.addPanelDescuentos(centro);
@@ -161,11 +166,39 @@ public class ControladorGestor {
                                     JOptionPane.showMessageDialog(frame, "Obra almacenada correctamente.");
                                     break;
                                 case "Exponer Obra":
-                                    if (obra.exponerObra() == false) {
+                                    Map<String, Set<SalaExposicion>> exposicionesYSalas = new HashMap<>();
+                                    for (Exposicion exposicion : centro.getExposiciones()) {
+                                        exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
+                                    }
+                                    String exposicionSeleccionada = (String) JOptionPane.showInputDialog(frame,
+                                            "Seleccione la exposición donde quiere exponer la obra:",
+                                            "Exponer Obra",
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,
+                                            exposicionesYSalas.keySet().toArray(),
+                                            exposicionesYSalas.keySet().toArray()[0]);
+                                    Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
+                                    SalaExposicion[] salasArray = salas.toArray(new SalaExposicion[0]);
+                                    SalaExposicion salaSeleccionada = salasArray[0];
+                                    String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
+                                    salaSeleccionadaNombre = (String) JOptionPane.showInputDialog(frame,
+                                            "Seleccione la sala donde quiere exponer la obra:",
+                                            "Exponer Obra",
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,
+                                            salasArray,
+                                            salaSeleccionadaNombre);
+
+                                    modelo.setValueAt(Estado.EXPUESTA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente en "
+                                            + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
+
+                                    if (!obra.exponerObra()) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede exponer la obra " + nombreObra);
                                         continue;
                                     }
+
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
                                     break;

@@ -57,10 +57,10 @@ public class MainVisual {
                 Exposicion exposicion1 = new Exposicion("Picasso 1960", LocalDate.of(2024, 1, 2),
                                 LocalDate.now().plusYears(7),
                                 "Vive en el prado esta espectacular experiencia recordando los últimos años de este gran artista ",
-                                salasExposicion, TipoExpo.TEMPORAL, 15.0);
+                                TipoExpo.TEMPORAL, 15.0);
                 Exposicion exposicion2 = new Exposicion("Exposicion2", LocalDate.of(2025, 1, 2),
                                 LocalDate.now().plusYears(7),
-                                "Descripción", salasExposicion, TipoExpo.TEMPORAL, 10.0);
+                                "Descripción",  TipoExpo.TEMPORAL, 10.0);
 
                 centroExposicion1.addExposicion(exposicion1);
                 centroExposicion1.addExposicion(exposicion2);

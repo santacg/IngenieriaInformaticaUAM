@@ -49,6 +49,9 @@ public class SalaFormulario extends JDialog {
             case "Eliminar Sala":
                 confirmarEliminacion(panelFormulario, constraints);
                 break;
+            case "Añadir Sala a Exposicion":
+                confirmarAdicion(panelFormulario, constraints);
+                break;
         }
 
         addBotones(panelFormulario, constraints, 8);
@@ -94,6 +97,20 @@ public class SalaFormulario extends JDialog {
      */
     public void confirmarEliminacion(JPanel panelFormulario, GridBagConstraints constraints) {
         panelFormulario.add(new JLabel("¿Estás seguro de que quieres eliminar esta sala?"), constraints);
+    }
+
+    /**
+     * Método que crea el formulario para confirmar la adición de una sala a una
+     * 
+     * @param panelFormulario JPanel en el que se añadirán los campos
+     * @param constraints     GridBagConstraints que definen la posición de los
+     *                        campos
+     */
+    public void confirmarAdicion(JPanel panelFormulario, GridBagConstraints constraints) {
+        panelFormulario.add(
+                new JLabel(
+                        "Tienes que elegir una de las siguientes exposiciones a las que añadir la sala seleccionada"),
+                constraints);
     }
 
     /**

@@ -2,8 +2,6 @@ package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import javax.swing.*;
 

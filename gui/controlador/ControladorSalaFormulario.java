@@ -1,10 +1,16 @@
 package gui.controlador;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.*;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.sala.Sala;
 import gui.vistas.*;
 
@@ -41,13 +47,15 @@ public class ControladorSalaFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Añadir Sala":
-                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getAncho().equals("") || vista.getLargo().equals("")) {
+                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getAncho().equals("")
+                            || vista.getLargo().equals("")) {
                         JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), vista.getClimatizador(), Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
+                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), vista.getClimatizador(),
+                            Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
                             Double.parseDouble(vista.getLargo()));
 
                     if (centroExposicion.addSala(sala) == false) {
@@ -81,8 +89,10 @@ public class ControladorSalaFormulario {
                             salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
                         }
 
-                        if (salaSeleccionada.addSubsala(Double.parseDouble(vista.getAncho()), Double.parseDouble(vista.getLargo()),
-                                Integer.parseInt(vista.getTomasElectricidad()), Integer.parseInt(vista.getAforo())) == false) {
+                        if (salaSeleccionada.addSubsala(Double.parseDouble(vista.getAncho()),
+                                Double.parseDouble(vista.getLargo()),
+                                Integer.parseInt(vista.getTomasElectricidad()),
+                                Integer.parseInt(vista.getAforo())) == false) {
                             JOptionPane.showMessageDialog(vista,
                                     "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
                                     "Error",
@@ -126,6 +136,69 @@ public class ControladorSalaFormulario {
                     }
                     JOptionPane.showMessageDialog(vista, "Sala eliminada correctamente.", "Sala eliminada",
                             JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Añadir Sala a Exposicion":
+                    selectedRow = frame.getTablaSalas().getSelectedRow();
+
+                    if (selectedRow != -1) {
+                        frame.getTablaSalas().clearSelection();
+
+                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
+
+                        if (salaSeleccionada == null) {
+                            JOptionPane.showMessageDialog(vista, "No se puede añadir una subsala a una exposición.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            vista.dispose();
+                            return;
+                        }
+
+                        List<String> nombresExposiciones = new ArrayList<>();
+
+                        for (Exposicion exposicion : centroExposicion.getExposiciones()) {
+                            nombresExposiciones.add(exposicion.getNombre());
+                        }
+
+                        JList<String> listaExposiciones = new JList<>(nombresExposiciones.toArray(new String[0]));
+                        JScrollPane scrollPane = new JScrollPane(listaExposiciones);
+
+                        int result = JOptionPane.showConfirmDialog(vista, scrollPane, "Selecciona una exposición",
+                                JOptionPane.OK_CANCEL_OPTION);
+
+                        String exposicionSeleccionada = null;
+                        if (result == JOptionPane.OK_OPTION) {
+                            exposicionSeleccionada = listaExposiciones.getSelectedValue();
+                        } else {
+                            JOptionPane.showMessageDialog(vista, "No se ha seleccionado ninguna exposición.",
+                                    "Acción cancelada",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            vista.dispose();    
+                            return;
+                        }
+                        
+                        Exposicion exposicion = centroExposicion.getExposicionPorNombre(exposicionSeleccionada);
+                        
+                        SalaExposicion salaExposicion = new SalaExposicion(salaSeleccionada);
+                        if (exposicion.addSala(salaExposicion) == false) {
+                            JOptionPane.showMessageDialog(vista, "No se ha podido añadir la sala a la exposición.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        frame.actualizarTablaExposiciones(centroExposicion);
+                        JOptionPane.showMessageDialog(vista, "Sala añadida a la exposición correctamente.",
+                                "Sala añadida",
+                                JOptionPane.INFORMATION_MESSAGE);
+
+                    } else {
+                        JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir a una exposición.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        vista.dispose();
+                        return;
+                    }
                     break;
             }
             vista.dispose();

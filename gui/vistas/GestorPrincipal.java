@@ -155,7 +155,7 @@ public class GestorPrincipal extends JPanel {
      * @param centro Centro de exposiciones.
      */
     public void addPanelDescuentos(CentroExposicion centro) {
-        String[] titulos = { "Exposición", "Descuento (%)", "Cantidad" };
+        String[] titulos = { "Exposición", "Descuento (%)", "Cantidad (Días o meses)" };
 
         // Construir datos para la tabla de descuentos
         Object[][] datos = construirDatosDescuentos(centro, titulos);
@@ -181,7 +181,7 @@ public class GestorPrincipal extends JPanel {
     public void actualizarTablaDescuentos(CentroExposicion centro) {
         DefaultTableModel modelo = (DefaultTableModel) this.tablaDescuentos.getModel();
         modelo.setRowCount(0);
-        Object[][] datos = construirDatosDescuentos(centro, new String[] { "Exposición", "Descuento (%)", "Cantidad" });
+        Object[][] datos = construirDatosDescuentos(centro, new String[] { "Exposición", "Descuento (%)", "Cantidad días o meses" });
         for (Object[] descuentoData : datos) {
             modelo.addRow(descuentoData);
         }
@@ -361,7 +361,7 @@ public class GestorPrincipal extends JPanel {
 
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
-        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala" });
+        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala", "Añadir Sala a Exposicion"});
         this.salaEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));
@@ -449,7 +449,7 @@ public class GestorPrincipal extends JPanel {
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.obraComboAcciones = new JComboBox<>(
-                new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra" });
+                new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra"});
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
         this.obraAgregarBtn = new JButton("Agregar obra");
         this.leerObrasCSVBtn = new JButton("Leer Obras desde CSV");

@@ -53,16 +53,6 @@ public class ControladorExposicionFormulario {
         this.vista = frame.getVistaExposicionFormulario("Agregar Exposicion");
         this.accion = "Agregar Exposicion";
         this.centroExposicion = centroExposicion;
-        mostrarObras();
-        mostrarSalas();
-    }
-
-    public void mostrarObras() {
-        vista.mostrarObras(centroExposicion);
-    }
-
-    public void mostrarSalas() {
-        vista.mostrarSalas(centroExposicion);
     }
 
     /**
@@ -72,42 +62,22 @@ public class ControladorExposicionFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Agregar Exposicion":
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) vista.getTreeSalas()
-                            .getLastSelectedPathComponent();
-                    if (selectedNode == null) {
-                        JOptionPane.showMessageDialog(vista, "Debes seleccionar una sala.", "Error",
+                    if (vista.getNombre().equals("") || vista.getFechaInicio() == null || vista.getFechaFin() == null
+                            || vista.getDescripcion().equals("") || vista.getTipoSeleccionado().equals("") 
+                            || vista.getPrecio() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos y de forma correcta.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    String nombreSala = (String) selectedNode.getUserObject();
-                    Sala sala = centroExposicion.getSalaPorNombre(nombreSala);
-                    if (sala == null) {
-                        sala = centroExposicion.getSubSalaPorNombre(nombreSala);
+                    if (vista.getFechaInicio().isAfter(vista.getFechaFin())) {
+                        JOptionPane.showMessageDialog(vista, "La fecha de inicio no puede ser posterior a la fecha de fin.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-
-                    List<String> nombresObrasSeleccionadas = vista.getObras();
-                    Set<Obra> obrasSeleccionadas = new HashSet<>();
-                    for (String nombreObra : nombresObrasSeleccionadas) {
-                        Obra obra = centroExposicion.getObraPorNombre(nombreObra);
-                        obrasSeleccionadas.add(obra);
-                    }
-
-                    Set<SalaExposicion> salasExpo = new HashSet<>();
-                    SalaExposicion salaExpo = new SalaExposicion(sala);
-                    for (Obra obra : obrasSeleccionadas) {
-                        if (salaExpo.addObra(obra) == false) {
-                            JOptionPane.showMessageDialog(vista, "No se puede añadir la obra a la sala de exposicion.",
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                    }
-
-                    salasExpo.add(salaExpo);
 
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
-                            vista.getFechaFin(), vista.getDescripcion(), salasExpo, vista.getTipoExpo(),
+                            vista.getFechaFin(), vista.getDescripcion(), vista.getTipoSeleccionado(),
                             vista.getPrecio());
 
                     if (centroExposicion.addExposicion(expoNueva) == false) {

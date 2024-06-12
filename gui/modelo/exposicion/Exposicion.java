@@ -46,8 +46,7 @@ public class Exposicion implements Serializable {
      *                    exposición.
      * @param tipo        El tipo de exposición, puede ser temporal o permanente.
      */
-    public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion,
-            Set<SalaExposicion> salas, TipoExpo tipo, Double precio) {
+    public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion, TipoExpo tipo, Double precio) {
         LocalDate fechaAux;
         if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) {
             System.out.println("La fecha de inicio no puede ser posterior o igual a la fecha de fin");
@@ -74,7 +73,6 @@ public class Exposicion implements Serializable {
             }
         }
         this.descripcion = descripcion;
-        this.salas = salas;
         this.tipo = tipo;
         this.precio = precio;
         this.estado = EstadoExposicion.EN_CREACION;

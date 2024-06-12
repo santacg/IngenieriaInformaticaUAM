@@ -22,7 +22,6 @@ public class SorteoFormulario extends JDialog {
     private JTextField fechaFinSorteo;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
-    private JPanel panelExposiciones;
 
     /**
      * Constructor de la clase SalaFormulario

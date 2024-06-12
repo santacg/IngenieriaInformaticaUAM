@@ -31,7 +31,7 @@ public class ObraFormulario extends JDialog {
     private JTextField audiovisualDuracion;
     private JTextField audiovisualIdioma;
     private String tipoObraSeleccionada;
-    private JButton guardarBtn;
+    private JButton guardarBtn; 
     private JButton cancelarBtn;
 
     /**
@@ -40,8 +40,8 @@ public class ObraFormulario extends JDialog {
     public ObraFormulario() {
         setTitle("Agregar obra");
         setSize(600, 700);
-        setLocationRelativeTo(null); // Centrar el formulario
-        setModal(true); // Hacer el diálogo modal para bloquear otras ventanas hasta que se cierre
+        setLocationRelativeTo(null);
+        setModal(true); 
 
         tipoObraSeleccionada = formularioTipoObra();
         if (tipoObraSeleccionada == null) {
@@ -61,31 +61,31 @@ public class ObraFormulario extends JDialog {
         addCampo("Externa:", obraExterna = new JCheckBox(), panelFormulario, constraints, 4);
         addCampo("Cuantia Seguro:", obraCuantiaSeguro = new JTextField(32), panelFormulario, constraints, 5);
         addCampo("Numero Seguro:", obraNumeroSeguro = new JTextField(32), panelFormulario, constraints, 6);
-        addCampo("Alto", obraAlto = new JTextField(32), panelFormulario, constraints, 7);
-        addCampo("Ancho", obraAncho = new JTextField(32), panelFormulario, constraints, 8);
+        addCampo("Alto:", obraAlto = new JTextField(32), panelFormulario, constraints, 7);
+        addCampo("Ancho:", obraAncho = new JTextField(32), panelFormulario, constraints, 8);
 
         if (tipoObraSeleccionada.equals("Escultura") || tipoObraSeleccionada.equals("Cuadro")
                 || tipoObraSeleccionada.equals("Fotografia")) {
-            addCampo("Rango temperatura", obraRangoTemperatura = new JTextField(32), panelFormulario, constraints, 9);
-            addCampo("Rango Humedad", obraRangoHumedad = new JTextField(32), panelFormulario, constraints, 10);
+            addCampo("Rango temperatura:", obraRangoTemperatura = new JTextField(32), panelFormulario, constraints, 9);
+            addCampo("Rango Humedad:", obraRangoHumedad = new JTextField(32), panelFormulario, constraints, 10);
         }
 
         int gridy = 11;
         switch (tipoObraSeleccionada) {
             case "Cuadro":
-                addCampo("Técnica", cuadroTecnica = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Técnica:", cuadroTecnica = new JTextField(32), panelFormulario, constraints, gridy++);
                 break;
             case "Escultura":
-                addCampo("Material", esculturaMaterial = new JTextField(32), panelFormulario, constraints, gridy++);
-                addCampo("Profundidad", esculturaProfundidad = new JTextField(32), panelFormulario, constraints,
+                addCampo("Material:", esculturaMaterial = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Profundidad:", esculturaProfundidad = new JTextField(32), panelFormulario, constraints,
                         gridy++);
                 break;
             case "Fotografia":
-                addCampo("Color", fotografiaColor = new JCheckBox(), panelFormulario, constraints, gridy++);
+                addCampo("Color:", fotografiaColor = new JCheckBox(), panelFormulario, constraints, gridy++);
                 break;
             case "Audiovisual":
-                addCampo("Duración", audiovisualDuracion = new JTextField(32), panelFormulario, constraints, gridy++);
-                addCampo("Idioma", audiovisualIdioma = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Duración:", audiovisualDuracion = new JTextField(32), panelFormulario, constraints, gridy++);
+                addCampo("Idioma:", audiovisualIdioma = new JTextField(32), panelFormulario, constraints, gridy++);
                 break;
         }
 
@@ -369,6 +369,10 @@ public class ObraFormulario extends JDialog {
      * @param cCancelar Controlador del botón de cancelar.
      */
     public void setControlador(ActionListener cGuardar, ActionListener cCancelar) {
+        if (cGuardar == null || cCancelar == null || this.guardarBtn == null || this.cancelarBtn == null) {
+            return;
+        }
+
         this.guardarBtn.addActionListener(cGuardar);
         this.cancelarBtn.addActionListener(cCancelar);
         setVisible(true);

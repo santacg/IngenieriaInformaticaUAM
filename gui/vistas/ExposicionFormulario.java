@@ -2,20 +2,12 @@ package gui.vistas;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
-import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.*;
-import gui.modelo.obra.Obra;
-import gui.modelo.sala.Sala;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Clase ExposicionFormulario.
@@ -29,13 +21,13 @@ public class ExposicionFormulario extends JDialog {
     private JTextField fechaInicio;
     private JTextField fechaFin;
     private JTextField descipcion;
-    private JList<TipoExpo> tipoExpo;
+    private JRadioButton temporalBtn;
+    private JRadioButton permanenteBtn;
+    private ButtonGroup tipoExpoGroup;
+    private JPanel tipoExpoPanel;
     private JTextField precio;
-    private List<JCheckBox> obras = new ArrayList<>();
-    private JPanel panelObras;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
-    private JTree treeSalas;
 
     /**
      * Constructor de la clase ExposicionFormulario.
@@ -67,7 +59,7 @@ public class ExposicionFormulario extends JDialog {
                 formularioExposicionTemporal(panelFormulario, constraints);
                 break;
             case "Agregar Exposicion":
-                JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+                JPanel panelPrincipal = new JPanel(new BorderLayout());
                 // Formulario
                 panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
                 panelFormulario.setBorder(BorderFactory.createTitledBorder("Detalles de la exposición"));
@@ -76,22 +68,9 @@ public class ExposicionFormulario extends JDialog {
                 addCampoFlow("Fecha inicio (yyyy-mm-dd):", fechaInicio = new JTextField(20), panelFormulario);
                 addCampoFlow("Fecha fin (yyyy-mm-dd):", fechaFin = new JTextField(20), panelFormulario);
                 addCampoFlow("Descripción:", descipcion = new JTextField(20), panelFormulario);
-                addCampoFlow("Tipo de exposición:", tipoExpo = new JList<TipoExpo>(TipoExpo.values()), panelFormulario);
+                setupTipoExpoPanel();
+                panelFormulario.add(tipoExpoPanel);
                 addCampoFlow("Precio:", precio = new JTextField(20), panelFormulario);
-
-                // Panel obras
-                panelObras = new JPanel();
-                panelObras.setLayout(new GridLayout(0, 1));
-                JScrollPane scrollObras = new JScrollPane(panelObras);
-                scrollObras.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                scrollObras.setBorder(BorderFactory.createTitledBorder("Obras"));
-
-                // Panel salas
-                JPanel salasPanel = new JPanel(new BorderLayout());
-                treeSalas = new JTree();
-                JScrollPane scrollSalas = new JScrollPane(treeSalas);
-                salasPanel.add(scrollSalas, BorderLayout.CENTER);
-                salasPanel.setBorder(BorderFactory.createTitledBorder("Salas"));
 
                 // Panel botones
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -101,8 +80,6 @@ public class ExposicionFormulario extends JDialog {
                 buttonPanel.add(cancelarBtn);
 
                 panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
-                panelPrincipal.add(scrollObras, BorderLayout.CENTER);
-                panelPrincipal.add(salasPanel, BorderLayout.SOUTH);
                 add(panelPrincipal, BorderLayout.CENTER);
                 add(buttonPanel, BorderLayout.SOUTH);
 
@@ -111,6 +88,27 @@ public class ExposicionFormulario extends JDialog {
 
         addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
+    }
+
+    /**
+     * Método que crea el formulario para añadir una exposición.
+     */
+    private void setupTipoExpoPanel() {
+        tipoExpoGroup = new ButtonGroup();
+        tipoExpoPanel = new JPanel();
+        tipoExpoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        tipoExpoPanel.setBorder(BorderFactory.createTitledBorder("Tipo de Exposición"));
+
+        temporalBtn = new JRadioButton("Temporal");
+        permanenteBtn = new JRadioButton("Permanente");
+
+        tipoExpoGroup.add(temporalBtn);
+        tipoExpoGroup.add(permanenteBtn);
+
+        tipoExpoPanel.add(temporalBtn);
+        tipoExpoPanel.add(permanenteBtn);
+
+        temporalBtn.setSelected(true);
     }
 
     /**
@@ -125,60 +123,6 @@ public class ExposicionFormulario extends JDialog {
         panel.add(new JLabel(label));
         panel.add(field);
         container.add(panel);
-    }
-
-    /**
-     * Método que muestra las obras en el formulario.
-     * 
-     * @param centroExposicion CentroExposicion que contiene las obras.
-     */
-    public void mostrarObras(CentroExposicion centroExposicion) {
-        Set<Obra> obras = centroExposicion.getObrasAlmacenadas();
-        panelObras.removeAll();
-        this.obras.clear();
-
-        for (Obra obra : obras) {
-            JCheckBox checkBox = new JCheckBox(obra.getNombre());
-            this.obras.add(checkBox);
-            panelObras.add(checkBox);
-        }
-
-        panelObras.revalidate();
-        panelObras.repaint();
-    }
-
-    /**
-     * Método que muestra las salas en el formulario.
-     * 
-     * @param centroExposicion CentroExposicion que contiene las salas.
-     */
-    public void mostrarSalas(CentroExposicion centroExposicion) {
-        Set<Sala> salas = centroExposicion.getSalas();
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Salas");
-        for (Sala sala : salas) {
-            DefaultMutableTreeNode salaNode = new DefaultMutableTreeNode(sala.getNombre());
-            addSubSalas(sala, salaNode);
-            root.add(salaNode);
-        }
-        treeSalas.setModel(new DefaultTreeModel(root));
-    }
-
-    /**
-     * Método que añade las sub-salas al árbol de salas.
-     * 
-     * @param sala     Sala a la que se le añaden las sub-salas.
-     * @param salaNode Nodo de la sala.
-     */
-    private void addSubSalas(Sala sala, DefaultMutableTreeNode salaNode) {
-        // Me ha costa la vida esto, pero creo que esta bien
-        List<Sala> subSalas = sala.getSubSalas();
-        if (subSalas != null) {
-            for (Sala subSala : subSalas) {
-                DefaultMutableTreeNode subSalaNode = new DefaultMutableTreeNode(subSala.getNombre());
-                salaNode.add(subSalaNode);
-                addSubSalas(subSala, subSalaNode);
-            }
-        }
     }
 
     /**
@@ -270,7 +214,15 @@ public class ExposicionFormulario extends JDialog {
      * @return LocalDate con la fecha de inicio de la exposición.
      */
     public LocalDate getFechaInicio() {
-        return LocalDate.parse(fechaInicio.getText());
+        if (fechaInicio.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(fechaInicio.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**
@@ -279,7 +231,15 @@ public class ExposicionFormulario extends JDialog {
      * @return LocalDate con la fecha de fin de la exposición.
      */
     public LocalDate getFechaFin() {
-        return LocalDate.parse(fechaFin.getText());
+        if (fechaFin.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(fechaFin.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**
@@ -292,47 +252,34 @@ public class ExposicionFormulario extends JDialog {
     }
 
     /**
-     * Método que devuelve el tipo de exposición.
-     * 
-     * @return TipoExpo con el tipo de exposición.
-     */
-    public TipoExpo getTipoExpo() {
-        return tipoExpo.getSelectedValue();
-    }
-
-    /**
      * Método que devuelve el precio de la exposición.
      * 
      * @return Double con el precio de la exposición.
      */
     public Double getPrecio() {
-        return Double.parseDouble(precio.getText());
-    }
-
-
-    /**
-     * Método que devuelve las obras seleccionadas.
-     * @return lista con las obras seleccionadas.
-     */
-    public List<String> getObras() {
-        List<String> obrasSeleccionadas = new ArrayList<>();
-        for (JCheckBox obra : obras) {
-            if (obra.isSelected()) {
-                obrasSeleccionadas.add(obra.getText());
-            }
+        if (precio.getText().equals("")) {
+            return null;
         }
-        return obrasSeleccionadas;
+
+        try {
+            return Double.parseDouble(precio.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
-     * Metodo que devuelve el JTree de salas.
+     * Método que devuelve el tipo de exposición seleccionado.
      * 
-     * @return Arbol JTree de salas
+     * @return String con el tipo de exposición seleccionado.
      */
-    public JTree getTreeSalas() {
-        return treeSalas;
+    public TipoExpo getTipoSeleccionado() {
+        if (temporalBtn.isSelected()) {
+            return TipoExpo.TEMPORAL;
+        } else {
+            return TipoExpo.PERMANENTE;
+        }
     }
-
     /**
      * Método que establece el controlador de la vista.
      * 
