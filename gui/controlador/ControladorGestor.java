@@ -179,7 +179,6 @@ public class ControladorGestor {
                                             exposicionesYSalas.keySet().toArray(),
                                             exposicionesYSalas.keySet().toArray()[0]);
 
-                                        
                                     if (exposicionSeleccionada == null) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se seleccionó ninguna exposición.");
@@ -188,6 +187,12 @@ public class ControladorGestor {
 
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
                                     SalaExposicion[] salasArray = salas.toArray(new SalaExposicion[0]);
+
+                                    if (salasArray.length == 0) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No hay salas disponibles en la exposición seleccionada, debes agregar salas a la exposicíon.");
+                                        continue;
+                                    }
 
                                     SalaExposicion salaSeleccionada = (SalaExposicion) JOptionPane.showInputDialog(
                                             frame,
@@ -203,7 +208,7 @@ public class ControladorGestor {
                                                 "No se seleccionó ninguna sala.");
                                         continue;
                                     }
-                                    
+
                                     if (salaSeleccionada.addObra(obra) == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede exponer la obra " + nombreObra);
@@ -213,8 +218,9 @@ public class ControladorGestor {
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
 
-                                    JOptionPane.showMessageDialog(frame, "Obra " + nombreObra + "expuesta correctamente en "
-                                            + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
+                                    JOptionPane.showMessageDialog(frame,
+                                            "Obra " + nombreObra + "expuesta correctamente en "
+                                                    + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
                                     break;
                                 case "Prestar Obra":

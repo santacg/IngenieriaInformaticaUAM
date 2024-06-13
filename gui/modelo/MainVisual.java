@@ -1,102 +1,88 @@
 package gui.modelo;
 
 import java.time.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import gui.modelo.centroExposicion.*;
 import gui.modelo.expofy.*;
 import gui.modelo.exposicion.*;
-import gui.modelo.obra.Cuadro;
-import gui.modelo.obra.Obra;
-import gui.modelo.sala.Sala;
+import gui.modelo.obra.*;
+import gui.modelo.sala.*;
 
-/**
- * Clase MainVisual.
- * Esta clase se encarga de crear un entorno visual de la aplicación Expofy
- * estableciendo un centro de exposición con un gestor, un empleado, una sala,
- * una exposición y una obra. Además, se registrará un cliente y se enviarán
- * notificaciones a dicho cliente.
- * 
- * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
- */
 public class MainVisual {
+
         public static void main(String[] args) {
                 Expofy expofy = Expofy.getInstance();
+                registrarCliente(expofy);
+                CentroExposicion centroExposicion = configurarCentroExposicion();
+                expofy.addCentroExposicion(centroExposicion);
+                configurarExposicionesYObra(centroExposicion);
+                configurarYPublicarExposiciones(centroExposicion);
+                enviarNotificaciones(expofy);
+                expofy.persistirExpofy();
+        }
 
-                // Cliente
-                expofy.registrarCliente("123", "123", false);
+        private static void registrarCliente(Expofy expofy) {
+                expofy.registrarCliente("123", "Carlos123", true);
+        }
 
-                // Centro de exposicion
-                // Gestor
-                Gestor gestor1 = new Gestor("123");
-
-                // Salas
+        private static CentroExposicion configurarCentroExposicion() {
+                Gestor gestor = new Gestor("456");
                 Set<Sala> salas = new HashSet<>();
-                Sala sala1 = new Sala("Sala1", 100, 50, 25, true, 10, 15.0, 20.0);
-                salas.add(sala1);
-                sala1.addSubsala(7.0, 5.0, 4, 35);
+                Sala salaPrincipal = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0);
+                Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0);
+                salaPrincipal.addSubsala(8.0, 6.0, 3, 30);
+                salaImpresionismo.addSubsala(5.0, 7.0, 2, 25);
+                salas.add(salaPrincipal);
+                salas.add(salaImpresionismo);
 
-                // Empleado
-                Empleado empleado1 = new Empleado("455456", "PowerBazinga", "489", "423", "AnorLondo", true, false, false);
+                Empleado empleado1 = new Empleado("555", "Laura", "789", "789456",
+                                "Madrid", true, true, true);
+                Empleado empleado2 = new Empleado("666", "Jorge", "987",
+                                "987456", "Madrid", true, false, true);
+                CentroExposicion centro = new CentroExposicion("Museo Nacional del Prado", LocalTime.of(9, 0),
+                                LocalTime.of(20, 0), "Madrid", "empleadoPrado", "gestionPrado", gestor,
+                                salas);
+                centro.addEmpleado(empleado1);
+                centro.addEmpleado(empleado2);
+                return centro;
+        }
 
-                CentroExposicion centroExposicion1 = new CentroExposicion("Centro1", LocalTime.of(10, 0, 0),
-                                LocalTime.of(21, 0, 0), "Madrid",
-                                "123", "456", gestor1, salas);
-
-                centroExposicion1.loginGestor("456");
-                centroExposicion1.addEmpleado(empleado1);
-
-                expofy.addCentroExposicion(centroExposicion1);
-
-                // Exposicion
+        private static void configurarExposicionesYObra(CentroExposicion centro) {
                 Set<SalaExposicion> salasExposicion = new HashSet<>();
-                SalaExposicion salaExposicion1 = new SalaExposicion(sala1);
+                SalaExposicion salaExposicion1 = new SalaExposicion(centro.getSalas().iterator().next());
                 salasExposicion.add(salaExposicion1);
+                Exposicion exposicion1 = new Exposicion("Van Gogh: Los Últimos Años", LocalDate.of(2024, 10, 1),
+                                LocalDate.of(2025, 3, 30),
+                                "Explora la intensa última década de Van Gogh con obras nunca antes vistas en nuestro país.",
+                                TipoExpo.TEMPORAL, 20.0);
+                Exposicion exposicion2 = new Exposicion("Los Modernos", LocalDate.of(2024, 6, 15),
+                                LocalDate.of(2024, 12, 15),
+                                "Un recorrido por el arte moderno a través de las obras de Picasso, Dalí y Matisse.",
+                                TipoExpo.TEMPORAL, 18.0);
+                centro.addExposicion(exposicion1);
+                centro.addExposicion(exposicion2);
 
-                Exposicion exposicion1 = new Exposicion("Picasso 1960", LocalDate.of(2024, 1, 2),
-                                LocalDate.now().plusYears(7),
-                                "Vive en el prado esta espectacular experiencia recordando los últimos años de este gran artista ",
-                                TipoExpo.TEMPORAL, 15.0);
-                Exposicion exposicion2 = new Exposicion("Exposicion2", LocalDate.of(2025, 1, 2),
-                                LocalDate.now().plusYears(7),
-                                "Descripción",  TipoExpo.TEMPORAL, 10.0);
+                Cuadro cuadro = new Cuadro("Girasoles", 1888,
+                                "Una de las series más famosas de Van Gogh.", true, 3000.0, "VG456",
+                                92.1, 73.7, 30, 20, 70, 45, "Óleo sobre lienzo", "Vincent van Gogh");
+                centro.addObra(cuadro);
+                salaExposicion1.addObra(cuadro);
+                exposicion1.addSala(salaExposicion1);
+        }
 
-                centroExposicion1.addExposicion(exposicion1);
-                centroExposicion1.addExposicion(exposicion2);
-
-                Cuadro cuadro = new Cuadro(
-                                "La noche estrellada",
-                                1889,
-                                "Representación del paisaje visto desde la ventana del sanatorio donde estaba internado",
-                                false,
-                                2000.0,
-                                "456",
-                                73.7,
-                                92.1,
-                                25,
-                                15,
-                                60,
-                                40,
-                                "Óleo sobre lienzo",
-                                "Vincent van Gogh");
-
-                centroExposicion1.addObra(cuadro);
-
-                for (Obra obra : centroExposicion1.getObras()) {
-                        salaExposicion1.addObra(obra);
+        private static void configurarYPublicarExposiciones(CentroExposicion centro) {
+                for (Exposicion exposicion : centro.getExposiciones()) {
+                        centro.confgiurarSorteoExposicion(exposicion, LocalDate.of(2024, 12, 1), 100);
+                        exposicion.expoPublicar();
                 }
+        }
 
-                centroExposicion1.confgiurarSorteoExposicion(exposicion1, LocalDate.of(2025, 5, 2), 2);
-
-                exposicion1.expoPublicar();
-                exposicion2.expoPublicar();
+        private static void enviarNotificaciones(Expofy expofy) {
                 expofy.enviarNotificacionUsuario(
-                                "Hola qué tal, esto es una Notificacion de prueba a un cliente en concreto",
+                                "Estimado Carlos le notificamos la próxima apertura de la exposición 'Van Gogh: Los Últimos Años'.",
                                 expofy.getClienteRegistrado("123"));
                 expofy.enviarNotificacionesClientesPublicidad(
-                                "Hola qué tal, esto es una Notificacion de prueba para cualquier cliente con la publicidad activada");
-                expofy.persistirExpofy();
-                System.out.println(expofy.toString());
+                                "Descubre las nuevas exposiciones de arte moderno en el Museo Nacional del Prado. ¡Visítanos!");
         }
 }

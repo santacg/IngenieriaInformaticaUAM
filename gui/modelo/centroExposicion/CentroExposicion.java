@@ -487,10 +487,6 @@ public class CentroExposicion implements Serializable {
      * @return true si la exposicion se añade correctamente, false en caso contrario
      */
     public Boolean addExposicion(Exposicion exposicion) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes añadir exposiciones si no eres el gestor");
-            return false;
-        }
 
         if (this.exposiciones.add(exposicion) == false) {
             System.out.println("La exposición ya está en el centro de exposiciones");
@@ -556,10 +552,6 @@ public class CentroExposicion implements Serializable {
      * @param sorteo el sorteo a añadir
      */
     public Boolean addSorteo(Sorteo sorteo) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes añadir sorteos si no eres el gestor");
-            return false;
-        }
 
         if (this.sorteos.add(sorteo) == false) {
             System.out.println("El sorteo ya está en el centro de exposiciones");
@@ -783,10 +775,6 @@ public class CentroExposicion implements Serializable {
      * @return true si la obra se añade correctamente, false en caso contrario
      */
     public Boolean addObra(Obra obra) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes añadir obras si no eres el gestor");
-            return false;
-        }
 
         if (this.obras.add(obra) == false) {
             System.out.println("La obra ya está en el centro de exposiciones");
@@ -870,11 +858,6 @@ public class CentroExposicion implements Serializable {
      * @return true si el empleado se añade correctamente, false en caso contrario
      */
     public Boolean addEmpleado(Empleado empleado) {
-        if (this.gestor.isLoged() == false) {
-            System.out.println("No puedes añadir empleados si no eres el gestor");
-            return false;
-        }
-
         if (this.empleados.add(empleado) == false) {
             System.out.println("El empleado ya esta registrado en el centro");
             return false;
