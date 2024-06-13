@@ -152,21 +152,46 @@ public class ControladorGestor {
                             obras.add(obra);
                             switch (accion) {
                                 case "Retirar Obra":
+
+                                    if (obra.getEstado().equals(Estado.EXPUESTA)) {
+                                        for (Exposicion exposicion : centro.getExposiciones()) {
+                                            for (SalaExposicion sala : exposicion.getSalas()) {
+                                                if (sala.getObras().contains(obra)) {
+                                                    sala.removeObra(obra);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     if (obra.retirarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede retirar la obra " + nombreObra);
                                         continue;
                                     }
+
                                     modelo.setValueAt(Estado.RETIRADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra retirada correctamente.");
                                     break;
                                 case "Almacenar Obra":
+                                    
+                                    if (obra.getEstado().equals(Estado.EXPUESTA)) {
+                                        for (Exposicion exposicion : centro.getExposiciones()) {
+                                            for (SalaExposicion sala : exposicion.getSalas()) {
+                                                if (sala.getObras().contains(obra)) {
+                                                    sala.removeObra(obra);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     obra.almacenarObra();
                                     modelo.setValueAt(Estado.ALMACENADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra almacenada correctamente.");
                                     break;
                                 case "Exponer Obra":
+
                                     Map<String, Set<SalaExposicion>> exposicionesYSalas = new HashMap<>();
+
                                     for (Exposicion exposicion : centro.getExposiciones()) {
                                         exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
                                     }
@@ -219,25 +244,29 @@ public class ControladorGestor {
                                     String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
 
                                     JOptionPane.showMessageDialog(frame,
-                                            "Obra " + nombreObra + "expuesta correctamente en "
+                                            "Obra " + nombreObra + " expuesta correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
                                     break;
                                 case "Prestar Obra":
+
                                     if (obra.prestarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede prestar la obra " + nombreObra);
                                         continue;
                                     }
+
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra prestada correctamente.");
                                     break;
                                 case "Restaurar Obra":
+
                                     if (obra.restaurarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede restaurar la obra " + nombreObra);
                                         continue;
                                     }
+
                                     modelo.setValueAt(Estado.RESTAURACION, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra puesta en restauracion correctamente.");
                                     break;
