@@ -170,20 +170,28 @@ public class ControladorGestor {
                                     for (Exposicion exposicion : centro.getExposiciones()) {
                                         exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
                                     }
+
                                     String exposicionSeleccionada = (String) JOptionPane.showInputDialog(frame,
-                                            "Seleccione la exposición donde quiere exponer la obra:",
+                                            "Seleccione la exposición donde quiere exponer la obra " + nombreObra,
                                             "Exponer Obra",
                                             JOptionPane.QUESTION_MESSAGE,
                                             null,
                                             exposicionesYSalas.keySet().toArray(),
                                             exposicionesYSalas.keySet().toArray()[0]);
 
+                                        
+                                    if (exposicionSeleccionada == null) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se seleccionó ninguna exposición.");
+                                        continue;
+                                    }
+
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
                                     SalaExposicion[] salasArray = salas.toArray(new SalaExposicion[0]);
 
                                     SalaExposicion salaSeleccionada = (SalaExposicion) JOptionPane.showInputDialog(
                                             frame,
-                                            "Seleccione la sala donde quiere exponer la obra:",
+                                            "Seleccione la sala donde quiere exponer la obra " + nombreObra,
                                             "Exponer Obra",
                                             JOptionPane.QUESTION_MESSAGE,
                                             null,
@@ -205,7 +213,7 @@ public class ControladorGestor {
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
 
-                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente en "
+                                    JOptionPane.showMessageDialog(frame, "Obra " + nombreObra + "expuesta correctamente en "
                                             + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
                                     break;
