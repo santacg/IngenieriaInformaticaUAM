@@ -173,7 +173,7 @@ public class ControladorGestor {
                                     JOptionPane.showMessageDialog(frame, "Obra retirada correctamente.");
                                     break;
                                 case "Almacenar Obra":
-                                    
+
                                     if (obra.getEstado().equals(Estado.EXPUESTA)) {
                                         for (Exposicion exposicion : centro.getExposiciones()) {
                                             for (SalaExposicion sala : exposicion.getSalas()) {
@@ -191,7 +191,6 @@ public class ControladorGestor {
                                 case "Exponer Obra":
 
                                     Map<String, Set<SalaExposicion>> exposicionesYSalas = new HashMap<>();
-
                                     for (Exposicion exposicion : centro.getExposiciones()) {
                                         exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
                                     }
@@ -205,44 +204,58 @@ public class ControladorGestor {
                                             exposicionesYSalas.keySet().toArray()[0]);
 
                                     if (exposicionSeleccionada == null) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se seleccionó ninguna exposición.");
+                                        JOptionPane.showMessageDialog(frame, "No se seleccionó ninguna exposición.");
                                         continue;
                                     }
 
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
-                                    SalaExposicion[] salasArray = salas.toArray(new SalaExposicion[0]);
-
-                                    if (salasArray.length == 0) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No hay salas disponibles en la exposición seleccionada, debes agregar salas a la exposicíon.");
-                                        continue;
+                                    List<String> nombresSalas = new ArrayList<>();
+                                    for (SalaExposicion salaExposicion : salas) {
+                                        Sala salaPrincipal = salaExposicion.getSala();
+                                        nombresSalas.add(salaPrincipal.getNombre()); 
+                                        for (Sala subSala : salaPrincipal.getSubSalas()) { 
+                                            nombresSalas.add(subSala.getNombre());
+                                        }
                                     }
 
-                                    SalaExposicion salaSeleccionada = (SalaExposicion) JOptionPane.showInputDialog(
+                                    String salaSeleccionadaNombre = (String) JOptionPane.showInputDialog(
                                             frame,
                                             "Seleccione la sala donde quiere exponer la obra " + nombreObra,
                                             "Exponer Obra",
                                             JOptionPane.QUESTION_MESSAGE,
                                             null,
-                                            salasArray,
+                                            nombresSalas.toArray(),
                                             null);
 
-                                    if (salaSeleccionada == null) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se seleccionó ninguna sala.");
+                                    if (salaSeleccionadaNombre == null) {
+                                        JOptionPane.showMessageDialog(frame, "No se seleccionó ninguna sala.");
                                         continue;
                                     }
 
-                                    if (salaSeleccionada.addObra(obra) == false) {
+                                    SalaExposicion salaSeleccionada = null;
+                                    for (SalaExposicion salaExpo : salas) {
+                                        if (salaExpo.getSala().getNombre().equals(salaSeleccionadaNombre)) {
+                                            salaSeleccionada = salaExpo;
+                                            break;
+                                        }
+                                        for (Sala subSala : salaExpo.getSala().getSubSalas()) {
+                                            if (subSala.getNombre().equals(salaSeleccionadaNombre)) {
+                                                salaSeleccionada = new SalaExposicion(subSala); 
+                                                break;
+                                            }
+                                        }
+                                        if (salaSeleccionada != null) {
+                                            break;
+                                        }
+                                    }
+
+                                    if (salaSeleccionada == null || !salaSeleccionada.addObra(obra)) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede exponer la obra " + nombreObra);
                                         continue;
                                     }
 
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
-                                    String salaSeleccionadaNombre = salaSeleccionada.getSala().getNombre();
-
                                     JOptionPane.showMessageDialog(frame,
                                             "Obra " + nombreObra + " expuesta correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);

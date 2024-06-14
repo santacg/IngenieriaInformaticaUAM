@@ -2,6 +2,7 @@ package gui.controlador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.awt.event.*;
 
 import javax.swing.JList;
@@ -139,67 +140,62 @@ public class ControladorSalaFormulario {
                     break;
                 case "Añadir Sala a Exposicion":
                     selectedRow = frame.getTablaSalas().getSelectedRow();
-
-                    if (selectedRow != -1) {
-                        frame.getTablaSalas().clearSelection();
-
-                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
-                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
-
-                        if (salaSeleccionada == null) {
-                            JOptionPane.showMessageDialog(vista, "No se puede añadir una subsala a una exposición.",
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            vista.dispose();
-                            return;
-                        }
-
-                        List<String> nombresExposiciones = new ArrayList<>();
-
-                        for (Exposicion exposicion : centroExposicion.getExposiciones()) {
-                            nombresExposiciones.add(exposicion.getNombre());
-                        }
-
-                        JList<String> listaExposiciones = new JList<>(nombresExposiciones.toArray(new String[0]));
-                        JScrollPane scrollPane = new JScrollPane(listaExposiciones);
-
-                        int result = JOptionPane.showConfirmDialog(vista, scrollPane, "Selecciona una exposición",
-                                JOptionPane.OK_CANCEL_OPTION);
-
-                        String exposicionSeleccionada = null;
-                        if (result == JOptionPane.OK_OPTION) {
-                            exposicionSeleccionada = listaExposiciones.getSelectedValue();
-                        } else {
-                            JOptionPane.showMessageDialog(vista, "No se ha seleccionado ninguna exposición.",
-                                    "Acción cancelada",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            vista.dispose();    
-                            return;
-                        }
-                        
-                        Exposicion exposicion = centroExposicion.getExposicionPorNombre(exposicionSeleccionada);
-                        
-                        SalaExposicion salaExposicion = new SalaExposicion(salaSeleccionada);
-                        if (exposicion.addSala(salaExposicion) == false) {
-                            JOptionPane.showMessageDialog(vista, "No se ha podido añadir la sala a la exposición.",
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-
-                        frame.actualizarTablaExposiciones(centroExposicion);
-                        JOptionPane.showMessageDialog(vista, "Sala añadida a la exposición correctamente.",
-                                "Sala añadida",
-                                JOptionPane.INFORMATION_MESSAGE);
-
-                    } else {
+                    if (selectedRow == -1) {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir a una exposición.",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        vista.dispose();
+                                "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    frame.getTablaSalas().clearSelection();
+
+                    String nombreSala = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                    Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombreSala);
+
+                    if (salaSeleccionada == null) {
+                        salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombreSala);
+                        if (salaSeleccionada == null) {
+                            JOptionPane.showMessageDialog(vista, "Sala no encontrada.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            break;
+                        }
+                    }
+
+                    List<String> nombresExposiciones = new ArrayList<>();
+                    for (Exposicion exposicion : centroExposicion.getExposiciones()) {
+                        nombresExposiciones.add(exposicion.getNombre());
+                    }
+
+                    JList<String> listaExposiciones = new JList<>(nombresExposiciones.toArray(new String[0]));
+                    JScrollPane scrollPane = new JScrollPane(listaExposiciones);
+
+                    int result = JOptionPane.showConfirmDialog(vista, scrollPane, "Selecciona una exposición",
+                            JOptionPane.OK_CANCEL_OPTION);
+
+                    if (result != JOptionPane.OK_OPTION || listaExposiciones.getSelectedValue() == null) {
+                        JOptionPane.showMessageDialog(vista, "No se ha seleccionado ninguna exposición.",
+                                "Acción cancelada", JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    }
+
+                    String exposicionSeleccionada = listaExposiciones.getSelectedValue();
+                    Exposicion exposicion = centroExposicion.getExposicionPorNombre(exposicionSeleccionada);
+                    if (exposicion == null) {
+                        JOptionPane.showMessageDialog(vista, "Exposición no encontrada.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
+                    SalaExposicion nuevaSalaExposicion = new SalaExposicion(salaSeleccionada);
+                    if (!exposicion.addSala(nuevaSalaExposicion)) {
+                        JOptionPane.showMessageDialog(vista, "No se ha podido añadir la sala a la exposición.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
+                    frame.actualizarTablaExposiciones(centroExposicion);
+                    JOptionPane.showMessageDialog(vista, "Sala añadida a la exposición correctamente.",
+                            "Sala añadida", JOptionPane.INFORMATION_MESSAGE);
                     break;
+
             }
             vista.dispose();
         }
