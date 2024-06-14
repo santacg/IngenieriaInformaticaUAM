@@ -1,18 +1,14 @@
 package gui.controlador;
 
 import java.awt.event.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
+import gui.modelo.exposicion.TipoExpo;
 import gui.modelo.obra.Obra;
-import gui.modelo.sala.Sala;
 import gui.vistas.*;
 
 /**
@@ -62,18 +58,30 @@ public class ControladorExposicionFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Agregar Exposicion":
-                    if (vista.getNombre().equals("") || vista.getFechaInicio() == null || vista.getFechaFin() == null
-                            || vista.getDescripcion().equals("") || vista.getTipoSeleccionado().equals("") 
+
+                    if (vista.getNombre().equals("") || vista.getFechaInicio() == null
+                            || vista.getDescripcion().equals("")
                             || vista.getPrecio() == null) {
-                        JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos y de forma correcta.", "Error",
+                        JOptionPane.showMessageDialog(vista,
+                                "Debes rellenar todos los campos o hacerlo de forma correcta.",
+                                "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    if (vista.getFechaInicio().isAfter(vista.getFechaFin())) {
-                        JOptionPane.showMessageDialog(vista, "La fecha de inicio no puede ser posterior a la fecha de fin.", "Error",
+                    if (vista.getTipoSeleccionado().equals(TipoExpo.TEMPORAL) && vista.getFechaFin() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar la fecha de fin.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
+                    }
+
+                    if (vista.getTipoSeleccionado().equals(TipoExpo.TEMPORAL)) {
+                        if (vista.getFechaInicio().isAfter(vista.getFechaFin())) {
+                            JOptionPane.showMessageDialog(vista,
+                                    "La fecha de inicio no puede ser posterior a la fecha de fin.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                     }
 
                     Exposicion expoNueva = new Exposicion(vista.getNombre(), vista.getFechaInicio(),
@@ -114,6 +122,9 @@ public class ControladorExposicionFormulario {
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    frame.actualizarTablaObras(centroExposicion);
+
                     JOptionPane.showMessageDialog(vista, "Exposición cerrada temporalmente correctamente.",
                             "Exposición cerrada",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -124,6 +135,9 @@ public class ControladorExposicionFormulario {
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    frame.actualizarTablaObras(centroExposicion);
+
                     JOptionPane.showMessageDialog(vista, "Exposición publicada correctamente.", "Exposición publicada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;

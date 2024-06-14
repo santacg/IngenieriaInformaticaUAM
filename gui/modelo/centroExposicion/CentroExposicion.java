@@ -12,8 +12,6 @@ import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
 import gui.modelo.sala.Sala;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.File;
 
 import java.io.Serializable;

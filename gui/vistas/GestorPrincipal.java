@@ -31,7 +31,6 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionEmpleados;
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
-    private JPanel gestionUtils;
 
     private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;

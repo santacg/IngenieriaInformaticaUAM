@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.expofy.Expofy;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
@@ -153,6 +154,12 @@ public class ControladorGestor {
                             switch (accion) {
                                 case "Retirar Obra":
 
+                                    if (obra.retirarObra() == false) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede retirar la obra " + nombreObra);
+                                        continue;
+                                    }
+
                                     if (obra.getEstado().equals(Estado.EXPUESTA)) {
                                         for (Exposicion exposicion : centro.getExposiciones()) {
                                             for (SalaExposicion sala : exposicion.getSalas()) {
@@ -161,12 +168,6 @@ public class ControladorGestor {
                                                 }
                                             }
                                         }
-                                    }
-
-                                    if (obra.retirarObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede retirar la obra " + nombreObra);
-                                        continue;
                                     }
 
                                     modelo.setValueAt(Estado.RETIRADA, i, 8);
@@ -212,8 +213,8 @@ public class ControladorGestor {
                                     List<String> nombresSalas = new ArrayList<>();
                                     for (SalaExposicion salaExposicion : salas) {
                                         Sala salaPrincipal = salaExposicion.getSala();
-                                        nombresSalas.add(salaPrincipal.getNombre()); 
-                                        for (Sala subSala : salaPrincipal.getSubSalas()) { 
+                                        nombresSalas.add(salaPrincipal.getNombre());
+                                        for (Sala subSala : salaPrincipal.getSubSalas()) {
                                             nombresSalas.add(subSala.getNombre());
                                         }
                                     }
@@ -240,7 +241,7 @@ public class ControladorGestor {
                                         }
                                         for (Sala subSala : salaExpo.getSala().getSubSalas()) {
                                             if (subSala.getNombre().equals(salaSeleccionadaNombre)) {
-                                                salaSeleccionada = new SalaExposicion(subSala); 
+                                                salaSeleccionada = new SalaExposicion(subSala);
                                                 break;
                                             }
                                         }
@@ -255,7 +256,6 @@ public class ControladorGestor {
                                         continue;
                                     }
 
-                                    modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     JOptionPane.showMessageDialog(frame,
                                             "Obra " + nombreObra + " expuesta correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
@@ -263,14 +263,53 @@ public class ControladorGestor {
                                     break;
                                 case "Prestar Obra":
 
-                                    if (obra.prestarObra() == false) {
+                                    Expofy expofy = Expofy.getInstance();
+                                    Set<CentroExposicion> centros = expofy.getCentrosExposicion();
+                                    centros.remove(centro);
+                                    List<String> nombresCentros = new ArrayList<>();
+
+                                    for (CentroExposicion centro : centros) {
+                                        nombresCentros.add(centro.getNombre());
+                                    }
+
+                                    String[] opcionesCentros = nombresCentros.toArray(new String[0]);
+
+                                    String nombreCentroSeleccionado = (String) JOptionPane.showInputDialog(frame,
+                                            "Seleccione el centro al que se prestará la obra " + nombreObra,
+                                            "Prestar Obra",
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,
+                                            opcionesCentros,
+                                            opcionesCentros[0]);
+
+                                    if (nombreCentroSeleccionado == null) {
+                                        JOptionPane.showMessageDialog(frame, "No se ha seleccionado ningún centro.");
+                                        continue;
+                                    }
+
+                                    CentroExposicion centroDestino = null;
+                                    for (CentroExposicion centro : centros) {
+                                        if (centro.getNombre().equals(nombreCentroSeleccionado)) {
+                                            centroDestino = centro;
+                                            break;
+                                        }
+                                    }
+
+                                    if (centroDestino == null) {
+                                        JOptionPane.showMessageDialog(frame, "Centro no encontrado.");
+                                        continue;
+                                    }
+
+                                    if (!obra.prestarObra()) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede prestar la obra " + nombreObra);
                                         continue;
                                     }
 
+                                    centroDestino.addObra(obra);
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
-                                    JOptionPane.showMessageDialog(frame, "Obra prestada correctamente.");
+                                    JOptionPane.showMessageDialog(frame,
+                                            "Obra prestada correctamente al centro " + nombreCentroSeleccionado + ".");
                                     break;
                                 case "Restaurar Obra":
 

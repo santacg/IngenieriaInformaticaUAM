@@ -2,7 +2,6 @@ package gui.controlador;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.awt.event.*;
 
 import javax.swing.JList;
@@ -10,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.sala.Sala;
@@ -149,6 +149,17 @@ public class ControladorSalaFormulario {
 
                     String nombreSala = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
                     Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombreSala);
+
+                    for (Exposicion exposicion : centroExposicion.getExposiciones()) {
+                        for (SalaExposicion salaExposicion : exposicion.getSalas()) {
+                            if (salaExposicion.getSala().getNombre().equals(nombreSala)){
+                                JOptionPane.showMessageDialog(vista, "La sala ya está en una exposición.",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                                vista.dispose();
+                                return;
+                            }
+                        }
+                    }
 
                     if (salaSeleccionada == null) {
                         salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombreSala);

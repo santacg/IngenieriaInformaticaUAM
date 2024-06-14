@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
-import gui.modelo.exposicion.Descuento;
 import gui.modelo.exposicion.Exposicion;
 import gui.vistas.DescuentoFormulario;
 import gui.vistas.GestorPrincipal;
@@ -14,7 +13,6 @@ public class ControladorDescuentoFormulario {
     private DescuentoFormulario vista;
     private GestorPrincipal frame;
     private CentroExposicion centroExposicion;
-    private String accion;
 
     /**
      * Constructor de la clase ControladorSalaFormulario

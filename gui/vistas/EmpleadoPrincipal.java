@@ -1,10 +1,6 @@
 package gui.vistas;
 
 import javax.swing.*;
-
-import gui.controlador.ControladorCompraFormulario;
-import gui.modelo.centroExposicion.Empleado;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 

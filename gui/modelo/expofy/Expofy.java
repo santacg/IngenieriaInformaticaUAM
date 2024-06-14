@@ -551,4 +551,20 @@ public class Expofy implements Serializable {
         }
         return sb.toString();
     }
+
+    /**
+     * Obtiene un centro de exposición por su nombre.
+     * 
+     * @param nombreCentro el nombre del centro de exposición a buscar.
+     * @return el centro de exposición con el nombre.
+     */
+    public CentroExposicion getCentroExposicionPorNombre(String nombreCentro) {
+        for (CentroExposicion centro : centrosExposicion) {
+            if (centro.getNombre().equals(nombreCentro)) {
+                return centro;
+            }
+        }
+
+        return null;
+    }
 }

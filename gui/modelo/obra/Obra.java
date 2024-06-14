@@ -282,6 +282,12 @@ public abstract class Obra implements Serializable {
      * Cambia el estado de la obra a ALMACENADA.
      */
     public void almacenarObra() {
+
+        if (this.estado == Estado.PRESTADA || this.estado == Estado.RETIRADA) {
+            System.out.println("No se puede almacenar una obra que está prestada o retirada");
+            return;
+        }
+
         this.estado = Estado.ALMACENADA;
     }
 
