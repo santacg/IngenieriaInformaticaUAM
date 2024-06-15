@@ -89,6 +89,9 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaDescuentos;
     private JButton descuentoAgregarBtn;
 
+    // Estadisticas atributos
+    private JTable tablaEstadisticas;
+
     // Actividades atributos
     private JTable tablaActividades;
     private JButton actividadAgregarBtn;
@@ -131,6 +134,9 @@ public class GestorPrincipal extends JPanel {
         this.gestionActividades = new JPanel();
         gestionActividades.setLayout(new BorderLayout());
 
+        this.gestionEstadisticas = new JPanel();
+        gestionEstadisticas.setLayout(new BorderLayout());
+
         tabbedPane.addTab("Exposiciones", gestionExposiciones);
         tabbedPane.addTab("Salas de exposición", gestionSalasExposicion);
         tabbedPane.addTab("Salas", gestionSalas);
@@ -138,12 +144,60 @@ public class GestorPrincipal extends JPanel {
         tabbedPane.addTab("Empleados", gestionEmpleados);
         tabbedPane.addTab("Sorteos", gestionSorteos);
         tabbedPane.addTab("Descuentos", gestionDescuentos);
+        tabbedPane.addTab("Estadisticas", gestionEstadisticas);
         tabbedPane.addTab("Actividades", gestionActividades);
 
         JPanel panelSuperior = addPanelInfo();
 
         add(tabbedPane, BorderLayout.CENTER);
         add(panelSuperior, BorderLayout.NORTH);
+    }
+
+    /**
+     * Añade un panel de estadisticas al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelEstadisticas(CentroExposicion centro) {
+        String[] titulos = { "Tickets Vendidos", "Ingresos Totales" };
+        Object[][] datos = construirDatosEstadisticas(centro, titulos);
+
+        this.tablaEstadisticas = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionEstadisticas.add(new JScrollPane(tablaEstadisticas), BorderLayout.CENTER);
+    }
+
+    /**
+     * Construye los datos de las estadisticas.
+     * 
+     * @param centro  Centro de exposiciones.
+     * @param titulos Titulos de las columnas.
+     * @return Datos de las estadisticas.
+     */
+    private Object[][] construirDatosEstadisticas(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Exposicion exposicion : centro.getExposiciones()) {
+            Estadisticas estadisticas = exposicion.getEstadisticas();
+            data.add(new Object[] {
+                    estadisticas.getTicketsVendidos(),
+                    estadisticas.getIngresosTotales()
+            });
+        }
+        return data.toArray(new Object[0][]);
+    }
+
+    /**
+     * Actualiza el panel de estadisticas al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void actualizarTablaEstadisticas(CentroExposicion centro) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaEstadisticas.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosEstadisticas(centro, new String[] { "Tickets Vendidos", "Ingresos Totales" });
+        for (Object[] estadisticasData : datos) {
+            modelo.addRow(estadisticasData);
+        }
+        modelo.fireTableDataChanged();
     }
 
     /**
@@ -834,6 +888,24 @@ public class GestorPrincipal extends JPanel {
      */
     public JTable getTablaDescuentos() {
         return this.tablaDescuentos;
+    }
+
+    /**
+     * Devuelve la tabla de salas de exposición.
+     * 
+     * @return Tabla de salas de exposición.
+     */
+    public JTable getTablaSalasExposicion() {
+        return this.tablaSalasExposicion;
+    }
+
+    /**
+     * Devuelve la tabla de estadisticas.
+     * 
+     * @return Tabla de estadisticas.
+     */
+    public JTable getTablaEstadisticas() {
+        return this.tablaEstadisticas;
     }
 
     /**

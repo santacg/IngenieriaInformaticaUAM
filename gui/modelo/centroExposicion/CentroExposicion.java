@@ -1083,7 +1083,6 @@ public class CentroExposicion implements Serializable {
      */
     public Boolean venderEntrada(Exposicion exposicion, Hora hora, Integer nEntradas) {
         LocalDate fecha = LocalDate.now();
-        Boolean horaDisponible = false;
 
         // Verifica si la fecha de la visita está dentro del rango de fechas de la
         // exposición.

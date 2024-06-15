@@ -56,6 +56,7 @@ public class ControladorGestor {
         mostrarEmpleados();
         mostrarSorteos();
         mostrarDescuentos();
+        mostrarEstadisticas();
         mostrarActividades();
         mostrarInfo();
     }
@@ -107,6 +108,13 @@ public class ControladorGestor {
      */
     public void mostrarDescuentos() {
         vista.addPanelDescuentos(centro);
+    }
+
+    /**
+     * Método que muestra la vista de las estadísticas.
+     */
+    public void mostrarEstadisticas() {
+        vista.addPanelEstadisticas(centro);
     }
 
     /**
@@ -348,7 +356,8 @@ public class ControladorGestor {
                                     List<String> nombresCentros = new ArrayList<>();
 
                                     if (centros.isEmpty()) {
-                                        JOptionPane.showMessageDialog(frame, "No hay centros a los que prestar la obra.");
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No hay centros a los que prestar la obra.");
                                         continue;
                                     }
 
