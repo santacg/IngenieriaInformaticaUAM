@@ -21,6 +21,7 @@ public class Empleado extends Usuario {
     private Boolean permisoVenta;
     private Boolean permisoControl;
     private Boolean permisoMensajes;
+    private Boolean permisoActividades;
     private String direccion;
 
     /**
@@ -33,10 +34,11 @@ public class Empleado extends Usuario {
      * @param permisoVenta    Verdadero si el empleado tiene permiso para ventas
      * @param permisoControl  Verdadero si el empleado tiene permiso para controlar
      * @param permisoMensajes Verdadero si el empleado puede enviar mensajes
+     * @param permisoActividades Verdadero si el empleado puede gestionar actividades
      * @param direccion       La dirección del empleado
      */
     public Empleado(String NIF, String nombre, String numSS, String numCuenta, String direccion, Boolean permisoVenta,
-            Boolean permisoControl, Boolean permisoMensajes) {
+            Boolean permisoControl, Boolean permisoMensajes, Boolean permisoActividades) {
         super(NIF);
         this.nombre = nombre;
         this.numSS = numSS;
@@ -45,6 +47,7 @@ public class Empleado extends Usuario {
         this.permisoControl = permisoControl;
         this.permisoMensajes = permisoMensajes;
         this.direccion = direccion;
+        this.permisoActividades = permisoActividades;
     }
 
     /**
@@ -57,10 +60,11 @@ public class Empleado extends Usuario {
      * @param pControl  indica si el empleado tiene permiso de control.
      * @param pMensajes indica si el empleado tiene permiso de enviar mensajes.
      */
-    public void cambiarPermisos(Boolean pVenta, Boolean pControl, Boolean pMensajes) {
+    public void cambiarPermisos(Boolean pVenta, Boolean pControl, Boolean pMensajes, Boolean pActividades) {
         this.permisoVenta = pVenta;
         this.permisoControl = pControl;
         this.permisoMensajes = pMensajes;
+        this.permisoActividades = pActividades;
     }
 
     /**
@@ -185,6 +189,24 @@ public class Empleado extends Usuario {
      */
     public void setPermisoMensajes(Boolean permisoMensajes) {
         this.permisoMensajes = permisoMensajes;
+    }
+
+    /**
+     * Verifica si tiene permiso para gestionar actividades.
+     * 
+     * @return true si tiene permiso, false en caso contrario.
+     */
+    public Boolean getPermisoActividades() {
+        return permisoActividades;
+    }
+
+    /**
+     * Otorga o revoca el permiso para gestionar actividades.
+     * 
+     * @param permisoActividades true para otorgar, false para revocar.
+     */
+    public void setPermisoActividades(Boolean permisoActividades) {
+        this.permisoActividades = permisoActividades;
     }
 
     /**

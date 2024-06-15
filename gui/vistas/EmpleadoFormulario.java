@@ -20,6 +20,7 @@ public class EmpleadoFormulario extends JDialog {
     private JCheckBox permisoVenta;
     private JCheckBox permisoControl;
     private JCheckBox permisoMensajes;
+    private JCheckBox permisoActividades;
     private JButton guardarBtn;
     private JButton cancelarBtn;
 
@@ -46,6 +47,7 @@ public class EmpleadoFormulario extends JDialog {
         addCampo("Permiso de venta:", this.permisoVenta = new JCheckBox(), panelFormulario, constraints, 5);
         addCampo("Permiso de control:", this.permisoControl = new JCheckBox(), panelFormulario, constraints, 6);
         addCampo("Permiso de mensajes:", this.permisoMensajes = new JCheckBox(), panelFormulario, constraints, 7);
+        addCampo("Permiso de actividades", this.permisoActividades = new JCheckBox(), panelFormulario, constraints, 8);
 
         addBotones(panelFormulario, constraints, 8);
         add(panelFormulario);
@@ -148,6 +150,14 @@ public class EmpleadoFormulario extends JDialog {
      */
     public boolean getPermisoMensajes() {
         return permisoMensajes.isSelected();
+    }
+
+    /**
+     * Metodo que devuelve si el empleado tiene permiso de actividades
+     * @return boolean con si el empleado tiene permiso de actividades
+     */
+    public boolean getPermisoActividades() {
+        return permisoActividades.isSelected();
     }
 
     /**

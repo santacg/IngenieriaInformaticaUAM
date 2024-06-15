@@ -45,7 +45,7 @@ public class ControladorEmpleadoFormulario {
 
             Empleado empleado = new Empleado(vista.getEmpleadoNIF(), vista.getEmpleadoNombre(),
                     vista.getEmpleadoNumSS(), vista.getEmpleadoNumCuenta(), vista.getEmpleadoDireccion(),
-                    vista.getPermisoVenta(), vista.getPermisoControl(), vista.getPermisoMensajes());
+                    vista.getPermisoVenta(), vista.getPermisoControl(), vista.getPermisoMensajes(), vista.getPermisoActividades());
             
             if (centroExposicion.addEmpleado(empleado) == false) {
                 JOptionPane.showMessageDialog(vista, "Ya existe un empleado con ese NIF.", "Error",

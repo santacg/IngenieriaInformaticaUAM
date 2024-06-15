@@ -40,6 +40,7 @@ public class CentroExposicion implements Serializable {
     private Set<Obra> obras = new HashSet<>();
     private Set<Empleado> empleados = new HashSet<>();
     private Set<Sala> salas = new HashSet<>();
+    private Set<Actividad> actividades = new HashSet<>();
     private Gestor gestor;
 
     /**
@@ -236,6 +237,88 @@ public class CentroExposicion implements Serializable {
      */
     public void setSancion(Integer sancion) {
         this.sancion = sancion;
+    }
+
+    /**
+     * Obtiene las actividades del centro de exposiciones.
+     * 
+     * @return Un conjunto de actividades.
+     */
+    public Set<Actividad> getActividades() {
+        return actividades;
+    }
+
+    /**
+     * Establece las actividades del centro de exposiciones.
+     * 
+     * @param actividades Las actividades a asignar.
+     */
+    public Actividad getActividadPorNombre(String nombre) {
+        for (Actividad actividad : actividades) {
+            if (actividad.getNombre().equals(nombre)) {
+                return actividad;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Añade una actividad al centro de exposiciones.
+     * 
+     * @param actividades Las actividades a asignar.
+     */
+    public Boolean addActividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes,
+            LocalDate fecha, LocalTime hora, Sala salaCelebracion) {
+
+        for (Actividad actividad : actividades) {
+            if (actividad.getSalaCelebracion().equals(salaCelebracion) && actividad.getFecha().equals(fecha)
+                    && actividad.getHora().equals(hora)) {
+                System.out.println("La sala ya está siendo utilizada por otra actividad");
+                return false;
+            }
+        }
+
+        Actividad actividad = new Actividad(nombre, tipo, descripcion, maxParticipantes, fecha, hora, salaCelebracion);
+        if (actividades.add(actividad) == false) {
+            System.out.println("La actividad ya está en el centro de exposiciones");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Elimina una actividad del centro de exposiciones.
+     * 
+     * @param actividad La actividad a eliminar.
+     */
+    public void removeActividad(Actividad actividad) {
+        actividades.remove(actividad);
+    }
+
+    /**
+     * Añade un cliente a una actividad si se realiza en la fecha correcta y hay
+     * espacio disponible.
+     * 
+     * @param actividad La actividad a la que se quiere inscribir el cliente.
+     * @param NIF       El NIF del cliente que se quiere inscribir.
+     * @return true si el cliente se inscribe correctamente, false en caso
+     *         contrario.
+     */
+    public Boolean inscribirClienteActividad(Actividad actividad, String NIF) {
+
+        if (actividad.getFecha().isBefore(LocalDate.now()) || actividad.getHora().isBefore(LocalTime.now())) {
+            System.out.println("La fecha de la actividad ya ha pasado");
+            return false;
+        }
+
+        if (actividad.addParticipante(NIF) == false) {
+            System.out.println("No se ha podido inscribir al cliente en la actividad");
+            return false;
+        }
+
+        return true;
     }
 
     /**

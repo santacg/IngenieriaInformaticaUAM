@@ -47,10 +47,10 @@ public class MainVisual {
                 salasPrado.add(salaImpresionismo);
                 salasPrado.add(salaModerna);
 
-                Empleado empleado1 = new Empleado("555", "Laura", "789", "789456", "Madrid", true, true, true);
-                Empleado empleado2 = new Empleado("666", "Jorge", "987", "987456", "Madrid", true, false, true);
-                Empleado empleado3 = new Empleado("777", "Marta", "123", "123456", "Madrid", true, true, false);
-                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, true);
+                Empleado empleado1 = new Empleado("555", "Laura", "789", "789456", "Madrid", true, true, true, true);
+                Empleado empleado2 = new Empleado("666", "Jorge", "987", "987456", "Madrid", true, false, true, false);
+                Empleado empleado3 = new Empleado("777", "Marta", "123", "123456", "Madrid", true, true, false, false);
+                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, true, true);
 
                 CentroExposicion centroPrado = new CentroExposicion("Museo Nacional del Prado", LocalTime.of(9, 0),
                                 LocalTime.of(20, 0), "Madrid", "empleadoPrado", "gestionPrado", gestorPrado,
