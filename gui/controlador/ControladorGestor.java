@@ -408,7 +408,7 @@ public class ControladorGestor {
                                         }
                                     }
 
-                                    vista.actualizarTablaSalasExposicion(centroDestino);
+                                    vista.actualizarTablaSalasExposicion(centro);
 
                                     centroDestino.addObra(obra);
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
