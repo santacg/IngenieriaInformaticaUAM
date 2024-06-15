@@ -116,7 +116,7 @@ public class ControladorVentaFormulario {
         public void actionPerformed(ActionEvent e) {
             if (centro.venderEntrada(exposicion, exposicion.getHora(fecha, hora), nEntradas)) {
                 JOptionPane.showMessageDialog(vista,
-                        "La compra se ha realizado con éxito, encontrará el pdf con su entrada en la carpeta tmp");
+                        "La compra se ha realizado con éxito, encontrará el pdf con su entrada en la carpeta resources");
                 vistaConfirmarVenta.dispose();
                 vista.dispose();
             } else {

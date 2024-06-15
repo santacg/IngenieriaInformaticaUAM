@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import gui.controlador.ControladorCompraFormulario;
+import gui.modelo.centroExposicion.CentroExposicion;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -18,6 +19,10 @@ import java.util.ArrayList;
 public class ClientePrincipal extends JPanel {
     private JPanel buscarExposiciones;
     private JButton comprarBoton;
+    private JButton filtrarFechaBoton;
+    private JButton filtrarTempBoton;
+    private JButton filtrarTipoBoton;
+    private JButton eliminarFiltrosBoton;
     private JTable tablaExposiciones;
 
     private CompraFormulario vistaCompraFormulario;
@@ -88,10 +93,21 @@ public class ClientePrincipal extends JPanel {
 
         JPanel panelBoton = new JPanel();
         comprarBoton = new JButton("Comprar");
+
+        filtrarFechaBoton = new JButton("Fecha");
+        filtrarTempBoton = new JButton("Temporalidad");
+        filtrarTipoBoton = new JButton("Tipo de obra");
+        eliminarFiltrosBoton = new JButton("Eliminar filtros");
         tablaExposiciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaExposiciones.setFillsViewportHeight(true);
 
         panelBoton.add(comprarBoton);
+        panelBoton.add(new JLabel("Filtros:"));
+        panelBoton.add(filtrarFechaBoton);
+        panelBoton.add(filtrarTempBoton);
+        panelBoton.add(filtrarTipoBoton);
+        panelBoton.add(eliminarFiltrosBoton);
+
         buscarExposiciones.add(panelBoton, BorderLayout.SOUTH);
         this.buscarExposiciones.add(new JScrollPane(tablaExposiciones), BorderLayout.CENTER);
     }
@@ -240,6 +256,25 @@ public class ClientePrincipal extends JPanel {
     }
 
     /**
+     * Actualiza la tabla de exposiciones.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void actualizarTablaExposiciones(ArrayList<Object[]> data) {
+        String[] titulos = { "Nombre", "Descripcion", "Fecha Inicio", "Fecha Fin", "Precio", "Nombre Centro",
+                "Localizacion" };
+
+        Object[][] datos = data.toArray(new Object[0][]);
+        DefaultTableModel model = new DefaultTableModel(datos, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tablaExposiciones.setModel(model);
+    }
+
+    /**
      * Método que establece los controladores de los botones de la vista.
      * 
      * @param cComprar      Controlador del botón de comprar.
@@ -247,11 +282,17 @@ public class ClientePrincipal extends JPanel {
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
      */
-    public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion, ActionListener cInscribirse) {
+    public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion,
+            ActionListener cInscribirse, ActionListener cFiltroFecha, ActionListener cFiltroTemp,
+            ActionListener cFiltroTipoObra, ActionListener cEliminarFiltros) {
         comprarBoton.addActionListener(cComprar);
         actualizarBoton.addActionListener(cActualizar);
         cerrarSesionBoton.addActionListener(cCerrarSesion);
         inscribirseBoton.addActionListener(cInscribirse);
+        filtrarFechaBoton.addActionListener(cFiltroFecha);
+        filtrarTempBoton.addActionListener(cFiltroTemp);
+        filtrarTipoBoton.addActionListener(cFiltroTipoObra);
+        eliminarFiltrosBoton.addActionListener(cEliminarFiltros);
     }
 
     /**
@@ -262,11 +303,17 @@ public class ClientePrincipal extends JPanel {
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
      */
-    public void removeControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion, ActionListener cInscribirse) {
+    public void removeControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion,
+            ActionListener cInscribirse, ActionListener cFiltroFecha, ActionListener cFiltroTemp,
+            ActionListener cFiltroTipoObra, ActionListener cEliminarFiltros) {
         comprarBoton.removeActionListener(cComprar);
         actualizarBoton.removeActionListener(cActualizar);
         cerrarSesionBoton.removeActionListener(cCerrarSesion);
         inscribirseBoton.removeActionListener(cInscribirse);
+        filtrarFechaBoton.removeActionListener(cFiltroFecha);
+        filtrarTempBoton.removeActionListener(cFiltroTemp);
+        filtrarTipoBoton.removeActionListener(cFiltroTipoObra);
+        eliminarFiltrosBoton.removeActionListener(cEliminarFiltros);
     }
 
     /**

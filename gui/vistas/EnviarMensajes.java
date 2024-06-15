@@ -102,8 +102,9 @@ public class EnviarMensajes extends JPanel {
         this.atrasBoton = new JButton("Atrás");
         this.enviarBoton = new JButton("Enviar");
 
-        buttonPanel.add(this.atrasBoton);
         buttonPanel.add(this.enviarBoton);
+        buttonPanel.add(this.atrasBoton);
+        
 
         constraints.gridx = 0;
         constraints.gridy = 5;

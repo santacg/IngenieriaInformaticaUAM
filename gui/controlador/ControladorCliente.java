@@ -2,13 +2,20 @@ package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.*;
 import gui.modelo.expofy.*;
 import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.TipoExpo;
+import gui.modelo.obra.Obra;
 import gui.vistas.ClientePrincipal;
 import gui.vistas.Ventana;
 
@@ -65,7 +72,89 @@ public class ControladorCliente {
                 });
             }
         }
-        vista.addTablaExposiciones(data);
+        if (vista.getTablaExposiciones() == null) {
+            vista.addTablaExposiciones(data);
+        } else {
+            vista.actualizarTablaExposiciones(data);
+        }
+
+    }
+
+    /**
+     * Método que muestra las exposiciones filtradas por fecha en la vista.
+     */
+    public void filtrarPorFecha(LocalDate fechaInicio, LocalDate fechaFin) {
+        ArrayList<Object[]> data = new ArrayList<>();
+        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
+            for (Exposicion exposicion : centro.getExposiciones()) {
+                if ((exposicion.getFechaInicio().isAfter(fechaInicio)
+                        || exposicion.getFechaInicio().isEqual(fechaInicio))
+                        && (exposicion.getFechaFin().isBefore(fechaFin)
+                                || exposicion.getFechaFin().isEqual(fechaFin))) {
+
+                    data.add(new Object[] {
+                            exposicion.getNombre(),
+                            exposicion.getDescripcion(),
+                            exposicion.getFechaInicio(),
+                            exposicion.getFechaFin(),
+                            exposicion.getPrecio(),
+                            centro.getNombre(),
+                            centro.getLocalizacion()
+                    });
+                }
+            }
+        }
+        vista.actualizarTablaExposiciones(data);
+    }
+
+    /**
+     * Método que muestra las exposiciones filtradas por temporalidad en la vista.
+     */
+    public void filtrarPorTemp(TipoExpo tipo) {
+        ArrayList<Object[]> data = new ArrayList<>();
+        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
+            for (Exposicion exposicion : centro.getExposiciones()) {
+                if ((exposicion.getTipo().equals(tipo))) {
+                    data.add(new Object[] {
+                            exposicion.getNombre(),
+                            exposicion.getDescripcion(),
+                            exposicion.getFechaInicio(),
+                            exposicion.getFechaFin(),
+                            exposicion.getPrecio(),
+                            centro.getNombre(),
+                            centro.getLocalizacion()
+                    });
+                }
+            }
+        }
+        vista.actualizarTablaExposiciones(data);
+    }
+
+    /**
+     * Método que muestra las exposiciones filtradas por tipo de obra en la vista.
+     */
+    public void filtrarPorTipoObra(String tipoObra) {
+        ArrayList<Object[]> data = new ArrayList<>();
+        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
+            for (Exposicion exposicion : centro.getExposiciones()) {
+                for (Obra obra : exposicion.getObras()) {
+                    if (obra.getTipoObra().equalsIgnoreCase(tipoObra)) {
+                        data.add(new Object[] {
+                                exposicion.getNombre(),
+                                exposicion.getDescripcion(),
+                                exposicion.getFechaInicio(),
+                                exposicion.getFechaFin(),
+                                exposicion.getPrecio(),
+                                centro.getNombre(),
+                                centro.getLocalizacion()
+                        });
+                        break; // Solo necesitamos agregar la exposición una vez, no importa cuántas obras
+                               // coincidan
+                    }
+                }
+            }
+        }
+        vista.actualizarTablaExposiciones(data);
     }
 
     /**
@@ -181,8 +270,7 @@ public class ControladorCliente {
                     if (contrasena.equals(cliente.getContrasenia())) {
                         JOptionPane.showMessageDialog(frame,
                                 "Las contraseña a la que se intenta cambiar es ya actualmente la contraseña asociada a esta cuenta.",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     cliente.setContrasenia(contrasena);
                     JOptionPane.showMessageDialog(frame, "Se ha cambiado con éxito su contraseña.");
@@ -200,7 +288,9 @@ public class ControladorCliente {
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             expofy.logOut(cliente);
-            vista.removeControlador(comprarListener, actualizarDatosListener, cerrarSesionListener, inscribirseListener);
+            vista.removeControlador(comprarListener, actualizarDatosListener, cerrarSesionListener,
+                    inscribirseListener, filtroFechaListener, filtroTempListener, filtroTipoObraListener,
+                    eliminarFiltrosListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -232,11 +322,170 @@ public class ControladorCliente {
                     return;
                 }
                 cliente.inscribirse(sorteo, 1);
-                JOptionPane.showMessageDialog(frame,
-                        "Usted se ha inscrito al sorteo");
+                JOptionPane.showMessageDialog(frame, "Usted se ha inscrito al sorteo");
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona un sorteo.");
             }
+        }
+    };
+
+    /**
+     * Método que devuelve el ActionListener para el filtrado por fecha.
+     * 
+     * @return ActionListener para el filtrado por fecha.
+     */
+    public ActionListener getFiltroFechaListener() {
+        return filtroFechaListener;
+    }
+
+    /**
+     * ActionListener para el filtrado por fecha.
+     */
+    private ActionListener filtroFechaListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate startDate = null;
+            LocalDate endDate = null;
+
+            while (startDate == null) {
+                String startDateStr = JOptionPane.showInputDialog(frame,
+                        "Introduce la fecha de inicio (dd/MM/yyyy):",
+                        "Filtro por fecha",
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (startDateStr == null || startDateStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Fecha de inicio no válida.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    startDate = LocalDate.parse(startDateStr, formatter);
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Fecha de inicio no válida. Usa el formato dd/MM/yyyy.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            while (endDate == null) {
+                String endDateStr = JOptionPane.showInputDialog(frame,
+                        "Introduce la fecha de fin (dd/MM/yyyy):",
+                        "Filtro por fecha",
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (endDateStr == null || endDateStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Fecha de fin no válida.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    endDate = LocalDate.parse(endDateStr, formatter);
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Fecha de fin no válida. Usa el formato dd/MM/yyyy.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            JOptionPane.showMessageDialog(frame,
+                    "Filtrar desde " + startDate.format(formatter) + " hasta " + endDate.format(formatter),
+                    "Información de Filtro",
+                    JOptionPane.INFORMATION_MESSAGE);
+            filtrarPorFecha(startDate, endDate);
+        }
+
+    };
+
+    /**
+     * Método que devuelve el ActionListener para el filtrado por fecha.
+     * 
+     * @return ActionListener para el filtrado por fecha.
+     */
+    public ActionListener getFiltroTempListener() {
+        return filtroTempListener;
+    }
+
+    /**
+     * ActionListener para el filtrado por fecha.
+     */
+    private ActionListener filtroTempListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            TipoExpo[] opciones = TipoExpo.values();
+            TipoExpo tipoSeleccionado = (TipoExpo) JOptionPane.showInputDialog(frame,
+                    "Selecciona el tipo de exposición:",
+                    "Filtro por tipo",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+
+            if (tipoSeleccionado != null) {
+                filtrarPorTemp(tipoSeleccionado);
+            } else {
+                return;
+            }
+        }
+
+    };
+
+    /**
+     * Método que devuelve el ActionListener para el filtrado por tipo de obra.
+     * 
+     * @return ActionListener para el filtrado por tipo de obra.
+     */
+    public ActionListener getFiltroTipoObraListener() {
+        return filtroTipoObraListener;
+    }
+
+    /**
+     * ActionListener para el filtrado por tipo de obra.
+     */
+    private ActionListener filtroTipoObraListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String[] opciones = { "Audiovisual", "Cuadro", "Escultura", "Fotografía" };
+            String tipoObraSeleccionado = (String) JOptionPane.showInputDialog(frame,
+                    "Selecciona el tipo de obra:",
+                    "Filtro por tipo de obra",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+
+            if (tipoObraSeleccionado != null && !tipoObraSeleccionado.trim().isEmpty()) {
+                filtrarPorTipoObra(tipoObraSeleccionado);
+            } else {
+                return;
+            }
+        }
+    };
+
+    /**
+     * Método que devuelve el ActionListener para eliminar el filtro actual.
+     * 
+     * @return ActionListener para eliminar el filtro actual.
+     */
+    public ActionListener getEliminarFiltrosListener() {
+        return eliminarFiltrosListener;
+    }
+
+    /**
+     * ActionListener para eliminar el filtro actual.
+     */
+    private ActionListener eliminarFiltrosListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(frame,
+                    "Se han eliminado los filtros aplicados anteriormente",
+                    "Información de Filtro",
+                    JOptionPane.INFORMATION_MESSAGE);
+            mostrarExposiciones();
         }
     };
 }

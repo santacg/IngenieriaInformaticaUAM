@@ -148,7 +148,7 @@ public class ControladorCompraFormulario {
             if (expofy.comprarEntrada(cliente, exposicion, fecha, exposicion.getHora(fecha, hora), nEntradas,
                     new TarjetaDeCredito(numeroTarjetadeCredito, fechaTarj, cvv), codigoSorteo)) {
                 JOptionPane.showMessageDialog(vista,
-                        "La compra se ha realizado con éxito, encontrará el pdf con su entrada en la carpeta tmp");
+                        "La compra se ha realizado con éxito, encontrará el pdf con su entrada en la carpeta resources");
             } else {
                 JOptionPane.showMessageDialog(vista, "Ha habido un error en la compra", "Error",
                         JOptionPane.ERROR_MESSAGE);
