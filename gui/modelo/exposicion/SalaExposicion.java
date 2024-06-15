@@ -43,7 +43,7 @@ public class SalaExposicion implements Serializable {
      * @param sala La nueva sala física.
      */
     public void setSala(Sala sala) {
-        this.sala = sala; 
+        this.sala = sala;
     }
 
     /**
@@ -60,10 +60,11 @@ public class SalaExposicion implements Serializable {
      * 
      * @param obras El nuevo conjunto de obras de arte.
      * 
-     * @return {@code true} si las obras se establecen correctamente, {@code false} en caso contrario.
+     * @return {@code true} si las obras se establecen correctamente, {@code false}
+     *         en caso contrario.
      */
     public Boolean setObras(Set<Obra> obras) {
-        for (Obra obra: obras) {
+        for (Obra obra : obras) {
             if (addObra(obra) == false) {
                 return false;
             }
@@ -78,7 +79,8 @@ public class SalaExposicion implements Serializable {
      * 
      * @param obra La obra de arte a añadir.
      * 
-     * @return {@code true} si la obra se añade correctamente, {@code false} en caso contrario.
+     * @return {@code true} si la obra se añade correctamente, {@code false} en caso
+     *         contrario.
      */
     public Boolean addObra(Obra obra) {
         if (obras.contains(obra)) {
@@ -96,9 +98,6 @@ public class SalaExposicion implements Serializable {
             case PRESTADA:
                 System.out.println("No se puede añadir una obra prestada");
                 return false;
-            case EXPUESTA:
-                System.out.println("No se puede añadir una obra ya expuesta");
-                return false;
             default:
                 break;
         }
@@ -109,17 +108,18 @@ public class SalaExposicion implements Serializable {
                 return false;
             }
         }
-        
+
         if (obra.getClass() == Audiovisual.class) {
             int tomasElectricidadRestantes = sala.getTomasElectricidad();
-            for (Obra o: obras) {
+            for (Obra o : obras) {
                 if (o.getClass() == Audiovisual.class) {
                     tomasElectricidadRestantes--;
                 }
             }
             tomasElectricidadRestantes--;
             if (tomasElectricidadRestantes < 0) {
-                System.out.println("No se puede añadir una obra audiovisual a una sala sin tomas de electricidad");
+                System.out.println(
+                        "No se puede añadir una obra audiovisual a una sala sin al menos una toma de electricidad disponible");
                 return false;
             }
         }
@@ -139,8 +139,6 @@ public class SalaExposicion implements Serializable {
             System.out.println("La obra no está en la sala");
             return;
         }
-
-        obra.almacenarObra();
     }
 
     /**
@@ -178,7 +176,8 @@ public class SalaExposicion implements Serializable {
      * 
      * @param obj El objeto con el que comparar esta SalaExposicion.
      * 
-     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     *         contrario.
      */
     @Override
     public boolean equals(Object obj) {
@@ -197,5 +196,4 @@ public class SalaExposicion implements Serializable {
         return true;
     }
 
-    
 }

@@ -213,7 +213,9 @@ public class Exposicion implements Serializable {
 
         for (SalaExposicion sala : this.salas) {
             for (Obra obra : sala.getObras()) {
-                obra.exponerObra();
+                if (obra.exponerObra() == false) {
+                    System.out.println("La obra " + obra.getNombre() + " no se puede exponer");
+                }
             }
         }
 

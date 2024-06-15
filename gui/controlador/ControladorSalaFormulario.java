@@ -9,9 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
-import gui.modelo.exposicion.EstadoExposicion;
-import gui.modelo.exposicion.Exposicion;
-import gui.modelo.exposicion.SalaExposicion;
+import gui.modelo.exposicion.*;
 import gui.modelo.sala.Sala;
 import gui.vistas.*;
 
@@ -52,7 +50,7 @@ public class ControladorSalaFormulario {
                             || vista.getLargo().equals("")) {
                         JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
-                        return;
+                        break;
                     }
 
                     Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), vista.getClimatizador(),
@@ -62,7 +60,7 @@ public class ControladorSalaFormulario {
                     if (centroExposicion.addSala(sala) == false) {
                         JOptionPane.showMessageDialog(vista, "Ya existe una sala con ese nombre.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
-                        return;
+                        break;
                     }
 
                     Object[] salaData = new Object[] {
@@ -98,13 +96,13 @@ public class ControladorSalaFormulario {
                                     "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
                                     "Error",
                                     JOptionPane.ERROR_MESSAGE);
-                            return;
+                            break;
                         }
                         frame.actualizarTablaSalas(centroExposicion);
                     } else {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir una subsala.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
-                        return;
+                        break;
                     }
 
                     JOptionPane.showMessageDialog(vista, "Subsala añadida correctamente.", "Subsala añadida",
@@ -126,48 +124,35 @@ public class ControladorSalaFormulario {
                             if (centroExposicion.removeSala(salaSeleccionada) == false) {
                                 JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
                                         JOptionPane.ERROR_MESSAGE);
-                                return;
+                                break;
                             }
                         }
                         frame.actualizarTablaSalas(centroExposicion);
                     } else {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para eliminar.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
-                        return;
+                        break;
                     }
                     JOptionPane.showMessageDialog(vista, "Sala eliminada correctamente.", "Sala eliminada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Añadir Sala a Exposicion":
+
                     selectedRow = frame.getTablaSalas().getSelectedRow();
                     if (selectedRow == -1) {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir a una exposición.",
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                        break;
                     }
                     frame.getTablaSalas().clearSelection();
 
                     String nombreSala = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
                     Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombreSala);
 
-                    for (Exposicion exposicion : centroExposicion.getExposiciones()) {
-                        for (SalaExposicion salaExposicion : exposicion.getSalas()) {
-                            if (salaExposicion.getSala().getNombre().equals(nombreSala)){
-                                JOptionPane.showMessageDialog(vista, "La sala ya está en una exposición.",
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                                vista.dispose();
-                                return;
-                            }
-                        }
-                    }
-
                     if (salaSeleccionada == null) {
-                        salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombreSala);
-                        if (salaSeleccionada == null) {
-                            JOptionPane.showMessageDialog(vista, "Sala no encontrada.",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
+                        JOptionPane.showMessageDialog(vista, "No se puede añadir una subsala, debes añadir salas.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                     }
 
                     List<String> nombresExposiciones = new ArrayList<>();
@@ -195,16 +180,25 @@ public class ControladorSalaFormulario {
                         break;
                     }
 
+                    if (exposicion.getEstado() != EstadoExposicion.EN_CREACION) {
+                        JOptionPane.showMessageDialog(vista, "La exposición no se puede modificar.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
                     SalaExposicion nuevaSalaExposicion = new SalaExposicion(salaSeleccionada);
-                    if (!exposicion.addSala(nuevaSalaExposicion)) {
+                    if (exposicion.addSala(nuevaSalaExposicion) == false) {
                         JOptionPane.showMessageDialog(vista, "No se ha podido añadir la sala a la exposición.",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                     }
 
                     frame.actualizarTablaExposiciones(centroExposicion);
+                    frame.actualizarTablaSalasExposicion(centroExposicion);
+
                     JOptionPane.showMessageDialog(vista, "Sala añadida a la exposición correctamente.",
                             "Sala añadida", JOptionPane.INFORMATION_MESSAGE);
+
                     break;
 
             }
@@ -224,7 +218,7 @@ public class ControladorSalaFormulario {
     /**
      * Método que devuelve el listener del botón aceptar
      * 
-     * @return ActionListener
+     * @break ActionListener
      */
     public ActionListener getAceptarListener() {
         return aceptarListener;
@@ -233,7 +227,7 @@ public class ControladorSalaFormulario {
     /**
      * Método que devuelve el listener del botón cancelar
      * 
-     * @return ActionListener
+     * @break ActionListener
      */
     public ActionListener getCancelarListener() {
         return cancelarListener;

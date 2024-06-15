@@ -13,6 +13,7 @@ import javax.swing.JTable;
 
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.expofy.Expofy;
+import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
@@ -48,6 +49,7 @@ public class ControladorGestor {
         this.vista = frame.getVistaGestorPrincipal();
 
         mostrarExposiciones();
+        mostrarSalasExposicion();
         mostrarSalas();
         mostrarObras();
         mostrarEmpleados();
@@ -61,6 +63,13 @@ public class ControladorGestor {
      */
     public void mostrarExposiciones() {
         vista.addPanelExposiciones(centro);
+    }
+
+    /**
+     * Método que muestra la vista de las salas de exposición.
+     */
+    public void mostrarSalasExposicion() {
+        vista.addPanelSalasExposicion(centro);
     }
 
     /**
@@ -160,40 +169,43 @@ public class ControladorGestor {
                                         continue;
                                     }
 
-                                    if (obra.getEstado().equals(Estado.EXPUESTA)) {
-                                        for (Exposicion exposicion : centro.getExposiciones()) {
-                                            for (SalaExposicion sala : exposicion.getSalas()) {
-                                                if (sala.getObras().contains(obra)) {
-                                                    sala.removeObra(obra);
-                                                }
-                                            }
-                                        }
-                                    }
-
                                     modelo.setValueAt(Estado.RETIRADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra retirada correctamente.");
                                     break;
                                 case "Almacenar Obra":
 
-                                    if (obra.getEstado().equals(Estado.EXPUESTA)) {
-                                        for (Exposicion exposicion : centro.getExposiciones()) {
-                                            for (SalaExposicion sala : exposicion.getSalas()) {
-                                                if (sala.getObras().contains(obra)) {
-                                                    sala.removeObra(obra);
-                                                }
-                                            }
-                                        }
+                                    if (obra.almacenarObra() == false) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede almacenar la obra " + nombreObra);
+                                        continue;
                                     }
 
-                                    obra.almacenarObra();
                                     modelo.setValueAt(Estado.ALMACENADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra almacenada correctamente.");
                                     break;
                                 case "Exponer Obra":
 
+                                    if (obra.exponerObra() == false) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede exponer la obra " + nombreObra);
+                                        continue;
+                                    }
+
+                                    modelo.setValueAt(Estado.EXPUESTA, i, 8);
+                                    JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
+                                    break;
+                                case "Asignar Obra a Sala":
+
                                     Map<String, Set<SalaExposicion>> exposicionesYSalas = new HashMap<>();
                                     for (Exposicion exposicion : centro.getExposiciones()) {
-                                        exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
+                                        if (exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                                            exposicionesYSalas.put(exposicion.getNombre(), exposicion.getSalas());
+                                        }
+                                    }
+
+                                    if (exposicionesYSalas.isEmpty()) {
+                                        JOptionPane.showMessageDialog(frame, "No hay exposiciones en creación.");
+                                        break;
                                     }
 
                                     String exposicionSeleccionada = (String) JOptionPane.showInputDialog(frame,
@@ -250,9 +262,9 @@ public class ControladorGestor {
                                         }
                                     }
 
-                                    if (salaSeleccionada == null || !salaSeleccionada.addObra(obra)) {
+                                    if (salaSeleccionada == null || salaSeleccionada.addObra(obra) == false) {
                                         JOptionPane.showMessageDialog(frame,
-                                                "No se puede exponer la obra " + nombreObra);
+                                                "No se puede añadir la obra " + nombreObra);
                                         continue;
                                     }
 
@@ -260,7 +272,65 @@ public class ControladorGestor {
                                             "Obra " + nombreObra + " expuesta correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
+                                    vista.actualizarTablaSalasExposicion(centro);
+
                                     break;
+                                case "Eliminar Obra de Sala":
+
+                                    List<String> nombresSalasExposicion = new ArrayList<>();
+
+                                    for (Exposicion exposicion : centro.getExposiciones()) {
+                                        if (exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                                            for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                                                if (salaExpo.getObras().contains(obra)) {
+                                                    nombresSalasExposicion.add(exposicion.getNombre() + " - "
+                                                            + salaExpo.getSala().getNombre());
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (nombresSalasExposicion.isEmpty()) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "La obra no está en ninguna sala de exposiciones de exposiciones en creación.");
+                                        break;
+                                    }
+
+                                    String salaExposicionSeleccionada = (String) JOptionPane.showInputDialog(frame,
+                                            "Seleccione la sala de exposición de la que quiere eliminar la obra "
+                                                    + nombreObra,
+                                            "Eliminar Obra de Sala",
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,
+                                            nombresSalasExposicion.toArray(),
+                                            nombresSalasExposicion.toArray()[0]);
+
+                                    if (salaExposicionSeleccionada == null) {
+                                        JOptionPane.showMessageDialog(frame, "No se seleccionó ninguna sala.");
+                                        continue;
+                                    }
+
+                                    String[] partes = salaExposicionSeleccionada.split(" - ");
+                                    String nombreExposicion = partes[0];
+                                    String nombreSala = partes[1];
+
+                                    Exposicion exposicion = centro.getExposicionPorNombre(nombreExposicion);
+
+                                    for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                                        if (salaExpo.getSala().getNombre().equals(nombreSala)) {
+                                            salaExpo.removeObra(obra);
+                                            break;
+                                        }
+                                    }
+
+                                    JOptionPane.showMessageDialog(frame,
+                                            "Obra " + nombreObra + " eliminada correctamente de " + nombreExposicion
+                                                    + " - " + nombreSala);
+
+                                    vista.actualizarTablaSalasExposicion(centro);
+
+                                    break;
+
                                 case "Prestar Obra":
 
                                     Expofy expofy = Expofy.getInstance();
@@ -300,11 +370,22 @@ public class ControladorGestor {
                                         continue;
                                     }
 
-                                    if (!obra.prestarObra()) {
+                                    if (obra.prestarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede prestar la obra " + nombreObra);
                                         continue;
                                     }
+
+                                    for (Exposicion exposiciones : centro.getExposiciones()) {
+                                        for (SalaExposicion salaExpo : exposiciones.getSalas()) {
+                                            if (salaExpo.getObras().contains(obra)) {
+                                                salaExpo.removeObra(obra);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    vista.actualizarTablaSalasExposicion(centroDestino);
 
                                     centroDestino.addObra(obra);
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
@@ -318,6 +399,19 @@ public class ControladorGestor {
                                                 "No se puede restaurar la obra " + nombreObra);
                                         continue;
                                     }
+
+                                    for (Exposicion exposicionPublicada : centro.getExposiciones()) {
+                                        if (!exposicionPublicada.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                                            for (SalaExposicion salaExpo : exposicionPublicada.getSalas()) {
+                                                if (salaExpo.getObras().contains(obra)) {
+                                                    salaExpo.removeObra(obra);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    vista.actualizarTablaSalasExposicion(centro);
 
                                     modelo.setValueAt(Estado.RESTAURACION, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra puesta en restauracion correctamente.");

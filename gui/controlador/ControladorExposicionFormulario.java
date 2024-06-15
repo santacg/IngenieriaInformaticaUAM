@@ -131,7 +131,9 @@ public class ControladorExposicionFormulario {
                     break;
                 case "Publicar Exposicion":
                     if (exposicion.expoPublicar() == false) {
-                        JOptionPane.showMessageDialog(vista, "No se puede publicar la exposición.", "Error",
+                        JOptionPane.showMessageDialog(vista,
+                                "Error al publicar la exposición, una o más obras ya están siendo expuestas en otra exposición",
+                                "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }

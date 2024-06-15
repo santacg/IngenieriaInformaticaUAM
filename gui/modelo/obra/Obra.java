@@ -249,8 +249,8 @@ public abstract class Obra implements Serializable {
      * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
     public Boolean retirarObra() {
-        if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
-            System.out.println("No se puede retirar una obra que no está almacenada o expuesta");
+        if (this.estado != Estado.ALMACENADA) {
+            System.out.println("No se puede retirar una obra que no está almacenada");
             return false;
         }
 
@@ -281,14 +281,15 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a ALMACENADA.
      */
-    public void almacenarObra() {
+    public Boolean almacenarObra() {
 
-        if (this.estado == Estado.PRESTADA || this.estado == Estado.RETIRADA) {
-            System.out.println("No se puede almacenar una obra que está prestada o retirada");
-            return;
+        if (this.estado == Estado.RETIRADA) {
+            System.out.println("No se puede almacenar una obra que retirada");
+            return false;
         }
 
         this.estado = Estado.ALMACENADA;
+        return true;
     }
 
     /**
@@ -298,7 +299,7 @@ public abstract class Obra implements Serializable {
      */
     public Boolean exponerObra() {
         if (this.estado != Estado.ALMACENADA) {
-            System.out.println("No se puede exponer una obra que no está almacenada");
+            System.out.println("No se puede exponer una obra que no está en estado de almacenada");
             return false;
         }
 

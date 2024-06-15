@@ -21,10 +21,10 @@ public class MainVisual {
                 expofy.addCentroExposicion(centroExposicionReinaSofia);
 
                 configurarExposicionesYObra(centroExposicionPrado);
-                configurarExposicionesYObra(centroExposicionReinaSofia);
 
                 configurarYPublicarExposiciones(centroExposicionPrado);
-                configurarYPublicarExposiciones(centroExposicionReinaSofia);
+
+                configurarDescuentos(centroExposicionPrado);
 
                 enviarNotificaciones(expofy);
                 expofy.persistirExpofy();
@@ -36,63 +36,77 @@ public class MainVisual {
         }
 
         private static CentroExposicion configurarCentroExposicionPrado() {
-                Gestor gestorPrado = new Gestor("gestionPrado");
+                Gestor gestorPrado = new Gestor("7451321659");
                 Set<Sala> salasPrado = new HashSet<>();
+
                 Sala salaRenacimiento = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0);
                 Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0);
+                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0);
+
                 salasPrado.add(salaRenacimiento);
                 salasPrado.add(salaImpresionismo);
+                salasPrado.add(salaModerna);
 
                 Empleado empleado1 = new Empleado("555", "Laura", "789", "789456", "Madrid", true, true, true);
                 Empleado empleado2 = new Empleado("666", "Jorge", "987", "987456", "Madrid", true, false, true);
+                Empleado empleado3 = new Empleado("777", "Marta", "123", "123456", "Madrid", true, true, false);
+                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, true);
 
                 CentroExposicion centroPrado = new CentroExposicion("Museo Nacional del Prado", LocalTime.of(9, 0),
                                 LocalTime.of(20, 0), "Madrid", "empleadoPrado", "gestionPrado", gestorPrado,
                                 salasPrado);
+
                 centroPrado.addEmpleado(empleado1);
                 centroPrado.addEmpleado(empleado2);
+                centroPrado.addEmpleado(empleado3);
+                centroPrado.addEmpleado(empleado4);
 
                 return centroPrado;
         }
 
         private static CentroExposicion configurarCentroExposicionReinaSofia() {
-                Gestor gestorSofia = new Gestor("gestionSofia");
+                Gestor gestorSofia = new Gestor("4453519848");
                 Set<Sala> salasSofia = new HashSet<>();
-                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0);
                 Sala salaContemporaneo = new Sala("Sala Arte Contemporáneo", 160, 50, 23, true, 18, 28.0, 45.0);
-                salasSofia.add(salaModerna);
                 salasSofia.add(salaContemporaneo);
-
-                Empleado empleado3 = new Empleado("777", "Marta", "123", "123456", "Madrid", true, true, false);
-                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, true);
 
                 CentroExposicion centroSofia = new CentroExposicion("Museo Reina Sofia", LocalTime.of(10, 0),
                                 LocalTime.of(19, 0), "Madrid", "empleadoSofia", "gestionSofia", gestorSofia,
                                 salasSofia);
-                centroSofia.addEmpleado(empleado3);
-                centroSofia.addEmpleado(empleado4);
 
                 return centroSofia;
         }
 
         private static void configurarExposicionesYObra(CentroExposicion centro) {
                 SalaExposicion salaExposicion = new SalaExposicion(centro.getSalas().iterator().next());
+
                 Exposicion exposicion1 = new Exposicion("Van Gogh: Los Últimos Años", LocalDate.of(2024, 10, 1),
                                 LocalDate.of(2025, 3, 30),
                                 "Explora la intensa última década de Van Gogh con obras nunca antes vistas en nuestro país.",
                                 TipoExpo.TEMPORAL, 20.0);
-                Exposicion exposicion2 = new Exposicion("Los Modernos", LocalDate.of(2024, 6, 15),
-                                LocalDate.of(2024, 12, 15),
-                                "Un recorrido por el arte moderno a través de las obras de Picasso, Dalí y Matisse.",
-                                TipoExpo.TEMPORAL, 18.0);
+
                 centro.addExposicion(exposicion1);
-                centro.addExposicion(exposicion2);
 
                 Cuadro cuadro = new Cuadro("Girasoles", 1888,
                                 "Una de las series más famosas de Van Gogh.", true, 3000.0, "VG456",
                                 92.1, 73.7, 30, 20, 70, 45, "Óleo sobre lienzo", "Vincent van Gogh");
+
+                Cuadro cuadro2 = new Cuadro("La noche estrellada", 1889,
+                                "Una de las obras más conocidas de Van Gogh.", true, 4000.0, "VG789",
+                                73.7, 92.1, 45, 30, 70, 45, "Óleo sobre lienzo", "Vincent van Gogh");
+
+                Audiovisual audiovisual = new Audiovisual("Van Gogh: Los Últimos Años", 2024,
+                                "Documental sobre la última década de Van Gogh.", false, 500.0, "VG123",
+                                "60", "ESP", "Alguien");
+
                 centro.addObra(cuadro);
+                centro.addObra(cuadro2);
+                centro.addObra(audiovisual);
+
                 salaExposicion.addObra(cuadro);
+                salaExposicion.addObra(cuadro2);
+                salaExposicion.addObra(audiovisual);
+
                 exposicion1.addSala(salaExposicion);
         }
 
@@ -100,6 +114,12 @@ public class MainVisual {
                 for (Exposicion exposicion : centro.getExposiciones()) {
                         centro.confgiurarSorteoExposicion(exposicion, LocalDate.of(2024, 12, 1), 100);
                         exposicion.expoPublicar();
+                }
+        }
+
+        private static void configurarDescuentos(CentroExposicion centro) {
+                for (Exposicion exposicion : centro.getExposiciones()) {
+                        exposicion.configurarDescuentoDia(20.00, 10);
                 }
         }
 

@@ -6,8 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 import gui.controlador.*;
 import gui.modelo.centroExposicion.*;
-import gui.modelo.exposicion.Descuento;
-import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.*;
 import gui.modelo.obra.Obra;
 import gui.modelo.sala.Sala;
 
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 public class GestorPrincipal extends JPanel {
 
     private JPanel gestionExposiciones;
+    private JPanel gestionSalasExposicion;
     private JPanel gestionSalas;
     private JPanel gestionObras;
     private JPanel gestionEmpleados;
@@ -56,6 +56,9 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaObras;
     private JButton obraAgregarBtn;
     private JButton leerObrasCSVBtn;
+
+    // Salas de Exposicion atributos
+    private JTable tablaSalasExposicion;
 
     // Salas atributos
     private JButton salaEjecutarBtn;
@@ -97,6 +100,9 @@ public class GestorPrincipal extends JPanel {
         this.gestionExposiciones = new JPanel();
         gestionExposiciones.setLayout(new BorderLayout());
 
+        this.gestionSalasExposicion = new JPanel();
+        gestionSalasExposicion.setLayout(new BorderLayout());
+
         this.gestionSalas = new JPanel();
         gestionSalas.setLayout(new BorderLayout());
 
@@ -113,18 +119,89 @@ public class GestorPrincipal extends JPanel {
         gestionDescuentos.setLayout(new BorderLayout());
 
         tabbedPane.addTab("Exposiciones", gestionExposiciones);
+        tabbedPane.addTab("Salas de exposición", gestionSalasExposicion);
         tabbedPane.addTab("Salas", gestionSalas);
         tabbedPane.addTab("Obras", gestionObras);
         tabbedPane.addTab("Empleados", gestionEmpleados);
         tabbedPane.addTab("Sorteos", gestionSorteos);
         tabbedPane.addTab("Descuentos", gestionDescuentos);
 
-        JPanel panelSuperior = addPanelInfo();;
+        JPanel panelSuperior = addPanelInfo();
+        ;
 
         add(tabbedPane, BorderLayout.CENTER);
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Añade un panel de salas de exposición al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelSalasExposicion(CentroExposicion centro) {
+        String[] titulos = { "Exposición", "Fecha Inicio", "Fecha Fin", "Estado", "Sala", "Obras en Sala" };
+
+        Object[][] datos = construirDatosSalasExposicion(centro, titulos);
+
+        this.tablaSalasExposicion = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionSalasExposicion.add(new JScrollPane(tablaSalasExposicion), BorderLayout.CENTER);
+    }
+
+    /**
+     * Construye los datos de las salas de exposición.
+     * 
+     * @param centro  Centro de exposiciones.
+     * @param titulos Titulos de las columnas.
+     * @return Datos de las salas de exposición.
+     */
+    private Object[][] construirDatosSalasExposicion(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Exposicion exposicion : centro.getExposiciones()) {
+            for (SalaExposicion salaExposicion : exposicion.getSalas()) {
+                StringBuilder nombresObras = new StringBuilder();
+                for (Obra obra : salaExposicion.getObras()) {
+                    if (nombresObras.length() > 0) {
+                        nombresObras.append(", ");
+                    }
+                    nombresObras.append(obra.getNombre());
+                }
+                if (nombresObras.length() == 0) {
+                    nombresObras.append("Sin obras");
+                }
+                data.add(new Object[] {
+                        exposicion.getNombre(),
+                        exposicion.getFechaInicio(),
+                        exposicion.getFechaFin(),
+                        exposicion.getEstado(),
+                        salaExposicion.getSala().getNombre(),
+                        nombresObras.toString()
+                });
+            }
+        }
+        return data.toArray(new Object[0][]);
+    }
+
+    /**
+     * Actualiza el panel de salas de exposición al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void actualizarTablaSalasExposicion(CentroExposicion centro) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaSalasExposicion.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosSalasExposicion(centro,
+                new String[] { "Exposición", "Fecha Inicio", "Fecha Fin", "Estado", "Sala", "Obras en Sala" });
+        for (Object[] salaData : datos) {
+            modelo.addRow(salaData);
+        }
+        modelo.fireTableDataChanged();
+    }
+
+    /**
+     * Añade un panel de informacion al gestor principal.
+     * 
+     * @return JPanel con la información del centro.
+     */
     public JPanel addPanelInfo() {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         cerrarSesionBtn = new JButton("Cerrar Sesión");
@@ -142,6 +219,11 @@ public class GestorPrincipal extends JPanel {
         return panelSuperior;
     }
 
+    /**
+     * Actualiza la informacion del panel.
+     * 
+     * @param centro Centro de exposiciones.
+     */
     public void actualizarInfo(CentroExposicion centro) {
         nombreCentro.setText("Centro de Exposiciones: " + centro.getNombre());
         horaApertura.setText("Hora de apertura: " + centro.getHoraApertura());
@@ -180,7 +262,8 @@ public class GestorPrincipal extends JPanel {
     public void actualizarTablaDescuentos(CentroExposicion centro) {
         DefaultTableModel modelo = (DefaultTableModel) this.tablaDescuentos.getModel();
         modelo.setRowCount(0);
-        Object[][] datos = construirDatosDescuentos(centro, new String[] { "Exposición", "Descuento (%)", "Cantidad días o meses" });
+        Object[][] datos = construirDatosDescuentos(centro,
+                new String[] { "Exposición", "Descuento (%)", "Cantidad días o meses" });
         for (Object[] descuentoData : datos) {
             modelo.addRow(descuentoData);
         }
@@ -360,7 +443,8 @@ public class GestorPrincipal extends JPanel {
 
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
-        this.salaComboAcciones = new JComboBox<>(new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala", "Añadir Sala a Exposicion"});
+        this.salaComboAcciones = new JComboBox<>(
+                new String[] { "Añadir Sala", "Añadir Subsala", "Eliminar Sala", "Añadir Sala a Exposicion" });
         this.salaEjecutarBtn = new JButton("Ejecutar accion");
 
         panelAcciones.add(new JLabel("Acciones: "));
@@ -448,7 +532,8 @@ public class GestorPrincipal extends JPanel {
         // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
         this.obraComboAcciones = new JComboBox<>(
-                new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra"});
+                new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra",
+                        "Asignar Obra a Sala", "Eliminar Obra de Sala"});
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
         this.obraAgregarBtn = new JButton("Agregar obra");
         this.leerObrasCSVBtn = new JButton("Leer Obras desde CSV");
@@ -771,7 +856,7 @@ public class GestorPrincipal extends JPanel {
         this.vistaEmpleadoFormulario = new EmpleadoFormulario();
         return this.vistaEmpleadoFormulario;
     }
-    
+
     /**
      * Devuelve la vista del formulario de sorteo.
      * 
@@ -876,6 +961,7 @@ public class GestorPrincipal extends JPanel {
         if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
             return;
         }
-        this.vistaDescuentoFormulario.setControlador(controlador.getAceptarListener(), controlador.getCancelarListener());
+        this.vistaDescuentoFormulario.setControlador(controlador.getAceptarListener(),
+                controlador.getCancelarListener());
     }
 }
