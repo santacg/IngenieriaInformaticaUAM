@@ -358,7 +358,8 @@ public class Ventana extends JFrame {
 		this.controladorEmpleado = controlador;
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
 				controlador.getClimatizacionListener(), controlador.getVenderEntrada(),
-				controlador.getCerrarSesionListener(), controlador.getDesbloquearListener());
+				controlador.getCerrarSesionListener(), controlador.getDesbloquearListener(),
+				controlador.getInscribirActividad());
 	}
 
 	/**

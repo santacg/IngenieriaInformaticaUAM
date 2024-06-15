@@ -440,7 +440,7 @@ public class ControladorGestor {
     private ActionListener obraLeerCSVListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String fileName = JOptionPane.showInputDialog(vista,
-                    "Introduce el nombre del archivo CSV (debes incluir el .csv)");
+                    "Introduce el nombre del archivo CSV (no debes incluir el .csv)");
             if (LectorCSVObras.leerObras(centro, fileName) == false) {
                 JOptionPane.showMessageDialog(frame, "Error al leer las obras.");
                 return;

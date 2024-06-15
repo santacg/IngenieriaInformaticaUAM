@@ -14,6 +14,7 @@ public class EmpleadoPrincipal extends JPanel {
     private JButton enviarMensajeBoton;
     private JButton cambiarClimatizacionBoton;
     private JButton venderEntradaBoton;
+    private JButton inscibirActividadBoton;
     private JPanel panelPrincipal;
     private JButton cerrarSesionBoton;
     private JButton desbloquearBoton;
@@ -35,9 +36,7 @@ public class EmpleadoPrincipal extends JPanel {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        // Componentes del formulario
         addButtons(constraints);
-        // addTitle(constraints);
         add(panelPrincipal, BorderLayout.CENTER);
         add(panelCerrarSesion, BorderLayout.NORTH);
     }
@@ -69,21 +68,23 @@ public class EmpleadoPrincipal extends JPanel {
      */
     public void addButtons(GridBagConstraints constraints) {
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); //
         this.enviarMensajeBoton = new JButton("Envío de mensajes");
         this.cambiarClimatizacionBoton = new JButton("Cambiar Climatización");
         this.venderEntradaBoton = new JButton("Venta de entradas");
         this.desbloquearBoton = new JButton("Clientes bloqueados");
+        this.inscibirActividadBoton = new JButton("Inscribir actividad");
 
         buttonPanel.add(this.enviarMensajeBoton);
         buttonPanel.add(this.cambiarClimatizacionBoton);
         buttonPanel.add(this.venderEntradaBoton);
+        buttonPanel.add(this.inscibirActividadBoton);
         buttonPanel.add(this.desbloquearBoton);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
-        constraints.gridwidth = 2;
-        constraints.anchor = GridBagConstraints.LAST_LINE_END;
+        constraints.gridwidth = GridBagConstraints.REMAINDER; 
+        constraints.anchor = GridBagConstraints.CENTER; 
         panelPrincipal.add(buttonPanel, constraints);
     }
 
@@ -96,12 +97,13 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion, ActionListener cDesbloquear) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
         this.venderEntradaBoton.addActionListener(cVentaEntradas);
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
+        this.inscibirActividadBoton.addActionListener(cActividad);
         this.desbloquearBoton.addActionListener(cDesbloquear);
     }
 
@@ -114,17 +116,20 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
     public void removeControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad) {
 
         this.enviarMensajeBoton.removeActionListener(cMensaje);
         this.cambiarClimatizacionBoton.removeActionListener(cClimatizacion);
         this.venderEntradaBoton.removeActionListener(cVentaEntradas);
         this.cerrarSesionBoton.removeActionListener(cCerrarSesion);
+        this.desbloquearBoton.removeActionListener(cDesbloquear);
+        this.inscibirActividadBoton.removeActionListener(cActividad);
     }
 
-    public void hideButtons(boolean msj, boolean clmtz, boolean venta) {
+    public void hideButtons(boolean msj, boolean clmtz, boolean venta, boolean actividad) {
         enviarMensajeBoton.setVisible(msj);
         cambiarClimatizacionBoton.setVisible(clmtz);
         venderEntradaBoton.setVisible(venta);
+        inscibirActividadBoton.setVisible(actividad);
     }
 }

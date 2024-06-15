@@ -27,9 +27,9 @@ public class ControladorEmpleado {
     /**
      * Constructor de la clase ControladorEmpleado.
      * 
-     * @param frame   Ventana
-     * @param expofy  Expofy
-     * @param centro  CentroExposicion
+     * @param frame    Ventana
+     * @param expofy   Expofy
+     * @param centro   CentroExposicion
      * @param empleado String
      */
     public ControladorEmpleado(Ventana frame, Expofy expofy, CentroExposicion centro, Empleado empleado) {
@@ -39,7 +39,8 @@ public class ControladorEmpleado {
         this.centro = centro;
         this.vista = frame.getVistaEmpleadoPrincipal();
         this.empleado = empleado;
-        this.vista.hideButtons(this.empleado.getPermisoMensajes(), this.empleado.getPermisoControl(),this.empleado.getPermisoVenta());
+        this.vista.hideButtons(this.empleado.getPermisoMensajes(), this.empleado.getPermisoControl(),
+                this.empleado.getPermisoVenta(), this.empleado.getPermisoActividades());
         vista.addTitle();
 
     }
@@ -102,12 +103,41 @@ public class ControladorEmpleado {
     }
 
     /**
+     * Método que inicializa el listener del boton de inscribir en actividades.
+     * 
+     * @return ActionListener
+     */
+    private ActionListener inscribirActividadListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (empleado.getPermisoActividades() == false) {
+                JOptionPane.showMessageDialog(frame,
+                        "Actualmente no tienes permiso para inscribir en actividades. Solicita al gestor que modifique tu permiso.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(frame,
+                    "Mostrando pantalla de inscripción en actividades.");
+        }
+    };
+
+    /**
+     * Método que devuelve el listener del botón de inscribir en actividades.
+     * 
+     * @return ActionListener
+     */
+    public ActionListener getInscribirActividad() {
+        return inscribirActividadListener;
+    }
+
+    /**
      * Método que inicializa el controlador cerrarSesionListener.
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             empleado.logOut();
-            vista.removeControlador(enviarMsjListener, cambiarClimatizacionListener, cambiarClimatizacionListener, cerrarSesionListener);
+            vista.removeControlador(enviarMsjListener, cambiarClimatizacionListener, cambiarClimatizacionListener,
+                    cerrarSesionListener, desbloquearListener, inscribirActividadListener);
             vista.removeAll();
             ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
             frame.setControladorPantallaPrincipal(controlador);
@@ -139,9 +169,8 @@ public class ControladorEmpleado {
      */
     private ActionListener desbloquearListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame,
-                        "Mostrando pantalla de clientes bloqueados.");
-            ControladorDesbloqueoClientes controladorDesbloqueoClientes = new ControladorDesbloqueoClientes(frame,expofy);
+            ControladorDesbloqueoClientes controladorDesbloqueoClientes = new ControladorDesbloqueoClientes(frame,
+                    expofy);
             frame.setControladorDesbloqueoClientes(controladorDesbloqueoClientes);
             frame.mostrarPanel(frame.getDesbloqueoClientes());
         }
@@ -159,9 +188,8 @@ public class ControladorEmpleado {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            JOptionPane.showMessageDialog(frame,
-                        "Mostrando pantalla de venta de entradas.");
-            ControladorVentaEntradas controladorVentaEntradas = new ControladorVentaEntradas(frame,expofy, centro, empleado);
+            ControladorVentaEntradas controladorVentaEntradas = new ControladorVentaEntradas(frame, expofy, centro,
+                    empleado);
             frame.setControladorVentaEntradas(controladorVentaEntradas);
             frame.mostrarPanel(frame.getVentaEntradas());
         }

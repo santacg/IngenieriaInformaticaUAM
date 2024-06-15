@@ -31,6 +31,8 @@ public class LectorCSVObras {
         String line = ""; // Variable para almacenar cada línea leída del archivo.
         String csvSeparador = ";"; // Define el separador utilizado en el archivo CSV.
 
+        fileName = fileName + ".csv";
+
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             br.readLine(); // Salta la primera línea del archivo CSV, generalmente encabezados.
             while ((line = br.readLine()) != null) { // Itera sobre cada línea del archivo hasta el final.
