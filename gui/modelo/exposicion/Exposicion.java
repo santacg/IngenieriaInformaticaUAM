@@ -509,6 +509,14 @@ public class Exposicion implements Serializable {
         return new Hora(fecha, LocalTime.of(hora_num, 0, 0), LocalTime.of(hora_num, 59, 0), 40, precio);
     }
 
+    public Set<Obra> getObras() {
+        Set<Obra> obras = new HashSet<>();
+        for (SalaExposicion sala : this.salas) {
+            obras.addAll(sala.getObras());
+        }
+        return obras;
+    }
+
     /**
      * Genera una representación en cadena de la exposición, incluyendo detalles
      * como el ID, nombre, fechas, y más.

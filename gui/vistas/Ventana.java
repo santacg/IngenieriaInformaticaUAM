@@ -347,7 +347,9 @@ public class Ventana extends JFrame {
 		this.controladorCliente = controlador;
 		this.vistaClientePrincipal.setControlador(controladorCliente.getComprarListener(),
 				controladorCliente.getActualizarDatos(), controladorCliente.getCerrarSesion(),
-				controladorCliente.getInscribirse());
+				controladorCliente.getInscribirse(), controlador.getFiltroFechaListener(),
+				controlador.getFiltroTempListener(), controlador.getFiltroTipoObraListener(),
+				controlador.getEliminarFiltrosListener());
 	}
 
 	/**
