@@ -83,6 +83,7 @@ public class GestorPrincipal extends JPanel {
 
     // Sorteos atributos
     private JTable tablaSorteos;
+    private JLabel penalizacionSorteos;
     private JButton sorteoAgregarBtn;
 
     // Descuentos atributos
@@ -452,6 +453,9 @@ public class GestorPrincipal extends JPanel {
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(sorteoAgregarBtn);
         panelAcciones.add(sorteoEliminarBtn);
+
+        penalizacionSorteos = new JLabel("Penalización por sorteo no realizado: " + centro.getSancion());
+        panelAcciones.add(penalizacionSorteos);
         this.gestionSorteos.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -485,6 +489,7 @@ public class GestorPrincipal extends JPanel {
         for (Object[] sorteoData : datos) {
             modelo.addRow(sorteoData);
         }
+        penalizacionSorteos.setText("Penalización por sorteo no realizado: " + centro.getSancion());
         modelo.fireTableDataChanged();
     }
 

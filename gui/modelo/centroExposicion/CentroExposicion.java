@@ -34,7 +34,7 @@ public class CentroExposicion implements Serializable {
     private String localizacion;
     private String contraseniaEmpleado;
     private String contraseniaGestor;
-    private Integer sancion;
+    private Integer sancion = 0;
     private Set<Exposicion> exposiciones = new HashSet<>();
     private Set<Sorteo> sorteos = new HashSet<>();
     private Set<Obra> obras = new HashSet<>();
