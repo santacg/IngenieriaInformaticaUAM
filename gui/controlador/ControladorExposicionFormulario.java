@@ -6,9 +6,7 @@ import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.Exposicion;
-import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.exposicion.TipoExpo;
-import gui.modelo.obra.Obra;
 import gui.vistas.*;
 
 /**

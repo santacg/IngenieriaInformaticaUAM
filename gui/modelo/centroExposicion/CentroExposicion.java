@@ -308,7 +308,8 @@ public class CentroExposicion implements Serializable {
      */
     public Boolean inscribirClienteActividad(Actividad actividad, String NIF) {
 
-        if (actividad.getFecha().isBefore(LocalDate.now()) || actividad.getHora().isBefore(LocalTime.now())) {
+        if (actividad.getFecha().isBefore(LocalDate.now())
+                || (actividad.getHora().isBefore(LocalTime.now()) && actividad.getFecha().isEqual(LocalDate.now()))) {
             System.out.println("La fecha de la actividad ya ha pasado");
             return false;
         }

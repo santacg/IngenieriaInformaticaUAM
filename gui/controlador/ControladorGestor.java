@@ -2,6 +2,7 @@ package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -346,6 +347,11 @@ public class ControladorGestor {
                                     centros.remove(centro);
                                     List<String> nombresCentros = new ArrayList<>();
 
+                                    if (centros.isEmpty()) {
+                                        JOptionPane.showMessageDialog(frame, "No hay centros a los que prestar la obra.");
+                                        continue;
+                                    }
+
                                     for (CentroExposicion centro : centros) {
                                         nombresCentros.add(centro.getNombre());
                                     }
@@ -542,6 +548,40 @@ public class ControladorGestor {
         }
     };
 
+    private ActionListener cambiarHorasListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String stringHora = JOptionPane.showInputDialog(vista, "Introduce la nueva hora de apertura (HH:MM)");
+
+            if (stringHora.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "No se ha actualizado la hora de cierre");
+            }
+
+            try {
+                LocalTime hora = LocalTime.parse(stringHora);
+                centro.setHoraApertura(hora);
+                JOptionPane.showMessageDialog(frame, "Hora de apertura actualizada correctamente");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Hora de apertura no válida");
+            }
+
+            stringHora = JOptionPane.showInputDialog(vista, "Introduce la nueva hora de cierre (HH:MM)");
+
+            if (stringHora.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "No se ha actualizado la hora de apertura");
+            }
+
+            try {
+                LocalTime hora = LocalTime.parse(stringHora);
+                centro.setHoraCierre(hora);
+                JOptionPane.showMessageDialog(frame, "Hora de cierre actualizada correctamente");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Hora de cierre no válida");
+            }
+
+            vista.actualizarInfo(centro);
+        }
+    };
+
     /**
      * Método que inicializa un listener para cerrar sesion.
      */
@@ -552,7 +592,7 @@ public class ControladorGestor {
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
                     empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
                     actividadAgregarListener,
-                    cerrarSesionListener);
+                    cerrarSesionListener, cambiarHorasListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -656,6 +696,16 @@ public class ControladorGestor {
      */
     public ActionListener getActividadAgregarListener() {
         return actividadAgregarListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para cambiar las horas de apertura y
+     * cierre.
+     * 
+     * @return ActionListener para cambiar las horas de apertura y cierre.
+     */
+    public ActionListener getCambiarHorasListener() {
+        return cambiarHorasListener;
     }
 
     /**

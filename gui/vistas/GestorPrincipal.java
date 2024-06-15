@@ -98,6 +98,7 @@ public class GestorPrincipal extends JPanel {
     private JLabel horaApertura;
     private JLabel horaCierre;
     private JButton cerrarSesionBtn;
+    private JButton cambiarHorasBtn;
 
     /**
      * Constructor de la clase GestorPrincipal.
@@ -151,7 +152,8 @@ public class GestorPrincipal extends JPanel {
      * @param centro Centro de exposiciones.
      */
     public void addPanelActividades(CentroExposicion centro) {
-        String[] titulos = { "Nombre", "Tipo", "Descripción", "Max. Participantes", "Fecha", "Hora", "Sala" };
+        String[] titulos = { "Nombre", "Tipo", "Descripción", "Max. Participantes", "Participantes inscritos", "Fecha",
+                "Hora", "Sala" };
 
         Object[][] datos = construirDatosActividades(centro, titulos);
 
@@ -182,6 +184,7 @@ public class GestorPrincipal extends JPanel {
                     actividad.getTipo(),
                     actividad.getDescripcion(),
                     actividad.getMaxParticipantes(),
+                    actividad.getParticipantes().size(),
                     actividad.getFecha(),
                     actividad.getHora(),
                     actividad.getSalaCelebracion().getNombre()
@@ -277,18 +280,27 @@ public class GestorPrincipal extends JPanel {
      */
     public JPanel addPanelInfo() {
         JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         cerrarSesionBtn = new JButton("Cerrar Sesión");
-        panelSuperior.add(cerrarSesionBtn, BorderLayout.EAST);
+        cambiarHorasBtn = new JButton("Cambiar Horas");
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(cambiarHorasBtn);
+        buttonPanel.add(cerrarSesionBtn);
+        panelSuperior.add(buttonPanel, BorderLayout.EAST);
 
         JPanel panelInfo = new JPanel(new GridLayout(1, 3));
-        nombreCentro = new JLabel("Nombre del centro");
-        horaApertura = new JLabel("Hora de apertura");
-        horaCierre = new JLabel("Hora de cierre");
+        nombreCentro = new JLabel("Nombre del centro", SwingConstants.CENTER);
+        horaApertura = new JLabel("Hora de apertura", SwingConstants.CENTER);
+        horaCierre = new JLabel("Hora de cierre", SwingConstants.CENTER);
+
         panelInfo.add(nombreCentro);
         panelInfo.add(horaApertura);
         panelInfo.add(horaCierre);
 
         panelSuperior.add(panelInfo, BorderLayout.CENTER);
+
         return panelSuperior;
     }
 
@@ -298,7 +310,7 @@ public class GestorPrincipal extends JPanel {
      * @param centro Centro de exposiciones.
      */
     public void actualizarInfo(CentroExposicion centro) {
-        nombreCentro.setText("Centro de Exposiciones: " + centro.getNombre());
+        nombreCentro.setText("Centro de exposición: " + centro.getNombre());
         horaApertura.setText("Hora de apertura: " + centro.getHoraApertura());
         horaCierre.setText("Hora de cierre: " + centro.getHoraCierre());
     }
@@ -696,8 +708,9 @@ public class GestorPrincipal extends JPanel {
 
         this.gestionEmpleados.add(new JScrollPane(tablaEmpleados), BorderLayout.CENTER);
 
-        // Lista acciones y botones
         JPanel panelAcciones = new JPanel();
+        JLabel accionesLabel = new JLabel("Acciones: ");
+        panelAcciones.add(accionesLabel);
         this.empleadoAgregarBtn = new JButton("Agregar empleado");
         this.empleadoConfigurarContraseniaBtn = new JButton("Configurar contraseña");
 
@@ -863,13 +876,15 @@ public class GestorPrincipal extends JPanel {
      * @param cExposicionesAgregar           Controlador de agregar exposiciones.
      * @param cEmpleadoConfigurarContrasenia Controlador de configurar contraseña de
      *                                       empleado.
+     * @param cCambiarHoras                  Controlador de cambiar horas de
+     *                                       apertura
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia,
             ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar, ActionListener cActividadesAgregar,
-            ActionListener cCerrarSesion) {
+            ActionListener cCerrarSesion, ActionListener cCambiarHoras) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -882,7 +897,7 @@ public class GestorPrincipal extends JPanel {
         this.descuentoAgregarBtn.addActionListener(cDescuentoAgregar);
         this.actividadAgregarBtn.addActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
-
+        this.cambiarHorasBtn.addActionListener(cCambiarHoras);
     }
 
     /**
@@ -893,12 +908,23 @@ public class GestorPrincipal extends JPanel {
      * @param cSalasEjecutar        Controlador de ejecutar acciones de salas.
      * @param cExposicionesEjecutar Controlador de ejecutar acciones de
      *                              exposiciones.
+     * @param cEmpleadoAgregar      Controlador de agregar empleados.
+     * @param cSorteoAgregar        Controlador de agregar sorteos.
+     * @param cDescuentoAgregar     Controlador de agregar descuentos.
+     * @param cCerrarSesion         Controlador de cerrar sesión.
+     * @param cCambiarContrasenia   Controlador de cambiar contraseña.
+     * @param cObrasLeerCSV         Controlador de leer obras desde CSV.
+     * @param cActividadesAgregar   Controlador de agregar actividades.
+     * @param cExposicionesAgregar  Controlador de agregar exposiciones.
+     * @param cCambiarHoras         Controlador de cambiar horas de apertura
+     *                              y cierre.
      */
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar,
-            ActionListener cCerrarSesion, ActionListener cActividadesAgregar, ActionListener cCambiarContrasenia) {
+            ActionListener cCerrarSesion, ActionListener cActividadesAgregar, ActionListener cCambiarContrasenia,
+            ActionListener cCambiarHoras) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
@@ -911,6 +937,7 @@ public class GestorPrincipal extends JPanel {
         this.empleadoConfigurarContraseniaBtn.removeActionListener(cCambiarContrasenia);
         this.actividadAgregarBtn.removeActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
+        this.cambiarHorasBtn.removeActionListener(cCambiarHoras);
     }
 
     /**

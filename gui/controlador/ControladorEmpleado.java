@@ -1,12 +1,12 @@
 package gui.controlador;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.*;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import gui.modelo.centroExposicion.CentroExposicion;
-import gui.modelo.centroExposicion.Empleado;
+import gui.modelo.centroExposicion.*;
 import gui.modelo.expofy.Expofy;
 import gui.vistas.EmpleadoPrincipal;
 import gui.vistas.Ventana;
@@ -116,8 +116,45 @@ public class ControladorEmpleado {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            JOptionPane.showMessageDialog(frame,
-                    "Mostrando pantalla de inscripción en actividades.");
+
+            Set<Actividad> actividades = centro.getActividades();
+            List<String> nombresActividades = new ArrayList<>();
+
+            if (actividades.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "No hay actividades disponibles.");
+                return;
+            }
+
+            for (Actividad actividad : actividades) {
+                nombresActividades.add(actividad.getNombre());
+            }
+
+            String nombreActividad = (String) JOptionPane.showInputDialog(frame,
+                    "Selecciona la actividad a la que quieres inscribir al cliente:",
+                    "Inscribir en actividad", JOptionPane.QUESTION_MESSAGE, null, nombresActividades.toArray(),
+                    nombresActividades.get(0));
+
+            if (nombreActividad == null) {
+                JOptionPane.showMessageDialog(frame, "No se ha seleccionado ninguna actividad.");
+                return;
+            }
+
+            Actividad actividad = centro.getActividadPorNombre(nombreActividad);
+
+            String NIF = JOptionPane.showInputDialog(frame,
+                    "Introduce el NIF del cliente a inscribir en la actividad:");
+
+            if (NIF == null) {
+                JOptionPane.showMessageDialog(frame, "No se ha introducido ningún NIF.");
+                return;
+            }
+
+            if (centro.inscribirClienteActividad(actividad, NIF) == false) {
+                JOptionPane.showMessageDialog(frame, "No se ha podido inscribir al cliente en la actividad.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(frame, "Cliente inscrito correctamente en la actividad.");
         }
     };
 

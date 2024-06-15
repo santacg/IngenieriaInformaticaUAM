@@ -9,16 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
-import gui.modelo.centroExposicion.CentroExposicion;
-import gui.modelo.sala.Sala;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Clase AjustarClimatizacion

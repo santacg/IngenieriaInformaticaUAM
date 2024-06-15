@@ -26,13 +26,15 @@ public class MainVisual {
 
                 configurarDescuentos(centroExposicionPrado);
 
+                configurarActividades(centroExposicionPrado);
+
                 enviarNotificaciones(expofy);
                 expofy.persistirExpofy();
         }
 
         private static void registrarClientes(Expofy expofy) {
                 expofy.registrarCliente("123", "Carlos123", true);
-                expofy.registrarCliente("456", "Ana456", true);
+                expofy.registrarCliente("456", "Ana456", false);
         }
 
         private static CentroExposicion configurarCentroExposicionPrado() {
@@ -40,12 +42,12 @@ public class MainVisual {
                 Set<Sala> salasPrado = new HashSet<>();
 
                 Sala salaRenacimiento = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0);
+                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, false, 12, 20.0, 35.0);
                 Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0);
-                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0);
 
                 salasPrado.add(salaRenacimiento);
-                salasPrado.add(salaImpresionismo);
                 salasPrado.add(salaModerna);
+                salasPrado.add(salaImpresionismo);
 
                 Empleado empleado1 = new Empleado("555", "Laura", "789", "789456", "Madrid", true, true, true, true);
                 Empleado empleado2 = new Empleado("666", "Jorge", "987", "987456", "Madrid", true, false, true, false);
@@ -81,7 +83,7 @@ public class MainVisual {
                 SalaExposicion salaExposicion = new SalaExposicion(centro.getSalas().iterator().next());
 
                 Exposicion exposicion1 = new Exposicion("Van Gogh: Los Últimos Años", LocalDate.of(2024, 10, 1),
-                                LocalDate.of(2025, 3, 30),
+                                LocalDate.of(2024, 11, 1),
                                 "Explora la intensa última década de Van Gogh con obras nunca antes vistas en nuestro país.",
                                 TipoExpo.TEMPORAL, 20.0);
 
@@ -112,15 +114,20 @@ public class MainVisual {
 
         private static void configurarYPublicarExposiciones(CentroExposicion centro) {
                 for (Exposicion exposicion : centro.getExposiciones()) {
-                        centro.confgiurarSorteoExposicion(exposicion, LocalDate.of(2024, 12, 1), 100);
+                        centro.confgiurarSorteoExposicion(exposicion, LocalDate.of(2024, 10, 5), 10);
                         exposicion.expoPublicar();
                 }
         }
 
         private static void configurarDescuentos(CentroExposicion centro) {
                 for (Exposicion exposicion : centro.getExposiciones()) {
-                        exposicion.configurarDescuentoDia(20.00, 10);
+                        exposicion.configurarDescuentoDia(20.00, 2);
                 }
+        }
+
+        private static void configurarActividades(CentroExposicion centro) {
+                centro.addActividad("Visita expo Van Gogh", TipoActividad.VISITA_GUIADA, "Visita guiada a la exposición 'Van Gogh: Los Últimos Años", 10,
+                                LocalDate.of(2024, 10, 2), LocalTime.of(11, 0), centro.getSalas().iterator().next());
         }
 
         private static void enviarNotificaciones(Expofy expofy) {
