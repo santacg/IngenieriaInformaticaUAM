@@ -31,6 +31,8 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionEmpleados;
     private JPanel gestionSorteos;
     private JPanel gestionDescuentos;
+    private JPanel gestionEstadisticas;
+    private JPanel gestionActividades;
 
     private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;
@@ -49,6 +51,9 @@ public class GestorPrincipal extends JPanel {
 
     private DescuentoFormulario vistaDescuentoFormulario;
     private ControladorDescuentoFormulario controladorDescuentoFormulario;
+
+    private ActividadFormulario vistaActividadFormulario;
+    private ControladorActividadFormulario controladorActividadFormulario;
 
     // Obras atributos
     private JButton obraEjecutarBtn;
@@ -84,6 +89,10 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaDescuentos;
     private JButton descuentoAgregarBtn;
 
+    // Actividades atributos
+    private JTable tablaActividades;
+    private JButton actividadAgregarBtn;
+
     // Atributos de la vista
     private JLabel nombreCentro;
     private JLabel horaApertura;
@@ -118,6 +127,9 @@ public class GestorPrincipal extends JPanel {
         this.gestionDescuentos = new JPanel();
         gestionDescuentos.setLayout(new BorderLayout());
 
+        this.gestionActividades = new JPanel();
+        gestionActividades.setLayout(new BorderLayout());
+
         tabbedPane.addTab("Exposiciones", gestionExposiciones);
         tabbedPane.addTab("Salas de exposición", gestionSalasExposicion);
         tabbedPane.addTab("Salas", gestionSalas);
@@ -125,12 +137,73 @@ public class GestorPrincipal extends JPanel {
         tabbedPane.addTab("Empleados", gestionEmpleados);
         tabbedPane.addTab("Sorteos", gestionSorteos);
         tabbedPane.addTab("Descuentos", gestionDescuentos);
+        tabbedPane.addTab("Actividades", gestionActividades);
 
         JPanel panelSuperior = addPanelInfo();
-        ;
 
         add(tabbedPane, BorderLayout.CENTER);
         add(panelSuperior, BorderLayout.NORTH);
+    }
+
+    /**
+     * Añade un panel de actividades al gestor principal.
+     * 
+     * @param centro Centro de exposiciones.
+     */
+    public void addPanelActividades(CentroExposicion centro) {
+        String[] titulos = { "Nombre", "Tipo", "Descripción", "Max. Participantes", "Fecha", "Hora", "Sala" };
+
+        Object[][] datos = construirDatosActividades(centro, titulos);
+
+        this.tablaActividades = new JTable(new DefaultTableModel(datos, titulos));
+        this.gestionActividades.add(new JScrollPane(tablaActividades), BorderLayout.CENTER);
+
+        JPanel panelAcciones = new JPanel();
+        this.actividadAgregarBtn = new JButton("Agregar Actividad");
+
+        panelAcciones.add(new JLabel("Acciones: "));
+        panelAcciones.add(actividadAgregarBtn);
+        this.gestionActividades.add(panelAcciones, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Construye los datos de las actividades.
+     * 
+     * @param centro  Centro de exposiciones.
+     * @param titulos Titulos de las columnas.
+     * 
+     * @return Datos de las actividades.
+     */
+    private Object[][] construirDatosActividades(CentroExposicion centro, String[] titulos) {
+        List<Object[]> data = new ArrayList<>();
+        for (Actividad actividad : centro.getActividades()) {
+            data.add(new Object[] {
+                    actividad.getNombre(),
+                    actividad.getTipo(),
+                    actividad.getDescripcion(),
+                    actividad.getMaxParticipantes(),
+                    actividad.getFecha(),
+                    actividad.getHora(),
+                    actividad.getSalaCelebracion().getNombre()
+            });
+        }
+        return data.toArray(new Object[0][]);
+    }
+
+    /**
+     * Actualiza el panel de actividades al gestor principal.
+     * 
+     * @param centro Centro de exposiciones
+     */
+    public void actualizarTablaActividades(CentroExposicion centro) {
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaActividades.getModel();
+        modelo.setRowCount(0);
+        Object[][] datos = construirDatosActividades(centro, new String[] { "Nombre", "Tipo", "Descripción",
+                "Max. Participantes", "Fecha", "Hora", "Sala" });
+        for (Object[] actividadData : datos) {
+            modelo.addRow(actividadData);
+        }
+        modelo.fireTableDataChanged();
     }
 
     /**
@@ -533,7 +606,7 @@ public class GestorPrincipal extends JPanel {
         JPanel panelAcciones = new JPanel();
         this.obraComboAcciones = new JComboBox<>(
                 new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra",
-                        "Asignar Obra a Sala", "Eliminar Obra de Sala"});
+                        "Asignar Obra a Sala", "Eliminar Obra de Sala" });
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
         this.obraAgregarBtn = new JButton("Agregar obra");
         this.leerObrasCSVBtn = new JButton("Leer Obras desde CSV");
@@ -606,7 +679,7 @@ public class GestorPrincipal extends JPanel {
         // Tabla
         String[] titulos = { "NIF", "Nombre", "Numero SS", "Numero de cuenta", "Direccion", "Permiso venta",
                 "Permiso control",
-                "Permiso mensajes" };
+                "Permiso mensajes", "Permiso actividades" };
         Object[][] datos = construirDatosEmpleados(centro, titulos);
         List<Empleado> empleados = new ArrayList<>(centro.getEmpleados());
 
@@ -619,6 +692,7 @@ public class GestorPrincipal extends JPanel {
         tablaEmpleados.getColumnModel().getColumn(5).setCellEditor(checkBoxEditor);
         tablaEmpleados.getColumnModel().getColumn(6).setCellEditor(checkBoxEditor);
         tablaEmpleados.getColumnModel().getColumn(7).setCellEditor(checkBoxEditor);
+        tablaEmpleados.getColumnModel().getColumn(8).setCellEditor(checkBoxEditor);
 
         this.gestionEmpleados.add(new JScrollPane(tablaEmpleados), BorderLayout.CENTER);
 
@@ -650,7 +724,8 @@ public class GestorPrincipal extends JPanel {
                     empleado.getDireccion(),
                     empleado.getPermisoVenta(),
                     empleado.getPermisoControl(),
-                    empleado.getPermisoMensajes()
+                    empleado.getPermisoMensajes(),
+                    empleado.getPermisoActividades()
             });
         }
         return data.toArray(new Object[0][]);
@@ -749,6 +824,15 @@ public class GestorPrincipal extends JPanel {
     }
 
     /**
+     * Devuelve la tabla de actividades.
+     * 
+     * @return Tabla de actividades.
+     */
+    public JTable getTablaActividades() {
+        return this.tablaActividades;
+    }
+
+    /**
      * Deselecciona todas las filas de la tabla.
      * 
      * @param tabla Tabla a deseleccionar.
@@ -762,17 +846,30 @@ public class GestorPrincipal extends JPanel {
     /**
      * Establece los controladores de los botones.
      * 
-     * @param cObrasEjecutar        Controlador de ejecutar acciones de obras.
-     * @param cObrasAgregar         Controlador de agregar obras.
-     * @param cSalasEjecutar        Controlador de ejecutar acciones de salas.
-     * @param cExposicionesEjecutar Controlador de ejecutar acciones de
-     *                              exposiciones.
+     * @param cObrasEjecutar                 Controlador de ejecutar acciones de
+     *                                       obras.
+     * @param cObrasAgregar                  Controlador de agregar obras.
+     * @param cSalasEjecutar                 Controlador de ejecutar acciones de
+     *                                       salas.
+     * @param cExposicionesEjecutar          Controlador de ejecutar acciones de
+     *                                       exposiciones.
+     * @param cEmpleadoAgregar               Controlador de agregar empleados.
+     * @param cSorteoAgregar                 Controlador de agregar sorteos.
+     * @param cDescuentoAgregar              Controlador de agregar descuentos.
+     * @param cCerrarSesion                  Controlador de cerrar sesión.
+     * @param cCambiarContrasenia            Controlador de cambiar contraseña.
+     * @param cObrasLeerCSV                  Controlador de leer obras desde CSV.
+     * @param cActividadesAgregar            Controlador de agregar actividades.
+     * @param cExposicionesAgregar           Controlador de agregar exposiciones.
+     * @param cEmpleadoConfigurarContrasenia Controlador de configurar contraseña de
+     *                                       empleado.
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia,
-            ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar, ActionListener cCerrarSesion) {
+            ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar, ActionListener cActividadesAgregar,
+            ActionListener cCerrarSesion) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -783,6 +880,7 @@ public class GestorPrincipal extends JPanel {
         this.empleadoConfigurarContraseniaBtn.addActionListener(cEmpleadoConfigurarContrasenia);
         this.sorteoAgregarBtn.addActionListener(cSorteoAgregar);
         this.descuentoAgregarBtn.addActionListener(cDescuentoAgregar);
+        this.actividadAgregarBtn.addActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
 
     }
@@ -800,7 +898,7 @@ public class GestorPrincipal extends JPanel {
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar,
-            ActionListener cCerrarSesion, ActionListener cCambiarContrasenia) {
+            ActionListener cCerrarSesion, ActionListener cActividadesAgregar, ActionListener cCambiarContrasenia) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
@@ -811,8 +909,8 @@ public class GestorPrincipal extends JPanel {
         this.sorteoAgregarBtn.removeActionListener(cSorteoAgregar);
         this.descuentoAgregarBtn.removeActionListener(cDescuentoAgregar);
         this.empleadoConfigurarContraseniaBtn.removeActionListener(cCambiarContrasenia);
+        this.actividadAgregarBtn.removeActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
-
     }
 
     /**
@@ -875,6 +973,16 @@ public class GestorPrincipal extends JPanel {
     public DescuentoFormulario getVistaDescuentoFormulario() {
         this.vistaDescuentoFormulario = new DescuentoFormulario();
         return this.vistaDescuentoFormulario;
+    }
+
+    /**
+     * Devuelve la vista del formulario de actividad.
+     * 
+     * @return Vista del formulario de actividad.
+     */
+    public ActividadFormulario getVistaActividadFormulario() {
+        this.vistaActividadFormulario = new ActividadFormulario();
+        return this.vistaActividadFormulario;
     }
 
     /**
@@ -962,6 +1070,21 @@ public class GestorPrincipal extends JPanel {
             return;
         }
         this.vistaDescuentoFormulario.setControlador(controlador.getAceptarListener(),
+                controlador.getCancelarListener());
+    }
+
+    /**
+     * Establece el controlador del formulario de actividad.
+     * 
+     * @param controlador Controlador del formulario de actividad.
+     * @return Controlador del formulario de actividad.
+     */
+    public void setControladorActividadFormulario(ControladorActividadFormulario controlador) {
+        this.controladorActividadFormulario = controlador;
+        if (controlador.getAceptarListener() == null || controlador.getCancelarListener() == null) {
+            return;
+        }
+        this.vistaActividadFormulario.setControlador(controlador.getAceptarListener(),
                 controlador.getCancelarListener());
     }
 }

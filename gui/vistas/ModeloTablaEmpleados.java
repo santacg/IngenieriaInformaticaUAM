@@ -64,11 +64,11 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
     }
 
     /**
-     * Obtiene si la 3 últimas columnas son editables.
+     * Obtiene si las 4 últimas columnas son editables.
      */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex >= 5 && columnIndex <= 7; 
+        return columnIndex >= 5 && columnIndex <= 8;
     }
 
     /**
@@ -89,6 +89,9 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
             case 7:
                 empleado.setPermisoMensajes((Boolean) value);
                 break;
+            case 8:
+                empleado.setPermisoActividades((Boolean) value);
+                break;
         }
 
         fireTableCellUpdated(rowIndex, columnIndex);
@@ -103,12 +106,11 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
     }
 
     /**
-     * Obtiene las clases de una columna (En este caso 3 checkboxes al final).
+     * Obtiene las clases de una columna.
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        int lastIndex = getColumnCount() - 1;
-        if (columnIndex == lastIndex || columnIndex == lastIndex - 1 || columnIndex == lastIndex - 2) {
+        if (columnIndex >= 5 && columnIndex <= 8) {
             return Boolean.class;
         }
         return String.class;

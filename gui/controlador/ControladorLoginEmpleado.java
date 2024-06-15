@@ -35,18 +35,21 @@ public class ControladorLoginEmpleado {
      */
     private ActionListener acceptListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String usuario = vista.getUsuario();
+            String numSS = vista.getNumSS();
             String password = vista.getPassword();
-            if (usuario.equals("") || password.equals("")) {
+
+            if (numSS.equals("") || password.equals("")) {
                 JOptionPane.showMessageDialog(frame,
                         "Debes introducir el número de la Seguridad Social y una contraseña.", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
             for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-                if (centro.loginEmpleado(usuario, password) == true) {
-                    JOptionPane.showMessageDialog(frame, "Bienvenido " + usuario + "!");
-                    ControladorEmpleado controladorEmpleado = new ControladorEmpleado(frame, expofy, centro, usuario);
+                if (centro.loginEmpleado(numSS, password) == true) {
+                    Empleado empleado = centro.getEmpleado(numSS);
+                    JOptionPane.showMessageDialog(frame, "Bienvenid@ " + empleado.getNombre() + "!");
+                    ControladorEmpleado controladorEmpleado = new ControladorEmpleado(frame, expofy, centro, empleado);
                     frame.setControladorEmpleado(controladorEmpleado);
                     vista.update();
                     frame.mostrarPanel(frame.getEmpleadoPrincipal());

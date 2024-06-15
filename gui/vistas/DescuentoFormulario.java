@@ -7,11 +7,12 @@ import java.util.Set;
 import javax.swing.*;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 
 public class DescuentoFormulario extends JDialog {
     private String tipoDescuento;
-    private JList<String> exposiciones;
+    private JComboBox<String> exposiciones;
     private JTextField descuento;
     private JTextField cantidad;
     private JButton aceptarBtn;
@@ -40,18 +41,14 @@ public class DescuentoFormulario extends JDialog {
             return;
         }
 
+        constraints.gridy = 0;
+
         formularioAñadirDescuento(panelFormulario, constraints);
-
-        this.exposiciones = new JList<>();
-        JScrollPane scrollExposiciones = new JScrollPane(this.exposiciones);
-        scrollExposiciones.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollExposiciones.setBorder(BorderFactory.createTitledBorder("Exposiciones"));
-
-        panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
-        panelPrincipal.add(scrollExposiciones, BorderLayout.CENTER);
+        addCampo("Selecciona una exposición: ", exposiciones = new JComboBox<>(), panelFormulario, constraints);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addBotones(buttonPanel);
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
         panelPrincipal.add(buttonPanel, BorderLayout.SOUTH);
 
         add(panelPrincipal);
@@ -65,8 +62,8 @@ public class DescuentoFormulario extends JDialog {
      *                        campos
      */
     public void formularioAñadirDescuento(JPanel panelFormulario, GridBagConstraints constraints) {
-        addCampo("Descuento:", descuento = new JTextField(20), panelFormulario, constraints, 0);
-        addCampo("Cantidad en días o meses:", cantidad = new JTextField(20), panelFormulario, constraints, 1);
+        addCampo("Descuento:", descuento = new JTextField(20), panelFormulario, constraints);
+        addCampo("Cantidad en días o meses:", cantidad = new JTextField(20), panelFormulario, constraints);
     }
 
     /**
@@ -96,17 +93,16 @@ public class DescuentoFormulario extends JDialog {
      */
     public void mostrarExposiciones(CentroExposicion centroExposicion) {
         Set<Exposicion> exposicionesSet = centroExposicion.getExposiciones();
-        DefaultListModel<String> model = new DefaultListModel<>();
 
-        if (exposicionesSet.isEmpty()) {
-            model.addElement("No hay exposiciones disponibles.");
-        } else {
-            for (Exposicion exposicion : exposicionesSet) {
-                model.addElement(exposicion.getNombre());
+        for (Exposicion exposicion : exposicionesSet) {
+            if (!exposicion.getEstado().equals(EstadoExposicion.CANCELADA)) {
+                exposiciones.addItem(exposicion.getNombre());
             }
         }
 
-        exposiciones.setModel(model);
+        if (exposicionesSet.isEmpty()) {
+            exposiciones.addItem("No hay exposiciones disponibles");
+        }
     }
 
     /**
@@ -116,18 +112,13 @@ public class DescuentoFormulario extends JDialog {
      * @param comp        Component que se añadirá al formulario
      * @param panel       JPanel en el que se añadirá el campo
      * @param constraints GridBagConstraints que definen la posición del campo
-     * @param gridy       int que indica la fila en la que se añadirá el campo
      */
-    private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy) {
-        JLabel jlabel = new JLabel(label);
+    private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints) {
         constraints.gridx = 0;
-        constraints.gridy = gridy;
-        constraints.gridwidth = 1;
-        panel.add(jlabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = gridy;
+        panel.add(new JLabel(label), constraints);
+        constraints.gridx++;
         panel.add(comp, constraints);
+        constraints.gridy++;
     }
 
     /**
@@ -192,7 +183,7 @@ public class DescuentoFormulario extends JDialog {
      * @return String con la exposición seleccionada
      */
     public String getSelectedExposicion() {
-        return exposiciones.getSelectedValue();
+        return (String) exposiciones.getSelectedItem();
     }
 
     /**

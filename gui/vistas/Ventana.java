@@ -333,6 +333,7 @@ public class Ventana extends JFrame {
 				controladorGestor.getEmpleadoConfigurarContraseniaListener(),
 				controladorGestor.getSorteoAgregarListener(),
 				controladorGestor.getDescuentoAgregarListener(),
+				controladorGestor.getActividadAgregarListener(),
 				controladorGestor.getCerrarSesionListener());
 	}
 

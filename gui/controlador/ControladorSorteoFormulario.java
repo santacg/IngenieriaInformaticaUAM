@@ -16,7 +16,7 @@ public class ControladorSorteoFormulario {
     private CentroExposicion centroExposicion;
 
     /**
-     * Constructor de la clase ControladorSalaFormulario
+     * Constructor de la clase ControladorSorteoFormulario
      * 
      * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion

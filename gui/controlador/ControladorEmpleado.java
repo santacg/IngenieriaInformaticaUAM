@@ -30,17 +30,17 @@ public class ControladorEmpleado {
      * @param frame   Ventana
      * @param expofy  Expofy
      * @param centro  CentroExposicion
-     * @param usuario String
+     * @param empleado String
      */
-    public ControladorEmpleado(Ventana frame, Expofy expofy, CentroExposicion centro, String usuario) {
+    public ControladorEmpleado(Ventana frame, Expofy expofy, CentroExposicion centro, Empleado empleado) {
         this.frame = frame;
         this.frame.setCartaEmpleadoPrincipal();
         this.expofy = expofy;
         this.centro = centro;
         this.vista = frame.getVistaEmpleadoPrincipal();
-        this.empleado = centro.getEmpleado(usuario);
+        this.empleado = empleado;
         this.vista.hideButtons(this.empleado.getPermisoMensajes(), this.empleado.getPermisoControl(),this.empleado.getPermisoVenta());
-        vista.addTitle(empleado.getNombre());
+        vista.addTitle();
 
     }
 

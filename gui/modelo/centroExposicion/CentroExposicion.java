@@ -905,13 +905,13 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
-     * Obtiene un empleado del centro de exposición a partir de su NIF.
+     * Obtiene un empleado del centro de exposición a partir de su NumSS.
      *
      * @return El empleado o null si no existe.
      */
-    public Empleado getEmpleado(String NIF) {
+    public Empleado getEmpleado(String NumSS) {
         for (Empleado empleado : empleados) {
-            if (empleado.getNIF().equals(NIF)) {
+            if (empleado.getNumSS().equals(NumSS)) {
                 return empleado;
             }
         }
@@ -1062,9 +1062,9 @@ public class CentroExposicion implements Serializable {
      * @param contrasenia La contraseña de acceso.
      * @return true si el login es exitoso, false en caso contrario.
      */
-    public Boolean loginEmpleado(String NIF, String contrasenia) {
+    public Boolean loginEmpleado(String numSS, String contrasenia) {
         for (Empleado e : empleados) {
-            if (e.getNIF().equals(NIF) && contrasenia.equals(contraseniaEmpleado)) {
+            if (e.getNumSS().equals(numSS) && contrasenia.equals(contraseniaEmpleado)) {
                 e.logIn();
                 return true;
             }

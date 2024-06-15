@@ -47,12 +47,12 @@ public class EmpleadoPrincipal extends JPanel {
      * 
      * @param constraints Constraints para el GridBagLayout.
      */
-    public void addTitle(String name) {
+    public void addTitle() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titleLabel = new JLabel("Bienvenido, " + name);
+        JLabel titleLabel = new JLabel("Bienvenid@ al panel de empleado, elige una operación a realizar:");
         titleLabel.setFont(new Font(getName(), Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 0;

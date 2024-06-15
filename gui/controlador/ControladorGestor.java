@@ -55,6 +55,7 @@ public class ControladorGestor {
         mostrarEmpleados();
         mostrarSorteos();
         mostrarDescuentos();
+        mostrarActividades();
         mostrarInfo();
     }
 
@@ -105,6 +106,13 @@ public class ControladorGestor {
      */
     public void mostrarDescuentos() {
         vista.addPanelDescuentos(centro);
+    }
+
+    /**
+     * Método que muestra la vista de las actividades.
+     */
+    public void mostrarActividades() {
+        vista.addPanelActividades(centro);
     }
 
     /**
@@ -524,6 +532,17 @@ public class ControladorGestor {
     };
 
     /**
+     * Método que inicializa un listener para agregar actividades.
+     */
+    private ActionListener actividadAgregarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorActividadFormulario controladorActividadFormulario = new ControladorActividadFormulario(vista,
+                    centro);
+            vista.setControladorActividadFormulario(controladorActividadFormulario);
+        }
+    };
+
+    /**
      * Método que inicializa un listener para cerrar sesion.
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
@@ -532,6 +551,7 @@ public class ControladorGestor {
             vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener,
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
                     empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
+                    actividadAgregarListener,
                     cerrarSesionListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
@@ -627,6 +647,15 @@ public class ControladorGestor {
      */
     public ActionListener getDescuentoAgregarListener() {
         return descuentoAgregarListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para agregar actividades.
+     * 
+     * @return ActionListener para agregar actividades.
+     */
+    public ActionListener getActividadAgregarListener() {
+        return actividadAgregarListener;
     }
 
     /**

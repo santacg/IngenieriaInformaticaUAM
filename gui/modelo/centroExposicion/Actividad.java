@@ -1,5 +1,6 @@
 package gui.modelo.centroExposicion;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import gui.modelo.sala.Sala;
 /**
  * La clase Actividades representa una actividad en un centro de exposición.
  */
-public class Actividad {
+public class Actividad implements Serializable {
     private String nombre;
     private TipoActividad tipo;
     private String descripcion;

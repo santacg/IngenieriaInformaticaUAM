@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public class LoginEmpleado extends JPanel {
-    private JTextField textUser;
+    private JTextField empleadoNumSS;
     private JPasswordField fieldPassword;
     private JButton atrasBoton;
     private JButton aceptarBoton;
@@ -62,10 +62,10 @@ public class LoginEmpleado extends JPanel {
         constraints.gridwidth = 1;
         add(labelUser, constraints);
 
-        this.textUser = new JTextField(30);
+        this.empleadoNumSS = new JTextField(30);
         constraints.gridx = 1;
         constraints.gridy = 1;
-        add(textUser, constraints);
+        add(empleadoNumSS, constraints);
     }
 
     /**
@@ -116,8 +116,8 @@ public class LoginEmpleado extends JPanel {
      * 
      * @return Nº de Seguridad Social introducido.
      */
-    public String getUsuario() {
-        return this.textUser.getText();
+    public String getNumSS() {
+        return this.empleadoNumSS.getText();
     }
 
     /**
@@ -144,7 +144,7 @@ public class LoginEmpleado extends JPanel {
      * Método que limpia los campos de texto de la vista.
      */
     public void update() {
-        textUser.setText("");
+        empleadoNumSS.setText("");
         fieldPassword.setText("");
     }
 
