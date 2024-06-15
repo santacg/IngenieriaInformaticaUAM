@@ -286,7 +286,7 @@ public class ControladorGestor {
                                     }
 
                                     JOptionPane.showMessageDialog(frame,
-                                            "Obra " + nombreObra + " expuesta correctamente en "
+                                            "Obra " + nombreObra + " añadida correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
                                     vista.actualizarTablaSalasExposicion(centro);

@@ -42,11 +42,6 @@ public class Actividad implements Serializable {
     public Actividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes, LocalDate fecha,
             LocalTime hora,
             Sala salaCelebracion) {
-        if (salaCelebracion.getAforo() < maxParticipantes) {
-            System.out.println("El aforo de la sala es menor que el número de participantes");
-            return;
-        }
-
         this.nombre = nombre;
         this.tipo = tipo;
         this.descripcion = descripcion;

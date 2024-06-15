@@ -279,7 +279,13 @@ public class CentroExposicion implements Serializable {
             }
         }
 
+        if (salaCelebracion.getAforo() < maxParticipantes) {
+            System.out.println("El número de participantes supera el aforo de la sala");
+            return false;
+        }
+
         Actividad actividad = new Actividad(nombre, tipo, descripcion, maxParticipantes, fecha, hora, salaCelebracion);
+
         if (actividades.add(actividad) == false) {
             System.out.println("La actividad ya está en el centro de exposiciones");
             return false;
