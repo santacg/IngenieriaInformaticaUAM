@@ -19,7 +19,6 @@ import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
-import gui.modelo.sala.Sala;
 import gui.modelo.utils.LectorCSVObras;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.ModeloTablaObras;
@@ -603,6 +602,31 @@ public class ControladorGestor {
     };
 
     /**
+     * Método que inicializa un listener para cambiar la penalizacion en sorteos.
+     */
+    private ActionListener cambiarPenalizacionSorteosListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String stringPenalizacion = JOptionPane.showInputDialog(vista, "Introduce la nueva penalización");
+
+            if (stringPenalizacion.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "No se ha actualizado la penalización");
+                return;
+            }
+
+            try {
+                Integer penalizacion = Integer.parseInt(stringPenalizacion);
+                centro.setSancion(penalizacion);
+                JOptionPane.showMessageDialog(frame, "Penalización actualizada correctamente");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Penalización no válida");
+                return;
+            }
+
+            vista.actualizarTablaSorteos(centro);
+        }
+    };
+
+    /**
      * Método que inicializa un listener para cerrar sesion.
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
@@ -611,7 +635,8 @@ public class ControladorGestor {
             vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener,
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
                     empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
-                    actividadAgregarListener, cerrarSesionListener, cambiarHorasListener);
+                    actividadAgregarListener, cerrarSesionListener, cambiarHorasListener,
+                    cambiarPenalizacionSorteosListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -725,6 +750,16 @@ public class ControladorGestor {
      */
     public ActionListener getCambiarHorasListener() {
         return cambiarHorasListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para cambiar la penalización en
+     * sorteos.
+     * 
+     * @return ActionListener para cambiar la penalización en sorteos.
+     */
+    public ActionListener getCambiarPenalizacionSorteosListener() {
+        return cambiarPenalizacionSorteosListener;
     }
 
     /**

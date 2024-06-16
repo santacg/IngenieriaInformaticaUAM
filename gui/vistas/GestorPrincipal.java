@@ -86,6 +86,7 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaSorteos;
     private JLabel penalizacionSorteos;
     private JButton sorteoAgregarBtn;
+    private JButton cambiarPenalizacionBtn;
 
     // Descuentos atributos
     private JTable tablaDescuentos;
@@ -454,8 +455,12 @@ public class GestorPrincipal extends JPanel {
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(sorteoAgregarBtn);
 
+        this.cambiarPenalizacionBtn = new JButton("Cambiar Penalización");
+        panelAcciones.add(cambiarPenalizacionBtn);
+
         penalizacionSorteos = new JLabel("Penalización por sorteo no canjeado: " + centro.getSancion());
         panelAcciones.add(penalizacionSorteos);
+
         this.gestionSorteos.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -962,7 +967,7 @@ public class GestorPrincipal extends JPanel {
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cEmpleadoConfigurarContrasenia,
             ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar, ActionListener cActividadesAgregar,
-            ActionListener cCerrarSesion, ActionListener cCambiarHoras) {
+            ActionListener cCerrarSesion, ActionListener cCambiarHoras, ActionListener cCambiarPenalizacionSorteo) {
         this.obraEjecutarBtn.addActionListener(cObrasEjecutar);
         this.obraAgregarBtn.addActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.addActionListener(cObrasLeerCSV);
@@ -976,6 +981,7 @@ public class GestorPrincipal extends JPanel {
         this.actividadAgregarBtn.addActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.addActionListener(cCerrarSesion);
         this.cambiarHorasBtn.addActionListener(cCambiarHoras);
+        this.cambiarPenalizacionBtn.addActionListener(cCambiarPenalizacionSorteo);
     }
 
     /**
@@ -996,13 +1002,14 @@ public class GestorPrincipal extends JPanel {
      * @param cExposicionesAgregar  Controlador de agregar exposiciones.
      * @param cCambiarHoras         Controlador de cambiar horas de apertura
      *                              y cierre.
+     * @param cCambiarPenalizacionSorteo Controlador de cambiar la penalización por sorteo no canjeado.
      */
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
             ActionListener cSalasEjecutar, ActionListener cExposicionesEjecutar, ActionListener cExposicionesAgregar,
             ActionListener cEmpleadoAgregar, ActionListener cSorteoAgregar, ActionListener cDescuentoAgregar,
             ActionListener cCerrarSesion, ActionListener cActividadesAgregar, ActionListener cCambiarContrasenia,
-            ActionListener cCambiarHoras) {
+            ActionListener cCambiarHoras, ActionListener cCambiarPenalizacionSorteo) {
         this.obraEjecutarBtn.removeActionListener(cObrasEjecutar);
         this.obraAgregarBtn.removeActionListener(cObrasAgregar);
         this.leerObrasCSVBtn.removeActionListener(cObrasLeerCSV);
@@ -1016,6 +1023,7 @@ public class GestorPrincipal extends JPanel {
         this.actividadAgregarBtn.removeActionListener(cActividadesAgregar);
         this.cerrarSesionBtn.removeActionListener(cCerrarSesion);
         this.cambiarHorasBtn.removeActionListener(cCambiarHoras);
+        this.cambiarPenalizacionBtn.removeActionListener(cCambiarPenalizacionSorteo);
     }
 
     /**
