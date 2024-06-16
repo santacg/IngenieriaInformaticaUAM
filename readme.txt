@@ -3,6 +3,7 @@ y fin de las exposiciones, de tal manera que si la fecha de inicio es la fecha a
 si la fecha de fin es la actual y la exposición está en cualquier estado equivalente a PUBLICADA (todos menos EN_CREACION) las obras se eliminan de esas salas de exposición de esa exposición y pasan al estado de Almacenada. 
 Los sorteos se realizan de forma automática cuando llega la fecha con el uso de Tareas.java.
 A pesar de haber implementado esta automatización hemos dejado disponibles los métodos manuales de exponer obra y similares, aunque no se deberían usar.
+Para el código se ha usado la documentación de java: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html
 
 SalaExposicion.java: Se han implementado salas de exposición que se asocian a las salas físicas, esto permite tener distintas exposiciones en creación con las mismas salas físicas asignadas,
 esto otorga flexibilidad ya que el gestor puede tener distintas exposiciones en creación que comparten salas y obras, pero también hace que el gestor deba cuadrar la utilización de estas salas y obras

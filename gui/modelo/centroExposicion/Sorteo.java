@@ -25,6 +25,7 @@ public abstract class Sorteo implements Serializable {
     private int n_entradas;
     private Exposicion exposicion;
     private Set<Inscripcion> inscripciones;
+    private Boolean realizado = false;
 
     /**
      * Construye una instancia de Sorteo asignando una fecha y una exposicion
@@ -214,6 +215,25 @@ public abstract class Sorteo implements Serializable {
                 expofy.enviarNotificacionUsuario(mensaje, inscripcion.getCliente());
             }
         }
+
+        setRealizado();
+    }
+
+    /**
+     * Comprueba si el sorteo ya ha sido realizado.
+     * 
+     * @return {@code true} si el sorteo ya ha sido realizado, {@code false} en caso
+     *         contrario.
+     */
+    public Boolean isRealizado() {
+        return realizado;
+    }
+
+    /**
+     * Establece si el sorteo a realizado.
+     */
+    public void setRealizado() {
+        this.realizado = true;
     }
 
     /**
