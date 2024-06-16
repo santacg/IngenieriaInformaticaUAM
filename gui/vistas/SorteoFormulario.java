@@ -53,8 +53,8 @@ public class SorteoFormulario extends JDialog {
         formularioAñadirSorteo(panelFormulario, constraints);
 
         if (tipoSorteo.equals("Sorteo por día y hora")) {
-            addCampo("Dia del sorteo:", diaSorteo = new JTextField(20), panelFormulario, constraints);
-            addCampo("Hora del sorteo (hh:mm):", horaSorteo = new JTextField(20), panelFormulario, constraints);
+            addCampo("Dia de la exposición:", diaSorteo = new JTextField(20), panelFormulario, constraints);
+            addCampo("Hora de la exposición (hh:mm):", horaSorteo = new JTextField(20), panelFormulario, constraints);
         } else if (tipoSorteo.equals("Sorteo por fechas")) {
             addCampo("Fecha inicio (yyyy-mm-dd):", fechaInicioSorteo = new JTextField(20), panelFormulario, constraints);
             addCampo("Fecha fin (yyyy-mm-dd):", fechaFinSorteo = new JTextField(20), panelFormulario, constraints);
