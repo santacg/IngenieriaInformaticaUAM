@@ -608,7 +608,8 @@ public class ControladorGestor {
      */
     private ActionListener cambiarPenalizacionSorteosListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String stringPenalizacion = JOptionPane.showInputDialog(vista, "Introduce el número de días de la nueva penalización: ");
+            String stringPenalizacion = JOptionPane.showInputDialog(vista,
+                    "Introduce el número de días de la nueva penalización: ");
 
             if (stringPenalizacion == null || stringPenalizacion.equals("")) {
                 JOptionPane.showMessageDialog(frame, "No se ha actualizado la penalización");
@@ -643,20 +644,22 @@ public class ControladorGestor {
             int selectedRow = tabla.getSelectedRow();
 
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(frame, "Debes seleccionar un sorteo.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Debes seleccionar un sorteo.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            String fechaSorteoString  = (String) tabla.getValueAt(selectedRow, 0);
+            String fechaSorteoString = (String) tabla.getValueAt(selectedRow, 0);
             String exposicionString = (String) tabla.getValueAt(selectedRow, 1);
 
             LocalDate fechaSorteo = LocalDate.parse(fechaSorteoString);
             Exposicion exposicion = centro.getExposicionPorNombre(exposicionString);
-            
+
             Sorteo sorteo = centro.getSorteo(exposicion, fechaSorteo);
 
             if (LocalDate.now().isBefore(fechaSorteo)) {
-                JOptionPane.showMessageDialog(frame, "No se puede celebrar un sorteo antes de la fecha del sorteo.");
+                JOptionPane.showMessageDialog(frame,
+                        "No se puede celebrar un sorteo antes de la fecha límite de inscripción del sorteo.");
                 return;
             }
 

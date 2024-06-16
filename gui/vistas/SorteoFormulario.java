@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 import javax.swing.*;
@@ -53,7 +54,7 @@ public class SorteoFormulario extends JDialog {
 
         if (tipoSorteo.equals("Sorteo por día y hora")) {
             addCampo("Dia del sorteo:", diaSorteo = new JTextField(20), panelFormulario, constraints);
-            addCampo("Hora del sorteo:", horaSorteo = new JTextField(20), panelFormulario, constraints);
+            addCampo("Hora del sorteo (hh:mm):", horaSorteo = new JTextField(20), panelFormulario, constraints);
         } else if (tipoSorteo.equals("Sorteo por fechas")) {
             addCampo("Fecha inicio (yyyy-mm-dd):", fechaInicioSorteo = new JTextField(20), panelFormulario, constraints);
             addCampo("Fecha fin (yyyy-mm-dd):", fechaFinSorteo = new JTextField(20), panelFormulario, constraints);
@@ -208,10 +209,18 @@ public class SorteoFormulario extends JDialog {
     /**
      * Método que devuelve la hora introducida en el formulario
      * 
-     * @return String con la hora introducida
+     * @return LocalTime con la hora introducida
      */
-    public String getHoraSorteo() {
-        return horaSorteo.getText();
+    public LocalTime getHoraSorteo() {
+        if (this.horaSorteo.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return LocalTime.parse(this.horaSorteo.getText());
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     /**

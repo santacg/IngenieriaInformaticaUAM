@@ -25,9 +25,8 @@ public class Hora implements Serializable {
      * @param horaInicio La hora de inicio de la actividad.
      * @param horaFin    La hora de fin de la actividad.
      * @param nEntradas  El número total de entradas disponibles para la actividad.
-     * @param precio     El precio por entrada.
      */
-    public Hora(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas, Double precio) {
+    public Hora(LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Integer nEntradas) {
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;

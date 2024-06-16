@@ -443,7 +443,8 @@ public class GestorPrincipal extends JPanel {
      * @param centro Centro de exposiciones.
      */
     public void addPanelSorteos(CentroExposicion centro) {
-        String[] titulos = { "Fecha de realización del Sorteo", "Exposición Relacionada", "Número de Entradas", "Realizado" };
+        String[] titulos = { "Fecha límite de inscripción del Sorteo", "Exposición Relacionada", "Número de Entradas",
+                "Realizado" };
 
         Object[][] datos = construirDatosSorteos(centro, titulos);
 
@@ -494,8 +495,9 @@ public class GestorPrincipal extends JPanel {
     public void actualizarTablaSorteos(CentroExposicion centro) {
         DefaultTableModel modelo = (DefaultTableModel) this.tablaSorteos.getModel();
         modelo.setRowCount(0);
-        Object[][] datos = construirDatosSorteos(centro, new String[] { "Fecha de realización del Sorteo", "Exposición Relacionada",
-                "Número de Entradas", "Realizado" });
+        Object[][] datos = construirDatosSorteos(centro,
+                new String[] { "Fecha límite de inscripción del Sorteo", "Exposición Relacionada",
+                        "Número de Entradas", "Realizado" });
         for (Object[] sorteoData : datos) {
             modelo.addRow(sorteoData);
         }
@@ -521,7 +523,8 @@ public class GestorPrincipal extends JPanel {
         JPanel panelAcciones = new JPanel();
         this.exposicionComboAcciones = new JComboBox<>(
                 new String[] { "Publicar Exposicion", "Cancelar Exposicion", "Prorrogar Exposicion",
-                        "Cerrar Temporalmente", "Establecer como Temporal", "Establecer como Permanente", "Eliminar Exposicion"});
+                        "Cerrar Temporalmente", "Establecer como Temporal", "Establecer como Permanente",
+                        "Eliminar Exposicion" });
         this.exposicionEjecutarBtn = new JButton("Ejecutar accion");
         this.exposicionAgregarBtn = new JButton("Agregar exposicion");
 
@@ -967,7 +970,7 @@ public class GestorPrincipal extends JPanel {
      * @param cCambiarHoras                  Controlador de cambiar horas de
      *                                       apertura
      * @param cCambiarPenalizacionSorteo     Controlador de cambiar la penalización
-     *                                      por sorteo no canjeado.
+     *                                       por sorteo no canjeado.
      * @param cCelebrarSorteo                Controlador de celebrar sorteo.
      */
     public void setControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
@@ -997,23 +1000,24 @@ public class GestorPrincipal extends JPanel {
     /**
      * Elimina los controladores de los botones.
      * 
-     * @param cObrasEjecutar        Controlador de ejecutar acciones de obras.
-     * @param cObrasAgregar         Controlador de agregar obras.
-     * @param cSalasEjecutar        Controlador de ejecutar acciones de salas.
-     * @param cExposicionesEjecutar Controlador de ejecutar acciones de
-     *                              exposiciones.
-     * @param cEmpleadoAgregar      Controlador de agregar empleados.
-     * @param cSorteoAgregar        Controlador de agregar sorteos.
-     * @param cDescuentoAgregar     Controlador de agregar descuentos.
-     * @param cCerrarSesion         Controlador de cerrar sesión.
-     * @param cCambiarContrasenia   Controlador de cambiar contraseña.
-     * @param cObrasLeerCSV         Controlador de leer obras desde CSV.
-     * @param cActividadesAgregar   Controlador de agregar actividades.
-     * @param cExposicionesAgregar  Controlador de agregar exposiciones.
-     * @param cCambiarHoras         Controlador de cambiar horas de apertura
-     *                              y cierre.
-     * @param cCambiarPenalizacionSorteo Controlador de cambiar la penalización por sorteo no canjeado.
-     * @param cCelebrarSorte Controlador de celebrar sorteo.
+     * @param cObrasEjecutar             Controlador de ejecutar acciones de obras.
+     * @param cObrasAgregar              Controlador de agregar obras.
+     * @param cSalasEjecutar             Controlador de ejecutar acciones de salas.
+     * @param cExposicionesEjecutar      Controlador de ejecutar acciones de
+     *                                   exposiciones.
+     * @param cEmpleadoAgregar           Controlador de agregar empleados.
+     * @param cSorteoAgregar             Controlador de agregar sorteos.
+     * @param cDescuentoAgregar          Controlador de agregar descuentos.
+     * @param cCerrarSesion              Controlador de cerrar sesión.
+     * @param cCambiarContrasenia        Controlador de cambiar contraseña.
+     * @param cObrasLeerCSV              Controlador de leer obras desde CSV.
+     * @param cActividadesAgregar        Controlador de agregar actividades.
+     * @param cExposicionesAgregar       Controlador de agregar exposiciones.
+     * @param cCambiarHoras              Controlador de cambiar horas de apertura
+     *                                   y cierre.
+     * @param cCambiarPenalizacionSorteo Controlador de cambiar la penalización por
+     *                                   sorteo no canjeado.
+     * @param cCelebrarSorte             Controlador de celebrar sorteo.
      */
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,

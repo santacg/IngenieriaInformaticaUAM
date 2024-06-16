@@ -21,3 +21,4 @@ Para usar la parte visual hemos implementado un mainVisual;
 Contraseña gestor: gestionPrado
 NumSS y contraseña empleado1: 789 - empleadoPrado
 NIF y contraseña cliente1: 123 - Carlos123
+NIF y contraseña cliente2: 456 - Ana456

@@ -64,7 +64,7 @@ public class Exposicion implements Serializable {
         for (fechaAux = fechaInicio; fechaAux.isBefore(fechaAux); fechaAux.plusDays(1)) {
             for (int i = 0; i < 11; i++) {
                 horario.add(new Hora(fechaAux, LocalTime.of(9, 0, 0).plusHours(i),
-                        LocalTime.of(9, 0, 0).plusHours(i).plusMinutes(50), 40, precio));
+                        LocalTime.of(9, 0, 0).plusHours(i).plusMinutes(50), 40));
             }
         }
         this.descripcion = descripcion;
@@ -481,6 +481,12 @@ public class Exposicion implements Serializable {
         this.descuento = descuento;
     }
 
+    /**
+     * Configura un descuento para la exposición basado en la cantidad de meses
+     * 
+     * @param cantidadDescuento La cantidad de descuento.
+     * @param meses            El número de meses.
+     */
     public void configurarDescuentoMes(double cantidadDescuento, int meses) {
         if (cantidadDescuento <= 0) {
             System.out.println("El descuento no puede ser negativo o nulo");
@@ -505,15 +511,27 @@ public class Exposicion implements Serializable {
         return true;
     }
 
+    /**
+     * Devuelve una hora.
+     * 
+     * @param fecha    La fecha de la hora.
+     * @param hora_num El número de la hora.
+     * @return La hora.
+     */
     public Hora getHora(LocalDate fecha, int hora_num) {
         for (Hora hora : horario) {
             if (hora.getFecha().isEqual(fecha) && hora_num == hora.getHoraInicio().getHour()) {
                 return hora;
             }
         }
-        return new Hora(fecha, LocalTime.of(hora_num, 0, 0), LocalTime.of(hora_num, 59, 0), 40, precio);
+        return new Hora(fecha, LocalTime.of(hora_num, 0, 0), LocalTime.of(hora_num, 59, 0), 40);
     }
 
+    /**
+     * Devuelve un conjunto de obras.
+     * 
+     * @return El conjunto de obras.
+     */
     public Set<Obra> getObras() {
         Set<Obra> obras = new HashSet<>();
         for (SalaExposicion sala : this.salas) {
