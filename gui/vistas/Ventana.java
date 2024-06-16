@@ -336,7 +336,8 @@ public class Ventana extends JFrame {
 				controladorGestor.getActividadAgregarListener(),
 				controladorGestor.getCerrarSesionListener(),
 				controladorGestor.getCambiarHorasListener(),
-				controladorGestor.getCambiarPenalizacionSorteosListener());
+				controladorGestor.getCambiarPenalizacionSorteosListener(),
+				controladorGestor.getSorteoCelebrarListener());
 	}
 
 	/**

@@ -2,6 +2,7 @@ package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.centroExposicion.Sorteo;
 import gui.modelo.expofy.Expofy;
 import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
@@ -633,6 +635,39 @@ public class ControladorGestor {
     };
 
     /**
+     * Método que inicializa un listener para celebrar un sorteo.
+     */
+    private ActionListener sorteoCelebrarListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            JTable tabla = vista.getTablaSorteos();
+            int selectedRow = tabla.getSelectedRow();
+
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(frame, "Debes seleccionar un sorteo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String fechaSorteoString  = (String) tabla.getValueAt(selectedRow, 0);
+            String exposicionString = (String) tabla.getValueAt(selectedRow, 1);
+
+            LocalDate fechaSorteo = LocalDate.parse(fechaSorteoString);
+            Exposicion exposicion = centro.getExposicionPorNombre(exposicionString);
+            
+            Sorteo sorteo = centro.getSorteo(exposicion, fechaSorteo);
+
+            if (LocalDate.now().isBefore(fechaSorteo)) {
+                JOptionPane.showMessageDialog(frame, "No se puede celebrar un sorteo antes de la fecha del sorteo.");
+                return;
+            }
+
+            sorteo.realizarSorteo();
+
+            JOptionPane.showMessageDialog(frame, "Sorteo celebrado correctamente.");
+            vista.actualizarTablaSorteos(centro);
+        }
+    };
+
+    /**
      * Método que inicializa un listener para cerrar sesion.
      */
     private ActionListener cerrarSesionListener = new ActionListener() {
@@ -642,7 +677,7 @@ public class ControladorGestor {
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
                     empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
                     actividadAgregarListener, cerrarSesionListener, cambiarHorasListener,
-                    cambiarPenalizacionSorteosListener);
+                    cambiarPenalizacionSorteosListener, sorteoCelebrarListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());
@@ -766,6 +801,15 @@ public class ControladorGestor {
      */
     public ActionListener getCambiarPenalizacionSorteosListener() {
         return cambiarPenalizacionSorteosListener;
+    }
+
+    /**
+     * Método que devuelve el ActionListener para celebrar un sorteo.
+     * 
+     * @return ActionListener para celebrar un sorteo.
+     */
+    public ActionListener getSorteoCelebrarListener() {
+        return sorteoCelebrarListener;
     }
 
     /**

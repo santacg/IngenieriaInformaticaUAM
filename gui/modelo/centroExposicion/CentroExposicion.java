@@ -623,6 +623,22 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
+     * Obtiene un sorteo por su fecha de inscripcion y exposicion.
+     * 
+     * 
+     * @return el sorteo con el nombre proporcionado, o null si no existe
+     */
+    public Sorteo getSorteo(Exposicion exposicion, LocalDate fechaSorteo) {
+        for (Sorteo sorteo : sorteos) {
+            if (sorteo.getExposicion().equals(exposicion) && sorteo.getFechaSorteo().equals(fechaSorteo)) {
+                return sorteo;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Establece el los sorteos del centro.
      * 
      * @param sorteos Los sorteos a asignar.
@@ -1184,4 +1200,5 @@ public class CentroExposicion implements Serializable {
 
         return sb.toString();
     }
+
 }

@@ -20,11 +20,12 @@ public class Tareas {
 
         Set<CentroExposicion> centros = expofy.getCentrosExposicion();
         for (CentroExposicion centro : centros) {
-            
-            // Se realizan los sorteos de forma automática si es el día del sorteo
+
             for (Sorteo sorteo : centro.getSorteos()) {
-                if (sorteo.getFechaSorteo().isEqual(LocalDate.now())) {
-                    sorteo.realizarSorteo();
+                if (sorteo.getFechaSorteo().isBefore(LocalDate.now())) {
+                    expofy.enviarNotificacionUsuario("La fecha de realización del sorteo de la exposición "
+                            + sorteo.getExposicion() + " con fecha " + sorteo.getFechaSorteo() + " ha pasado",
+                            centro.getGestor());
                 }
             }
 
@@ -42,15 +43,17 @@ public class Tareas {
                         }
                     }
 
-                // Si la exposición ha finalizado, y no esta en estado de creacion se almacenan las obras
-                } else if (exposicion.getFechaFin().isEqual(LocalDate.now()) && estado != EstadoExposicion.EN_CREACION) {
+                    // Si la exposición ha finalizado, y no esta en estado de creacion se almacenan
+                    // las obras
+                } else if (exposicion.getFechaFin().isEqual(LocalDate.now())
+                        && estado != EstadoExposicion.EN_CREACION) {
                     for (SalaExposicion sala : exposicion.getSalas()) {
                         for (Obra obra : sala.getObras()) {
                             obra.almacenarObra();
                             sala.removeObra(obra);
                         }
                     }
-                } 
+                }
             }
         }
     };

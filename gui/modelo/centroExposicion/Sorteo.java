@@ -139,7 +139,8 @@ public abstract class Sorteo implements Serializable {
             }
             i++;
         }
-        throw new IllegalStateException("Something went wrong while picking a random element.");
+
+        throw new IllegalArgumentException("El conjunto de inscripciones está vacío.");
     }
 
     /**

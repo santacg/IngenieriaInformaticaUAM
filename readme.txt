@@ -13,7 +13,8 @@ con los parametros físicos que eligiese, quedando la sala inicial como sala pad
 y la sala principal.
 
 Creacion de exposiciones: Para crear exposiciones primero se añade una exposición y posteriormente se van asignando salas físicas a la exposición en el panel de salas, luego en el panel de obras se van
-añadiendo obras a las distintas salas de exposición previamente asignadas (el sistema comprueba que las obras sean compatibles con la sala de exposición elegida).
+añadiendo obras a las distintas salas de exposición previamente asignadas (el sistema comprueba que las obras sean compatibles con la sala de exposición elegida). En cada uno de estos pasos 
+se comprueba que los recursos de la exposicion (obras y salas) no se compartan con exposiciones en fechas coincidentes.
 
 Para usar la parte visual hemos implementado un mainVisual;
 
