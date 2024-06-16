@@ -314,11 +314,27 @@ public class ControladorCliente {
                 vista.getTablaExposiciones().clearSelection();
                 if (cliente.getSancionado()) {
                     JOptionPane.showMessageDialog(frame,
-                            "Su cuenta está sancionada para la participación en sorteos hasta la fecha "
+                            "Su cuenta está sancionada para la participación en sorteos hasta la fecha."
                                     + cliente.getSancionadoHasta());
                     return;
                 }
-                cliente.inscribirse(sorteo, 1);
+                if (sorteo.clienteInscristo(cliente.getNIF())) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Usted ya se encuentra inscrito en este sorteo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Integer[] opciones = { 1, 2 };
+                Integer nSeleccionado = (Integer) JOptionPane.showInputDialog(frame,
+                        "Selecciona el numero de entradas para participar:",
+                        "Número de entradas",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opciones,
+                        opciones[0]);
+                if (nSeleccionado == null) {
+                    return;
+                }
+                cliente.inscribirse(sorteo, nSeleccionado);
                 JOptionPane.showMessageDialog(frame, "Usted se ha inscrito al sorteo");
             } else {
                 JOptionPane.showMessageDialog(frame, "Por favor, selecciona un sorteo.");

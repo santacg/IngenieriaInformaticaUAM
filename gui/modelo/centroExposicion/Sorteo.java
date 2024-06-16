@@ -123,6 +123,15 @@ public abstract class Sorteo implements Serializable {
         inscripciones.remove(inscripcion);
     }
 
+    public Boolean clienteInscristo(String nif){
+        for (Inscripcion inscripcion : inscripciones) {
+            if (inscripcion.getCliente().getNIF().equals(nif)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Selecciona aleatoriamente una inscripción de un conjunto de inscripciones.
      * 
