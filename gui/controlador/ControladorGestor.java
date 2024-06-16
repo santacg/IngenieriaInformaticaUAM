@@ -608,7 +608,7 @@ public class ControladorGestor {
         public void actionPerformed(ActionEvent e) {
             String stringPenalizacion = JOptionPane.showInputDialog(vista, "Introduce el número de días de la nueva penalización: ");
 
-            if (stringPenalizacion.isEmpty()) {
+            if (stringPenalizacion == null || stringPenalizacion.equals("")) {
                 JOptionPane.showMessageDialog(frame, "No se ha actualizado la penalización");
                 return;
             }
