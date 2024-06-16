@@ -102,7 +102,8 @@ public class SalaExposicion implements Serializable {
                 break;
         }
 
-        if (obra.getClass() == ObraNoDigital.class) {
+        if (obra.getClass() == Fotografia.class || obra.getClass() == Cuadro.class
+                || obra.getClass() == Escultura.class) {
             if (sala.getClimatizador() == false) {
                 System.out.println("No se puede añadir una obra no digital a una sala sin climatizador");
                 return false;

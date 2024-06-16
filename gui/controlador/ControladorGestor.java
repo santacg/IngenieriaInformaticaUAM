@@ -244,13 +244,16 @@ public class ControladorGestor {
                                         if ((exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaInicio())
                                                 && exposicion.getFechaFin().isBefore(exposicionCentro.getFechaFin())) ||
                                                 (exposicion.getFechaInicio().isEqual(exposicionCentro.getFechaInicio())
-                                                && exposicion.getFechaFin().isEqual(exposicionCentro.getFechaFin()))) {
+                                                        && exposicion.getFechaFin()
+                                                                .isEqual(exposicionCentro.getFechaFin()))) {
                                             for (SalaExposicion salaExpo : exposicionCentro.getSalas()) {
                                                 if (salaExpo.getObras().contains(obra)) {
                                                     JOptionPane.showMessageDialog(frame,
                                                             "La obra ya está en una sala de exposición de la exposición "
                                                                     + exposicionCentro.getNombre());
-                                                    continue;
+
+                                                    vista.deseleccionarTabla();
+                                                    return;
                                                 }
                                             }
                                         }
@@ -259,11 +262,7 @@ public class ControladorGestor {
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
                                     List<String> nombresSalas = new ArrayList<>();
                                     for (SalaExposicion salaExposicion : salas) {
-                                        Sala salaPrincipal = salaExposicion.getSala();
-                                        nombresSalas.add(salaPrincipal.getNombre());
-                                        for (Sala subSala : salaPrincipal.getSubSalas()) {
-                                            nombresSalas.add(subSala.getNombre());
-                                        }
+                                        nombresSalas.add(salaExposicion.getSala().getNombre());
                                     }
 
                                     String salaSeleccionadaNombre = (String) JOptionPane.showInputDialog(
@@ -291,7 +290,9 @@ public class ControladorGestor {
 
                                     if (salaSeleccionada == null || salaSeleccionada.addObra(obra) == false) {
                                         JOptionPane.showMessageDialog(frame,
-                                                "No se puede añadir la obra " + nombreObra);
+                                                "No se puede añadir la obra " + nombreObra
+                                                        + " analiza bien sus requistos o si ya esta añadidada a la sala "
+                                                        + salaSeleccionadaNombre);
                                         continue;
                                     }
 

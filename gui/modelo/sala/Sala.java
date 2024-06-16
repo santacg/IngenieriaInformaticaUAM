@@ -290,7 +290,7 @@ public class Sala implements Serializable {
      */
     public boolean addSubsala(Double ancho, Double largo, Integer nTomasElectricidad, Integer aforo) {
         if (this.aforo <= aforo || this.ancho <= ancho || this.largo <= largo
-                || this.tomasElectricidad <= nTomasElectricidad) {
+                || this.tomasElectricidad < nTomasElectricidad) {
             System.out.println("No se puede añadir la subsala, no hay suficientes recursos.");
             return false;
         }

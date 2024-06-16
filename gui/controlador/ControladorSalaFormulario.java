@@ -61,9 +61,9 @@ public class ControladorSalaFormulario {
                         return;
                     }
 
-                    if (aforo <= 0 || ancho <= 0 || largo <= 0 || alto <= 0 || tomasElectricidad <= 0) {
+                    if (aforo <= 0 || ancho <= 0 || largo <= 0 || alto <= 0 || tomasElectricidad < 0) {
                         JOptionPane.showMessageDialog(vista,
-                                "Debes rellenar todos los campos con valores mayores que 0.", "Error",
+                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -85,51 +85,52 @@ public class ControladorSalaFormulario {
                 case "Añadir Subsala":
                     int selectedRow = frame.getTablaSalas().getSelectedRow();
 
-                    if (selectedRow != -1) {
-                        frame.getTablaSalas().clearSelection();
-                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
-                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
-                        // Si no se ha encontrado sala con ese nombre es que es una subsala
-                        if (salaSeleccionada == null) {
-                            salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
-                        }
-
-                        aforo = vista.getAforo();
-                        ancho = vista.getAncho();
-                        largo = vista.getLargo();
-                        tomasElectricidad = vista.getTomasElectricidad();
-
-                        if (aforo == null || ancho == null || largo == null
-                                || tomasElectricidad == null) {
-                            JOptionPane.showMessageDialog(vista,
-                                    "Debes rellenar todos los campos o hacerlo de forma correcta.", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
-
-                        if (aforo <= 0 || ancho <= 0 || largo <= 0 || tomasElectricidad <= 0) {
-                            JOptionPane.showMessageDialog(vista,
-                                    "Debes rellenar todos los campos con valores mayores que 0.", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
-
-                        if (salaSeleccionada.addSubsala(ancho,
-                                largo,
-                                tomasElectricidad,
-                                aforo) == false) {
-                            JOptionPane.showMessageDialog(vista,
-                                    "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
-                                    "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
-                        frame.actualizarTablaSalas(centroExposicion);
-                    } else {
+                    if (selectedRow == -1) {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para añadir una subsala.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         break;
                     }
+
+                    frame.getTablaSalas().clearSelection();
+                    String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                    Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
+
+                    if (salaSeleccionada == null) {
+                        salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
+                    }
+
+                    aforo = vista.getAforo();
+                    ancho = vista.getAncho();
+                    largo = vista.getLargo();
+                    tomasElectricidad = vista.getTomasElectricidad();
+
+                    if (aforo == null || ancho == null || largo == null
+                            || tomasElectricidad == null) {
+                        JOptionPane.showMessageDialog(vista,
+                                "Debes rellenar todos los campos o hacerlo de forma correcta.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (aforo <= 0 || ancho <= 0 || largo <= 0 || tomasElectricidad < 0) {
+                        JOptionPane.showMessageDialog(vista,
+                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (salaSeleccionada.addSubsala(ancho,
+                            largo,
+                            tomasElectricidad,
+                            aforo) == false) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    frame.actualizarTablaSalas(centroExposicion);
 
                     JOptionPane.showMessageDialog(vista, "Subsala añadida correctamente.", "Subsala añadida",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -137,28 +138,39 @@ public class ControladorSalaFormulario {
                 case "Eliminar Sala":
                     selectedRow = frame.getTablaSalas().getSelectedRow();
 
-                    if (selectedRow != -1) {
-                        frame.getTablaSalas().clearSelection();
-                        String nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
-                        Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
-
-                        // Si es null es una subsala
-                        if (salaSeleccionada == null) {
-                            salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
-                            salaSeleccionada.removeSubsala();
-                        } else {
-                            if (centroExposicion.removeSala(salaSeleccionada) == false) {
-                                JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
-                                        JOptionPane.ERROR_MESSAGE);
-                                break;
-                            }
-                        }
-                        frame.actualizarTablaSalas(centroExposicion);
-                    } else {
+                    if (selectedRow == -1) {
                         JOptionPane.showMessageDialog(vista, "Selecciona una sala para eliminar.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         break;
                     }
+
+                    frame.getTablaSalas().clearSelection();
+                    nombre = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
+                    salaSeleccionada = centroExposicion.getSalaPorNombre(nombre);
+
+                    if (salaSeleccionada == null) {
+                        salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
+                    } 
+
+                    for (Exposicion exposicion : centroExposicion.getExposiciones()) {
+                        for (SalaExposicion salaExposicion : exposicion.getSalas()) {
+                            if (salaExposicion.getSala().getNombre().equals(salaSeleccionada.getNombre())) {
+                                JOptionPane.showMessageDialog(vista,
+                                        "No se puede eliminar una sala que está asignada a una exposición.",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                        }
+                    }
+                    
+                    if (centroExposicion.removeSala(salaSeleccionada) == false) {
+                            JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            break;
+                    }
+
+                    frame.actualizarTablaSalas(centroExposicion);
+
                     JOptionPane.showMessageDialog(vista, "Sala eliminada correctamente.", "Sala eliminada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
@@ -170,10 +182,11 @@ public class ControladorSalaFormulario {
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                     }
+
                     frame.getTablaSalas().clearSelection();
 
                     String nombreSala = (String) frame.getTablaSalas().getValueAt(selectedRow, 0);
-                    Sala salaSeleccionada = centroExposicion.getSalaPorNombre(nombreSala);
+                    salaSeleccionada = centroExposicion.getSalaPorNombre(nombreSala);
 
                     if (salaSeleccionada == null) {
                         JOptionPane.showMessageDialog(vista, "No se puede añadir una subsala, debes añadir salas.",
@@ -195,11 +208,12 @@ public class ControladorSalaFormulario {
                     if (result != JOptionPane.OK_OPTION || listaExposiciones.getSelectedValue() == null) {
                         JOptionPane.showMessageDialog(vista, "No se ha seleccionado ninguna exposición.",
                                 "Acción cancelada", JOptionPane.INFORMATION_MESSAGE);
-                        break;
+                        return;
                     }
 
                     String exposicionSeleccionada = listaExposiciones.getSelectedValue();
                     Exposicion exposicion = centroExposicion.getExposicionPorNombre(exposicionSeleccionada);
+
                     if (exposicion == null) {
                         JOptionPane.showMessageDialog(vista, "Exposición no encontrada.",
                                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -209,7 +223,15 @@ public class ControladorSalaFormulario {
                     if (exposicion.getEstado() != EstadoExposicion.EN_CREACION) {
                         JOptionPane.showMessageDialog(vista, "La exposición no se puede modificar.",
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        break;
+                        return;
+                    }
+
+                    for (SalaExposicion salaExposicion : exposicion.getSalas()) {
+                        if (salaExposicion.getSala().getNombre().equals(salaSeleccionada.getNombre())) {
+                            JOptionPane.showMessageDialog(vista, "La sala ya está asignada a la exposición.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                     }
 
                     for (Exposicion exposicionCentro : centroExposicion.getExposiciones()) {
@@ -223,7 +245,7 @@ public class ControladorSalaFormulario {
                                     JOptionPane.showMessageDialog(vista,
                                             "La sala ya está asignada a otra exposición en las mismas fechas.",
                                             "Error", JOptionPane.ERROR_MESSAGE);
-                                    break;
+                                    return;
                                 }
                             }
                         }
@@ -240,7 +262,7 @@ public class ControladorSalaFormulario {
                             JOptionPane.showMessageDialog(vista,
                                     "No se han podido añadir las subsalas a la exposición.",
                                     "Error", JOptionPane.ERROR_MESSAGE);
-                            break;
+                            return;
                         }
                     }
 

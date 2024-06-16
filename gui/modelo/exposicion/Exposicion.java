@@ -53,18 +53,6 @@ public class Exposicion implements Serializable {
             Double precio) {
         LocalDate fechaAux;
 
-        if (fechaFin != null) {
-            if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) {
-                System.out.println("La fecha de inicio no puede ser posterior o igual a la fecha de fin");
-                return;
-            }
-
-            if (fechaFin.isBefore(LocalDate.now()) || fechaFin.isEqual(LocalDate.now())) {
-                System.out.println("La fecha de fin no puede ser anterior a la fecha actual");
-                return;
-            }
-        }
-
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         if (tipo.equals(TipoExpo.PERMANENTE)) {
