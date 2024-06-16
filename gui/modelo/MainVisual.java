@@ -42,7 +42,7 @@ public class MainVisual {
                 Set<Sala> salasPrado = new HashSet<>();
 
                 Sala salaRenacimiento = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0);
-                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, false, 12, 20.0, 35.0);
+                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0);
                 Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0);
 
                 salasPrado.add(salaRenacimiento);
@@ -80,14 +80,37 @@ public class MainVisual {
         }
 
         private static void configurarExposicionesYObra(CentroExposicion centro) {
-                SalaExposicion salaExposicion = new SalaExposicion(centro.getSalas().iterator().next());
+                SalaExposicion salaExposicionRenacimiento = null;
+                SalaExposicion salaExposicionImpresionismo = null;
+                SalaExposicion salaExposicionModerno = null;
 
-                Exposicion exposicion1 = new Exposicion("Van Gogh: Los Últimos Años", LocalDate.of(2024, 10, 1),
-                                LocalDate.of(2024, 11, 1),
+                for (Sala sala : centro.getSalas()) {
+                        if (sala.getNombre().equals("Sala de Renacimiento")) {
+                                salaExposicionRenacimiento = new SalaExposicion(sala);
+                        } else if (sala.getNombre().equals("Sala de Impresionismo")) {
+                                salaExposicionImpresionismo = new SalaExposicion(sala);
+                        } else if (sala.getNombre().equals("Sala Arte Moderno")) {
+                                salaExposicionModerno = new SalaExposicion(sala);
+                        }
+                }
+
+                Exposicion exposicion1 = new Exposicion("Van Gogh: Los Últimos Años", LocalDate.now(),
+                                LocalDate.now().plusDays(30),
                                 "Explora la intensa última década de Van Gogh con obras nunca antes vistas en nuestro país.",
                                 TipoExpo.TEMPORAL, 20.0);
 
+                Exposicion exposicion2 = new Exposicion("Clásicos del Impresionismo", LocalDate.now(),
+                                LocalDate.now().plusDays(10),
+                                "Una colección selecta de las obras más representativas del impresionismo.",
+                                TipoExpo.TEMPORAL, 15.0);
+
+                Exposicion exposicion3 = new Exposicion("Arte Moderno", LocalDate.now(), null,
+                                "Una exposición de arte moderno con obras de los artistas más influyentes del siglo XX.",
+                                TipoExpo.PERMANENTE, 10.0);
+
                 centro.addExposicion(exposicion1);
+                centro.addExposicion(exposicion2);
+                centro.addExposicion(exposicion3);
 
                 Cuadro cuadro = new Cuadro("Girasoles", 1888,
                                 "Una de las series más famosas de Van Gogh.", true, 3000.0, "VG456",
@@ -101,20 +124,60 @@ public class MainVisual {
                                 "Documental sobre la última década de Van Gogh.", false, 500.0, "VG123",
                                 "60", "ESP", "Alguien");
 
+                Cuadro cuadro3 = new Cuadro("Impresión, sol naciente", 1872,
+                                "La obra que dio nombre al impresionismo.", true, 2000.0, "IM456",
+                                48.0, 63.0, 30, 20, 70, 45, "Óleo sobre lienzo", "Claude Monet");
+
+                Cuadro cuadro4 = new Cuadro("Mujer con sombrilla", 1875, "Una de las obras más conocidas de Monet.",
+                                true, 2500.0, "IM789", 100.0, 81.0, 45, 30, 70, 45, "Óleo sobre lienzo",
+                                "Claude Monet");
+
+                Audiovisual audiovisual2 = new Audiovisual("Impresionismo documental", 2024,
+                                "Documental sobre el impresionismo.",
+                                false, 200.0, "IM123", "60", "ESP", "Alguien2");
+
+                Escultura escultura = new Escultura("La danza", 1881, "Escultura impresionista.", true, 10000.0,
+                                "DE456",
+                                2.0, 0.5, 0.5, 22, 10, 65, 35, "Bronce", "Jean-Baptiste Carpeaux");
+
+                Cuadro cuadro5 = new Cuadro("La persistencia de la memoria", 1931, "Obra de Dalí", false, 5000.0,
+                                "DM456", 24.1, 33.0, 30, 20, 70, 45, "Óleo sobre lienzo", "Salvador Dalí");
+
+                Fotografia fotografia = new Fotografia("Migrant Mother", 1936, "Fotografía de Dorothea Lange", false,
+                                1000.0, "FL456", 10.0, 8.0, 30, 20, 70, 45, false, "Dorothea Lange");
+
                 centro.addObra(cuadro);
                 centro.addObra(cuadro2);
                 centro.addObra(audiovisual);
+                centro.addObra(cuadro3);
+                centro.addObra(cuadro4);
+                centro.addObra(audiovisual2);
+                centro.addObra(escultura);
+                centro.addObra(cuadro5);
+                centro.addObra(fotografia);
 
-                salaExposicion.addObra(cuadro);
-                salaExposicion.addObra(cuadro2);
-                salaExposicion.addObra(audiovisual);
+                salaExposicionRenacimiento.addObra(cuadro);
+                salaExposicionRenacimiento.addObra(cuadro2);
+                salaExposicionRenacimiento.addObra(audiovisual);
 
-                exposicion1.addSala(salaExposicion);
+                exposicion1.addSala(salaExposicionRenacimiento);
+
+                salaExposicionImpresionismo.addObra(cuadro3);
+                salaExposicionImpresionismo.addObra(cuadro4);
+                salaExposicionImpresionismo.addObra(audiovisual2);
+                salaExposicionImpresionismo.addObra(escultura);
+
+                exposicion2.addSala(salaExposicionImpresionismo);
+
+                salaExposicionModerno.addObra(cuadro5);
+                salaExposicionModerno.addObra(fotografia);
+
+                exposicion3.addSala(salaExposicionModerno);
         }
 
         private static void configurarYPublicarExposiciones(CentroExposicion centro) {
                 for (Exposicion exposicion : centro.getExposiciones()) {
-                        centro.confgiurarSorteoExposicion(exposicion, LocalDate.of(2024, 10, 5), 10);
+                        centro.confgiurarSorteoExposicion(exposicion, LocalDate.now().plusDays(4), 10);
                         exposicion.expoPublicar();
                 }
         }
@@ -126,7 +189,8 @@ public class MainVisual {
         }
 
         private static void configurarActividades(CentroExposicion centro) {
-                centro.addActividad("Visita expo Van Gogh", TipoActividad.VISITA_GUIADA, "Visita guiada a la exposición 'Van Gogh: Los Últimos Años", 10,
+                centro.addActividad("Visita expo Van Gogh", TipoActividad.VISITA_GUIADA,
+                                "Visita guiada a la exposición 'Van Gogh: Los Últimos Años", 10,
                                 LocalDate.of(2024, 10, 2), LocalTime.of(11, 0), centro.getSalas().iterator().next());
         }
 

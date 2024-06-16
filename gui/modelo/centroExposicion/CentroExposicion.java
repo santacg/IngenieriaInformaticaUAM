@@ -316,7 +316,7 @@ public class CentroExposicion implements Serializable {
 
         if (actividad.getFecha().isBefore(LocalDate.now())
                 || (actividad.getHora().isBefore(LocalTime.now()) && actividad.getFecha().isEqual(LocalDate.now()))) {
-            System.out.println("La fecha de la actividad ya ha pasado");
+            System.out.println("La actividad ya ha pasado");
             return false;
         }
 
@@ -460,6 +460,12 @@ public class CentroExposicion implements Serializable {
         return exposiciones;
     }
 
+    /**
+     * Obtiene una exposición por su nombre.
+     * 
+     * @param nombre el nombre de la exposición a buscar
+     * @return la exposición con el nombre proporcionado, o null si no existe
+     */
     public Exposicion getExposicionPorNombre(String nombre) {
         for (Exposicion exposicion : exposiciones) {
             if (exposicion.getNombre().equals(nombre)) {

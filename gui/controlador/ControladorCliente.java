@@ -343,63 +343,58 @@ public class ControladorCliente {
      */
     private ActionListener filtroFechaListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate startDate = null;
-            LocalDate endDate = null;
+            LocalDate fechaInicio = null;
+            LocalDate fechaFin = null;
 
-            while (startDate == null) {
-                String startDateStr = JOptionPane.showInputDialog(frame,
-                        "Introduce la fecha de inicio (dd/MM/yyyy):",
-                        "Filtro por fecha",
-                        JOptionPane.QUESTION_MESSAGE);
+            String fechaInicioStr = JOptionPane.showInputDialog(frame,
+                    "Introduce la fecha de inicio (yyyy-mm-dd):",
+                    "Filtro por fecha",
+                    JOptionPane.QUESTION_MESSAGE);
 
-                if (startDateStr == null || startDateStr.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Fecha de inicio no válida.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                try {
-                    startDate = LocalDate.parse(startDateStr, formatter);
-                } catch (DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Fecha de inicio no válida. Usa el formato dd/MM/yyyy.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+            if (fechaInicioStr.isEmpty()) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de inicio no válida.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
-            while (endDate == null) {
-                String endDateStr = JOptionPane.showInputDialog(frame,
-                        "Introduce la fecha de fin (dd/MM/yyyy):",
-                        "Filtro por fecha",
-                        JOptionPane.QUESTION_MESSAGE);
+            try {
+                fechaInicio = LocalDate.parse(fechaInicioStr);
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de inicio no válida. Usa el formato yyyy-mm-dd.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
-                if (endDateStr == null || endDateStr.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Fecha de fin no válida.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            String fechaFinStr = JOptionPane.showInputDialog(frame,
+                    "Introduce la fecha de fin (yyyy-mm-dd):",
+                    "Filtro por fecha",
+                    JOptionPane.QUESTION_MESSAGE);
 
-                try {
-                    endDate = LocalDate.parse(endDateStr, formatter);
-                } catch (DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Fecha de fin no válida. Usa el formato dd/MM/yyyy.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+            if (fechaFinStr.isEmpty()) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de fin no válida.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                fechaFin = LocalDate.parse(fechaFinStr);
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de fin no válida. Usa el formato yyyy-mm-dd.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
 
             JOptionPane.showMessageDialog(frame,
-                    "Filtrar desde " + startDate.format(formatter) + " hasta " + endDate.format(formatter),
+                    "Filtrar desde " + fechaInicio + " hasta " + fechaFin,
                     "Información de Filtro",
                     JOptionPane.INFORMATION_MESSAGE);
-            filtrarPorFecha(startDate, endDate);
+            filtrarPorFecha(fechaInicio, fechaFin);
         }
 
     };
