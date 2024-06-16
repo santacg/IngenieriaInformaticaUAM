@@ -39,6 +39,7 @@ public class Tareas {
                         }
                     }
 
+                // Si la exposición ha finalizado, y no esta en estado de creacion se almacenan las obras
                 } else if (exposicion.getFechaFin().isEqual(LocalDate.now()) && estado != EstadoExposicion.EN_CREACION) {
                     for (SalaExposicion sala : exposicion.getSalas()) {
                         for (Obra obra : sala.getObras()) {
