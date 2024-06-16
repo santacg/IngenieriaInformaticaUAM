@@ -458,7 +458,7 @@ public class GestorPrincipal extends JPanel {
         this.cambiarPenalizacionBtn = new JButton("Cambiar Penalización");
         panelAcciones.add(cambiarPenalizacionBtn);
 
-        penalizacionSorteos = new JLabel("Penalización por sorteo no canjeado: " + centro.getSancion());
+        penalizacionSorteos = new JLabel("Penalización por sorteo (en días) no canjeado: " + centro.getSancion());
         panelAcciones.add(penalizacionSorteos);
 
         this.gestionSorteos.add(panelAcciones, BorderLayout.SOUTH);
