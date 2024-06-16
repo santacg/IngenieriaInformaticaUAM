@@ -41,21 +41,23 @@ public class ControladorEnviarMensajes {
      */
     private ActionListener enviarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String destinatario = vistaEnviarMensajes.getDestinatario();
+            String destinatarios = vistaEnviarMensajes.getDestinatario().trim();
             String mensaje = vistaEnviarMensajes.getMensaje();
-            if (mensaje.equals("")) {
+            if (mensaje.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Debes introducir un mensaje.", "Error",
                         JOptionPane.ERROR_MESSAGE);
-            } else if (destinatario.equals("")) {
+            } else if (destinatarios.isEmpty()) {
                 expofy.enviarNotificacionesClientesPublicidad(mensaje);
-                JOptionPane.showMessageDialog(frame, "Mensaje enviado!");
+                JOptionPane.showMessageDialog(frame, "Mensaje enviado a todos los clientes que permiten publicidad!");
             } else {
-                expofy.enviarNotificacionCliente(mensaje, destinatario, empleado);
-                JOptionPane.showMessageDialog(frame, "Mensaje enviado a " + destinatario + "!");
+                String[] NIFS = destinatarios.split("\\s+");
+                for (String NIF : NIFS) {
+                    expofy.enviarNotificacionCliente(mensaje, NIF, empleado);
+                }
+                JOptionPane.showMessageDialog(frame, "Mensaje enviado a los destinatarios especificados!");
             }
         }
     };
-
     /**
      * Inicializa el controlador atrasListener.
      */
