@@ -68,7 +68,6 @@ public class ControladorVentaFormulario {
     private ActionListener siguienteListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String exposicionNombre = vista.getExposicionNombre();
-            String precioPorEntrada = vista.getPrecio();
 
             precioFinal = (exposicion.getPrecio() * (double) nEntradas);
 

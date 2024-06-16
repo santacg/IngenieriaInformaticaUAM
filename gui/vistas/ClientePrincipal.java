@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import gui.controlador.ControladorCompraFormulario;
-import gui.modelo.centroExposicion.CentroExposicion;
 
 import java.awt.*;
 import java.awt.event.ActionListener;

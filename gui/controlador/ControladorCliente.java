@@ -3,12 +3,9 @@ package gui.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.*;
