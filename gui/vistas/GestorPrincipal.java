@@ -34,6 +34,7 @@ public class GestorPrincipal extends JPanel {
     private JPanel gestionDescuentos;
     private JPanel gestionEstadisticas;
     private JPanel gestionActividades;
+    private JPanel gestionNotificaciones;
 
     private ObraFormulario vistaObraFormulario;
     private ControladorObraFormulario controladorObraFormulario;
@@ -100,6 +101,9 @@ public class GestorPrincipal extends JPanel {
     private JTable tablaActividades;
     private JButton actividadAgregarBtn;
 
+    // Notificaciones atributos
+    private JTable tablaNotificaciones;
+
     // Atributos de la vista
     private JLabel nombreCentro;
     private JLabel horaApertura;
@@ -141,6 +145,9 @@ public class GestorPrincipal extends JPanel {
         this.gestionEstadisticas = new JPanel();
         gestionEstadisticas.setLayout(new BorderLayout());
 
+        this.gestionNotificaciones = new JPanel();
+        gestionNotificaciones.setLayout(new BorderLayout());
+
         tabbedPane.addTab("Exposiciones", gestionExposiciones);
         tabbedPane.addTab("Salas de exposición", gestionSalasExposicion);
         tabbedPane.addTab("Salas", gestionSalas);
@@ -150,11 +157,32 @@ public class GestorPrincipal extends JPanel {
         tabbedPane.addTab("Descuentos", gestionDescuentos);
         tabbedPane.addTab("Estadisticas", gestionEstadisticas);
         tabbedPane.addTab("Actividades", gestionActividades);
+        tabbedPane.addTab("Notificaciones", gestionNotificaciones);
 
         JPanel panelSuperior = addPanelInfo();
 
         add(tabbedPane, BorderLayout.CENTER);
         add(panelSuperior, BorderLayout.NORTH);
+    }
+
+    /**
+     * Método que añade una tabla de notificaciones a la vista.
+     * 
+     * @param data ArrayList de objetos que contiene los datos de las
+     *             notificaciones.
+     */
+    public void addTablaNotificaciones(ArrayList<Object[]> data) {
+        String[] titulos = { "Fecha", "Mensaje" };
+
+        Object[][] datos = data.toArray(new Object[0][]);
+        tablaNotificaciones = new JTable(new DefaultTableModel(datos, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
+
+        this.gestionNotificaciones.add(new JScrollPane(tablaNotificaciones), BorderLayout.CENTER);
     }
 
     /**

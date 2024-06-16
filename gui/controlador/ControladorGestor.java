@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.centroExposicion.Sorteo;
 import gui.modelo.expofy.Expofy;
+import gui.modelo.expofy.Notificacion;
 import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
@@ -60,6 +61,7 @@ public class ControladorGestor {
         mostrarEstadisticas();
         mostrarActividades();
         mostrarInfo();
+        mostrarNotificaciones();
     }
 
     /**
@@ -130,6 +132,21 @@ public class ControladorGestor {
      */
     public void mostrarInfo() {
         vista.actualizarInfo(centro);
+    }
+
+
+    /**
+     * Método que muestra las notificaciones en la vista.
+     */
+    public void mostrarNotificaciones() {
+        ArrayList<Object[]> data = new ArrayList<>();
+        for (Notificacion notificacion : centro.getGestor().getNotificaciones()) {
+            data.add(new Object[] {
+                    notificacion.getFecha(),
+                    notificacion.getMensaje()
+            });
+        }
+        vista.addTablaNotificaciones(data);
     }
 
     /**
