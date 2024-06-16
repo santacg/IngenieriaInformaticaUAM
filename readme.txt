@@ -5,8 +5,8 @@ con lo cual el gestor deberá cuadrar la utilización de estas salas con las dis
 si el gestor trata de publicar una exposición con obras ya expuestas en otra exposición con las mismas fechas el sistema proporcionará un error.
 
 Exposicion.java, SalaExposicion.java y Tareas.java: Se han implementado unas tareas que se ejecutan cada vez que se abre la aplicación, estas tareas comprueban las fechas de inicio
-y fin de las exposiciones, de tal manera que si la fecha de inicio es la fecha actual las obras en las salas de exposición de esa exposición concreta pasan al estado de Expuesta, de forma similar
-si la fecha de fin es la actual las obras se eliminan de esas salas de exposición de esa exposición y pasan al estado de Almacenada. 
+y fin de las exposiciones, de tal manera que si la fecha de inicio es la fecha actual y la exposición está en estado de PUBLICADA las obras en las salas de exposición de esa exposición concreta pasan al estado de Expuesta, de forma similar
+si la fecha de fin es la actual y las exposición está en cualquier estado equivalente a PUBLICADA (todos menos EN_CREACION) las obras se eliminan de esas salas de exposición de esa exposición y pasan al estado de Almacenada. 
 
 Sorteos.java: Los sorteos se realizan de forma automática cuando llega la fecha con el uso de Tareas.java.
 

@@ -216,8 +216,6 @@ public class ControladorExposicionFormulario {
                         return;
                     }
 
-                    frame.actualizarTablaObras(centroExposicion);
-
                     JOptionPane.showMessageDialog(vista, "Exposición publicada correctamente.", "Exposición publicada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;

@@ -32,14 +32,14 @@ public class Tareas {
                 EstadoExposicion estado = exposicion.getEstado();
 
                 // Si la exposición está en creación y es el día de inicio, se exponen las obras
-                if (exposicion.getFechaInicio().isEqual(LocalDate.now()) && estado == EstadoExposicion.EN_CREACION) {
+                if (exposicion.getFechaInicio().isEqual(LocalDate.now()) && estado == EstadoExposicion.PUBLICADA) {
                     for (SalaExposicion sala : exposicion.getSalas()) {
                         for (Obra obra : sala.getObras()) {
                             obra.exponerObra();
                         }
                     }
 
-                } else if (exposicion.getFechaFin().isEqual(LocalDate.now())) {
+                } else if (exposicion.getFechaFin().isEqual(LocalDate.now()) && estado != EstadoExposicion.EN_CREACION) {
                     for (SalaExposicion sala : exposicion.getSalas()) {
                         for (Obra obra : sala.getObras()) {
                             obra.almacenarObra();
