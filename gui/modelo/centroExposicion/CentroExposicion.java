@@ -600,8 +600,8 @@ public class CentroExposicion implements Serializable {
      */
     public Boolean removeExposicion(Exposicion exposicion) {
 
-        if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
-            System.out.println("No se puede eliminar una exposición que no este en creación");
+        if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION) && exposicion.getFechaFin().isAfter(LocalDate.now())) {
+            System.out.println("No se puede eliminar una exposición que no este en creación o que no haya finalizado");
             return false;
         }
 

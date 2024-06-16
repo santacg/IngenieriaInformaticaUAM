@@ -53,6 +53,7 @@ public class Tareas {
                             sala.removeObra(obra);
                         }
                     }
+                    centro.removeExposicion(exposicion);
                 }
             }
         }
