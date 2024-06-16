@@ -494,7 +494,7 @@ public class GestorPrincipal extends JPanel {
         for (Object[] sorteoData : datos) {
             modelo.addRow(sorteoData);
         }
-        penalizacionSorteos.setText("Penalización por sorteo no canjeado: " + centro.getSancion());
+        penalizacionSorteos.setText("Penalización por sorteo (en días) no canjeado: " + centro.getSancion());
         modelo.fireTableDataChanged();
     }
 

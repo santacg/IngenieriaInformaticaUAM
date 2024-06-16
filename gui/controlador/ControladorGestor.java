@@ -606,7 +606,7 @@ public class ControladorGestor {
      */
     private ActionListener cambiarPenalizacionSorteosListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            String stringPenalizacion = JOptionPane.showInputDialog(vista, "Introduce la nueva penalización");
+            String stringPenalizacion = JOptionPane.showInputDialog(vista, "Introduce el número de días de la nueva penalización: ");
 
             if (stringPenalizacion.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No se ha actualizado la penalización");
@@ -615,6 +615,12 @@ public class ControladorGestor {
 
             try {
                 Integer penalizacion = Integer.parseInt(stringPenalizacion);
+
+                if (penalizacion < 0) {
+                    JOptionPane.showMessageDialog(frame, "Penalización no válida");
+                    return;
+                }
+
                 centro.setSancion(penalizacion);
                 JOptionPane.showMessageDialog(frame, "Penalización actualizada correctamente");
             } catch (NumberFormatException ex) {
