@@ -3,6 +3,7 @@ package gui.vistas;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import gui.controlador.*;
 import gui.modelo.centroExposicion.*;
@@ -160,7 +161,7 @@ public class GestorPrincipal extends JPanel {
      * @param centro Centro de exposiciones.
      */
     public void addPanelEstadisticas(CentroExposicion centro) {
-        String[] titulos = { "Tickets Vendidos", "Ingresos Totales" };
+        String[] titulos = { "Exposición", "Tickets Vendidos", "Ingresos Totales" };
         Object[][] datos = construirDatosEstadisticas(centro, titulos);
 
         this.tablaEstadisticas = new JTable(new DefaultTableModel(datos, titulos));
@@ -179,6 +180,7 @@ public class GestorPrincipal extends JPanel {
         for (Exposicion exposicion : centro.getExposiciones()) {
             Estadisticas estadisticas = exposicion.getEstadisticas();
             data.add(new Object[] {
+                    exposicion.getNombre(),
                     estadisticas.getTicketsVendidos(),
                     estadisticas.getIngresosTotales()
             });
@@ -275,6 +277,8 @@ public class GestorPrincipal extends JPanel {
         Object[][] datos = construirDatosSalasExposicion(centro, titulos);
 
         this.tablaSalasExposicion = new JTable(new DefaultTableModel(datos, titulos));
+        TableColumnModel columnModel = tablaSalasExposicion.getColumnModel();
+        columnModel.getColumn(5).setPreferredWidth(500);
         this.gestionSalasExposicion.add(new JScrollPane(tablaSalasExposicion), BorderLayout.CENTER);
     }
 
@@ -386,11 +390,9 @@ public class GestorPrincipal extends JPanel {
 
         JPanel panelAcciones = new JPanel();
         this.descuentoAgregarBtn = new JButton("Agregar Descuento");
-        JButton descuentoEliminarBtn = new JButton("Eliminar Descuento");
 
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(descuentoAgregarBtn);
-        panelAcciones.add(descuentoEliminarBtn);
         this.gestionDescuentos.add(panelAcciones, BorderLayout.SOUTH);
     }
 
@@ -448,13 +450,11 @@ public class GestorPrincipal extends JPanel {
 
         JPanel panelAcciones = new JPanel();
         this.sorteoAgregarBtn = new JButton("Agregar Sorteo");
-        JButton sorteoEliminarBtn = new JButton("Eliminar Sorteo");
 
         panelAcciones.add(new JLabel("Acciones: "));
         panelAcciones.add(sorteoAgregarBtn);
-        panelAcciones.add(sorteoEliminarBtn);
 
-        penalizacionSorteos = new JLabel("Penalización por sorteo no realizado: " + centro.getSancion());
+        penalizacionSorteos = new JLabel("Penalización por sorteo no canjeado: " + centro.getSancion());
         panelAcciones.add(penalizacionSorteos);
         this.gestionSorteos.add(panelAcciones, BorderLayout.SOUTH);
     }
@@ -511,7 +511,7 @@ public class GestorPrincipal extends JPanel {
         JPanel panelAcciones = new JPanel();
         this.exposicionComboAcciones = new JComboBox<>(
                 new String[] { "Publicar Exposicion", "Cancelar Exposicion", "Prorrogar Exposicion",
-                        "Cerrar Temporalmente", "Establecer como Temporal", "Establecer como Permanente" });
+                        "Cerrar Temporalmente", "Establecer como Temporal", "Establecer como Permanente", "Eliminar Exposicion"});
         this.exposicionEjecutarBtn = new JButton("Ejecutar accion");
         this.exposicionAgregarBtn = new JButton("Agregar exposicion");
 
@@ -579,7 +579,7 @@ public class GestorPrincipal extends JPanel {
      */
     public void addPanelSalas(CentroExposicion centro) {
         // Tabla
-        String[] titulos = { "Nombre", "Aforo", "Climatizador", "Tomas de corriente", "Ancho", "Largo" };
+        String[] titulos = { "Nombre", "Aforo", "Climatizador", "Tomas de corriente", "Ancho", "Largo", "Alto" };
         Object[][] datos = construirDatosSalas(centro);
 
         this.tablaSalas = new JTable(new DefaultTableModel(datos, titulos));
@@ -624,7 +624,8 @@ public class GestorPrincipal extends JPanel {
                 sala.getClimatizador(),
                 sala.getTomasElectricidad(),
                 sala.getAncho(),
-                sala.getLargo()
+                sala.getLargo(),
+                sala.getAlto()
         });
 
         for (Sala subSala : sala.getSubSalas()) {

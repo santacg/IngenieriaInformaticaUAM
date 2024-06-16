@@ -21,6 +21,7 @@ public class Sala implements Serializable {
     private Integer tomasElectricidad;
     private Double ancho;
     private Double largo;
+    private Double alto;
     private List<Sala> subSalas;
     private Sala salaPadre = null;
 
@@ -36,9 +37,10 @@ public class Sala implements Serializable {
      *                          sala.
      * @param ancho             El ancho de la sala.
      * @param largo             El largo de la sala.
+     * @param alto              El alto de la sala.
      */
     public Sala(String nombre, Integer aforo, Integer temperatura, Integer humedad, Boolean climatizador,
-            Integer tomasElectricidad, Double ancho, Double largo) {
+            Integer tomasElectricidad, Double ancho, Double largo, Double alto) {
         this.nombre = nombre;
         this.aforo = aforo;
         this.humedad = humedad;
@@ -47,10 +49,12 @@ public class Sala implements Serializable {
         this.tomasElectricidad = tomasElectricidad;
         this.ancho = ancho;
         this.largo = largo;
+        this.alto = alto;
         this.subSalas = new ArrayList<>();
     }
 
-    public Sala(String nombre, Integer aforo, Boolean climatizador, Integer tomasElectricidad, Double ancho, Double largo) {
+    public Sala(String nombre, Integer aforo, Boolean climatizador, Integer tomasElectricidad, Double ancho,
+            Double largo, Double alto) {
         this.nombre = nombre;
         this.aforo = aforo;
         this.humedad = 0;
@@ -59,6 +63,7 @@ public class Sala implements Serializable {
         this.tomasElectricidad = tomasElectricidad;
         this.ancho = ancho;
         this.largo = largo;
+        this.alto = alto;
         this.subSalas = new ArrayList<>();
     }
 
@@ -257,6 +262,24 @@ public class Sala implements Serializable {
     }
 
     /**
+     * Obtiene el alto de la sala.
+     * 
+     * @return El alto de la sala.
+     */
+    public Double getAlto() {
+        return alto;
+    }
+
+    /**
+     * Establece el alto de la sala.
+     * 
+     * @param alto El nuevo alto para la sala.
+     */
+    public void setAlto(Double alto) {
+        this.alto = alto;
+    }
+
+    /**
      * Intenta agregar una subsala con las especificaciones dadas.
      * 
      * @param ancho              El ancho de la subsala.
@@ -273,8 +296,8 @@ public class Sala implements Serializable {
         }
 
         int numsubSalas = subSalas.size();
-        Sala subSala = new Sala(nombre + " subsala" + (numsubSalas + 1), aforo, humedad, temperatura, climatizador,
-                nTomasElectricidad, ancho, largo);
+        Sala subSala = new Sala(nombre + " subsala" + (numsubSalas + 1), aforo, climatizador,
+                nTomasElectricidad, ancho, largo, this.alto);
         subSala.salaPadre = this;
         this.aforo -= aforo;
         this.ancho -= ancho;

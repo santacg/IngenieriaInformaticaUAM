@@ -46,16 +46,24 @@ public class ControladorSalaFormulario {
         public void actionPerformed(ActionEvent e) {
             switch (accion) {
                 case "Añadir Sala":
-                    if (vista.getNombre().equals("") || vista.getAforo().equals("") || vista.getAncho().equals("")
-                            || vista.getLargo().equals("")) {
-                        JOptionPane.showMessageDialog(vista, "Debes rellenar todos los campos.", "Error",
+
+                    Integer aforo = vista.getAforo();
+                    Double ancho = vista.getAncho();
+                    Double largo = vista.getLargo();
+                    Double alto = vista.getAlto();
+                    Integer tomasElectricidad = vista.getTomasElectricidad();
+
+                    if (aforo == null || ancho == null || largo == null || alto == null || tomasElectricidad == null
+                            || vista.getNombre().equals("")) {
+                        JOptionPane.showMessageDialog(vista,
+                                "Debes rellenar todos los campos o hacerlo de forma correcta.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         break;
                     }
 
-                    Sala sala = new Sala(vista.getNombre(), Integer.parseInt(vista.getAforo()), vista.getClimatizador(),
-                            Integer.parseInt(vista.getTomasElectricidad()), Double.parseDouble(vista.getAncho()),
-                            Double.parseDouble(vista.getLargo()));
+                    Sala sala = new Sala(vista.getNombre(), aforo, vista.getClimatizador(),
+                            tomasElectricidad, ancho,
+                            largo, alto);
 
                     if (centroExposicion.addSala(sala) == false) {
                         JOptionPane.showMessageDialog(vista, "Ya existe una sala con ese nombre.", "Error",
@@ -88,10 +96,23 @@ public class ControladorSalaFormulario {
                             salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
                         }
 
-                        if (salaSeleccionada.addSubsala(Double.parseDouble(vista.getAncho()),
-                                Double.parseDouble(vista.getLargo()),
-                                Integer.parseInt(vista.getTomasElectricidad()),
-                                Integer.parseInt(vista.getAforo())) == false) {
+                        aforo = vista.getAforo();
+                        ancho = vista.getAncho();
+                        largo = vista.getLargo();
+                        tomasElectricidad = vista.getTomasElectricidad();
+
+                        if (aforo == null || ancho == null || largo == null
+                                || tomasElectricidad == null) {
+                            JOptionPane.showMessageDialog(vista,
+                                    "Debes rellenar todos los campos o hacerlo de forma correcta.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            break;
+                        }
+
+                        if (salaSeleccionada.addSubsala(ancho,
+                                largo,
+                                tomasElectricidad,
+                                aforo) == false) {
                             JOptionPane.showMessageDialog(vista,
                                     "No se ha podido añadir la subsala (recursos de la sala padre insuficientes).",
                                     "Error",

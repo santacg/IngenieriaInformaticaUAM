@@ -15,12 +15,11 @@ public class SalaFormulario extends JDialog {
 
     private JTextField nombre;
     private JTextField aforo;
-    private JTextField humedad;
-    private JTextField temperatura;
     private JCheckBox climatizador;
     private JTextField tomasElectricidad;
     private JTextField ancho;
     private JTextField largo;
+    private JTextField alto;
     private JButton aceptarBtn;
     private JButton cancelarBtn;
 
@@ -72,6 +71,7 @@ public class SalaFormulario extends JDialog {
         addCampo("Tomas de electricidad:", tomasElectricidad = new JTextField(20), panelFormulario, constraints, 5);
         addCampo("Ancho:", ancho = new JTextField(20), panelFormulario, constraints, 6);
         addCampo("Largo:", largo = new JTextField(20), panelFormulario, constraints, 7);
+        addCampo("Alto:", alto = new JTextField(20), panelFormulario, constraints, 8);
     }
 
     /**
@@ -168,28 +168,18 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que devuelve el aforo introducido en el formulario
      * 
-     * @return String con el aforo introducido
+     * @return Integer con el aforo introducido o null
      */
-    public String getAforo() {
-        return aforo.getText();
-    }
+    public Integer getAforo() {
+        if (aforo.getText().equals("")) {
+            return null;
+        }
 
-    /**
-     * Método que devuelve la humedad introducida en el formulario
-     * 
-     * @return String con la humedad introducida
-     */
-    public String getHumedad() {
-        return humedad.getText();
-    }
-
-    /**
-     * Método que devuelve la temperatura introducida en el formulario
-     * 
-     * @return String con la temperatura introducida
-     */
-    public String getTemperatura() {
-        return temperatura.getText();
+        try {
+            return Integer.parseInt(aforo.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
@@ -204,28 +194,69 @@ public class SalaFormulario extends JDialog {
     /**
      * Método que devuelve las tomas de electricidad introducidas en el formulario
      * 
-     * @return String con las tomas de electricidad introducidas
+     * @return Integer con las tomas de electricidad introducidas o null
      */
-    public String getTomasElectricidad() {
-        return tomasElectricidad.getText();
+    public Integer getTomasElectricidad() {
+        if (tomasElectricidad.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Integer.parseInt(tomasElectricidad.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
      * Método que devuelve el ancho introducido en el formulario
      * 
-     * @return String con el ancho introducido
+     * @return Double con el ancho introducido o null
      */
-    public String getAncho() {
-        return ancho.getText();
+    public Double getAncho() {
+        if (ancho.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(ancho.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
      * Método que devuelve el largo introducido en el formulario
      * 
-     * @return String con el largo introducido
+     * @return Double con el largo introducido o null
      */
-    public String getLargo() {
-        return largo.getText();
+    public Double getLargo() {
+        if (largo.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(largo.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Método que devuelve el alto introducido en el formulario
+     * 
+     * @return Double con el alto introducido o null
+     */
+    public Double getAlto() {
+        if (alto.getText().equals("")) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(alto.getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**

@@ -598,14 +598,9 @@ public class CentroExposicion implements Serializable {
      *         contrario
      */
     public Boolean removeExposicion(Exposicion exposicion) {
-        if (gestor.isLoged() == false) {
-            System.out.println("No puedes eliminar exposiciones si no eres el gestor");
-            return false;
-        }
 
-        if (exposicion.getEstado().equals(EstadoExposicion.PUBLICADA)
-                || exposicion.getEstado().equals(EstadoExposicion.PRORROGADA)) {
-            System.out.println("No se puede eliminar una exposición publicada o prorrogada");
+        if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+            System.out.println("No se puede eliminar una exposición que no este en creación");
             return false;
         }
 

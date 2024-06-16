@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 
 import gui.controlador.Controlador;
 import gui.modelo.expofy.Expofy;
+import gui.modelo.utils.Tareas;
 import gui.vistas.Ventana;
 
 /**
@@ -29,6 +30,8 @@ public class Main {
 					frame.setLocation(150, 50);
 					frame.setSize(1280, 720);
 					frame.setVisible(true);
+
+					Tareas.iniciarTareas();
 
 					frame.addWindowListener(new WindowAdapter() {
 						@Override

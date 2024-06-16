@@ -37,7 +37,6 @@ public class ExposicionFormulario extends JDialog {
     public ExposicionFormulario(String accion) {
         setTitle("Añadir Exposición");
         setSize(600, 700);
-        setLocationRelativeTo(null);
         setModal(true);
 
         JPanel panelFormulario = new JPanel(new GridBagLayout());
@@ -84,6 +83,9 @@ public class ExposicionFormulario extends JDialog {
                 add(buttonPanel, BorderLayout.SOUTH);
 
                 return;
+            default:
+                panelFormulario.add(new JLabel("Confirma o cancela la acción " + accion + ":"));
+                break;
         }
 
         addBotones(panelFormulario, constraints, 8);

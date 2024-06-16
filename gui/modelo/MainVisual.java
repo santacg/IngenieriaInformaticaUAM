@@ -41,9 +41,9 @@ public class MainVisual {
                 Gestor gestorPrado = new Gestor("7451321659");
                 Set<Sala> salasPrado = new HashSet<>();
 
-                Sala salaRenacimiento = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0);
-                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0);
-                Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0);
+                Sala salaRenacimiento = new Sala("Sala de Renacimiento", 200, 55, 22, true, 15, 25.0, 40.0, 6.0);
+                Sala salaModerna = new Sala("Sala Arte Moderno", 180, 60, 21, true, 12, 20.0, 35.0, 5.0);
+                Sala salaImpresionismo = new Sala("Sala de Impresionismo", 150, 45, 24, true, 20, 30.0, 50.0, 8.0);
 
                 salasPrado.add(salaRenacimiento);
                 salasPrado.add(salaModerna);
@@ -69,7 +69,7 @@ public class MainVisual {
         private static CentroExposicion configurarCentroExposicionReinaSofia() {
                 Gestor gestorSofia = new Gestor("4453519848");
                 Set<Sala> salasSofia = new HashSet<>();
-                Sala salaContemporaneo = new Sala("Sala Arte Contemporáneo", 160, 50, 23, true, 18, 28.0, 45.0);
+                Sala salaContemporaneo = new Sala("Sala Arte Contemporáneo", 160, 50, 23, true, 18, 28.0, 45.0, 6.0);
                 salasSofia.add(salaContemporaneo);
 
                 CentroExposicion centroSofia = new CentroExposicion("Museo Reina Sofia", LocalTime.of(10, 0),

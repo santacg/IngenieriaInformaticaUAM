@@ -5,7 +5,10 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.centroExposicion.Sorteo;
 import gui.modelo.expofy.*;
+import gui.modelo.inscripcion.Inscripcion;
 import gui.modelo.obra.Obra;
 import gui.modelo.usuario.Usuario;
 
@@ -207,16 +210,8 @@ public class Exposicion implements Serializable {
      */
     public boolean expoPublicar() {
         if (this.estado != EstadoExposicion.EN_CREACION) {
-            System.out.println("No se puede publicar una exposición que no ha sido creada");
+            System.out.println("No se puede publicar una exposición que no esta en creacion");
             return false;
-        }
-
-        for (SalaExposicion sala : this.salas) {
-            for (Obra obra : sala.getObras()) {
-                if (obra.exponerObra() == false) {
-                    System.out.println("La obra " + obra.getNombre() + " no se puede exponer");
-                }
-            }
         }
 
         Expofy expofy = Expofy.getInstance();
@@ -233,6 +228,11 @@ public class Exposicion implements Serializable {
     public boolean expoCancelar(LocalDate fechaCancelacion) {
         if (this.estado == EstadoExposicion.EN_CREACION) {
             System.out.println("No se puede cancelar una exposición que esta en creacion");
+            return false;
+        }
+
+        if (this.estado == EstadoExposicion.CANCELADA) {
+            System.out.println("La exposición ya ha sido cancelada");
             return false;
         }
 
@@ -255,6 +255,23 @@ public class Exposicion implements Serializable {
             }
         }
 
+        for (CentroExposicion centro : expofy.getCentrosExposicion()) {
+            for (Sorteo sorteo : centro.getSorteos()) {
+                if (sorteo.getExposicion().equals(this)) {
+                    if (sorteo.getFechaSorteo().isAfter(fechaCancelacion)) {
+                        for (Inscripcion inscripcion : sorteo.getInscripciones()) {
+                            expofy.enviarNotificacionUsuario("Se ha cancelado la exposición " + this.nombre
+                                    + "el sorteo al que te has inscrito es después de la fecha de cancelación por ello se ha eliminado tu inscripción",
+                                    inscripcion.getCliente());
+                            sorteo.removeInscripcion(inscripcion);
+                        }
+                        centro.removeSorteo(sorteo);
+                        break;
+                    }
+                }
+            }
+        }
+
         expofy.enviarNotificacionUsuarios("Se ha cancelado la exposicion: " + this.nombre
                 + ".Se ha reintegrado el importe de la entrada en tu cuenta bancaria", clientes);
 
@@ -269,7 +286,7 @@ public class Exposicion implements Serializable {
      * @param fechaFin La nueva fecha de fin para la exposición.
      */
     public boolean expoProrrogar(LocalDate fechaFin) {
-        if (this.estado != EstadoExposicion.PUBLICADA) {
+        if (this.estado != EstadoExposicion.PUBLICADA || this.estado != EstadoExposicion.PRORROGADA) {
             System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
             return false;
         }
@@ -305,12 +322,6 @@ public class Exposicion implements Serializable {
             return false;
         }
 
-        for (SalaExposicion sala : salas) {
-            for (Obra obra : sala.getObras()) {
-                sala.removeObra(obra);
-            }
-        }
-    
         this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
         return true;
     }
@@ -423,6 +434,12 @@ public class Exposicion implements Serializable {
      * Cambia el tipo de la exposición a temporal.
      */
     public boolean expoTemporal(LocalDate fechaFin) {
+
+        if (this.estado == EstadoExposicion.CANCELADA) {
+            System.out.println("No se puede cambiar el tipo de la exposición a temporal si ha sido cancelada");
+            return false;
+        }
+
         if (this.tipo == TipoExpo.TEMPORAL) {
             System.out.println("La exposición ya es temporal");
             return false;

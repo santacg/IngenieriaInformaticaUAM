@@ -5,7 +5,9 @@ import java.awt.event.*;
 import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.CentroExposicion;
+import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
+import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.exposicion.TipoExpo;
 import gui.vistas.*;
 
@@ -96,25 +98,84 @@ public class ControladorExposicionFormulario {
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Cancelar Exposicion":
+                    if (vista.getFechaInicio() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar la fecha de inicio.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getEstado() == EstadoExposicion.EN_CREACION) {
+                        JOptionPane.showMessageDialog(vista, "No se puede cancelar una exposición está en creación.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    if (exposicion.getEstado() == EstadoExposicion.CANCELADA) {
+                        JOptionPane.showMessageDialog(vista, "La exposición ya está cancelada.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     if (exposicion.expoCancelar(vista.getFechaInicio()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede cancelar la exposición.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    frame.actualizarTablaSorteos(centroExposicion);
                     JOptionPane.showMessageDialog(vista, "Exposición cancelada correctamente.", "Exposición cancelada",
                             JOptionPane.INFORMATION_MESSAGE);
+
                     break;
                 case "Prorrogar Exposicion":
+                    if (vista.getFechaFin() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar la fecha de fin.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getTipo() == TipoExpo.PERMANENTE) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede prorrogar una exposición permanente.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getEstado() != EstadoExposicion.PUBLICADA
+                            && exposicion.getEstado() != EstadoExposicion.PRORROGADA) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede prorrogar una exposición que no está publicada o prorrogada.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+
                     if (exposicion.expoProrrogar(vista.getFechaFin()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede prorrogar la exposición.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
                     JOptionPane.showMessageDialog(vista, "Exposición prorrogada correctamente.",
                             "Exposición prorrogada",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Cerrar Temporalmente":
+
+                    if (vista.getFechaInicio() == null || vista.getFechaFin() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar las fechas de inicio y fin.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getEstado() != EstadoExposicion.PUBLICADA
+                            && exposicion.getEstado() != EstadoExposicion.PRORROGADA) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede cerrar una exposición que no está publicada o prorrogada.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+
                     if (exposicion.expoCerrarTemporalmente(vista.getFechaInicio(), vista.getFechaFin()) == false) {
                         JOptionPane.showMessageDialog(vista, "No se puede cerrar la exposición temporalmente.", "Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -128,9 +189,28 @@ public class ControladorExposicionFormulario {
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Publicar Exposicion":
+
+                    if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede publicar una exposición que no está en creación.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
+                    for (SalaExposicion sala : exposicion.getSalas()) {
+                        if (sala.getObras().size() == 0) {
+                            JOptionPane.showMessageDialog(vista,
+                                    "No se puede publicar una exposición con una o más salas sin obras.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+
                     if (exposicion.expoPublicar() == false) {
                         JOptionPane.showMessageDialog(vista,
-                                "Error al publicar la exposición, una o más obras ya están siendo expuestas en otra exposición",
+                                "Error al publicar la exposición",
                                 "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
@@ -142,21 +222,82 @@ public class ControladorExposicionFormulario {
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Establecer como Temporal":
-                    if (exposicion.expoTemporal(vista.getFechaFin()) == false) {
-                        JOptionPane.showMessageDialog(vista, "No se puede establecer la exposición como temporal.",
+
+                    if (vista.getFechaFin() == null) {
+                        JOptionPane.showMessageDialog(vista, "Debes rellenar la fecha de fin.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getTipo() == TipoExpo.TEMPORAL) {
+                        JOptionPane.showMessageDialog(vista,
+                                "La exposición ya es temporal.",
                                 "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    if (exposicion.getEstado() == EstadoExposicion.CANCELADA) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede establecer como temporal una exposición cancelada.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.expoTemporal(vista.getFechaFin()) == false) {
+                        JOptionPane.showMessageDialog(vista, "Error al establecer la exposición como temporal.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     JOptionPane.showMessageDialog(vista, "Exposición establecida como temporal correctamente.",
                             "Exposición temporal",
                             JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case "Establecer como Permanente":
+
+                    if (exposicion.getTipo() == TipoExpo.PERMANENTE) {
+                        JOptionPane.showMessageDialog(vista,
+                                "La exposición ya es permanente.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (exposicion.getEstado().equals(EstadoExposicion.CANCELADA)
+                            || exposicion.getEstado().equals(EstadoExposicion.CERRADATEMPORALMENTE)) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede establecer como permanente una exposición cancelada o cerrada temporalmente.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     exposicion.expoPermanente();
                     JOptionPane.showMessageDialog(vista, "Exposición establecida como permanente correctamente.",
                             "Exposición permanente",
                             JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Eliminar Exposicion":
+
+                    if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                        JOptionPane.showMessageDialog(vista,
+                                "No se puede eliminar una exposición que no está en creación.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
+                    if (centroExposicion.removeExposicion(exposicion) == false) {
+                        JOptionPane.showMessageDialog(vista, "No se puede eliminar la exposición.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
+                    }
+
+                    JOptionPane.showMessageDialog(vista, "Exposición eliminada correctamente.", "Exposición eliminada",
+                            JOptionPane.INFORMATION_MESSAGE);
+
                     break;
             }
 
