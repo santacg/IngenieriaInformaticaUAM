@@ -53,7 +53,7 @@ public class SalaFormulario extends JDialog {
                 break;
         }
 
-        addBotones(panelFormulario, constraints, 8);
+        addBotones(panelFormulario, constraints, 9);
         add(panelFormulario);
     }
 

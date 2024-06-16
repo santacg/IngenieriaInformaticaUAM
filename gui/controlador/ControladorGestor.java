@@ -238,6 +238,24 @@ public class ControladorGestor {
                                         continue;
                                     }
 
+                                    Exposicion exposicion = centro.getExposicionPorNombre(exposicionSeleccionada);
+
+                                    for (Exposicion exposicionCentro : centro.getExposiciones()) {
+                                        if ((exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaInicio())
+                                                && exposicion.getFechaFin().isBefore(exposicionCentro.getFechaFin())) ||
+                                                (exposicion.getFechaInicio().isEqual(exposicionCentro.getFechaInicio())
+                                                && exposicion.getFechaFin().isEqual(exposicionCentro.getFechaFin()))) {
+                                            for (SalaExposicion salaExpo : exposicionCentro.getSalas()) {
+                                                if (salaExpo.getObras().contains(obra)) {
+                                                    JOptionPane.showMessageDialog(frame,
+                                                            "La obra ya está en una sala de exposición de la exposición "
+                                                                    + exposicionCentro.getNombre());
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     Set<SalaExposicion> salas = exposicionesYSalas.get(exposicionSeleccionada);
                                     List<String> nombresSalas = new ArrayList<>();
                                     for (SalaExposicion salaExposicion : salas) {
@@ -268,15 +286,7 @@ public class ControladorGestor {
                                             salaSeleccionada = salaExpo;
                                             break;
                                         }
-                                        for (Sala subSala : salaExpo.getSala().getSubSalas()) {
-                                            if (subSala.getNombre().equals(salaSeleccionadaNombre)) {
-                                                salaSeleccionada = new SalaExposicion(subSala);
-                                                break;
-                                            }
-                                        }
-                                        if (salaSeleccionada != null) {
-                                            break;
-                                        }
+
                                     }
 
                                     if (salaSeleccionada == null || salaSeleccionada.addObra(obra) == false) {
@@ -296,11 +306,11 @@ public class ControladorGestor {
 
                                     List<String> nombresSalasExposicion = new ArrayList<>();
 
-                                    for (Exposicion exposicion : centro.getExposiciones()) {
-                                        if (exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)) {
-                                            for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                                    for (Exposicion expo : centro.getExposiciones()) {
+                                        if (expo.getEstado().equals(EstadoExposicion.EN_CREACION)) {
+                                            for (SalaExposicion salaExpo : expo.getSalas()) {
                                                 if (salaExpo.getObras().contains(obra)) {
-                                                    nombresSalasExposicion.add(exposicion.getNombre() + " - "
+                                                    nombresSalasExposicion.add(expo.getNombre() + " - "
                                                             + salaExpo.getSala().getNombre());
                                                 }
                                             }
@@ -331,7 +341,7 @@ public class ControladorGestor {
                                     String nombreExposicion = partes[0];
                                     String nombreSala = partes[1];
 
-                                    Exposicion exposicion = centro.getExposicionPorNombre(nombreExposicion);
+                                    exposicion = centro.getExposicionPorNombre(nombreExposicion);
 
                                     for (SalaExposicion salaExpo : exposicion.getSalas()) {
                                         if (salaExpo.getSala().getNombre().equals(nombreSala)) {
@@ -600,8 +610,7 @@ public class ControladorGestor {
             vista.removeControlador(salaEjecutarListener, obraLeerCSVListener, obraEjecutarListener,
                     obraAgregarListener, exposicionEjecutarListener, exposicionAgregarListener, empleadoAgregarListener,
                     empleadoConfigurarContraseniaListener, sorteoAgregarListener, descuentoAgregarListener,
-                    actividadAgregarListener,
-                    cerrarSesionListener, cambiarHorasListener);
+                    actividadAgregarListener, cerrarSesionListener, cambiarHorasListener);
             vista.removeAll();
             JOptionPane.showMessageDialog(frame, "Se ha cerrado la sesión.");
             frame.mostrarPanel(frame.getPanelPrincipal());

@@ -3,12 +3,10 @@ y fin de las exposiciones, de tal manera que si la fecha de inicio es la fecha a
 si la fecha de fin es la actual y la exposición está en cualquier estado equivalente a PUBLICADA (todos menos EN_CREACION) las obras se eliminan de esas salas de exposición de esa exposición y pasan al estado de Almacenada. 
 Los sorteos se realizan de forma automática cuando llega la fecha con el uso de Tareas.java.
 A pesar de haber implementado esta automatización hemos dejado disponibles los métodos manuales de exponer obra y similares, aunque no se deberían usar.
-Para el código se ha usado la documentación de java: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html
 
-SalaExposicion.java: Se han implementado salas de exposición que se asocian a las salas físicas, esto permite tener distintas exposiciones en creación con las mismas salas físicas asignadas,
-esto otorga flexibilidad ya que el gestor puede tener distintas exposiciones en creación que comparten salas y obras, pero también hace que el gestor deba cuadrar la utilización de estas salas y obras
-con las distintas fechas de las exposiciones para evitar que las salas y obras sean utilizadas por exposiciones distintas en las mismas fechas. Aún así cuando se añade una exposición se 
-comprueba que la nueva exposición no comparta recursos con exposiciones que se van a realizar en las mismas fechas (método addExposicion en CentroExposicion.java)
+SalaExposicion.java: Es una implementación que permite distinguir las salas físicas asociadas de las salas de la exposición, se ha incluido un panel que permite 
+ver estas salas y las obras que contienen. Como en las exposiciones solo se pueden añadir salas enteras, si una sala esta subdividida se añadiran sus subsalas también como 
+salas de exposición. 
 
 Sala.java: Hemos implementado esta clase pensando que el gestor obtendría las características físicas de una sala y luego establecería una división
 con los parametros físicos que eligiese, quedando la sala inicial como sala padre de esta subdivisión y manteniendo la consistencia entre la división 

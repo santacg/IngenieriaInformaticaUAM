@@ -582,30 +582,6 @@ public class CentroExposicion implements Serializable {
      */
     public Boolean addExposicion(Exposicion exposicion) {
 
-        // Se comprueba que si la exposicion a añadir esta entre las fechas de otra exposicion
-        // no se solapen las salas ni las obras
-        for (Exposicion expo : exposiciones) {
-            if (exposicion.getFechaFin().isBefore(expo.getFechaFin()) && exposicion.getFechaInicio().isAfter(expo.getFechaInicio())) {
-                for (SalaExposicion salaExpo : expo.getSalas()) {
-                    for (SalaExposicion sala : exposicion.getSalas()) {
-                        if (salaExpo.getSala().equals(sala.getSala())) {
-                            System.out.println("La sala ya está siendo utilizada por otra exposición");
-                            return false;
-                        }
-
-                        for (Obra obraExpo : salaExpo.getObras()) {
-                            for (Obra obra : sala.getObras()) {
-                                if (obra.equals(obraExpo)) {
-                                    System.out.println("La obra ya está siendo utilizada por otra exposición");
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         if (this.exposiciones.add(exposicion) == false) {
             System.out.println("La exposición ya está en el centro de exposiciones");
             return false;
