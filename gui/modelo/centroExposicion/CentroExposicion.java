@@ -614,6 +614,7 @@ public class CentroExposicion implements Serializable {
         return true;
     }
 
+
     /**
      * Elimina una exposicion determinada de un centro de exposiciones.
      * 
