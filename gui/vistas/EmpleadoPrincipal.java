@@ -16,6 +16,7 @@ public class EmpleadoPrincipal extends JPanel {
     private JButton venderEntradaBoton;
     private JButton inscibirActividadBoton;
     private JPanel panelPrincipal;
+    private JButton perfilBoton;
     private JButton cerrarSesionBoton;
     private JButton desbloquearBoton;
 
@@ -27,10 +28,12 @@ public class EmpleadoPrincipal extends JPanel {
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new GridBagLayout());
 
-        JPanel panelCerrarSesion = new JPanel();
-        panelCerrarSesion.setLayout(new BorderLayout());
+        JPanel panelSuperior = new JPanel();
+        panelSuperior.setLayout(new BorderLayout());
         cerrarSesionBoton = new JButton("Cerrar Sesión");
-        panelCerrarSesion.add(cerrarSesionBoton, BorderLayout.EAST);
+        perfilBoton = new JButton("Perfil");
+        panelSuperior.add(perfilBoton,BorderLayout.WEST);
+        panelSuperior.add(cerrarSesionBoton, BorderLayout.EAST);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -38,7 +41,7 @@ public class EmpleadoPrincipal extends JPanel {
 
         addButtons(constraints);
         add(panelPrincipal, BorderLayout.CENTER);
-        add(panelCerrarSesion, BorderLayout.NORTH);
+        add(panelSuperior, BorderLayout.NORTH);
     }
 
     /**
@@ -97,7 +100,7 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad, ActionListener cPerfil) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
@@ -105,6 +108,7 @@ public class EmpleadoPrincipal extends JPanel {
         this.cerrarSesionBoton.addActionListener(cCerrarSesion);
         this.inscibirActividadBoton.addActionListener(cActividad);
         this.desbloquearBoton.addActionListener(cDesbloquear);
+        this.perfilBoton.addActionListener(cPerfil);
     }
 
     /**
@@ -116,7 +120,7 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
      */
     public void removeControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad, ActionListener cPerfil) {
 
         this.enviarMensajeBoton.removeActionListener(cMensaje);
         this.cambiarClimatizacionBoton.removeActionListener(cClimatizacion);
@@ -124,6 +128,7 @@ public class EmpleadoPrincipal extends JPanel {
         this.cerrarSesionBoton.removeActionListener(cCerrarSesion);
         this.desbloquearBoton.removeActionListener(cDesbloquear);
         this.inscibirActividadBoton.removeActionListener(cActividad);
+        this.perfilBoton.removeActionListener(cPerfil);
     }
 
     public void hideButtons(boolean msj, boolean clmtz, boolean venta, boolean actividad) {

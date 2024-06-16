@@ -31,6 +31,8 @@ public class Ventana extends JFrame {
 	private final static String CLIENTEPRINCIPAL = "clientePrincipal";
 	private final static String VENTAENTRADAS = "ventaEntradas";
 	private final static String DESBLOQUEOCLIENTES = "desbloqueoClientes";
+	private final static String PERFILEMPLEADO = "perfilEmpleado";
+
 
 	// Vistas y controladores
 	private ControladorPantallaPrincipal controladorPantallaPrincipal;
@@ -69,6 +71,10 @@ public class Ventana extends JFrame {
 
 	private ControladorDesbloqueoClientes controladorDesbloqueoClientes;
 	private DesbloqueoClientes vistaDesbloqueoClientes;
+
+	private ControladorPerfilEmpleado controladorPerfilEmpleado;
+	private PerfilEmpleado vistaPerfilEmpleado;
+
 
 	/**
 	 * Constructor de la clase Ventana
@@ -200,6 +206,15 @@ public class Ventana extends JFrame {
 	}
 
 	/**
+	 * Devuelve el nombre del panel de desbloquo de clientes
+	 * 
+	 * @return DesbloquoClientes string PERFILEMPLEADO
+	 */
+	public String getPerfilEmpleado() {
+		return PERFILEMPLEADO;
+	}
+
+	/**
 	 * Devuelve el nombre del panel de la venta de entradas
 	 * 
 	 * @return VentaEntradas string VENTAENTRADAS
@@ -217,6 +232,19 @@ public class Ventana extends JFrame {
 		this.vistaPantallaPrincipal = new PantallaPrincipal();
 		cartas.add(vistaPantallaPrincipal, PANELPRINCIPAL);
 		return vistaPantallaPrincipal;
+	}
+
+	public PerfilEmpleado getVistaPerfilEmpleado() {
+		if (this.vistaPerfilEmpleado == null) {
+			this.vistaPerfilEmpleado = new PerfilEmpleado();
+			cartas.add(vistaPerfilEmpleado, "perfilEmpleado");
+		}
+		return vistaPerfilEmpleado;
+	}
+
+	public void setControladorPerfilEmpleado(ControladorPerfilEmpleado controlador) {
+		getVistaPerfilEmpleado().setControlador(controlador.getGuardarCambiosListener(),
+				controlador.getCancelarCambiosListener());
 	}
 
 	/**
@@ -364,7 +392,7 @@ public class Ventana extends JFrame {
 		this.vistaEmpleadoPrincipal.setControlador(controlador.getEnviarMsjListener(),
 				controlador.getClimatizacionListener(), controlador.getVenderEntrada(),
 				controlador.getCerrarSesionListener(), controlador.getDesbloquearListener(),
-				controlador.getInscribirActividad());
+				controlador.getInscribirActividad(), controlador.getPerfilListener());
 	}
 
 	/**

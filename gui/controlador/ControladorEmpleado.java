@@ -1,6 +1,5 @@
 package gui.controlador;
 
-import java.util.List;
 import java.awt.event.*;
 import java.util.*;
 
@@ -174,7 +173,7 @@ public class ControladorEmpleado {
         public void actionPerformed(ActionEvent e) {
             empleado.logOut();
             vista.removeControlador(enviarMsjListener, cambiarClimatizacionListener, cambiarClimatizacionListener,
-                    cerrarSesionListener, desbloquearListener, inscribirActividadListener);
+                    cerrarSesionListener, desbloquearListener, inscribirActividadListener, perfilListener);
             vista.removeAll();
             ControladorPantallaPrincipal controlador = new ControladorPantallaPrincipal(frame, expofy);
             frame.setControladorPantallaPrincipal(controlador);
@@ -200,6 +199,24 @@ public class ControladorEmpleado {
     public ActionListener getDesbloquearListener() {
         return desbloquearListener;
     }
+
+    /**
+     * Método que devuelve el listener del perfil.
+     * 
+     * @return ActionListener
+     */
+    public ActionListener getPerfilListener() {
+        return perfilListener;
+    }
+
+    private ActionListener perfilListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            ControladorPerfilEmpleado controladorPerfilEmpleado = new ControladorPerfilEmpleado(frame,
+                    expofy, empleado);
+            frame.setControladorPerfilEmpleado(controladorPerfilEmpleado);
+            frame.mostrarPanel(frame.getPerfilEmpleado());
+        }
+    };
 
     /**
      * Método que inicializa el controlador venderEntradaListener.
