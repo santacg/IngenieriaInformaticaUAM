@@ -14,7 +14,6 @@ import gui.modelo.obra.*;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
-
 public class LectorCSVObras {
     /**
      * Lee obras de arte desde un archivo CSV y las añade a una sala de exposición

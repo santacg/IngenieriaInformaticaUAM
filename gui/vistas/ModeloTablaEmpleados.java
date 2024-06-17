@@ -8,6 +8,11 @@ import javax.swing.table.AbstractTableModel;
 
 import gui.modelo.centroExposicion.Empleado;
 
+/**
+ * Modelo de tabla para la vista de empleados.
+ * 
+ * @author Carlos Garcia Santa
+ */
 public class ModeloTablaEmpleados extends AbstractTableModel {
     private String[] titulos;
     private Object[][] filas;
@@ -116,6 +121,9 @@ public class ModeloTablaEmpleados extends AbstractTableModel {
         return String.class;
     }
 
+    /**
+     * Establece el recuento de filas a 0.
+     */
     public void setRowCountToNone() {
         filas = new Object[0][];
         fireTableDataChanged();

@@ -12,6 +12,13 @@ import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
 
+/**
+ * Clase Tareas.
+ * Es una clase que proporciona funcionalidades para la ejecución y comprobación
+ * de fechas y sus consecuencias.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class Tareas {
     public static void iniciarTareas() {
         System.out.println("Ejecutando tareas ");

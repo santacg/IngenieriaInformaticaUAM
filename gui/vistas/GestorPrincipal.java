@@ -970,7 +970,6 @@ public class GestorPrincipal extends JPanel {
     /**
      * Deselecciona todas las filas de la tabla.
      * 
-     * @param tabla Tabla a deseleccionar.
      */
     public void deseleccionarTabla() {
         for (int i = 0; i < this.tablaObras.getRowCount(); i++) {
@@ -1164,7 +1163,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de sala.
      * 
      * @param controlador Controlador del formulario de sala.
-     * @return Controlador del formulario de sala.
      */
     public void setControladorSalaFormulario(ControladorSalaFormulario controlador) {
         this.controladorSalaFormulario = controlador;
@@ -1178,7 +1176,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de exposición.
      * 
      * @param controlador Controlador del formulario de exposición.
-     * @return Controlador del formulario de exposición.
      */
     public void setControladorExposicionFormulario(ControladorExposicionFormulario controlador) {
         this.controladorExposicionFormulario = controlador;
@@ -1194,7 +1191,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de empleado.
      * 
      * @param controlador Controlador del formulario de empleado.
-     * @return Controlador del formulario de empleado.
      */
     public void setControladorEmpleadoFormulario(ControladorEmpleadoFormulario controlador) {
         this.controladorEmpleadoFormulario = controlador;
@@ -1209,7 +1205,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de sorteo.
      * 
      * @param controlador Controlador del formulario de sorteo.
-     * @return Controlador del formulario de sorteo.
      */
     public void setControladorSorteoFormulario(ControladorSorteoFormulario controlador) {
         this.controladorSorteoFormulario = controlador;
@@ -1223,7 +1218,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de descuento.
      * 
      * @param controlador Controlador del formulario de descuento.
-     * @return Controlador del formulario de descuento.
      */
     public void setControladorDescuentoFormulario(ControladorDescuentoFormulario controlador) {
         this.controladorDescuentoFormulario = controlador;
@@ -1238,7 +1232,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de actividad.
      * 
      * @param controlador Controlador del formulario de actividad.
-     * @return Controlador del formulario de actividad.
      */
     public void setControladorActividadFormulario(ControladorActividadFormulario controlador) {
         this.controladorActividadFormulario = controlador;

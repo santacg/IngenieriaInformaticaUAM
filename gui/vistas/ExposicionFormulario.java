@@ -129,6 +129,9 @@ public class ExposicionFormulario extends JDialog {
 
     /**
      * Método que crea el formulario para cancelar una exposición.
+     * 
+     * @param panelFormulario panel del formulario.
+     * @param constraints contrains aplicadas.
      */
     public void formularioCancelarExposicion(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Fecha cancelación (yyyy-mm-dd):", fechaInicio = new JTextField(20), panelFormulario, constraints, 1);
@@ -146,6 +149,9 @@ public class ExposicionFormulario extends JDialog {
 
     /**
      * Método que crea el formulario para cerrar temporalmente una exposición.
+     * 
+     * @param panelFormulario panel del formulario.
+     * @param constraints contrains aplicadas.
      */
     public void formularioCerrarExposicion(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Fecha incio cierre temporal (yyyy-mm-dd)", fechaInicio = new JTextField(20), panelFormulario,
@@ -156,6 +162,9 @@ public class ExposicionFormulario extends JDialog {
 
     /**
      * Método que crea el formulario para establecer una exposición como temporal.
+     * 
+     * @param panelFormulario panel del formulario.
+     * @param constraints contrains aplicadas.
      */
     public void formularioExposicionTemporal(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Fecha fin exposición (yyyy-mm-dd):", fechaFin = new JTextField(20), panelFormulario, constraints, 2);

@@ -150,6 +150,11 @@ public class Hora implements Serializable {
         return countEntradas;
     }
 
+    /**
+     * Genera una representación en cadena de caracteres del horario.
+     * 
+     * @return La representación en cadena de caracteres del horario.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -177,6 +182,11 @@ public class Hora implements Serializable {
         return result;
     }
 
+    /**
+     * Reserva un número de entradas para un horario.
+     * 
+     * @param n_entradas El número de entradas a reservar.
+     */
     public void reservarEntradas(int n_entradas){
         if (n_entradas <= this.countEntradas) {
             countEntradas -= n_entradas;

@@ -19,6 +19,7 @@ public class SorteoExpo extends Sorteo{
      * 
      * @param exposicion   La exposición del sorteo
      * @param fechaSorteo  La fecha en laf finalizará la inscripción al sorteo 
+     * @param n_entradas   El número de entradas a sortear
      */
     public SorteoExpo(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
         super(fechaSorteo, exposicion, n_entradas);

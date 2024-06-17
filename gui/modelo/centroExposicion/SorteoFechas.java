@@ -23,6 +23,7 @@ public class SorteoFechas extends Sorteo{
      * @param fechaSorteo La fecha en la límite de inscripción 
      * @param fechaInicio La fecha de inicio
      * @param fechaFin    La fecha de fin
+     * @param n_entradas  El número de entradas a sortear
      */
     public SorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate fechaInicio, LocalDate fechaFin) {
         super(fechaSorteo, exposicion, n_entradas);

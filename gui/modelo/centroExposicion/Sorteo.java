@@ -123,6 +123,13 @@ public abstract class Sorteo implements Serializable {
         inscripciones.remove(inscripcion);
     }
 
+    /**
+     * Comprueba si un cliente está inscrito en el sorteo.
+     * 
+     * @param nif El NIF del cliente a comprobar.
+     * @return {@code true} si el cliente está inscrito, {@code false} en caso
+     *         contrario.
+     */
     public Boolean clienteInscristo(String nif){
         for (Inscripcion inscripcion : inscripciones) {
             if (inscripcion.getCliente().getNIF().equals(nif)) {

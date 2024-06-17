@@ -331,6 +331,18 @@ public class Exposicion implements Serializable {
      * 
      * @param fechaInicioCierre La fecha de inicio del cierre temporal.
      * @param fechaFinCierre    La fecha de fin del cierre temporal.
+     * 
+     * @throws ExcepcionMensaje si la exposición no ha sido publicada o prorrogada,
+     *                          la fecha de inicio de cierre temporal es anterior a
+     *                          la
+     *                          fecha actual o la fecha de fin de cierre temporal,
+     *                          la
+     *                          fecha de fin de cierre temporal es mayor que la
+     *                          fecha
+     *                          de fin de la exposición o la fecha de inicio de
+     *                          cierre
+     *                          temporal es anterior a la fecha de inicio de la
+     *                          exposición.
      */
     public void expoCerrarTemporalmente(LocalDate fechaInicioCierre, LocalDate fechaFinCierre) throws ExcepcionMensaje {
         if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {

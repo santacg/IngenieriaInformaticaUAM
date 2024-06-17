@@ -517,36 +517,55 @@ public class Ventana extends JFrame {
 
 	}
 
+	/**
+	 * Devuelve el panel de cartas
+	 * 
+	 * @return JPanel cartas
+	 
+	 */
 	public JPanel getCartas() {
 		return cartas;
 	}
 
+	/**
+	 * Establece el panel de cartas con la carta principal
+	 * 
+	 */
 	public void setCartaClientePrincipal() {
 		this.vistaClientePrincipal = new ClientePrincipal();
 		cartas.add(vistaClientePrincipal, CLIENTEPRINCIPAL);
 	}
 
+	/**
+	 * Establece el panel de cartas con la carta principal del empleado
+	 */
 	public void setCartaEmpleadoPrincipal() {
 		this.vistaEmpleadoPrincipal = new EmpleadoPrincipal();
 		cartas.add(vistaEmpleadoPrincipal, EMPLEADOPRINCIPAL);
 	}
 
+	/**
+	 * Establece el panel de cartas con la carta principal del gestor
+	 
+	 */
 	public void setCartaGestorPrincipal() {
 		this.vistaGestorPrincipal = new GestorPrincipal();
 		cartas.add(vistaGestorPrincipal, GESTORPRINCIPAL);
 	}
 
+	/**
+	 * Establece el panel de cartas con la carta de ajuste de climatizacion
+	 */
 	public void setCartaAjustarClimatizacion() {
 		this.vistaAjustarClimatizacion = new AjustarClimatizacion();
 		cartas.add(vistaAjustarClimatizacion, AJUSTARCLIMATIZACION);
 	}
 
+	/**
+	 * Establece el panel de cartas con la carta de desbloqueo de clientes
+	 */
 	public void setCartaDesbloqueoClientes() {
 		this.vistaDesbloqueoClientes = new DesbloqueoClientes();
 		cartas.add(vistaDesbloqueoClientes, DESBLOQUEOCLIENTES);
-	}
-
-	public void setCartaPantallaPrincipal() {
-
 	}
 }

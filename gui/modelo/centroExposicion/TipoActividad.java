@@ -18,5 +18,18 @@ package gui.modelo.centroExposicion;
  * @author Carlos García Santa
  */
 public enum TipoActividad {
-    CONFERENCIA, MESA_REDONDA, PROYECCION, ACTUACION_EN_VIVO, VISITA_GUIADA, FORMATIVA, OTROS;
+    /** Conferencia. */
+    CONFERENCIA,
+    /** Mesa redonda. */ 
+    MESA_REDONDA,
+    /** Proyección. */ 
+    PROYECCION,
+    /** Actuación en vivo. */
+    ACTUACION_EN_VIVO, 
+    /** Visita guiada. */
+    VISITA_GUIADA,
+    /** Formativa. */ 
+    FORMATIVA,
+    /** Otros. */ 
+    OTROS;
 }

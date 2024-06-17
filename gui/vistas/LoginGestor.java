@@ -69,7 +69,7 @@ public class LoginGestor extends JPanel {
     /**
      * Método que añade los botones a la vista
      * 
-     * @param constraints
+     * @param constraints Restricciones de la vista
      */
     public void addButtons(GridBagConstraints constraints) {
         this.aceptarBtn = new JButton("Aceptar");
@@ -94,8 +94,8 @@ public class LoginGestor extends JPanel {
     /**
      * Método que establece los controladores de los botones
      * 
-     * @param cAceptar
-     * @param cAtras
+     * @param cAceptar Controlador del botón de aceptar
+     * @param cAtras  Controlador del botón de atrás
      */
     public void setControlador(ActionListener cAceptar, ActionListener cAtras) {
         this.aceptarBtn.addActionListener(cAceptar);
@@ -105,7 +105,7 @@ public class LoginGestor extends JPanel {
     /**
      * Método que devuelve la contraseña introducida
      * 
-     * @return String
+     * @return String Contraseña introducida
      */
     public String getPassword() {
         return new String(this.fieldPassword.getPassword());

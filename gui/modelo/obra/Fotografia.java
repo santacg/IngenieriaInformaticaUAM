@@ -32,6 +32,7 @@ public class Fotografia extends ObraNoDigital {
      * @param humedadMaxima     la humedad máxima para la conservación de
      * @param humedadMinima     la humedad mínima para la conservación de
      * @param color             si la fotografía es en color o en blanco y negro.
+     * @param autores           Autores de las fotografia
      */
     public Fotografia(String nombre, Integer anio, String descripcion, Boolean externa,
             Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,

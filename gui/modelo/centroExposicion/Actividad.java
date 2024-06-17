@@ -15,9 +15,6 @@ import gui.modelo.sala.Sala;
  * 
  * @author Carlos García Santa
  */
-/**
- * La clase Actividades representa una actividad en un centro de exposición.
- */
 public class Actividad implements Serializable {
     private String nombre;
     private TipoActividad tipo;

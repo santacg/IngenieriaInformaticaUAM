@@ -13,8 +13,13 @@ import gui.controlador.ControladorVentaFormulario;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-
-public class VentaEntradas extends JPanel{
+/**
+ * Clase VentaEntradas
+ * Implementa la interfaz gráfica de la venta de entradas.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
+public class VentaEntradas extends JPanel {
     private JPanel buscarExposiciones;
     private JButton venderBoton;
     private JTable tablaExposiciones;
@@ -28,7 +33,7 @@ public class VentaEntradas extends JPanel{
     /**
      * Constructor de la clase ClientePrincipal.
      */
-    public VentaEntradas(){
+    public VentaEntradas() {
         setLayout(new BorderLayout());
         this.buscarExposiciones = new JPanel();
         buscarExposiciones.setLayout(new BorderLayout());
@@ -75,7 +80,7 @@ public class VentaEntradas extends JPanel{
      * 
      * @param cVender       Controlador del botón de comprar.
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
-     * @param cInscribirse  Controlador del botón de inscribirse.
+     * @param cAtras        Controlador del botón de inscribirse.
      */
     public void setControlador(ActionListener cVender, ActionListener cCerrarSesion, ActionListener cAtras) {
         venderBoton.addActionListener(cVender);

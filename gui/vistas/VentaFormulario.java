@@ -4,6 +4,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/**
+ * Clase VentaFormulario
+ * Implementa la interfaz gráfica de un formulario para ventas.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class VentaFormulario extends JDialog {
 
     private JLabel exposicionNombre;
@@ -15,6 +21,10 @@ public class VentaFormulario extends JDialog {
     private JButton siguienteBtn;
     private JButton cancelarBtn;
 
+    /**
+     * Constructor de la clase SorteoFormulario
+     * 
+     */
     public VentaFormulario(String nombreExposicion, double precio) {
         setTitle("Comprar entrada");
         setSize(700, 600);
@@ -49,6 +59,15 @@ public class VentaFormulario extends JDialog {
         add(panelFormulario);
     }
 
+    /**
+     * Método auxiliar para añadir un campo al formulario
+     * 
+     * @param label       Etiqueta del campo
+     * @param comp        Componente del campo
+     * @param panel       Panel al que añadir el campo
+     * @param constraints Restricciones de diseño
+     * @param gridy       Fila en la que añadir el campo
+     */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, Integer gridy,
             Integer gridwidth) {
         JLabel jlabel = new JLabel(label);
@@ -62,6 +81,13 @@ public class VentaFormulario extends JDialog {
         panel.add(comp, constraints);
     }
 
+    /**
+     * Método auxiliar para añadir los botones al formulario
+     * 
+     * @param panel       Panel al que añadir los botones
+     * @param constraints Restricciones de diseño
+     * @param gridy       Fila en la que añadir los botones
+     */
     private void addBotones(JPanel panel, GridBagConstraints constraints, Integer gridy) {
         constraints.gridx = 0;
         constraints.gridy = gridy;
@@ -77,22 +103,50 @@ public class VentaFormulario extends JDialog {
         panel.add(buttonPanel, constraints);
     }
 
+    /**
+     * Método para obtener el nombre de la exposicion seleccionada
+     * 
+     * @return String con el nombre de la exposicion seleccionada
+     */ 
     public String getExposicionNombre() {
         return exposicionNombre.getText();
     }
 
+    /**
+     * Método para obtener el precio
+     * 
+     * @return String con el precio de las entradas 
+     */ 
     public String getPrecio() {
         return precioPorEntrada.getText();
     }
 
+    /**
+     * Método para obtener el número de entradas seleccionado
+     * 
+     * @return Integer con el número de entradas seleccionado 
+     */
     public JComboBox<Integer> getNentradas() {
         return nEntradas;
     }
 
+    /**
+     * Método para obtener la hora seleccionada
+     * 
+     * @return String con la hora seleccionada 
+     */
     public JComboBox<String> getHora() {
         return hora;
     }
 
+    /**
+     * Método para establecer los controladores de los botones
+     * 
+     * @param cSiguiente ActionListener para el botón de siguiente
+     * @param cCancelar ActionListener para el botón de cancelar
+     * @param cNentradas ActionListener para el JComboBox de número de entradas
+     * @param cHoras ActionListener para el JComboBox de horas
+     */
     public void setControlador(ActionListener cSiguiente, ActionListener cCancelar, ActionListener cNentradas,
             ActionListener cHoras) {
         this.siguienteBtn.addActionListener(cSiguiente);

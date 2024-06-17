@@ -53,6 +53,18 @@ public class Sala implements Serializable {
         this.subSalas = new ArrayList<>();
     }
 
+    /**
+     * Constructor que inicializa una nueva sala con sus propiedades específicas.
+     * 
+     * @param nombre            El nombre de la sala.
+     * @param aforo             El aforo máximo permitido en la sala.
+     * @param climatizador      Si la sala tiene o no climatizador.
+     * @param tomasElectricidad El número de tomas de electricidad disponibles en la
+     *                          sala.
+     * @param ancho             El ancho de la sala.
+     * @param largo             El largo de la sala.
+     * @param alto              El alto de la sala.
+     */
     public Sala(String nombre, Integer aforo, Boolean climatizador, Integer tomasElectricidad, Double ancho,
             Double largo, Double alto) {
         this.nombre = nombre;

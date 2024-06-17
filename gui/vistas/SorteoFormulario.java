@@ -13,6 +13,12 @@ import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 
+/**
+ * Clase SorteoFormulario
+ * Implementa la interfaz gráfica de un formulario para sorteos.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class SorteoFormulario extends JDialog {
     private String tipoSorteo;
     private JComboBox<String> exposiciones;

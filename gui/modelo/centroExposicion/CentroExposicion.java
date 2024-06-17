@@ -44,51 +44,7 @@ public class CentroExposicion implements Serializable {
     private Set<Actividad> actividades = new HashSet<>();
     private Gestor gestor;
 
-    /**
-     * Genera el codigo hash para un centro de exposición.
-     * 
-     * @return el código hash generado.
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-        result = prime * result + ((localizacion == null) ? 0 : localizacion.hashCode());
-        return result;
-    }
 
-    /**
-     * Comprueba si este centro de exposición es igual al objeto proporcionado.
-     * Dos centros de exposición se consideran iguales si tienen el mismo nombre y
-     * localización.
-     * 
-     * @param obj el objeto con el que comparar este centro de exposición.
-     * 
-     * @return true si los objetos son iguales, false en caso contrario.
-     * 
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        CentroExposicion other = (CentroExposicion) obj;
-        if (nombre == null) {
-            if (other.nombre != null)
-                return false;
-        } else if (!nombre.equals(other.nombre))
-            return false;
-        if (localizacion == null) {
-            if (other.localizacion != null)
-                return false;
-        } else if (!localizacion.equals(other.localizacion))
-            return false;
-        return true;
-    }
 
     /**
      * Constructor de un centro de exposición con los parámetros proporcionados.
@@ -1240,6 +1196,52 @@ public class CentroExposicion implements Serializable {
         sb.append("Gestor: ").append(gestor).append("\n");
 
         return sb.toString();
+    }
+
+    /**
+     * Genera el codigo hash para un centro de exposición.
+     * 
+     * @return el código hash generado.
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+        result = prime * result + ((localizacion == null) ? 0 : localizacion.hashCode());
+        return result;
+    }
+
+    /**
+     * Comprueba si este centro de exposición es igual al objeto proporcionado.
+     * Dos centros de exposición se consideran iguales si tienen el mismo nombre y
+     * localización.
+     * 
+     * @param obj el objeto con el que comparar este centro de exposición.
+     * 
+     * @return true si los objetos son iguales, false en caso contrario.
+     * 
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CentroExposicion other = (CentroExposicion) obj;
+        if (nombre == null) {
+            if (other.nombre != null)
+                return false;
+        } else if (!nombre.equals(other.nombre))
+            return false;
+        if (localizacion == null) {
+            if (other.localizacion != null)
+                return false;
+        } else if (!localizacion.equals(other.localizacion))
+            return false;
+        return true;
     }
 
 }
