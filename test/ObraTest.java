@@ -169,15 +169,15 @@ public class ObraTest {
 
         obra1.retirarObra();
         obra1.almacenarObra();
-        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+        assertEquals(Estado.RETIRADA, obra1.getEstado());
 
-        obra1.prestarObra();
-        obra1.almacenarObra();
-        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+        obra2.prestarObra();
+        obra2.almacenarObra();
+        assertEquals(Estado.ALMACENADA, obra2.getEstado());
 
-        obra1.restaurarObra();
-        obra1.almacenarObra();
-        assertEquals(Estado.ALMACENADA, obra1.getEstado());
+        obra2.restaurarObra();
+        obra2.almacenarObra();
+        assertEquals(Estado.ALMACENADA, obra2.getEstado());
     }
 
     @Test

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.*;
 import gui.modelo.sala.Sala;
+import gui.modelo.utils.ExcepcionMensaje;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.ActividadFormulario;
 
@@ -76,10 +77,11 @@ public class ControladorActividadFormulario {
 
             Sala sala = centroExposicion.getSalaPorNombre(vista.getSelectedSala());
 
-            if (centroExposicion.addActividad(vista.getNombreActividad(), tipoActividad, vista.getDescripcion(),
-                    maxParticipantes, fechaActividad, horaActividad, sala) == false) {
-                JOptionPane.showMessageDialog(vista, "Error añadiendo la actividad.", "Error",
-                        JOptionPane.ERROR_MESSAGE);
+            try {
+                centroExposicion.addActividad(vista.getNombreActividad(), tipoActividad, vista.getDescripcion(),
+                    maxParticipantes, fechaActividad, horaActividad, sala);
+            } catch (ExcepcionMensaje e1) {
+                JOptionPane.showMessageDialog(vista, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 

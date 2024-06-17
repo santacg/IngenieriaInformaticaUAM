@@ -723,7 +723,7 @@ public class GestorPrincipal extends JPanel {
         JPanel panelAcciones = new JPanel();
         this.obraComboAcciones = new JComboBox<>(
                 new String[] { "Retirar Obra", "Almacenar Obra", "Exponer Obra", "Restaurar Obra", "Prestar Obra",
-                        "Asignar Obra a Sala", "Eliminar Obra de Sala" });
+                        "Asignar Obra a Sala de Exposición", "Eliminar Obra de Sala de Exposición" });
         this.obraEjecutarBtn = new JButton("Ejecutar accion");
         this.obraAgregarBtn = new JButton("Agregar obra");
         this.leerObrasCSVBtn = new JButton("Leer Obras desde CSV");

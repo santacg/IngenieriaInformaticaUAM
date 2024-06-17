@@ -19,11 +19,9 @@ Creación de exposiciones: Para crear exposiciones, primero se añade una exposi
 Posteriormente, en el panel de obras, se añaden obras que deben estar en estado de ALMACENADA o EXPUESTA a las salas de exposición previamente asignadas. 
 En cada paso, se verifica que los recursos de la exposición (obras y salas) no se compartan con otras exposiciones en fechas coincidentes.
 
-Modificación de exposiciones: Es posible cambiar el estado de las obras expuestas. 
-Si las obras se prestan, almacenan o restauran, no desaparecerán de las salas de exposición, ya que esto es una condición temporal. 
-Por ejemplo, si una obra se está restaurando, una vez completada puede volver al estado de EXPUESTA y permanecer en la misma sala de exposición. 
-Sin embargo, si una obra se retira definitivamente, se eliminará de todas las salas de exposición de todas las exposiciones.
-Además no se pueden eliminar las obras de las salas de exposición de exposiciones que no esten en creación (si la exposición termina, el sistema elimina
+Modificación de exposiciones: Es posible cambiar el estado de las obras expuestas, en concreto pueden cambiar a RETIRIDA, PRESTADA Y RESTAURACION, en cualquiera
+de estos casos la obra se eliminara de la sala de exposición de todas las exposiciones. 
+No se pueden eliminar las obras de las salas de exposición de exposiciones que no esten en creación (si la exposición termina, el sistema elimina
 las obras de las salas de exposición automáticamente) ya que una vez publicada la exposición no se puede modificar. 
 Por otro lado, tampoco se pueden añadir nuevas obras a salas de exposición de exposiciones ya publicadas.
 

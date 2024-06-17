@@ -38,22 +38,27 @@ public class Tareas {
                     for (SalaExposicion sala : exposicion.getSalas()) {
                         for (Obra obra : sala.getObras()) {
                             if (obra.getEstado() != Estado.EXPUESTA) {
-                                obra.exponerObra();
+                                try {
+                                    obra.exponerObra();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
 
                     // Si la exposición ha finalizado, y no esta en estado de creacion se almacenan
-                    // las obras
+                    // las obras y se borran las salas de exposición asociadas
                 } else if (exposicion.getFechaFin().isEqual(LocalDate.now())
                         && estado != EstadoExposicion.EN_CREACION) {
                     for (SalaExposicion sala : exposicion.getSalas()) {
-                        for (Obra obra : sala.getObras()) {
-                            obra.almacenarObra();
-                            sala.removeObra(obra);
-                        }
+                        exposicion.removeSala(sala);
                     }
-                    centro.removeExposicion(exposicion);
+                    try {
+                        centro.removeExposicion(exposicion);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

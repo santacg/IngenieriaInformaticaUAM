@@ -11,6 +11,7 @@ import gui.modelo.expofy.*;
 import gui.modelo.inscripcion.Inscripcion;
 import gui.modelo.obra.Obra;
 import gui.modelo.usuario.Usuario;
+import gui.modelo.utils.ExcepcionMensaje;
 
 import java.io.Serializable;
 
@@ -133,7 +134,6 @@ public class Exposicion implements Serializable {
      */
     public boolean setFechaFin(LocalDate fechaFin) {
         if (this.fechaInicio.isAfter(fechaFin)) {
-            System.out.println("La fecha de inicio no puede ser posterior a la fecha de fin");
             return false;
         }
 
@@ -196,10 +196,20 @@ public class Exposicion implements Serializable {
     /**
      * Cambia el estado de la exposición a PUBLICADA.
      */
-    public boolean expoPublicar() {
+    public void expoPublicar() throws ExcepcionMensaje {
+
         if (this.estado != EstadoExposicion.EN_CREACION) {
-            System.out.println("No se puede publicar una exposición que no esta en creacion");
-            return false;
+            throw new ExcepcionMensaje("No se puede publicar una exposición que no esta en creacion");
+        }
+
+        if (this.salas.size() == 0) {
+            throw new ExcepcionMensaje("No se puede publicar una exposición sin salas");
+        }
+
+        for (SalaExposicion sala : this.salas) {
+            if (sala.getObras().size() == 0) {
+                throw new ExcepcionMensaje("No se puede publicar una exposición con salas sin obras");
+            }
         }
 
         Expofy expofy = Expofy.getInstance();
@@ -207,27 +217,25 @@ public class Exposicion implements Serializable {
                 "Se ha publicado una nueva exposicion " + getNombre() + ": " + getDescripcion());
 
         this.estado = EstadoExposicion.PUBLICADA;
-        return true;
     }
 
     /**
      * Cambia el estado de la exposición a CANCELADA.
+     * 
+     * @param fechaCancelacion La fecha de cancelación de la exposición.
      */
-    public boolean expoCancelar(LocalDate fechaCancelacion) {
+    public void expoCancelar(LocalDate fechaCancelacion) throws ExcepcionMensaje {
         if (this.estado == EstadoExposicion.EN_CREACION || this.estado == EstadoExposicion.CANCELADA) {
-            System.out.println("No se puede cancelar una exposición que esta en creacion o ya ha sido cancelada");
-            return false;
+            throw new ExcepcionMensaje(
+                    "No se puede cancelar una exposición que no ha sido publicada o ya está cancelada");
         }
 
         if (fechaCancelacion.isBefore(LocalDate.now().plusDays(7))) {
-            System.out.println("No se puede cancelar la exposición con menos de 7 días de antelación");
-            return false;
+            throw new ExcepcionMensaje("No se puede cancelar la exposición con menos de 7 días de antelación");
         }
 
         if (fechaCancelacion.isAfter(this.fechaFin)) {
-            System.out.println(
-                    "No se puede cancelar la exposición con una fecha de fin anterior a la de inicio o la actual");
-            return false;
+            throw new ExcepcionMensaje("No se puede cancelar la exposición con una fecha de fin posterior a la actual");
         }
 
         Expofy expofy = Expofy.getInstance();
@@ -260,7 +268,10 @@ public class Exposicion implements Serializable {
 
         this.fechaFin = fechaCancelacion;
         this.estado = EstadoExposicion.CANCELADA;
-        return true;
+
+        if (this.tipo == TipoExpo.PERMANENTE) {
+            this.tipo = TipoExpo.TEMPORAL;
+        }
     }
 
     /**
@@ -268,45 +279,54 @@ public class Exposicion implements Serializable {
      * 
      * @param fechaFin La nueva fecha de fin para la exposición.
      */
-    public boolean expoProrrogar(LocalDate fechaFin) {
+    public void expoProrrogar(LocalDate fechaFin) throws ExcepcionMensaje {
+
+        if (this.tipo == TipoExpo.PERMANENTE) {
+            throw new ExcepcionMensaje("No se puede prorrogar una exposición permanente");
+        }
+
         if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {
-            System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
-            return false;
+            throw new ExcepcionMensaje("No se puede prorrogar una exposición que no ha sido publicada o prorrogada");
         }
 
         if (fechaFin.isBefore(this.fechaFin) || fechaFin.isEqual(this.fechaFin)) {
-            System.out.println("No se puede prorrogar la exposición con una fecha de fin anterior o igual a la actual");
-            return false;
+            throw new ExcepcionMensaje(
+                    "No se puede prorrogar la exposición con una fecha de fin anterior o igual a la actual");
         }
 
         this.fechaFin = fechaFin;
         this.estado = EstadoExposicion.PRORROGADA;
-        return true;
     }
 
     /**
      * Cierra temporalmente la exposición.
+     * 
+     * @param fechaInicioCierre La fecha de inicio del cierre temporal.
+     * @param fechaFinCierre    La fecha de fin del cierre temporal.
      */
-    public boolean expoCerrarTemporalmente(LocalDate fechaInicioCierre, LocalDate fechaFinCierre) {
+    public void expoCerrarTemporalmente(LocalDate fechaInicioCierre, LocalDate fechaFinCierre) throws ExcepcionMensaje {
         if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {
-            System.out.println("No se puede cerrar temporalmente una exposición que no ha sido publicada o prorrogada");
-            return false;
+            throw new ExcepcionMensaje(
+                    "No se puede cerrar temporalmente una exposición que no ha sido publicada o prorrogada");
         }
 
         if (fechaInicioCierre.isBefore(LocalDate.now()) || fechaFinCierre.isBefore(LocalDate.now())
                 || fechaInicioCierre.isAfter(fechaFinCierre)) {
-            System.out.println("No se puede cerrar temporalmente la exposición con fechas incorrectas");
-            return false;
+            throw new ExcepcionMensaje(
+                    "La fecha de inicio de cierre temporal no puede ser anterior a la fecha actual o la fecha de fin de cierre");
         }
 
-        if (this.fechaFin.isBefore(fechaFinCierre) || this.fechaInicio.isAfter(fechaInicioCierre)) {
-            System.out.println(
-                    "No se puede cerrar temporalmente la exposición con una fecha de fin anterior a la actual o de inicio posterior a la actual");
-            return false;
+        if (this.fechaFin.isBefore(fechaFinCierre)) {
+            throw new ExcepcionMensaje(
+                    "La fecha de fin de cierre temporal no puede ser mayor que la fecha de fin de la exposición");
+        }
+
+        if (this.fechaInicio.isAfter(fechaInicioCierre)) {
+            throw new ExcepcionMensaje(
+                    "La fecha de inicio de cierre temporal no puede ser anterior a la fecha de inicio de la exposición");
         }
 
         this.estado = EstadoExposicion.CERRADATEMPORALMENTE;
-        return true;
     }
 
     /**
@@ -352,7 +372,12 @@ public class Exposicion implements Serializable {
         }
 
         for (Obra obra : sala.getObras()) {
-            obra.almacenarObra();
+            try {
+                obra.almacenarObra();
+            } catch (ExcepcionMensaje e) {
+                e.printStackTrace();
+                return false;
+            }
         }
 
         this.salas.remove(sala);
@@ -415,33 +440,40 @@ public class Exposicion implements Serializable {
 
     /**
      * Cambia el tipo de la exposición a temporal.
+     * 
+     * @param fechaFin La fecha de fin de la exposición.
      */
-    public boolean expoTemporal(LocalDate fechaFin) {
+    public void expoTemporal(LocalDate fechaFin) throws ExcepcionMensaje {
 
         if (this.estado == EstadoExposicion.CANCELADA) {
-            System.out.println("No se puede cambiar el tipo de la exposición a temporal si ha sido cancelada");
-            return false;
+            throw new ExcepcionMensaje("No se puede cambiar el tipo de la exposición a temporal si ha sido cancelada");
         }
 
         if (this.tipo == TipoExpo.TEMPORAL) {
-            System.out.println("La exposición ya es temporal");
-            return false;
+            throw new ExcepcionMensaje("La exposición ya es temporal");
         }
 
         if (setFechaFin(fechaFin) == false) {
-            System.out.println(
-                    "No se puede cambiar el tipo de la exposición a temporal con una fecha de fin anterior a la actual");
-            return false;
+            throw new ExcepcionMensaje("La fecha de fin no puede ser anterior a la fecha de inicio");
         }
 
         this.tipo = TipoExpo.TEMPORAL;
-        return true;
     }
 
     /**
      * Cambia el tipo de la exposición a permanente.
      */
-    public void expoPermanente() {
+    public void expoPermanente() throws ExcepcionMensaje {
+
+        if (this.tipo == TipoExpo.PERMANENTE) {
+            throw new ExcepcionMensaje("La exposición ya es permanente");
+        }
+
+        if (this.estado == EstadoExposicion.CANCELADA) {
+            throw new ExcepcionMensaje(
+                    "No se puede cambiar el tipo de la exposición a permanente si ha sido cancelada");
+        }
+
         this.tipo = TipoExpo.PERMANENTE;
         this.fechaFin = LocalDate.MAX;
     }
@@ -635,6 +667,15 @@ public class Exposicion implements Serializable {
         } else if (!fechaFin.equals(other.fechaFin))
             return false;
         return true;
+    }
+
+    /**
+     * Unicamente util para los test no se debe usar en otro caso
+     * 
+     * @param Estado estado al que va a pasar la exposicion
+     */
+    public void setEstado(EstadoExposicion estado) {
+        this.estado = estado;
     }
 
 }

@@ -63,7 +63,8 @@ public class ControladorSalaFormulario {
 
                     if (aforo <= 0 || ancho <= 0 || largo <= 0 || alto <= 0 || tomasElectricidad < 0) {
                         JOptionPane.showMessageDialog(vista,
-                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).", "Error",
+                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).",
+                                "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -114,7 +115,8 @@ public class ControladorSalaFormulario {
 
                     if (aforo <= 0 || ancho <= 0 || largo <= 0 || tomasElectricidad < 0) {
                         JOptionPane.showMessageDialog(vista,
-                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).", "Error",
+                                "Debes rellenar todos los campos con valores mayores que 0 (o 0 en caso de las tomas).",
+                                "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -150,7 +152,7 @@ public class ControladorSalaFormulario {
 
                     if (salaSeleccionada == null) {
                         salaSeleccionada = centroExposicion.getSubSalaPorNombre(nombre);
-                    } 
+                    }
 
                     for (Exposicion exposicion : centroExposicion.getExposiciones()) {
                         for (SalaExposicion salaExposicion : exposicion.getSalas()) {
@@ -162,11 +164,11 @@ public class ControladorSalaFormulario {
                             }
                         }
                     }
-                    
+
                     if (centroExposicion.removeSala(salaSeleccionada) == false) {
-                            JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            break;
+                        JOptionPane.showMessageDialog(vista, "No se ha podido eliminar la sala.", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        break;
                     }
 
                     frame.actualizarTablaSalas(centroExposicion);
@@ -235,10 +237,8 @@ public class ControladorSalaFormulario {
                     }
 
                     for (Exposicion exposicionCentro : centroExposicion.getExposiciones()) {
-                        if ((exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaInicio())
-                                && exposicion.getFechaFin().isBefore(exposicionCentro.getFechaFin())) ||
-                                (exposicion.getFechaInicio().isEqual(exposicionCentro.getFechaInicio())
-                                        && exposicion.getFechaFin().isEqual(exposicionCentro.getFechaFin()))) {
+                        if (!(exposicion.getFechaFin().isBefore(exposicionCentro.getFechaInicio()) ||
+                                exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaFin()))) {
 
                             for (SalaExposicion salaExposicion : exposicionCentro.getSalas()) {
                                 if (salaExposicion.getSala().getNombre().equals(salaSeleccionada.getNombre())) {

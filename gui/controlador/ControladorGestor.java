@@ -2,6 +2,7 @@ package gui.controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Constructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.SalaExposicion;
 import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
+import gui.modelo.utils.ExcepcionMensaje;
 import gui.modelo.utils.LectorCSVObras;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.ModeloTablaObras;
@@ -197,23 +199,10 @@ public class ControladorGestor {
                             switch (accion) {
                                 case "Retirar Obra":
 
-                                    if (obra.getEstado() == Estado.RETIRADA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede retirar la obra " + nombreObra
-                                                        + " porque ya está retirada.");
-                                        continue;
-                                    }
-
-                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede retirar la obra " + nombreObra
-                                                        + " porque no está almacenada o expuesta.");
-                                        continue;
-                                    }
-
-                                    if (obra.retirarObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede retirar la obra " + nombreObra);
+                                    try {
+                                        obra.retirarObra();
+                                    } catch (ExcepcionMensaje e1) {
+                                        JOptionPane.showMessageDialog(frame, e1.getMessage());
                                         continue;
                                     }
 
@@ -221,7 +210,6 @@ public class ControladorGestor {
                                         for (SalaExposicion salaExpo : exposicion.getSalas()) {
                                             if (salaExpo.getObras().contains(obra)) {
                                                 salaExpo.removeObra(obra);
-                                                break;
                                             }
                                         }
                                     }
@@ -232,22 +220,17 @@ public class ControladorGestor {
                                     break;
                                 case "Almacenar Obra":
 
-                                    if (obra.getEstado() == Estado.ALMACENADA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                nombreObra + " ya está almacenada.");
-                                        continue;
-                                    }
-
-                                    if (obra.getEstado() == Estado.RETIRADA) {
+                                    if (obra.getEstado() == Estado.EXPUESTA) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede almacenar la obra " + nombreObra
-                                                        + " porque está retirada");
+                                                        + " porque está expuesta.");
                                         continue;
                                     }
 
-                                    if (obra.almacenarObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede almacenar la obra " + nombreObra);
+                                    try {
+                                        obra.almacenarObra();
+                                    } catch (ExcepcionMensaje e1) {
+                                        JOptionPane.showMessageDialog(frame, e1.getMessage());
                                         continue;
                                     }
 
@@ -257,23 +240,10 @@ public class ControladorGestor {
                                     break;
                                 case "Exponer Obra":
 
-                                    if (obra.getEstado() == Estado.EXPUESTA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede exponer la obra " + nombreObra
-                                                        + " porque ya está expuesta.");
-                                        continue;
-                                    }
-
-                                    if (obra.getEstado() != Estado.ALMACENADA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede exponer la obra " + nombreObra
-                                                        + " porque no está almacenada.");
-                                        continue;
-                                    }
-
-                                    if (obra.exponerObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede exponer la obra " + nombreObra);
+                                    try {
+                                        obra.exponerObra();
+                                    } catch (ExcepcionMensaje e1) {
+                                        JOptionPane.showMessageDialog(frame, e1.getMessage());
                                         continue;
                                     }
 
@@ -281,13 +251,13 @@ public class ControladorGestor {
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
                                     break;
-                                case "Asignar Obra a Sala":
+                                case "Asignar Obra a Sala de Exposición":
 
                                     if (obra.getEstado() == Estado.PRESTADA || obra.getEstado() == Estado.RESTAURACION
                                             || obra.getEstado() == Estado.RETIRADA) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede asignar la obra " + nombreObra
-                                                        + " porque está prestada o en restauración o retirada.");
+                                                        + " porque está prestada o retirida o en restauración.");
                                         continue;
                                     }
 
@@ -319,16 +289,15 @@ public class ControladorGestor {
                                     Exposicion exposicion = centro.getExposicionPorNombre(exposicionSeleccionada);
 
                                     for (Exposicion exposicionCentro : centro.getExposiciones()) {
-                                        if ((exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaInicio())
-                                                && exposicion.getFechaFin().isBefore(exposicionCentro.getFechaFin())) ||
-                                                (exposicion.getFechaInicio().isEqual(exposicionCentro.getFechaInicio())
-                                                        && exposicion.getFechaFin()
-                                                                .isEqual(exposicionCentro.getFechaFin()))) {
+                                        if (!(exposicion.getFechaFin().isBefore(exposicionCentro.getFechaInicio()) ||
+                                                exposicion.getFechaInicio().isAfter(exposicionCentro.getFechaFin()))) {
+
                                             for (SalaExposicion salaExpo : exposicionCentro.getSalas()) {
                                                 if (salaExpo.getObras().contains(obra)) {
                                                     JOptionPane.showMessageDialog(frame,
-                                                            "La obra ya está en una sala de exposición de la exposición "
-                                                                    + exposicionCentro.getNombre());
+                                                            "La obra ya está añadida en la exposición " + exposicionCentro.getNombre() + " en la sala "
+                                                                    + salaExpo.getSala().getNombre() + " y hay solapamiento de fechas con la exposición " + exposicionSeleccionada,
+                                                            "Error", JOptionPane.ERROR_MESSAGE);
 
                                                     vista.deseleccionarTabla();
                                                     return;
@@ -380,7 +349,7 @@ public class ControladorGestor {
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
 
                                     break;
-                                case "Eliminar Obra de Sala":
+                                case "Eliminar Obra de Sala de Exposición":
 
                                     List<String> nombresSalasExposicion = new ArrayList<>();
 
@@ -435,26 +404,6 @@ public class ControladorGestor {
                                     break;
                                 case "Prestar Obra":
 
-                                    if (obra.getEstado() == Estado.PRESTADA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede prestar la obra " + nombreObra
-                                                        + " porque ya está prestada.");
-                                        continue;
-                                    }
-
-                                    if (obra.getExterna() == true) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede prestar la obra " + nombreObra + " porque es externa.");
-                                        continue;
-                                    }
-
-                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede prestar la obra " + nombreObra
-                                                        + " porque no está almacenada o expuesta.");
-                                        continue;
-                                    }
-
                                     Expofy expofy = Expofy.getInstance();
                                     Set<CentroExposicion> centros = expofy.getCentrosExposicion();
                                     centros.remove(centro);
@@ -498,9 +447,10 @@ public class ControladorGestor {
                                         continue;
                                     }
 
-                                    if (obra.prestarObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede prestar la obra " + nombreObra);
+                                    try {
+                                        obra.prestarObra();
+                                    } catch (ExcepcionMensaje e1) {
+                                        JOptionPane.showMessageDialog(frame, e1.getMessage());
                                         continue;
                                     }
 
@@ -508,10 +458,11 @@ public class ControladorGestor {
                                         for (SalaExposicion salaExpo : exposiciones.getSalas()) {
                                             if (salaExpo.getObras().contains(obra)) {
                                                 salaExpo.removeObra(obra);
-                                                break;
                                             }
                                         }
                                     }
+
+                                    // deberia ser externa y para hay que crear una copia
 
                                     centroDestino.addObra(obra);
                                     vista.actualizarTablaSalasExposicion(centro);
@@ -521,24 +472,19 @@ public class ControladorGestor {
                                     break;
                                 case "Restaurar Obra":
 
-                                    if (obra.getEstado() == Estado.RESTAURACION) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede restaurar la obra " + nombreObra
-                                                        + " porque ya está en restauración.");
+                                    try {
+                                        obra.restaurarObra();
+                                    } catch (ExcepcionMensaje e1) {
+                                        JOptionPane.showMessageDialog(frame, e1.getMessage());
                                         continue;
                                     }
 
-                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede restaurar la obra " + nombreObra
-                                                        + " porque no está almacenada o expuesta.");
-                                        continue;
-                                    }
-
-                                    if (obra.restaurarObra() == false) {
-                                        JOptionPane.showMessageDialog(frame,
-                                                "No se puede restaurar la obra " + nombreObra);
-                                        continue;
+                                    for (Exposicion exposiciones : centro.getExposiciones()) {
+                                        for (SalaExposicion salaExpo : exposiciones.getSalas()) {
+                                            if (salaExpo.getObras().contains(obra)) {
+                                                salaExpo.removeObra(obra);
+                                            }
+                                        }
                                     }
 
                                     vista.actualizarTablaSalasExposicion(centro);
@@ -563,10 +509,13 @@ public class ControladorGestor {
         public void actionPerformed(ActionEvent e) {
             String fileName = JOptionPane.showInputDialog(vista,
                     "Introduce el nombre del archivo CSV (no debes incluir el .csv)");
-            if (LectorCSVObras.leerObras(centro, fileName) == false) {
-                JOptionPane.showMessageDialog(frame, "Error al leer las obras.");
+            try {
+                LectorCSVObras.leerObras(centro, fileName);
+            } catch (ExcepcionMensaje e1) {
+                JOptionPane.showMessageDialog(frame, e1.getMessage());
                 return;
             }
+
             JOptionPane.showMessageDialog(frame, "Obras leídas correctamente.");
             vista.actualizarTablaObras(centro);
         }

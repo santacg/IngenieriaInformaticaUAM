@@ -11,6 +11,7 @@ import gui.modelo.exposicion.*;
 import gui.modelo.obra.Estado;
 import gui.modelo.obra.Obra;
 import gui.modelo.sala.Sala;
+import gui.modelo.utils.ExcepcionMensaje;
 
 import java.io.File;
 
@@ -266,32 +267,34 @@ public class CentroExposicion implements Serializable {
     /**
      * Añade una actividad al centro de exposiciones.
      * 
-     * @param actividades Las actividades a asignar.
+     * @param nombre           el nombre de la actividad
+     * @param tipo             el tipo de actividad
+     * @param descripcion      la descripción de la actividad
+     * @param maxParticipantes el número máximo de participantes
+     * @param fecha            la fecha de la actividad
+     * @param hora             la hora de la actividad
+     * @param salaCelebracion  la sala en la que se celebrará la actividad
      */
-    public Boolean addActividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes,
-            LocalDate fecha, LocalTime hora, Sala salaCelebracion) {
+    public void addActividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes,
+            LocalDate fecha, LocalTime hora, Sala salaCelebracion) throws ExcepcionMensaje {
 
         for (Actividad actividad : actividades) {
             if (actividad.getSalaCelebracion().equals(salaCelebracion) && actividad.getFecha().equals(fecha)
                     && actividad.getHora().equals(hora)) {
-                System.out.println("La sala ya está siendo utilizada por otra actividad");
-                return false;
+                throw new ExcepcionMensaje("La sala ya está siendo utilizada por otra actividad");
             }
         }
 
         if (salaCelebracion.getAforo() < maxParticipantes) {
-            System.out.println("El número de participantes supera el aforo de la sala");
-            return false;
+            throw new ExcepcionMensaje("El número de participantes supera el aforo de la sala");
         }
 
         Actividad actividad = new Actividad(nombre, tipo, descripcion, maxParticipantes, fecha, hora, salaCelebracion);
 
         if (actividades.add(actividad) == false) {
-            System.out.println("La actividad ya está en el centro de exposiciones");
-            return false;
+            throw new ExcepcionMensaje("La actividad ya está en el centro de exposiciones");
         }
 
-        return true;
     }
 
     /**
@@ -594,23 +597,17 @@ public class CentroExposicion implements Serializable {
      * Elimina una exposicion determinada de un centro de exposiciones.
      * 
      * @param exposicion la sala a eliminar
-     * @return true si la exposicion se elimina correctamente, false en caso
-     *         contrario
      */
-    public Boolean removeExposicion(Exposicion exposicion) {
+    public void removeExposicion(Exposicion exposicion) throws ExcepcionMensaje {
 
         if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)
                 && exposicion.getFechaFin().isAfter(LocalDate.now())) {
-            System.out.println("No se puede eliminar una exposición que no este en creación o que no haya finalizado");
-            return false;
+            throw new ExcepcionMensaje("No se puede eliminar una exposición que no este en creación o que no haya finalizado");
         }
 
         if (this.exposiciones.remove(exposicion) == false) {
-            System.out.println("La exposición no está en el centro de exposiciones");
-            return false;
+            throw new ExcepcionMensaje("La exposición no está en el centro de exposiciones");
         }
-
-        return true;
     }
 
     /**
@@ -894,7 +891,6 @@ public class CentroExposicion implements Serializable {
             return false;
         }
 
-        obra.almacenarObra();
         return true;
     }
 

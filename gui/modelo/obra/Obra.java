@@ -3,6 +3,9 @@ package gui.modelo.obra;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import gui.modelo.utils.ExcepcionMensaje;
+
 import java.io.Serializable;
 
 /**
@@ -246,81 +249,89 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a RETIRADA.
      * 
-     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
-    public Boolean retirarObra() {
+    public void retirarObra() throws ExcepcionMensaje {
+
+        if (this.estado == Estado.RETIRADA) {
+            throw new ExcepcionMensaje("No se puede retirar una obra que ya está retirada");
+        }
+
         if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
-            System.out.println("No se puede retirar una obra que no está almacenada o expuesta");
-            return false;
+            throw new ExcepcionMensaje("No se puede retirar una obra que no está almacenada o expuesta");
         }
 
         this.estado = Estado.RETIRADA;
-        return true;
     }
 
     /**
      * Cambia el estado de la obra a PRESTADA.
-     * 
-     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
-    public Boolean prestarObra() {
+    public void prestarObra() throws ExcepcionMensaje {
+
+        if (this.estado == Estado.PRESTADA) {
+            throw new ExcepcionMensaje("No se puede prestar una obra que ya está prestada");
+        }
+
         if (this.externa == true) {
-            System.out.println("No se puede prestar una obra externa");
-            return false;
+            throw new ExcepcionMensaje("No se puede prestar una obra externa");
         }
 
         if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
-            System.out.println("No se puede prestar una obra que no está almacenada o expuesta");
-            return false;
+            throw new ExcepcionMensaje("No se puede prestar una obra que no está almacenada o expuesta");
         }
 
         this.estado = Estado.PRESTADA;
-        return true;
     }
 
     /**
      * Cambia el estado de la obra a ALMACENADA.
      */
-    public Boolean almacenarObra() {
+    public void almacenarObra() throws ExcepcionMensaje {
+
+        if (this.estado == Estado.ALMACENADA) {
+            throw new ExcepcionMensaje("No se puede almacenar una obra que ya está almacenada");
+        }
 
         if (this.estado == Estado.RETIRADA) {
-            System.out.println("No se puede almacenar una obra que retirada");
-            return false;
+            throw new ExcepcionMensaje("No se puede almacenar una obra que está retirada");
         }
 
         this.estado = Estado.ALMACENADA;
-        return true;
     }
 
     /**
      * Cambia el estado de la obra a EXPUESTA.
      * 
-     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
-    public Boolean exponerObra() {
+    public void exponerObra() throws ExcepcionMensaje {
+
+        if (this.estado == Estado.EXPUESTA) {
+            throw new ExcepcionMensaje("No se puede exponer una obra que ya está expuesta");
+        }
+
         if (this.estado != Estado.ALMACENADA) {
-            System.out.println("No se puede exponer una obra que no está en estado de almacenada");
-            return false;
+            throw new ExcepcionMensaje("No se puede exponer una obra que no está almacenada");
         }
 
         this.estado = Estado.EXPUESTA;
-        return true;
     }
 
     /**
      * Cambia el estado de la obra a RESTAURACION.
      * 
-     * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
 
-    public Boolean restaurarObra() {
+    public void restaurarObra() throws ExcepcionMensaje {
+
+        if (this.estado == Estado.RESTAURACION) {
+            throw new ExcepcionMensaje("No se puede restaurar una obra que ya está en restauración");
+        }
+
         if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
-            System.out.println("No se puede restaurar una obra que no está almacenada o expuesta");
-            return false;
+            throw new ExcepcionMensaje("No se puede restaurar una obra que no está almacenada o expuesta");
         }
 
         this.estado = Estado.RESTAURACION;
-        return true;
     }
 
     /**

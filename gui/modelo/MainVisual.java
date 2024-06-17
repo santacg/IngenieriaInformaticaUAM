@@ -8,6 +8,7 @@ import gui.modelo.expofy.*;
 import gui.modelo.exposicion.*;
 import gui.modelo.obra.*;
 import gui.modelo.sala.*;
+import gui.modelo.utils.ExcepcionMensaje;
 
 public class MainVisual {
 
@@ -52,7 +53,8 @@ public class MainVisual {
                 Empleado empleado1 = new Empleado("555", "Laura", "789", "789456", "Madrid", true, true, true, true);
                 Empleado empleado2 = new Empleado("666", "Jorge", "987", "987456", "Madrid", true, true, true, false);
                 Empleado empleado3 = new Empleado("777", "Marta", "123", "123456", "Madrid", true, true, false, false);
-                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, false, false);
+                Empleado empleado4 = new Empleado("888", "Antonio", "321", "654321", "Madrid", true, false, false,
+                                false);
                 Empleado empleado5 = new Empleado("999", "Sara", "654", "654987", "Madrid", false, false, false, false);
 
                 CentroExposicion centroPrado = new CentroExposicion("Museo Nacional del Prado", LocalTime.of(9, 0),
@@ -180,7 +182,11 @@ public class MainVisual {
         private static void configurarYPublicarExposiciones(CentroExposicion centro) {
                 for (Exposicion exposicion : centro.getExposiciones()) {
                         centro.confgiurarSorteoExposicion(exposicion, LocalDate.now().plusDays(4), 10);
-                        exposicion.expoPublicar();
+                        try {
+                                exposicion.expoPublicar();
+                        } catch (ExcepcionMensaje e) {
+                                System.out.println(e.getMessage());
+                        }
                 }
         }
 
@@ -191,9 +197,14 @@ public class MainVisual {
         }
 
         private static void configurarActividades(CentroExposicion centro) {
-                centro.addActividad("Visita expo Van Gogh", TipoActividad.VISITA_GUIADA,
-                                "Visita guiada a la exposición 'Van Gogh: Los Últimos Años", 10,
-                                LocalDate.of(2024, 10, 2), LocalTime.of(11, 0), centro.getSalas().iterator().next());
+                try {
+                        centro.addActividad("Visita expo Van Gogh", TipoActividad.VISITA_GUIADA,
+                                        "Visita guiada a la exposición 'Van Gogh: Los Últimos Años", 10,
+                                        LocalDate.of(2024, 10, 2), LocalTime.of(11, 0),
+                                        centro.getSalas().iterator().next());
+                } catch (ExcepcionMensaje e) {
+                        System.out.println(e.getMessage());
+                }
         }
 
         private static void enviarNotificaciones(Expofy expofy) {

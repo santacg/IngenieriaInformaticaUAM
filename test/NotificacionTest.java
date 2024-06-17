@@ -46,4 +46,9 @@ public class NotificacionTest {
         assertEquals(newFecha, notificacion.getFecha());
     }
 
+    @Test
+    public void testGetFecha() {
+        assertEquals(LocalDate.now(), notificacion.getFecha());
+    }
+
 }

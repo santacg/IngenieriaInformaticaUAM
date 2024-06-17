@@ -27,7 +27,7 @@ public class LectorCSVObras {
      * @param centroExposicion Centro de exposicion que lee las obras.
      * @param filename Archivo del que se leen las obras.
      */
-    public static boolean leerObras(CentroExposicion centroExposicion, String fileName) {
+    public static void leerObras(CentroExposicion centroExposicion, String fileName) throws ExcepcionMensaje {
         String line = ""; // Variable para almacenar cada línea leída del archivo.
         String csvSeparador = ";"; // Define el separador utilizado en el archivo CSV.
 
@@ -106,15 +106,12 @@ public class LectorCSVObras {
                 }
                 if (obra != null) { 
                     if (centroExposicion.addObra(obra) == false) {
-                        System.out.println("No se puede añadir la obra a la sala");
-                        return false;
+                        throw new ExcepcionMensaje("Error al añadir la obra " + obra.getNombre());
                     } // Añade la obra al conjunto de obras.
                 }
             }
         } catch (IOException e) { // Captura cualquier excepción de E/S que pueda ocurrir.
-            e.printStackTrace(); // Imprime el rastreo de la pila de excepciones.
-            return false;
+            throw new ExcepcionMensaje("Error: " + e.getMessage());        
         }
-        return true;
     }
 }
