@@ -47,4 +47,16 @@ public class SorteoExpoTest {
         assertEquals(newExpo, sorteo.getExposicion());
     }
 
+    @Test
+    public void testSetFechaSorteo() {
+        sorteo.setFechaSorteo(LocalDate.of(2022, 10, 20));
+        assertEquals(LocalDate.of(2022, 10, 20), sorteo.getFechaSorteo());
+    }
+
+    @Test
+    public void testSetN_entradas() {
+        sorteo.setN_entradas(2);
+        assertEquals(2, sorteo.getN_entradas());
+    }
+
 }

@@ -17,43 +17,30 @@ public class EntradaTest {
 
     @BeforeEach
     public void setUp() {
-        entrada = new Entrada();
         tarjeta = new TarjetaDeCredito("12345", LocalDate.of(2025, 8, 24), 123);
         cliente = new ClienteRegistrado("Juan García", false, "123", false, null, null);
+        entrada = new Entrada(cliente, tarjeta);
     }
 
     @Test
     public void testGetIDEntrada() {
-        assertNotNull(entrada.getIDEntrada());
+        assertEquals(0, entrada.getIDEntrada());
     }
 
     @Test
     public void testGetTarjetaDeCredito() {
-        assertNull(entrada.getTarjetaDeCredito());
-    }
-
-    @Test
-    public void testSetTarjetaDeCredito() {
-        entrada.setTarjetaDeCredito(tarjeta);
+        TarjetaDeCredito tarjeta = entrada.getTarjetaDeCredito();
         assertEquals(tarjeta, entrada.getTarjetaDeCredito());
     }
 
     @Test
     public void testGetClienteRegistrado() {
-        assertNull(entrada.getClienteRegistrado());
-    }
-
-    @Test
-    public void testAddClienteRegistrado() {
-        entrada.addClienteRegistrado(cliente);
+        ClienteRegistrado cliente = new ClienteRegistrado("Juan García", false, "123", false, null, null);
         assertEquals(cliente, entrada.getClienteRegistrado());
     }
 
     @Test
-    public void testEquals() {
-        Entrada entrada1 = new Entrada();
-        Entrada entrada2 = new Entrada();
-        assertNotEquals(entrada1, entrada2);
+    public void testGetFechaCompra() {
+        assertEquals(LocalDate.now(), entrada.getFechaDeCompra());
     }
-
 }

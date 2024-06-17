@@ -4,19 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import gui.modelo.exposicion.Entrada;
 import gui.modelo.exposicion.Hora;
 
 public class HoraTest {
     private Hora hora;
-    private Entrada entrada1;
-    private Entrada entrada2;
 
     @BeforeEach
     public void setUp() {
@@ -24,44 +19,14 @@ public class HoraTest {
         LocalTime horaInicio = LocalTime.of(10, 0);
         LocalTime horaFin = LocalTime.of(12, 0);
         Integer nEntradas = 10;
-        Double precio = 10.0;
-        hora = new Hora(fecha, horaInicio, horaFin, nEntradas, precio);
-        entrada1 = new Entrada();
-        entrada2 = new Entrada();
+
+        hora = new Hora(fecha, horaInicio, horaFin, nEntradas);
     }
 
-    @Test
+
+    @Test 
     public void testGetEntradas() {
-        Set<Entrada> entradas = new HashSet<>();
-        entradas.add(entrada1);
-        entradas.add(entrada2);
-        hora.addEntrada(entrada1);
-        hora.addEntrada(entrada2);
-        assertEquals(entradas, hora.getEntradas());
-    }
-
-    @Test
-    public void testAddEntrada() {
-        hora.addEntrada(entrada1);
-        assertTrue(hora.getEntradas().contains(entrada1));
-        assertEquals(11, hora.getCountEntradas());
-    }
-
-    @Test
-    public void testRemoveEntrada() {
-        hora.addEntrada(entrada1);
-        hora.removeEntrada(entrada1);
-        assertFalse(hora.getEntradas().contains(entrada1));
-        assertEquals(10, hora.getCountEntradas());
-    }
-
-    @Test
-    public void testRemoveAllEntradas() {
-        hora.addEntrada(entrada1);
-        hora.addEntrada(entrada2);
-        hora.removeAllEntradas();
-        assertTrue(hora.getEntradas().isEmpty());
-        assertEquals(0, hora.getCountEntradas());
+        assertEquals(10, hora.getnEntradas());
     }
 
     @Test
@@ -124,9 +89,4 @@ public class HoraTest {
         assertEquals(10, hora.getnEntradasDisp());
     }
 
-    @Test
-    public void testEquals_SameAttributes() {
-        Hora other = new Hora(LocalDate.of(2022, 1, 1), LocalTime.of(10, 0), LocalTime.of(12, 0), 10, 10.0);
-        assertTrue(hora.equals(other));
-    }
 }

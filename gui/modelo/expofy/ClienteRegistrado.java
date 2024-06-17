@@ -97,7 +97,7 @@ public class ClienteRegistrado extends Usuario {
      * @return {@code true} si el cliente está sancionado, {@code false} en caso
      *         contrario.
      */
-    public Boolean getSancionado() {
+    public Boolean getSancionado() {    
         return sancionado;
     }
 

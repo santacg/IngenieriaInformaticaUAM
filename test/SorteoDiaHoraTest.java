@@ -42,4 +42,50 @@ public class SorteoDiaHoraTest {
     public void testGetFechaLimite() {
         assertEquals(dia, sorteo.getFechaLimite());
     }
+
+    @Test
+    public void testGetHora() {
+        assertEquals(hora, sorteo.getHora());
+    }
+
+    @Test
+    public void testSetHora() {
+        Hora newHora = exposicion.getHora(fechaSorteo, 16);
+        sorteo.setHora(newHora);
+        assertEquals(newHora, sorteo.getHora());
+    }
+
+    @Test
+    public void testGetFechaSorteo() {
+        assertEquals(fechaSorteo, sorteo.getFechaSorteo());
+    }
+
+    @Test
+    public void testGetN_entradas() {
+        assertEquals(2, sorteo.getN_entradas());
+    }
+
+    @Test
+    public void testGetExposicion() {
+        assertEquals(exposicion, sorteo.getExposicion());
+    }
+
+    @Test
+    public void testSetExposicion() {
+        Exposicion newExpo = new Exposicion("Exposicion 2", LocalDate.now(), LocalDate.now().plusDays(14), "Descripción 2", TipoExpo.TEMPORAL, 20.0);
+        sorteo.setExposicion(newExpo);
+        assertEquals(newExpo, sorteo.getExposicion());
+    }
+
+    @Test
+    public void testSetFechaSorteo() {
+        sorteo.setFechaSorteo(LocalDate.of(2022, 1, 3));
+        assertEquals(LocalDate.of(2022, 1, 3), sorteo.getFechaSorteo());
+    }
+
+    @Test
+    public void testSetN_entradas() {
+        sorteo.setN_entradas(3);
+        assertEquals(3, sorteo.getN_entradas());
+    }
 }

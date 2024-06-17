@@ -54,4 +54,21 @@ public class SorteoFechasTest {
         LocalDate expected = LocalDate.of(2022, 12, 31);
         assertEquals(expected, sorteo.getFechaLimite());
     }
+
+    @Test
+    public void testGetFechaSorteo() {
+        LocalDate expected = LocalDate.now();
+        assertEquals(expected, sorteo.getFechaSorteo());
+    }
+
+    @Test
+    public void testGetN_entradas() {
+        assertEquals(2, sorteo.getN_entradas());
+    }
+
+    @Test
+    public void testGetExposicion() {
+        assertEquals(exposicion, sorteo.getExposicion());
+    }
+    
 }

@@ -66,4 +66,12 @@ public class InscripcionTest {
         inscripcion.removeCodigo("ABCD");
         assertFalse(inscripcion.getCodigos().contains("ABCD"));
     }
+
+    @Test
+    public void testRemoveCodigo_NotInList() {
+        inscripcion.addCodigo("ABCD");
+        inscripcion.removeCodigo("ABCDE");
+        assertTrue(inscripcion.getCodigos().contains("ABCD"));
+    }
+
 }
