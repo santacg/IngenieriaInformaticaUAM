@@ -568,4 +568,12 @@ public class Expofy implements Serializable {
 
         return null;
     }
+
+
+    /**
+     * Elimina la instancia única de Expofy, principalmente para propósitos de prueba.
+     */
+    public static void removeExpofy() {
+        instance = null;
+    }
 }

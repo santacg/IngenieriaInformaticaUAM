@@ -312,14 +312,6 @@ public class CentroExposicionTest {
     }
 
     @Test
-    public void testGetExposicionesPorTipoObra() {
-        gestor.logIn();
-        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
-                "Descripción",
-                TipoExpo.TEMPORAL, 10.0);
-    }
-
-    @Test
     public void testAddExposicion() {
         Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
                 "Descripción",
