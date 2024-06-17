@@ -379,11 +379,11 @@ public class Expofy implements Serializable {
             return false;
         }
         precioFinal = exposicion.getPrecio() * nEntradas;
-        // Aplica descuento si corresponde y verifica la validez del código del código.
+        // Aplica descuento si corresponde y verifica la validez del código de descuento.
         Descuento descuento = exposicion.getDescuento();
         if (descuento != null) {
             if (descuento.validezDescuento(clienteRegistrado.getUltimaCompra())) {
-                precioFinal = precioFinal * descuento.getDescuento();
+                precioFinal = precioFinal * (1 - descuento.getDescuento() / 100);
             }
         }
         for (String codigo : codigos) {
@@ -414,8 +414,9 @@ public class Expofy implements Serializable {
             exposicion.addEntrada(entrada);
             hora.entradaVendida();
             estadisticas.incrementarTicketsVendidos();
-            estadisticas.incrementarIngresosTotales(exposicion.getPrecio());
         }
+
+        estadisticas.incrementarIngresosTotales(precioFinal);
 
         try {
             TicketSystem.createTicket(new Ticket(exposicion, precioFinal, nEntradas, fecha, hora),

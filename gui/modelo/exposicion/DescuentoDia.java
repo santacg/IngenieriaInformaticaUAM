@@ -27,7 +27,7 @@ public class DescuentoDia extends Descuento{
      * @return boolean true si es aplicable, false si no
      */
     public boolean validezDescuento(LocalDate fecha){
-        if (fecha.plusDays(this.getcantidad()).isAfter(LocalDate.now())) {
+        if (fecha.plusDays(this.getCantidad()).isAfter(LocalDate.now())) {
             return true;
         }
         return false;

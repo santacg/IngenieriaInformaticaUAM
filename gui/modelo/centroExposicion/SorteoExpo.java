@@ -18,7 +18,7 @@ public class SorteoExpo extends Sorteo{
      * Constructor de un sorteo para la vigencia de exposición.
      * 
      * @param exposicion   La exposición del sorteo
-     * @param fechaSorteo  La fecha en la que se realizará el sorteo
+     * @param fechaSorteo  La fecha en laf finalizará la inscripción al sorteo 
      */
     public SorteoExpo(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
         super(fechaSorteo, exposicion, n_entradas);

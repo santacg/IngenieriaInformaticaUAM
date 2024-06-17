@@ -46,7 +46,7 @@ public abstract class Descuento implements Serializable{
      * Retorna la cantidad de items o unidades.
      * @return La cantidad actual como entero.
      */
-    public Integer getcantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
@@ -54,7 +54,7 @@ public abstract class Descuento implements Serializable{
      * Asigna un nuevo valor a la cantidad de items o unidades.
      * @param cantidad La nueva cantidad a establecer.
      */
-    public void setcantidad(Integer cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 

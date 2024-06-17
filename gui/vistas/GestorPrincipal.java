@@ -182,6 +182,10 @@ public class GestorPrincipal extends JPanel {
             }
         });
 
+
+        TableColumnModel columnModel = tablaNotificaciones.getColumnModel();
+        columnModel.getColumn(1).setPreferredWidth(1500);
+
         this.gestionNotificaciones.add(new JScrollPane(tablaNotificaciones), BorderLayout.CENTER);
     }
 
@@ -459,7 +463,7 @@ public class GestorPrincipal extends JPanel {
             data.add(new Object[] {
                     exposicion.getNombre(),
                     descuento.getDescuento(),
-                    descuento.getcantidad()
+                    descuento.getCantidad()
             });
         }
         return data.toArray(new Object[0][]);

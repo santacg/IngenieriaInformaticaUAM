@@ -461,6 +461,32 @@ public class Exposicion implements Serializable {
     }
 
     /**
+     * Establece un descuento para la exposición y envia un mensaje a los clientes
+     * que reciban publicidad.
+     * 
+     * @param descuento El descuento a aplicar.
+     */
+    public void setDescuento(Descuento descuento) {
+        this.descuento = descuento;
+
+        Expofy expofy = Expofy.getInstance();
+
+        if (descuento.getClass() == DescuentoDia.class) {
+            expofy.enviarNotificacionesClientesPublicidad("Se ha añadido un nuevo descuento del "
+                    + descuento.getDescuento() + "% "
+                    + " a la exposición " + getNombre()
+                    + " que se aplicará automaticamente en tu siguiente compra si has comprado una entrada en los últimos "
+                    + descuento.getCantidad() + " días");
+        } else {
+            expofy.enviarNotificacionesClientesPublicidad("Se ha añadido un nuevo descuento del "
+                    + descuento.getDescuento() + "% "
+                    + " a la exposición " + getNombre()
+                    + " que se aplicará automaticamente en tu siguiente compra si has comprado una entrada en los últimos "
+                    + descuento.getCantidad() + " meses");
+        }
+    }
+
+    /**
      * Configura un descuento para la exposición basado en la cantidad de días
      * 
      * @param cantidadDescuento
@@ -478,14 +504,14 @@ public class Exposicion implements Serializable {
         }
 
         DescuentoDia descuento = new DescuentoDia(cantidadDescuento, dias);
-        this.descuento = descuento;
+        setDescuento(descuento);
     }
 
     /**
      * Configura un descuento para la exposición basado en la cantidad de meses
      * 
      * @param cantidadDescuento La cantidad de descuento.
-     * @param meses            El número de meses.
+     * @param meses             El número de meses.
      */
     public void configurarDescuentoMes(double cantidadDescuento, int meses) {
         if (cantidadDescuento <= 0) {
@@ -499,7 +525,7 @@ public class Exposicion implements Serializable {
         }
 
         DescuentoMes descuento = new DescuentoMes(cantidadDescuento, meses);
-        this.descuento = descuento;
+        setDescuento(descuento);
     }
 
     public boolean addEntrada(Entrada entrada) {

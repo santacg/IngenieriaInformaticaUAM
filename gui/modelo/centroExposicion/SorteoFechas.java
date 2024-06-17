@@ -20,7 +20,7 @@ public class SorteoFechas extends Sorteo{
      * Constructor de un sorteo entre unas fechas especificadas.
      * 
      * @param exposicion  La exposición del sorteo
-     * @param fechaSorteo La fecha en la que se realizará el sorteo
+     * @param fechaSorteo La fecha en la límite de inscripción 
      * @param fechaInicio La fecha de inicio
      * @param fechaFin    La fecha de fin
      */

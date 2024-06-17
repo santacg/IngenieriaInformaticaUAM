@@ -28,7 +28,7 @@ public class DescuentoMes extends Descuento{
      * @return boolean true si es aplicable, false si no
      */
     public boolean validezDescuento(LocalDate fecha){
-        if (fecha.plusMonths(this.getcantidad()).isAfter(LocalDate.now())) {
+        if (fecha.plusMonths(this.getCantidad()).isAfter(LocalDate.now())) {
             return true;
         }
         return false;

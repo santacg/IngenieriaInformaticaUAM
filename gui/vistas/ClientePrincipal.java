@@ -2,6 +2,7 @@ package gui.vistas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import gui.controlador.ControladorCompraFormulario;
 
@@ -128,6 +129,9 @@ public class ClientePrincipal extends JPanel {
             }
         });
 
+
+        TableColumnModel columnModel = tablaNotificaciones.getColumnModel();
+        columnModel.getColumn(1).setPreferredWidth(1500);
         tablaNotificaciones.getTableHeader().setBackground(Color.LIGHT_GRAY);
         tablaNotificaciones.setFillsViewportHeight(true);
 

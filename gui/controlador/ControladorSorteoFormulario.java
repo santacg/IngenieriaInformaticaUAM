@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import javax.swing.JOptionPane;
 
 import gui.modelo.centroExposicion.*;
-import gui.modelo.expofy.Expofy;
 import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.Hora;
@@ -154,12 +153,6 @@ public class ControladorSorteoFormulario {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            Expofy expofy = Expofy.getInstance();
-
-            expofy.enviarNotificacionesClientesPublicidad(
-                    "Sorteo añadido para la exposición " + exposicion.getNombre() + " en la fecha "
-                            + fechaSorteo.toString() + " con " + nEntradas + " entradas.");
 
             JOptionPane.showMessageDialog(vista, "Sorteo configurado correctamente.");
 

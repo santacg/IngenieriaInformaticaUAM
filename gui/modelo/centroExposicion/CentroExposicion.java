@@ -590,7 +590,6 @@ public class CentroExposicion implements Serializable {
         return true;
     }
 
-
     /**
      * Elimina una exposicion determinada de un centro de exposiciones.
      * 
@@ -600,7 +599,8 @@ public class CentroExposicion implements Serializable {
      */
     public Boolean removeExposicion(Exposicion exposicion) {
 
-        if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION) && exposicion.getFechaFin().isAfter(LocalDate.now())) {
+        if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)
+                && exposicion.getFechaFin().isAfter(LocalDate.now())) {
             System.out.println("No se puede eliminar una exposición que no este en creación o que no haya finalizado");
             return false;
         }
@@ -663,6 +663,13 @@ public class CentroExposicion implements Serializable {
             System.out.println("El sorteo ya está en el centro de exposiciones");
             return false;
         }
+
+        Expofy expofy = Expofy.getInstance();
+
+        expofy.enviarNotificacionesClientesPublicidad(
+                "Sorteo añadido para la exposición " + sorteo.getExposicion().getNombre()
+                        + " con fecha límite de inscripción "
+                        + sorteo.getFechaSorteo().toString() + " con " + sorteo.getN_entradas() + " entradas.");
 
         return true;
     }
