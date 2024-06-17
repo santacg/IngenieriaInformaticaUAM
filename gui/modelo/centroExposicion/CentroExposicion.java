@@ -278,6 +278,10 @@ public class CentroExposicion implements Serializable {
     public void addActividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes,
             LocalDate fecha, LocalTime hora, Sala salaCelebracion) throws ExcepcionMensaje {
 
+        if (fecha.isBefore(LocalDate.now()) || (hora.isBefore(LocalTime.now()) && fecha.isEqual(LocalDate.now()))) {
+            throw new ExcepcionMensaje("La fecha y hora de la actividad no pueden ser anteriores a la actual");
+        }
+
         for (Actividad actividad : actividades) {
             if (actividad.getSalaCelebracion().equals(salaCelebracion) && actividad.getFecha().equals(fecha)
                     && actividad.getHora().equals(hora)) {
@@ -602,7 +606,8 @@ public class CentroExposicion implements Serializable {
 
         if (!exposicion.getEstado().equals(EstadoExposicion.EN_CREACION)
                 && exposicion.getFechaFin().isAfter(LocalDate.now())) {
-            throw new ExcepcionMensaje("No se puede eliminar una exposición que no este en creación o que no haya finalizado");
+            throw new ExcepcionMensaje(
+                    "No se puede eliminar una exposición que no este en creación o que no haya finalizado");
         }
 
         if (this.exposiciones.remove(exposicion) == false) {

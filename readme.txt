@@ -15,6 +15,9 @@ Sala.java: Hemos desarrollado esta clase con la idea de que el gestor pueda obte
 físicas de una sala y establecer divisiones con los parámetros físicos que elija. 
 La sala original actúa como sala padre de cualquier subdivisión, manteniendo la consistencia entre la subdivisión y la sala principal.
 
+Actividades.java: La implementación de base no permite que haya dos exposiciones en la misma fecha en la misma sala, con lo cual no 
+si una actividad coincide con una sala, siempre será con unícamente una.
+
 Creación de exposiciones: Para crear exposiciones, primero se añade una exposición y luego se asignan salas físicas a esta en el panel de salas. 
 Posteriormente, en el panel de obras, se añaden obras que deben estar en estado de ALMACENADA o EXPUESTA a las salas de exposición previamente asignadas. 
 En cada paso, se verifica que los recursos de la exposición (obras y salas) no se compartan con otras exposiciones en fechas coincidentes.

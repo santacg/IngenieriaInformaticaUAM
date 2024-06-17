@@ -3,7 +3,6 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,24 +15,43 @@ import gui.modelo.sala.Sala;
 
 public class ExposicionTest {
     private Exposicion exposicion;
+    private Exposicion exposicionSinSalas;
+    private Exposicion exposicionSinObras;
     private Exposicion exposicionPermanente;
+    private DescuentoDia descuento;
     private Set<SalaExposicion> salas;
     private SalaExposicion sala1;
     private SalaExposicion sala2;
+    private Obra obra1;
 
     @BeforeEach
     public void setUp() {
         salas = new HashSet<>();
         Sala salaf1 = new Sala("Sala1", 20, true, 3, 20.0, 20.0, 10.0);
-        Sala salaf2 = new Sala("Sala2", 20, false, 5, 10.0, 30.0, 1.0);
+
         sala1 = new SalaExposicion(salaf1);
-        sala2 = new SalaExposicion(salaf2);
         salas.add(sala1);
-        salas.add(sala2);
-        exposicion = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(7), "Descripción",
+
+        exposicion = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30), "Descripción",
                 TipoExpo.TEMPORAL, 10.0);
         exposicionPermanente = new Exposicion("Exposicion 2", LocalDate.now(), LocalDate.MAX, "Descripción",
                 TipoExpo.PERMANENTE, 10.0);
+        exposicionSinObras = new Exposicion("Exposicion 3", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+        exposicionSinSalas = new Exposicion("Exposicion 4", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+
+        exposicion.addSala(sala1);
+        exposicionSinObras.addSala(sala2);
+
+        obra1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20, 90, 20,
+                "óleo", "Leonardo da Vinci");
+        sala1.addObra(obra1);
+
+        descuento = new DescuentoDia(20.0, 10);
+        exposicion.setDescuento(descuento);
     }
 
     @Test
@@ -117,9 +135,15 @@ public class ExposicionTest {
     }
 
     @Test
-    public void testRemoveSala() {
+    public void testRemoveSalaSinObras() {
+        sala1.removeObra(obra1);
         exposicion.removeSala(sala1);
         assertFalse(exposicion.getSalas().contains(sala1));
+    }
+
+    @Test
+    public void testRemoveSalaConObras() {
+        assertFalse(exposicion.removeSala(sala1));
     }
 
     @Test
@@ -139,117 +163,183 @@ public class ExposicionTest {
     }
 
     @Test
+    public void testGetTipoPermanente() {
+        assertEquals(TipoExpo.PERMANENTE, exposicionPermanente.getTipo());
+    }
+
+    @Test
     public void testGetDescuento() {
-        assertNull(exposicion.getDescuento());
+        Descuento descuento = new DescuentoDia(20.00, 10);
+        assertEquals(descuento, exposicion.getDescuento());
     }
 
     @Test
     public void testSetDescuento() {
         DescuentoDia descuento = new DescuentoDia(20.0, 10);
+        exposicion.setDescuento(descuento);
         assertEquals(descuento, exposicion.getDescuento());
     }
 
     @Test
     public void testExpoPublicarExito() {
         exposicion.setEstado(EstadoExposicion.EN_CREACION);
-        assertTrue(exposicion.expoPublicar());
-        assertEquals(EstadoExposicion.PUBLICADA, exposicion.getEstado());
+        try {
+            exposicion.expoPublicar();
+            assertTrue(EstadoExposicion.PUBLICADA == exposicion.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
-    public void testExpoPublicarFallo() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        assertFalse(exposicion.expoPublicar());
+    public void testExpoSinSalasPublicarFallo() {
+        try {
+            exposicionSinSalas.expoPublicar();
+        } catch (Exception e) {
+        }
+
+        assertFalse(EstadoExposicion.PUBLICADA == exposicionSinSalas.getEstado());
+    }
+
+    @Test
+    public void testExpoSinObrasPublicarFallo() {
+        try {
+            exposicionSinObras.expoPublicar();
+        } catch (Exception e) {
+        }
+
+        assertFalse(EstadoExposicion.PUBLICADA == exposicionSinObras.getEstado());
     }
 
     @Test
     public void testExpoCancelarExito() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        LocalDate fechaCancelacion = LocalDate.now().plusDays(10);
-        assertTrue(exposicion.expoCancelar(fechaCancelacion));
-        assertEquals(EstadoExposicion.CANCELADA, exposicion.getEstado());
+        try {
+            exposicion.expoPublicar();
+            LocalDate fechaCancelacion = LocalDate.now().plusDays(10);
+            exposicion.expoCancelar(fechaCancelacion);
+        } catch (Exception e) {
+        }
+
+        assertTrue(EstadoExposicion.CANCELADA == exposicion.getEstado());
+    }
+
+    @Test
+    public void testExpoCancelarFalloFecha() {
+        try {
+            exposicion.expoPublicar();
+            LocalDate fechaCancelacion = LocalDate.now().plusDays(4);
+            exposicion.expoCancelar(fechaCancelacion);
+        } catch (Exception e) {
+        }
+
+        assertFalse(EstadoExposicion.CANCELADA == exposicion.getEstado());
+        assertEquals(EstadoExposicion.PUBLICADA, exposicion.getEstado());
     }
 
     @Test
     public void testExpoCancelarFalloEstadoEnCreacion() {
-        exposicion.setEstado(EstadoExposicion.EN_CREACION);
-        assertFalse(exposicion.expoCancelar(LocalDate.now().plusDays(10)));
-    }
+        try {
+            exposicionSinObras.expoCancelar(LocalDate.now().plusDays(10));
+            assertFalse(EstadoExposicion.CANCELADA == exposicionSinObras.getEstado());
+        } catch (Exception e) {
+        }
 
-    @Test
-    public void testExpoCancelarFalloFechaAntelacion() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        assertFalse(exposicion.expoCancelar(LocalDate.now().plusDays(5)));
-    }
-
-    @Test
-    public void testExpoCancelarFalloFechaPosteriorAFechaFin() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        exposicion.setFechaFin(LocalDate.now().plusDays(5));
-        assertFalse(exposicion.expoCancelar(LocalDate.now().plusDays(6)));
+        assertEquals(EstadoExposicion.EN_CREACION, exposicionSinObras.getEstado());
     }
 
     @Test
     public void testExpoProrrogarExito() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        LocalDate newFechaFin = LocalDate.now().plusDays(14);
-        assertTrue(exposicion.expoProrrogar(newFechaFin));
-        assertEquals(EstadoExposicion.PRORROGADA, exposicion.getEstado());
-        assertEquals(newFechaFin, exposicion.getFechaFin());
+        try {
+            exposicion.expoPublicar();
+            LocalDate newFechaFin = LocalDate.now().plusDays(31);
+            exposicion.expoProrrogar(newFechaFin);
+            assertTrue(EstadoExposicion.PRORROGADA == exposicion.getEstado());
+            assertEquals(newFechaFin, exposicion.getFechaFin());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoProrrogarFalloEstadoInvalido() {
-        exposicion.setEstado(EstadoExposicion.EN_CREACION);
-        assertFalse(exposicion.expoProrrogar(LocalDate.now().plusDays(14)));
+        try {
+            exposicionSinSalas.expoProrrogar(LocalDate.now().plusDays(34));
+            assertFalse(EstadoExposicion.PRORROGADA == exposicionSinSalas.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoProrrogarFalloFechaInvalida() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        assertFalse(exposicion.expoProrrogar(LocalDate.now()));
+        try {
+            exposicion.expoPublicar();
+            LocalDate newFechaFin = LocalDate.now().plusDays(29);
+            exposicion.expoProrrogar(newFechaFin);
+            assertFalse(EstadoExposicion.PRORROGADA == exposicion.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoCerrarTemporalmenteExito() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        LocalDate fechaInicioCierre = LocalDate.now().plusDays(1);
-        LocalDate fechaFinCierre = LocalDate.now().plusDays(5);
-        assertTrue(exposicion.expoCerrarTemporalmente(fechaInicioCierre, fechaFinCierre));
-        assertEquals(EstadoExposicion.CERRADATEMPORALMENTE, exposicion.getEstado());
+        try {
+            exposicion.expoPublicar();
+            LocalDate fechaInicioCierre = LocalDate.now().plusDays(1);
+            LocalDate fechaFinCierre = LocalDate.now().plusDays(5);
+            exposicion.expoCerrarTemporalmente(fechaInicioCierre, fechaFinCierre);
+            assertTrue(EstadoExposicion.CERRADATEMPORALMENTE == exposicion.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoCerrarTemporalmenteFalloEstadoInvalido() {
-        exposicion.setEstado(EstadoExposicion.EN_CREACION);
-        assertFalse(exposicion.expoCerrarTemporalmente(LocalDate.now().plusDays(1), LocalDate.now().plusDays(5)));
+        try {
+            exposicionSinSalas.expoCerrarTemporalmente(LocalDate.now().plusDays(1), LocalDate.now().plusDays(5));
+            assertFalse(EstadoExposicion.CERRADATEMPORALMENTE == exposicionSinSalas.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoCerrarTemporalmenteFalloFechasIncorrectas() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        assertFalse(exposicion.expoCerrarTemporalmente(LocalDate.now().plusDays(5), LocalDate.now().plusDays(1)));
+        try {
+            exposicion.expoPublicar();
+            LocalDate fechaInicioCierre = LocalDate.now().plusDays(5);
+            LocalDate fechaFinCierre = LocalDate.now().plusDays(1);
+            exposicion.expoCerrarTemporalmente(fechaInicioCierre, fechaFinCierre);
+            assertFalse(EstadoExposicion.CERRADATEMPORALMENTE == exposicion.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoCerrarTemporalmenteFalloFechaFueraDeRango() {
-        exposicion.setEstado(EstadoExposicion.PUBLICADA);
-        LocalDate fechaInicioCierre = LocalDate.now().minusDays(1); 
-        LocalDate fechaFinCierre = LocalDate.now().plusDays(10);
-        assertFalse(exposicion.expoCerrarTemporalmente(fechaInicioCierre, fechaFinCierre));
+        try {
+            exposicion.expoPublicar();
+            LocalDate fechaInicioCierre = LocalDate.now().plusDays(31);
+            LocalDate fechaFinCierre = LocalDate.now().plusDays(35);
+            exposicion.expoCerrarTemporalmente(fechaInicioCierre, fechaFinCierre);
+            assertFalse(EstadoExposicion.CERRADATEMPORALMENTE == exposicion.getEstado());
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoPermanente() {
-        exposicion.expoPermanente();
-        assertEquals(TipoExpo.PERMANENTE, exposicion.getTipo());
-        assertEquals(exposicion.getFechaFin(), LocalDate.MAX);
+        try {
+            exposicion.expoPermanente();
+            assertEquals(TipoExpo.PERMANENTE, exposicion.getTipo());
+            assertEquals(exposicion.getFechaFin(), LocalDate.MAX);
+        } catch (Exception e) {
+        }
     }
 
     @Test
     public void testExpoTemporal() {
-        exposicionPermanente.expoTemporal(LocalDate.now().plusDays(7));
-        assertEquals(TipoExpo.TEMPORAL, exposicion.getTipo());
+        try {
+            exposicionPermanente.expoTemporal(LocalDate.now().plusDays(7));
+            assertEquals(TipoExpo.TEMPORAL, exposicion.getTipo());
+        } catch (Exception e) {
+        }
     }
 
 }

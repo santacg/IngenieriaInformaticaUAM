@@ -12,7 +12,8 @@ public class EmpleadoTest {
 
     @BeforeEach
     public void setUp() {
-        empleado = new Empleado("123456789X", "María García", "123456789", "1234567890", true, false, true, "Calle de la Vírgen de la Paloma, 1");
+        empleado = new Empleado("123456789X", "María García", "123456789", "1234567890", "Calle", true, true, true, true);
+
     }
 
     @Test
@@ -61,7 +62,7 @@ public class EmpleadoTest {
 
     @Test
     public void testGetPermisoControl() {
-        assertFalse(empleado.getPermisoControl());
+        assertTrue(empleado.getPermisoControl());
     }
 
     @Test
@@ -82,8 +83,19 @@ public class EmpleadoTest {
     }
 
     @Test
+    public void testGetPermisoActivdades() {
+        assertTrue(empleado.getPermisoActividades());
+    }
+
+    @Test 
+    public void testSetPermisoActividades() {
+        empleado.setPermisoActividades(false);
+        assertFalse(empleado.getPermisoActividades());
+    }
+
+    @Test
     public void testGetDireccion() {
-        assertEquals("Calle de la Vírgen de la Paloma, 1", empleado.getDireccion());
+        assertEquals("Calle", empleado.getDireccion());
     }
 
     @Test
@@ -94,9 +106,10 @@ public class EmpleadoTest {
 
     @Test
     public void testCambiarPermisos() {
-        empleado.cambiarPermisos(false, true, false);
+        empleado.cambiarPermisos(false, false, false, false);
         assertFalse(empleado.getPermisoVenta());
-        assertTrue(empleado.getPermisoControl());
+        assertFalse(empleado.getPermisoControl());
+        assertFalse(empleado.getPermisoMensajes());
         assertFalse(empleado.getPermisoMensajes());
     }
 

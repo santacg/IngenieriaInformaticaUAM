@@ -178,6 +178,15 @@ public class Exposicion implements Serializable {
     }
 
     /**
+     * Obtiene las entradas 
+     *  
+     * @return entradas
+     */
+    public Set<Entrada> getEntradas() {
+        return entradas;
+    }
+
+    /**
      * Actualiza el precio de la exposición.
      * 
      * @param precio El nuevo precio de la exposición.
