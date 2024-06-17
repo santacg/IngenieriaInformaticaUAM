@@ -5,6 +5,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * ConfirmarCompra
+ *
+ * Vista para confirmar la compra de entradas.
+ * 
+ * @author Carlos Garcia Santa, Joaquin Abad Diaz, Eduardo Junoy Ortega
+ */
 public class ConfirmarCompra extends JDialog {
 
     private JLabel exposicionNombre;
@@ -23,6 +30,18 @@ public class ConfirmarCompra extends JDialog {
     private JButton confirmarBtn;
     private JButton atrasBtn;
 
+    /**
+     * Constructor de la vista.
+     * 
+     * @param exposicionNombre Nombre de la exposición.
+     * @param nEntradas Número de entradas.
+     * @param fechaExpo Fecha de la exposición.
+     * @param hora Hora de la exposición.
+     * @param numeroTarjetadeCredito Número de tarjeta de crédito.
+     * @param fechaTarj Fecha de expiración de la tarjeta.
+     * @param cvv CVV de la tarjeta.
+     * @param precioFinal Precio final de la compra.
+     */
     public ConfirmarCompra(String exposicionNombre, String nEntradas, String fechaExpo, String hora,
             String numeroTarjetadeCredito, String fechaTarj, String cvv, String precioFinal) {
         setTitle("Comprar entrada");
@@ -77,6 +96,12 @@ public class ConfirmarCompra extends JDialog {
         panel.add(comp, constraints);
     }
 
+    /**
+     * Añade los botones al formulario.
+     * @param panel Panel donde se añaden los botones.
+     * @param constraints Restricciones del GridBagLayout.
+     * @param gridy Posición en el grid.
+     */
     private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
         constraints.gridx = 0;
         constraints.gridy = gridy;
@@ -92,10 +117,22 @@ public class ConfirmarCompra extends JDialog {
         panel.add(buttonPanel, constraints);
     }
 
+    /**
+     * Devuelve el número de entradas.
+     * @return Número de entradas.
+     */
     public String getexposicionNombre() {
         return exposicionNombre.getText();
     }
 
+    /**
+     * Devuelve el número de entradas.
+     * 
+     * @param ActionListener cConfirmar Controlador del botón de confirmar.
+     * @param ActionListener cAtras Controlador del botón de atras.
+     * 
+     * @return Número de entradas.
+     */
     public void setControlador(ActionListener cConfirmar, ActionListener cAtras) {
         this.confirmarBtn.addActionListener(cConfirmar);
         this.atrasBtn.addActionListener(cAtras);

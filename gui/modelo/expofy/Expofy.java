@@ -140,6 +140,8 @@ public class Expofy implements Serializable {
      * Expofy.
      * 
      * @param centroExposicion El centro de exposición a añadir.
+     * 
+     * @return true si el centro de exposición se añadió con éxito, false en caso
      */
     public Boolean addCentroExposicion(CentroExposicion centroExposicion) {
         if (this.centrosExposicion.add(centroExposicion)) {
@@ -184,6 +186,8 @@ public class Expofy implements Serializable {
      * @param NIF         El NIF del cliente.
      * @param Contrasenia La contraseña del cliente.
      * @param publicidad  Indica si el cliente acepta recibir publicidad.
+     * 
+     * @return true si el registro es exitoso, false en caso contrario.
      */
     public Boolean registrarCliente(String NIF, String Contrasenia, Boolean publicidad) {
         for (ClienteRegistrado c : this.clientesRegistrados) {
@@ -333,6 +337,8 @@ public class Expofy implements Serializable {
      * @param hora              La hora de la visita.
      * @param nEntradas         El número de entradas a comprar.
      * @param tarjetaDeCredito  La tarjeta de crédito para el pago.
+     * @param codigos           Los códigos de descuento a aplicar.
+     * 
      * @return true si la compra es exitosa, false en caso contrario.
      */
     public boolean comprarEntrada(ClienteRegistrado clienteRegistrado, Exposicion exposicion, LocalDate fecha,

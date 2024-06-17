@@ -136,6 +136,9 @@ public class ExposicionFormulario extends JDialog {
 
     /**
      * Método que crea el formulario para prorrogar una exposición.
+     * 
+     * @param panelFormulario panel del formulario.
+     * @param constraints contrains aplicadas.
      */
     public void formularioProrrogarExposicion(JPanel panelFormulario, GridBagConstraints constraints) {
         addCampo("Nueva fecha fin (yyyy-mm-dd):", fechaFin = new JTextField(20), panelFormulario, constraints, 2);

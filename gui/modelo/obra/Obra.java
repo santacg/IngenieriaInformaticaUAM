@@ -152,7 +152,7 @@ public abstract class Obra implements Serializable {
     /**
      * Obtiene el conjunto de autores asociados a la entidad.
      * 
-     * @return El conjunto de autores como Set<String>.
+     * @return El conjunto de autores.
      */
     public Set<String> getAutores() {
         return autores;
@@ -249,6 +249,7 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a RETIRADA.
      * 
+     * @throws ExcepcionMensaje si la obra ya está retirada, o si no está almacenada
      */
     public void retirarObra() throws ExcepcionMensaje {
 
@@ -265,6 +266,9 @@ public abstract class Obra implements Serializable {
 
     /**
      * Cambia el estado de la obra a PRESTADA.
+     * 
+     * @throws ExcepcionMensaje si la obra ya está prestada, si es externa, o si no
+     *                          está almacenada o expuesta.
      */
     public void prestarObra() throws ExcepcionMensaje {
 
@@ -285,6 +289,9 @@ public abstract class Obra implements Serializable {
 
     /**
      * Cambia el estado de la obra a ALMACENADA.
+     * 
+     * @throws ExcepcionMensaje si la obra ya está almacenada, o si está retirada.
+     * 
      */
     public void almacenarObra() throws ExcepcionMensaje {
 
@@ -302,6 +309,8 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a EXPUESTA.
      * 
+     * @throws ExcepcionMensaje si la obra ya está expuesta, o si no está
+     *                          almacenada.
      */
     public void exponerObra() throws ExcepcionMensaje {
 
@@ -319,8 +328,9 @@ public abstract class Obra implements Serializable {
     /**
      * Cambia el estado de la obra a RESTAURACION.
      * 
+     * @throws ExcepcionMensaje si la obra ya está en restauración, o si no está
+     *                          almacenada o expuesta.
      */
-
     public void restaurarObra() throws ExcepcionMensaje {
 
         if (this.estado == Estado.RESTAURACION) {

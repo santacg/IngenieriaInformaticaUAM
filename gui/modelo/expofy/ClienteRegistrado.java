@@ -170,14 +170,25 @@ public class ClienteRegistrado extends Usuario {
         this.addNotificacion(notificacion);
     }
 
+    /**
+     * Bloquea la cuenta del cliente registrado.
+     */
     public void bloquearCuenta() {
         this.bloqueada = true;
     }
 
+    /**
+     * Desbloquea la cuenta del cliente registrado.
+     */
     public void desbloquearCuenta() {
         this.bloqueada = false;
     }
 
+    /**
+     * Devuelve si la cuenta del cliente está bloqueada.
+     * 
+     * @return True si la cuenta está bloqueada, false en caso contrario.
+     */
     public Boolean getBloqueada(){
         return this.bloqueada;
     }

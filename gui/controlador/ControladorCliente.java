@@ -78,6 +78,9 @@ public class ControladorCliente {
 
     /**
      * Método que muestra las exposiciones filtradas por fecha en la vista.
+     * 
+     * @param fechaInicio Fecha de inicio del filtro.
+     * @param fechaFin    Fecha de fin del filtro.
      */
     public void filtrarPorFecha(LocalDate fechaInicio, LocalDate fechaFin) {
         ArrayList<Object[]> data = new ArrayList<>();
@@ -98,6 +101,8 @@ public class ControladorCliente {
 
     /**
      * Método que muestra las exposiciones filtradas por temporalidad en la vista.
+     * 
+     * @param tipo Tipo de exposición (permanente o temporal).
      */
     public void filtrarPorTemp(TipoExpo tipo) {
         ArrayList<Object[]> data = new ArrayList<>();
@@ -133,6 +138,8 @@ public class ControladorCliente {
 
     /**
      * Método que muestra las exposiciones filtradas por tipo de obra en la vista.
+     * 
+     * @param tipoObra String con el tipo de obra de la exposición.
      */
     public void filtrarPorTipoObra(String tipoObra) {
         ArrayList<Object[]> data = new ArrayList<>();

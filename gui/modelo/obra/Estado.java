@@ -18,9 +18,14 @@ package gui.modelo.obra;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
 public enum Estado {
+    /** Obra expuesta en sala. */
     EXPUESTA,
+    /** Obra almacenada en centro. */
     ALMACENADA,
+    /** Obra prestada a otro centro. */
     PRESTADA,
+    /** Obra en resturación. */
     RESTAURACION,
+    /** Obra retirada. */
     RETIRADA,
 }

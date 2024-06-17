@@ -9,6 +9,11 @@ import gui.modelo.exposicion.Exposicion;
 import gui.vistas.DescuentoFormulario;
 import gui.vistas.GestorPrincipal;
 
+/**
+ * Controlador de la vista DescuentoFormulario
+ * 
+ * @author Carlos Garcia Santa, Joaquin Abad Diaz, Eduardo Junoy Ortega
+ */
 public class ControladorDescuentoFormulario {
     private DescuentoFormulario vista;
     private GestorPrincipal frame;
@@ -19,7 +24,6 @@ public class ControladorDescuentoFormulario {
      * 
      * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion
-     * @param accion           String
      */
     public ControladorDescuentoFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;

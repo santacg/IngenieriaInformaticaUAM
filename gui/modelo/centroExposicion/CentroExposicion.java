@@ -250,9 +250,11 @@ public class CentroExposicion implements Serializable {
     }
 
     /**
-     * Establece las actividades del centro de exposiciones.
+     * Busca una actividad por su nombre.
      * 
-     * @param actividades Las actividades a asignar.
+     * @param nombre String con el nombre de la actividad a buscar.
+     * 
+     * @return La actividad con el nombre proporcionado, o null si no existe.
      */
     public Actividad getActividadPorNombre(String nombre) {
         for (Actividad actividad : actividades) {
@@ -274,6 +276,12 @@ public class CentroExposicion implements Serializable {
      * @param fecha            la fecha de la actividad
      * @param hora             la hora de la actividad
      * @param salaCelebracion  la sala en la que se celebrará la actividad
+     * 
+     * @throws ExcepcionMensaje si la fecha y hora de la actividad son anteriores a
+     *                          la actual, si la sala ya está siendo utilizada por
+     *                          otra actividad, si el número de participantes supera
+     *                          el aforo de la sala, o si la actividad ya está en el
+     *                          centro de exposiciones.
      */
     public void addActividad(String nombre, TipoActividad tipo, String descripcion, Integer maxParticipantes,
             LocalDate fecha, LocalTime hora, Sala salaCelebracion) throws ExcepcionMensaje {
@@ -605,6 +613,11 @@ public class CentroExposicion implements Serializable {
      * Elimina una exposicion determinada de un centro de exposiciones.
      * 
      * @param exposicion la sala a eliminar
+     * 
+     * @throws ExcepcionMensaje si la exposición no está en el centro de
+     *                          exposiciones
+     *                          o si no está en creación o ha finalizado
+     *                          y no se puede eliminar.
      */
     public void removeExposicion(Exposicion exposicion) throws ExcepcionMensaje {
 
@@ -631,6 +644,8 @@ public class CentroExposicion implements Serializable {
     /**
      * Obtiene un sorteo por su fecha de inscripcion y exposicion.
      * 
+     * @param exposicion  la exposicion de la que se quiere obtener el sorteo
+     * @param fechaSorteo la fecha de sorteo del sorteo a buscar
      * 
      * @return el sorteo con el nombre proporcionado, o null si no existe
      */
@@ -662,6 +677,8 @@ public class CentroExposicion implements Serializable {
      * Añade un sorteo determinado a un centro de exposiciones.
      * 
      * @param sorteo el sorteo a añadir
+     * 
+     * @return true si el sorteo se añade correctamente, false en caso contrario
      */
     public Boolean addSorteo(Sorteo sorteo) {
 
@@ -688,6 +705,8 @@ public class CentroExposicion implements Serializable {
      * @param n_entradas  el número de entradas que se sortearán
      * @param dia         el día en el que se realizará la exposición
      * @param hora        la hora en la que se realizará la exposición
+     * 
+     * @return true si el sorteo se añade correctamente, false en caso contrario
      */
     public Boolean confgiurarSorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia,
             Hora hora) {
@@ -728,6 +747,8 @@ public class CentroExposicion implements Serializable {
      * @param exposicion  la exposicion de la que se quiere configurar el sorteo
      * @param fechaSorteo la fecha en la que se realizará el sorteo
      * @param n_entradas  el número de entradas que se sortearán
+     * 
+     * @return true si el sorteo se añade correctamente, false en caso contrario
      */
     public Boolean confgiurarSorteoExposicion(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas) {
         if (exposicion == null) {
@@ -763,6 +784,8 @@ public class CentroExposicion implements Serializable {
      * @param n_entradas  el número de entradas que se sortearán
      * @param fechaInicio la fecha de inicio de la exposición
      * @param fechaFin    la fecha de fin de la exposición
+     * 
+     * @return true si el sorteo se añade correctamente, false en caso contrario
      */
     public Boolean confgiurarSorteoFechas(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas,
             LocalDate fechaInicio, LocalDate fechaFin) {
@@ -907,6 +930,8 @@ public class CentroExposicion implements Serializable {
      * Elimina una obra determinada de un centro de exposiciones.
      * 
      * @param obra la obra a eliminar
+     * 
+     * @return true si la obra se elimina correctamente, false en caso contrario
      */
     public Boolean removeObra(Obra obra) {
         if (gestor.isLoged() == false) {
@@ -943,6 +968,8 @@ public class CentroExposicion implements Serializable {
 
     /**
      * Obtiene un empleado del centro de exposición a partir de su NumSS.
+     * 
+     * @param NumSS el NumSS del empleado a buscar.
      *
      * @return El empleado o null si no existe.
      */
@@ -988,6 +1015,8 @@ public class CentroExposicion implements Serializable {
      * Elimina un empleado determinado de un centro de exposiciones.
      * 
      * @param empleado el empleado a eliminar
+     * 
+     * @return true si el empleado se elimina correctamente, false en caso contrario
      */
     public Boolean removeEmpleado(Empleado empleado) {
         if (gestor.isLoged() == false) {
@@ -1095,7 +1124,7 @@ public class CentroExposicion implements Serializable {
      * Permite el login de un empleado al sistema, verificando su NIF, número de
      * seguridad social y contraseña.
      *
-     * @param NIF         El NIF del empleado.
+     * @param numSS       El numero de seguridad social del empleado.
      * @param contrasenia La contraseña de acceso.
      * @return true si el login es exitoso, false en caso contrario.
      */

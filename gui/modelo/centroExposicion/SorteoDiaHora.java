@@ -12,7 +12,7 @@ import gui.modelo.exposicion.*;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-public class SorteoDiaHora extends Sorteo{
+public class SorteoDiaHora extends Sorteo {
     private LocalDate dia;
     private Hora hora;
 
@@ -21,8 +21,9 @@ public class SorteoDiaHora extends Sorteo{
      * 
      * @param exposicion  La exposición del sorteo
      * @param fechaSorteo La fecha en la que se realizará el sorteo
-     * @param dia         El día en el que se atenderá a la exposición 
-     * @param hora        La hora en la que se atenderá a la exposición
+     * @param n_entradas  Numero de entradas sorteadas
+     * @param dia         El día en el que se atenderá a la exposición
+     * @param tiempo      La hora en el que se atenderá a la exposición *
      */
     public SorteoDiaHora(Exposicion exposicion, LocalDate fechaSorteo, int n_entradas, LocalDate dia, Hora tiempo) {
         super(fechaSorteo, exposicion, n_entradas);

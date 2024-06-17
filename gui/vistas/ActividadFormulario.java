@@ -15,6 +15,12 @@ import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.centroExposicion.TipoActividad;
 import gui.modelo.sala.Sala;
 
+/**
+ * ActividadFormulario
+ * 
+ * Formulario para añadir una actividad a un centro de exposición
+ * @author Carlos García Santa
+ */
 public class ActividadFormulario extends JDialog {
     private JTextField nombreActividad;
     private TipoActividad tipoActividad;
@@ -28,9 +34,7 @@ public class ActividadFormulario extends JDialog {
     private JButton cancelarBtn;
 
     /**
-     * Constructor de la clase SalaFormulario
-     * 
-     * @param accion String que indica la acción a realizar
+     * Constructor de la clase ActividadFormulario
      */
     public ActividadFormulario() {
         setSize(600, 700);

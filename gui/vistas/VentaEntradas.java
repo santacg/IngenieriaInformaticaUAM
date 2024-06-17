@@ -74,7 +74,6 @@ public class VentaEntradas extends JPanel{
      * Método que establece los controladores de los botones de la vista.
      * 
      * @param cVender       Controlador del botón de comprar.
-     * @param cActualizar   Controlador del botón de actualizar.
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
      */

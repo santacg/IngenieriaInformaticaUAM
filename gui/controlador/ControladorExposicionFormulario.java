@@ -45,6 +45,12 @@ public class ControladorExposicionFormulario {
 
     }
 
+    /**
+     * Constructor de la clase ControladorExposicionFormulario.
+     * 
+     * @param frame            GestorPrincipal
+     * @param centroExposicion CentroExposicion
+     */
     public ControladorExposicionFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;
         this.vista = frame.getVistaExposicionFormulario("Agregar Exposicion");

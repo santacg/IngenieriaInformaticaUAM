@@ -14,6 +14,7 @@ package gui.modelo.exposicion;
  * 
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  */
+
 public enum EstadoExposicion {
    EN_CREACION, 
    PUBLICADA,

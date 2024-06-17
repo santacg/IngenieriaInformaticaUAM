@@ -760,7 +760,7 @@ public class ControladorGestor {
     /**
      * Método que obtiene el listener de ejecucion de salas.
      * 
-     * @retunr ActionListener para ejecutar salas
+     * @return ActionListener para ejecutar salas
      */
     public ActionListener getSalaEjecutarListener() {
         return salaEjecutarListener;

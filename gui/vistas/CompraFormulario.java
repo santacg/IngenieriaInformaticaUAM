@@ -4,6 +4,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/**
+ * CompraFormulario
+ * 
+ * Vista para el formulario de compra de entradas
+ * 
+ * @author Carlos García Santa, Joaquín Abád Díaz, Eduardo Junoy Ortega
+ */
 public class CompraFormulario extends JDialog {
 
     private JLabel exposicionNombre;
@@ -26,6 +33,12 @@ public class CompraFormulario extends JDialog {
     private JButton siguienteBtn;
     private JButton cancelarBtn;
 
+    /**
+     * Constructor de la clase CompraFormulario
+     * 
+     * @param nombreExposicion Nombre de la exposición
+     * @param precio           Precio de la entrada
+     */
     public CompraFormulario(String nombreExposicion, double precio) {
         setTitle("Comprar entrada");
         setSize(700, 600);
@@ -74,6 +87,17 @@ public class CompraFormulario extends JDialog {
         add(panelFormulario);
     }
 
+    /**
+     * Método para añadir un campo al formulario
+     * 
+     * @param label       Etiqueta del campo
+     * @param comp        Componente del campo
+     * @param panel       Panel donde se añadirá el campo
+     * @param constraints Restricciones del GridBagLayout
+     * @param gridy       Posición en el eje Y
+     * @param gridwidth   Ancho del campo
+     * 
+     */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, Integer gridy,
             Integer gridwidth) {
         JLabel jlabel = new JLabel(label);
@@ -87,6 +111,17 @@ public class CompraFormulario extends JDialog {
         panel.add(comp, constraints);
     }
 
+    /**
+     * Método para añadir un campo de fecha al formulario
+     * 
+     * @param label    Etiqueta del campo
+     * @param diasBox  ComboBox de los días
+     * @param mesesBox ComboBox de los meses
+     * @param aniosBox ComboBox de los años
+     * @param panel    Panel donde se añadirá el campo
+     * @param constraints Restricciones del GridBagLayout
+     * @param gridy    Posición en el eje Y
+     */
     private void addCampoFecha(String label, JComboBox<Integer> diasBox, JComboBox<Integer> mesesBox,
             JComboBox<Integer> aniosBox,
             JPanel panel, GridBagConstraints constraints, Integer gridy) {
@@ -118,6 +153,13 @@ public class CompraFormulario extends JDialog {
         panel.add(aniosBox, constraints);
     }
 
+    /**
+     * Método para añadir los botones de la vista
+     * 
+     * @param panel       Panel donde se añadirán los botones
+     * @param constraints Restricciones del GridBagLayout
+     * @param gridy       Posición en el eje Y
+     */
     private void addBotones(JPanel panel, GridBagConstraints constraints, Integer gridy) {
         constraints.gridx = 0;
         constraints.gridy = gridy;
@@ -133,50 +175,110 @@ public class CompraFormulario extends JDialog {
         panel.add(buttonPanel, constraints);
     }
 
+    /**
+     * Método para obtener el nombre de la exposición
+     * 
+     * @return Nombre de la exposición
+     */
     public String getExposicionNombre() {
         return exposicionNombre.getText();
     }
 
+    /**
+     * Método para obtener el precio de la entrada
+     * 
+     * @return Precio de la entrada
+     */
     public String getPrecio() {
         return precioPorEntrada.getText();
     }
 
+    /**
+     * Método para obtener el número de entradas
+     * 
+     * @return Número de entradas
+     */
     public JComboBox<Integer> getNentradas() {
         return nEntradas;
     }
 
+    /**
+     * Método para obtener el día de la exposición
+     * 
+     * @return Día de la exposición
+     */
     public JComboBox<Integer> getDiaExpo() {
         return diaExpo;
     }
 
+    /**
+     * Método para obtener el mes de la exposición
+     * 
+     * @return Mes de la exposición
+     */
     public JComboBox<Integer> getMesExpo() {
         return mesExpo;
     }
 
+    /**
+     * Método para obtener el año de la exposición
+     * 
+     * @return Año de la exposición
+     */
     public JComboBox<Integer> getAnioExpo() {
         return anioExpo;
     }
 
+    /**
+     * Método para obtener la hora de la exposición
+     * 
+     * @return Hora de la exposición
+     */
     public JComboBox<String> getHora() {
         return hora;
     }
 
+    /**
+     * Método para obtener el número de tarjeta de crédito
+     * 
+     * @return Número de tarjeta de crédito
+     */
     public String getNumeroTarjetadeCredito() {
         return numeroTarjetadeCredito.getText();
     }
 
+    /**
+     * Método para obtener el día de la tarjeta
+     * 
+     * @return Día de la tarjeta
+     */
     public JComboBox<Integer> getDiaTarj() {
         return diaTarj;
     }
 
+    /** 
+     * Método para obtener el mes de la tarjeta
+     * 
+     * @return Mes de la tarjeta
+    */
     public JComboBox<Integer> getMesTarj() {
         return mesTarj;
     }
 
+    /**
+     * Método para obtener el año de la tarjeta
+     * 
+     * @return Año de la tarjeta
+     */
     public JComboBox<Integer> getAnioTarj() {
         return anioTarj;
     }
 
+    /**
+     * Método para obtener el CVV
+     * 
+     * @return CVV
+     */
     public Integer getCVV() {
         if (cvv.getText().equals("")) {
             return 0;
@@ -184,10 +286,29 @@ public class CompraFormulario extends JDialog {
         return Integer.parseInt(cvv.getText());
     }
 
+    /**
+     * Método para obtener el código de sorteo
+     * 
+     * @return Código de sorteo
+     */
     public String getCodigoSorteo() {
         return codigoSorteo.getText();
     }
 
+    /**
+     * Metodo para establecer el controlador de la vista
+     * 
+     * @param cSiguiente Controlador del botón siguiente
+     * @param cCancelar  Controlador del botón cancelar
+     * @param cDiaExpo   Controlador del día de la exposición
+     * @param cMesExpo   Controlador del mes de la exposición
+     * @param cAnioExpo  Controlador del año de la exposición
+     * @param cDiaTarj   Controlador del día de la tarjeta
+     * @param cMesTarj   Controlador del mes de la tarjeta
+     * @param cAnioTarj  Controlador del año de la tarjeta
+     * @param cNentradas Controlador del número de entradas
+     * @param cHoras     Controlador de las horas
+     */
     public void setControlador(ActionListener cSiguiente, ActionListener cCancelar, ActionListener cDiaExpo,
             ActionListener cMesExpo, ActionListener cAnioExpo, ActionListener cDiaTarj, ActionListener cMesTarj,
             ActionListener cAnioTarj, ActionListener cNentradas, ActionListener cHoras) {

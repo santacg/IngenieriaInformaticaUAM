@@ -26,6 +26,7 @@ public class Audiovisual extends Obra {
      * @param numeroSeguro  El número de la póliza del seguro.
      * @param duracion      La duración de la obra audiovisual.
      * @param idioma        El idioma principal de la obra audiovisual.
+     * @param autores       Los autores de la obra audiovisual.
      */
     public Audiovisual(String nombre, Integer anio, String descripcion, Boolean externa, Double cuantiaSeguro,
             String numeroSeguro, String duracion, String idioma, String... autores) {

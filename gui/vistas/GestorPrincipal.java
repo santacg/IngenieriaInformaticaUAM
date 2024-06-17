@@ -182,7 +182,6 @@ public class GestorPrincipal extends JPanel {
             }
         });
 
-
         TableColumnModel columnModel = tablaNotificaciones.getColumnModel();
         columnModel.getColumn(1).setPreferredWidth(1500);
 
@@ -993,7 +992,6 @@ public class GestorPrincipal extends JPanel {
      * @param cSorteoAgregar                 Controlador de agregar sorteos.
      * @param cDescuentoAgregar              Controlador de agregar descuentos.
      * @param cCerrarSesion                  Controlador de cerrar sesión.
-     * @param cCambiarContrasenia            Controlador de cambiar contraseña.
      * @param cObrasLeerCSV                  Controlador de leer obras desde CSV.
      * @param cActividadesAgregar            Controlador de agregar actividades.
      * @param cExposicionesAgregar           Controlador de agregar exposiciones.
@@ -1034,22 +1032,25 @@ public class GestorPrincipal extends JPanel {
      * 
      * @param cObrasEjecutar             Controlador de ejecutar acciones de obras.
      * @param cObrasAgregar              Controlador de agregar obras.
+     * @param cObrasLeerCSV              Controlador de leer obras desde CSV.
      * @param cSalasEjecutar             Controlador de ejecutar acciones de salas.
      * @param cExposicionesEjecutar      Controlador de ejecutar acciones de
      *                                   exposiciones.
+     * @param cExposicionesAgregar       Controlador de agregar exposiciones.
      * @param cEmpleadoAgregar           Controlador de agregar empleados.
      * @param cSorteoAgregar             Controlador de agregar sorteos.
      * @param cDescuentoAgregar          Controlador de agregar descuentos.
      * @param cCerrarSesion              Controlador de cerrar sesión.
-     * @param cCambiarContrasenia        Controlador de cambiar contraseña.
-     * @param cObrasLeerCSV              Controlador de leer obras desde CSV.
+     * 
      * @param cActividadesAgregar        Controlador de agregar actividades.
-     * @param cExposicionesAgregar       Controlador de agregar exposiciones.
+     * @param cCambiarContrasenia        Controlador de configurar contraseña de
+     *                                   empleado.
+     * 
      * @param cCambiarHoras              Controlador de cambiar horas de apertura
      *                                   y cierre.
      * @param cCambiarPenalizacionSorteo Controlador de cambiar la penalización por
      *                                   sorteo no canjeado.
-     * @param cCelebrarSorte             Controlador de celebrar sorteo.
+     * @param cCelebrarSorteo            Controlador de celebrar sorteo.
      */
     public void removeControlador(ActionListener cObrasEjecutar, ActionListener cObrasAgregar,
             ActionListener cObrasLeerCSV,
@@ -1077,7 +1078,7 @@ public class GestorPrincipal extends JPanel {
     /**
      * Devuelve la vista del formulario de obra.
      * 
-     * @return Vista del formulario de obra.
+     * @return ObraFormulario Vista del formulario de obra.
      */
     public ObraFormulario getVistaObraFormulario() {
         this.vistaObraFormulario = new ObraFormulario();
@@ -1088,7 +1089,7 @@ public class GestorPrincipal extends JPanel {
      * Devuelve la vista del formulario de sala.
      * 
      * @param accion Acción a realizar.
-     * @return Vista del formulario de sala.
+     * @return SalaFormulario Vista del formulario de sala.
      */
     public SalaFormulario getVistaSalaFormulario(String accion) {
         this.vistaSalaFormulario = new SalaFormulario(accion);
@@ -1099,7 +1100,7 @@ public class GestorPrincipal extends JPanel {
      * Devuelve la vista del formulario de exposición.
      * 
      * @param accion Acción a realizar.
-     * @return Vista del formulario de exposición.
+     * @return ExposicionFormulario Vista del formulario de exposición.
      */
     public ExposicionFormulario getVistaExposicionFormulario(String accion) {
         this.vistaExposicionFormulario = new ExposicionFormulario(accion);
@@ -1109,7 +1110,7 @@ public class GestorPrincipal extends JPanel {
     /**
      * Devuelve la vista del formulario de empleado.
      * 
-     * @return Vista del formulario de empleado.
+     * @return EmpleadoFormulario Vista del formulario de empleado.
      */
     public EmpleadoFormulario getVistaEmpleadoFormulario() {
         this.vistaEmpleadoFormulario = new EmpleadoFormulario();
@@ -1119,7 +1120,7 @@ public class GestorPrincipal extends JPanel {
     /**
      * Devuelve la vista del formulario de sorteo.
      * 
-     * @return Vista del formulario de sorteo.
+     * @return SorteoFormulario Vista del formulario de sorteo.
      */
     public SorteoFormulario getVistaSorteoFormulario() {
         this.vistaSorteoFormulario = new SorteoFormulario();
@@ -1129,7 +1130,7 @@ public class GestorPrincipal extends JPanel {
     /**
      * Devuelve la vista del formulario de descuento.
      * 
-     * @return Vista del formulario de descuento.
+     * @return DescuentoFormulario Vista del formulario de descuento.
      */
     public DescuentoFormulario getVistaDescuentoFormulario() {
         this.vistaDescuentoFormulario = new DescuentoFormulario();
@@ -1139,7 +1140,7 @@ public class GestorPrincipal extends JPanel {
     /**
      * Devuelve la vista del formulario de actividad.
      * 
-     * @return Vista del formulario de actividad.
+     * @return ActividadFormulario Vista del formulario de actividad.
      */
     public ActividadFormulario getVistaActividadFormulario() {
         this.vistaActividadFormulario = new ActividadFormulario();
@@ -1150,7 +1151,6 @@ public class GestorPrincipal extends JPanel {
      * Establece el controlador del formulario de obra.
      * 
      * @param controlador Controlador del formulario de obra.
-     * @return Controlador del formulario de obra.
      */
     public void setControladorObraFormulario(ControladorObraFormulario controlador) {
         this.controladorObraFormulario = controlador;

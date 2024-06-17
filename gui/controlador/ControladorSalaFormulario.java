@@ -281,6 +281,8 @@ public class ControladorSalaFormulario {
 
     /**
      * Método que inicializa el listener del botón cancelar
+     * 
+     * @return ActionListener del botón cancelar
      */
     private ActionListener cancelarListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -291,7 +293,7 @@ public class ControladorSalaFormulario {
     /**
      * Método que devuelve el listener del botón aceptar
      * 
-     * @break ActionListener
+     * @return ActionListener del botón aceptar
      */
     public ActionListener getAceptarListener() {
         return aceptarListener;
@@ -300,7 +302,7 @@ public class ControladorSalaFormulario {
     /**
      * Método que devuelve el listener del botón cancelar
      * 
-     * @break ActionListener
+     * @return ActionListener del botón cancelar
      */
     public ActionListener getCancelarListener() {
         return cancelarListener;

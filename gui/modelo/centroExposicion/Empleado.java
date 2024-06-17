@@ -59,6 +59,7 @@ public class Empleado extends Usuario {
      * @param pVenta    indica si el empleado tiene permiso de venta.
      * @param pControl  indica si el empleado tiene permiso de control.
      * @param pMensajes indica si el empleado tiene permiso de enviar mensajes.
+     * @param pActividades indica si el empleado tiene permiso de enviar mensajes.
      */
     public void cambiarPermisos(Boolean pVenta, Boolean pControl, Boolean pMensajes, Boolean pActividades) {
         this.permisoVenta = pVenta;

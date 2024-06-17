@@ -46,9 +46,8 @@ public class Exposicion implements Serializable {
      * @param fechaInicio La fecha de inicio de la exposición.
      * @param fechaFin    La fecha de conclusión de la exposición.
      * @param descripcion Una breve descripción de la exposición.
-     * @param salas       Un conjunto de salas en las que se llevará a cabo la
-     *                    exposición.
      * @param tipo        El tipo de exposición, puede ser temporal o permanente.
+     * @param precio      Precio de la exposición.
      */
     public Exposicion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String descripcion, TipoExpo tipo,
             Double precio) {
@@ -107,6 +106,7 @@ public class Exposicion implements Serializable {
      * Actualiza la fecha de inicio de la exposición.
      * 
      * @param fechaInicio La nueva fecha de inicio.
+     * @return boolean true si todo bien false si no.
      */
     public boolean setFechaInicio(LocalDate fechaInicio) {
         if (this.fechaFin.isBefore(fechaInicio)) {
@@ -131,6 +131,7 @@ public class Exposicion implements Serializable {
      * Actualiza la fecha de fin de la exposición.
      * 
      * @param fechaFin La nueva fecha de fin.
+     * @return boolean true si todo bien false si no.
      */
     public boolean setFechaFin(LocalDate fechaFin) {
         if (this.fechaInicio.isAfter(fechaFin)) {
@@ -178,8 +179,8 @@ public class Exposicion implements Serializable {
     }
 
     /**
-     * Obtiene las entradas 
-     *  
+     * Obtiene las entradas
+     * 
      * @return entradas
      */
     public Set<Entrada> getEntradas() {
@@ -204,6 +205,9 @@ public class Exposicion implements Serializable {
 
     /**
      * Cambia el estado de la exposición a PUBLICADA.
+     * 
+     * @throws ExcepcionMensaje si la exposición no está en estado de creación, no
+     *                          tiene salas o las salas no tienen obras.
      */
     public void expoPublicar() throws ExcepcionMensaje {
 
@@ -232,6 +236,15 @@ public class Exposicion implements Serializable {
      * Cambia el estado de la exposición a CANCELADA.
      * 
      * @param fechaCancelacion La fecha de cancelación de la exposición.
+     * 
+     * @throws ExcepcionMensaje si la exposición no está en estado de creación, la
+     *                          fecha de cancelación es anterior a la fecha actual,
+     *                          la
+     *                          fecha de cancelación es posterior a la fecha de fin
+     *                          de
+     *                          la exposición o hay entradas compradas con menos de
+     *                          7 días
+     *                          de antelación a la fecha de cancelación.
      */
     public void expoCancelar(LocalDate fechaCancelacion) throws ExcepcionMensaje {
         if (this.estado == EstadoExposicion.EN_CREACION || this.estado == EstadoExposicion.CANCELADA) {
@@ -287,6 +300,12 @@ public class Exposicion implements Serializable {
      * Prorroga la fecha de fin de la exposición.
      * 
      * @param fechaFin La nueva fecha de fin para la exposición.
+     * 
+     * @throws ExcepcionMensaje si la exposición es permanente, no ha sido publicada
+     *                          o prorrogada, o la fecha de fin es anterior o igual
+     *                          a
+     *                          la actual.
+     * 
      */
     public void expoProrrogar(LocalDate fechaFin) throws ExcepcionMensaje {
 
@@ -360,6 +379,7 @@ public class Exposicion implements Serializable {
      * Añade una sala al conjunto de salas de la exposición.
      * 
      * @param sala La sala a añadir.
+     * @return boolean true si todo bien false si no.
      */
     public boolean addSala(SalaExposicion sala) {
         if (this.salas.add(sala) == false) {
@@ -373,6 +393,7 @@ public class Exposicion implements Serializable {
      * Elimina una sala del conjunto de salas de la exposición.
      * 
      * @param sala La sala a eliminar.
+     * @return boolean true si todo bien false si no.
      */
     public boolean removeSala(SalaExposicion sala) {
         if (this.salas.contains(sala) == false) {
@@ -525,8 +546,8 @@ public class Exposicion implements Serializable {
     /**
      * Configura un descuento para la exposición basado en la cantidad de días
      * 
-     * @param cantidadDescuento
-     * @param dias
+     * @param cantidadDescuento la cantidad que se descuenta del precio.
+     * @param dias              los dias con los que se aplica el descuento.
      */
     public void configurarDescuentoDia(double cantidadDescuento, int dias) {
         if (cantidadDescuento <= 0) {
@@ -564,6 +585,11 @@ public class Exposicion implements Serializable {
         setDescuento(descuento);
     }
 
+    /**
+     * Configura un descuento para la exposición basado en la cantidad de meses
+     * 
+     * @param entrada Entrada a añadir.
+     */
     public boolean addEntrada(Entrada entrada) {
         if (this.entradas.add(entrada) == false) {
             System.out.println("La entrada ya existe");
@@ -681,7 +707,7 @@ public class Exposicion implements Serializable {
     /**
      * Unicamente util para los test no se debe usar en otro caso
      * 
-     * @param Estado estado al que va a pasar la exposicion
+     * @param estado estado al que va a pasar la exposicion
      */
     public void setEstado(EstadoExposicion estado) {
         this.estado = estado;

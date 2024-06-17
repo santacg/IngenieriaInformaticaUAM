@@ -261,7 +261,7 @@ public class ClientePrincipal extends JPanel {
     /**
      * Actualiza la tabla de exposiciones.
      * 
-     * @param centro Centro de exposiciones.
+     * @param data datos a añadir.
      */
     public void actualizarTablaExposiciones(ArrayList<Object[]> data) {
         String[] titulos = { "Nombre", "Descripcion", "Fecha Inicio", "Fecha Fin", "Precio", "Nombre Centro",
@@ -284,6 +284,10 @@ public class ClientePrincipal extends JPanel {
      * @param cActualizar   Controlador del botón de actualizar.
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
+     * @param cFiltroFecha  Controlador del botón de filtrar por fecha.
+     * @param cFiltroTemp   Controlador del botón de filtrar por temporalidad.
+     * @param cFiltroTipoObra Controlador del botón de filtrar por tipo de obra.
+     * @param cEliminarFiltros Controlador del botón de eliminar filtros.
      */
     public void setControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion,
             ActionListener cInscribirse, ActionListener cFiltroFecha, ActionListener cFiltroTemp,
@@ -305,6 +309,10 @@ public class ClientePrincipal extends JPanel {
      * @param cActualizar   Controlador del botón de actualizar.
      * @param cCerrarSesion Controlador del botón de cerrar sesión.
      * @param cInscribirse  Controlador del botón de inscribirse.
+     * @param cFiltroFecha  Controlador del botón de filtrar por fecha.
+     * @param cFiltroTemp   Controlador del botón de filtrar por temporalidad.
+     * @param cFiltroTipoObra Controlador del botón de filtrar por tipo de obra.
+     * @param cEliminarFiltros Controlador del botón de eliminar filtros.
      */
     public void removeControlador(ActionListener cComprar, ActionListener cActualizar, ActionListener cCerrarSesion,
             ActionListener cInscribirse, ActionListener cFiltroFecha, ActionListener cFiltroTemp,

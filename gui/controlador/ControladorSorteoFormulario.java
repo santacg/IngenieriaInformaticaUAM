@@ -13,6 +13,11 @@ import gui.modelo.exposicion.Hora;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.SorteoFormulario;
 
+/**
+ * Controlador de la vista SorteoFormulario
+ * 
+ * @author Carlos Garcia Santa, Joaquin Abad Diaz
+ */
 public class ControladorSorteoFormulario {
     private SorteoFormulario vista;
     private GestorPrincipal frame;
@@ -23,7 +28,6 @@ public class ControladorSorteoFormulario {
      * 
      * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion
-     * @param accion           String
      */
     public ControladorSorteoFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;

@@ -5,6 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Vista para confirmar la compra de entradas
+ * 
+ * @author Carlos Garcia Santa, Joaquin Abad Diaz, Eduardo Junoy Ortega
+ */
 public class ConfirmarVenta extends JDialog {
 
     private JLabel exposicionNombre;
@@ -17,6 +22,15 @@ public class ConfirmarVenta extends JDialog {
     private JButton confirmarBtn;
     private JButton atrasBtn;
 
+    /**
+     * Constructor de la vista
+     * 
+     * @param exposicionNombre nombre de la exposición
+     * @param nEntradas        número de entradas
+     * @param fechaExpo        fecha de la exposición
+     * @param hora             hora de la exposición
+     * @param precioFinal      precio final de la compra
+     */
     public ConfirmarVenta(String exposicionNombre, String nEntradas, String fechaExpo, String hora,
             String precioFinal) {
         setTitle("Comprar entrada");
@@ -43,6 +57,16 @@ public class ConfirmarVenta extends JDialog {
 
     }
 
+    /**
+     * Añade un campo al formulario
+     * 
+     * @param label       etiqueta del campo
+     * @param comp        componente del campo
+     * @param panel       panel del formulario
+     * @param constraints restricciones del layout
+     * @param gridy       fila en la que se añade el campo
+     * @param gridwidth   ancho del campo
+     */
     private void addCampo(String label, Component comp, JPanel panel, GridBagConstraints constraints, int gridy,
             int gridwidth) {
         JLabel jlabel = new JLabel(label);
@@ -56,6 +80,13 @@ public class ConfirmarVenta extends JDialog {
         panel.add(comp, constraints);
     }
 
+    /**
+     * Añade los botones al formulario
+     * 
+     * @param panel       panel del formulario
+     * @param constraints restricciones del layout
+     * @param gridy       fila en la que se añaden los botones
+     */
     private void addBotones(JPanel panel, GridBagConstraints constraints, int gridy) {
         constraints.gridx = 0;
         constraints.gridy = gridy;
@@ -71,10 +102,21 @@ public class ConfirmarVenta extends JDialog {
         panel.add(buttonPanel, constraints);
     }
 
+    /**
+     * Devuelve el número de entradas
+     * 
+     * @return número de entradas
+     */
     public String getexposicionNombre() {
         return exposicionNombre.getText();
     }
 
+    /**
+     * Establece el controlador
+     * 
+     * @param cConfirmar controlador del botón de confirmar
+     * @param cAtras     controlador del botón de atras
+     */
     public void setControlador(ActionListener cConfirmar, ActionListener cAtras) {
         this.confirmarBtn.addActionListener(cConfirmar);
         this.atrasBtn.addActionListener(cAtras);

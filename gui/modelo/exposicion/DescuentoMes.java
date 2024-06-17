@@ -1,5 +1,7 @@
 package gui.modelo.exposicion;
 
+import java.time.LocalDate;
+
 /**
  * Clase DescuentoMes.
  * Esta clase hereda de {@link Descuento} y aplica funcionalidades para manejar
@@ -8,10 +10,7 @@ package gui.modelo.exposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-
-import java.time.LocalDate;
-
-public class DescuentoMes extends Descuento{
+public class DescuentoMes extends Descuento {
     /**
      * Referencia al constructor de la superclase descuento.
      *
@@ -24,10 +23,11 @@ public class DescuentoMes extends Descuento{
 
     /**
      * Determina si un descuento es aplicable respecto a una fecha
+     * 
      * @param fecha La fecha que se evalua.
      * @return boolean true si es aplicable, false si no
      */
-    public boolean validezDescuento(LocalDate fecha){
+    public boolean validezDescuento(LocalDate fecha) {
         if (fecha.plusMonths(this.getCantidad()).isAfter(LocalDate.now())) {
             return true;
         }

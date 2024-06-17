@@ -32,7 +32,7 @@ public class EmpleadoPrincipal extends JPanel {
         panelSuperior.setLayout(new BorderLayout());
         cerrarSesionBoton = new JButton("Cerrar Sesión");
         perfilBoton = new JButton("Perfil");
-        panelSuperior.add(perfilBoton,BorderLayout.WEST);
+        panelSuperior.add(perfilBoton, BorderLayout.WEST);
         panelSuperior.add(cerrarSesionBoton, BorderLayout.EAST);
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -47,7 +47,6 @@ public class EmpleadoPrincipal extends JPanel {
     /**
      * Método que añade el título a la vista.
      * 
-     * @param constraints Constraints para el GridBagLayout.
      */
     public void addTitle() {
         GridBagConstraints constraints = new GridBagConstraints();
@@ -86,8 +85,8 @@ public class EmpleadoPrincipal extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 4;
-        constraints.gridwidth = GridBagConstraints.REMAINDER; 
-        constraints.anchor = GridBagConstraints.CENTER; 
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.anchor = GridBagConstraints.CENTER;
         panelPrincipal.add(buttonPanel, constraints);
     }
 
@@ -98,9 +97,13 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cClimatizacion Controlador del botón de cambio de climatización.
      * @param cVentaEntradas Controlador del botón de venta de entradas.
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
+     * @param cDesbloquear   Controlador del botón de desbloqueo de cuentas.
+     * @param cActividad     Controlador del botón de inscribir en actividad.
+     * @param cPerfil        Controlador del botón de perfil.
      */
     public void setControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad, ActionListener cPerfil) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad,
+            ActionListener cPerfil) {
 
         this.enviarMensajeBoton.addActionListener(cMensaje);
         this.cambiarClimatizacionBoton.addActionListener(cClimatizacion);
@@ -118,9 +121,13 @@ public class EmpleadoPrincipal extends JPanel {
      * @param cClimatizacion Controlador del botón de cambio de climatización.
      * @param cVentaEntradas Controlador del botón de venta de entradas.
      * @param cCerrarSesion  Controlador del botón de cierre de sesión.
+     * @param cDesbloquear   Controlador del botón de desbloqueo de cuentas.
+     * @param cActividad     Controlador del botón de inscribir en actividad.
+     * @param cPerfil        Controlador del botón de perfil.
      */
     public void removeControlador(ActionListener cMensaje, ActionListener cClimatizacion, ActionListener cVentaEntradas,
-            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad, ActionListener cPerfil) {
+            ActionListener cCerrarSesion, ActionListener cDesbloquear, ActionListener cActividad,
+            ActionListener cPerfil) {
 
         this.enviarMensajeBoton.removeActionListener(cMensaje);
         this.cambiarClimatizacionBoton.removeActionListener(cClimatizacion);
@@ -131,6 +138,14 @@ public class EmpleadoPrincipal extends JPanel {
         this.perfilBoton.removeActionListener(cPerfil);
     }
 
+    /**
+     * Método que oculta las funcionalidades según los permisos.
+     *
+     * @param msj permiso mensaje.
+     * @param clmtz permiso climatización.
+     * @param venta permiso venta.
+     * @param actividad  permiso inscribir en actividad.
+     */
     public void hideButtons(boolean msj, boolean clmtz, boolean venta, boolean actividad) {
         enviarMensajeBoton.setVisible(msj);
         cambiarClimatizacionBoton.setVisible(clmtz);

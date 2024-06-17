@@ -81,13 +81,19 @@ public class DesbloqueoClientes extends JPanel {
     /**
      * Método que establece el controlador de la vista
      * 
-     * @param ActionListener cAtras
+     * @param cAtras ActionListener cAtras
+     * @param cDesbloquear ActionListener cDesbloquear
      */
     public void setControlador(ActionListener cAtras, ActionListener cDesbloquear) {
         atrasBoton.addActionListener(cAtras);
         DesbloquearBoton.addActionListener(cDesbloquear);
     }
 
+    /**
+     * Devuelve la tabla de clientes bloqueados.
+     * 
+     * @return JTable tabla de clientes.
+     */
     public JTable getTablaClientes() {
         return tablaClientes;
     }

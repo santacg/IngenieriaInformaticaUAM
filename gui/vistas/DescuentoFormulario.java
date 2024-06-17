@@ -10,6 +10,12 @@ import gui.modelo.centroExposicion.CentroExposicion;
 import gui.modelo.exposicion.EstadoExposicion;
 import gui.modelo.exposicion.Exposicion;
 
+/**
+ * Clase DescuentoFormulario
+ * Implementa la vista de formulario de descuentos.
+ * 
+ * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
+ */
 public class DescuentoFormulario extends JDialog {
     private String tipoDescuento;
     private JComboBox<String> exposiciones;
@@ -19,9 +25,8 @@ public class DescuentoFormulario extends JDialog {
     private JButton cancelarBtn;
 
     /**
-     * Constructor de la clase SalaFormulario
+     * Constructor de la clase DescuentoFormulario
      * 
-     * @param accion String que indica la acción a realizar
      */
     public DescuentoFormulario() {
         setSize(600, 700);

@@ -12,6 +12,11 @@ import gui.modelo.utils.ExcepcionMensaje;
 import gui.vistas.GestorPrincipal;
 import gui.vistas.ActividadFormulario;
 
+/**
+ * Controlador de la vista ActividadFormulario
+ * 
+ * @author Carlos Garcia Santa, Joaquin Abad Diaz, Eduardo Junoy Ortega
+ */
 public class ControladorActividadFormulario {
     private ActividadFormulario vista;
     private GestorPrincipal frame;
@@ -22,7 +27,6 @@ public class ControladorActividadFormulario {
      * 
      * @param frame            GestorPrincipal
      * @param centroExposicion CentroExposicion
-     * @param accion           String
      */
     public ControladorActividadFormulario(GestorPrincipal frame, CentroExposicion centroExposicion) {
         this.frame = frame;

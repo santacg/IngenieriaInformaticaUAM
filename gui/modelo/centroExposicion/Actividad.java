@@ -180,7 +180,7 @@ public class Actividad implements Serializable {
     /**
      * Añade un cliente a la actividad.
      * 
-     * @param cliente el cliente a añadir
+     * @param NIF el cliente a añadir
      * @return {@code true} si el cliente se añade correctamente, {@code false} en
      */
     public Boolean addParticipante(String NIF) {

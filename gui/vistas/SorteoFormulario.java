@@ -26,9 +26,8 @@ public class SorteoFormulario extends JDialog {
     private JButton cancelarBtn;
 
     /**
-     * Constructor de la clase SalaFormulario
+     * Constructor de la clase SorteoFormulario
      * 
-     * @param accion String que indica la acción a realizar
      */
     public SorteoFormulario() {
         setSize(600, 700);

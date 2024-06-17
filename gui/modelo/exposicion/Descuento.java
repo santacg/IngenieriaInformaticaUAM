@@ -1,5 +1,8 @@
 package gui.modelo.exposicion;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+
 /**
  * Clase Descuento.
  * Esta clase abstracta ofrece funcionalidades para manejar los descuentos
@@ -8,10 +11,7 @@ package gui.modelo.exposicion;
  * @author Carlos García Santa, Joaquín Abad Díaz y Eduardo Junoy Ortega
  *
  */
-import java.io.Serializable;
-import java.time.LocalDate;
-
-public abstract class Descuento implements Serializable{
+public abstract class Descuento implements Serializable {
     private Double descuento;
     private Integer cantidad;
 
@@ -28,6 +28,7 @@ public abstract class Descuento implements Serializable{
 
     /**
      * Obtiene el valor del descuento aplicable.
+     * 
      * @return El porcentaje de descuento como double.
      */
     public Double getDescuento() {
@@ -36,6 +37,7 @@ public abstract class Descuento implements Serializable{
 
     /**
      * Establece un nuevo valor para el descuento.
+     * 
      * @param descuento El nuevo porcentaje de descuento a aplicar.
      */
     public void setDescuento(Double descuento) {
@@ -44,6 +46,7 @@ public abstract class Descuento implements Serializable{
 
     /**
      * Retorna la cantidad de items o unidades.
+     * 
      * @return La cantidad actual como entero.
      */
     public Integer getCantidad() {
@@ -52,6 +55,7 @@ public abstract class Descuento implements Serializable{
 
     /**
      * Asigna un nuevo valor a la cantidad de items o unidades.
+     * 
      * @param cantidad La nueva cantidad a establecer.
      */
     public void setCantidad(Integer cantidad) {
@@ -60,6 +64,7 @@ public abstract class Descuento implements Serializable{
 
     /**
      * Determina si un descuento es aplicable respecto a una fecha
+     * 
      * @param fecha La fecha que se evalua.
      * @return boolean true si es aplicable, false si no
      */
@@ -84,7 +89,8 @@ public abstract class Descuento implements Serializable{
      * Dos descuentos se consideran iguales si tienen el mismo descuento y cantidad.
      * 
      * @param obj El objeto con el que comparar este {@code Descuento}.
-     * @return {@code true} si los objetos son iguales, {@code false} en caso contrario.
+     * @return {@code true} si los objetos son iguales, {@code false} en caso
+     *         contrario.
      */
     @Override
     public boolean equals(Object obj) {

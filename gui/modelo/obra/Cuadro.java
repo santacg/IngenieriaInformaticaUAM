@@ -31,6 +31,7 @@ public class Cuadro extends ObraNoDigital {
      * @param humedadMaxima     La humedad máxima para la conservación
      * @param humedadMinima     La humedad mínima para la conservación
      * @param tecnica           La técnica utilizada para crear el cuadro.
+     * @param autores           Los autores del cuadro.
      */
     public Cuadro(String nombre, Integer anio, String descripcion, Boolean externa,
             Double cuantiaSeguro, String numeroSeguro, Double alto, Double ancho,

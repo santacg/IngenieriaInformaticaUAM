@@ -25,7 +25,7 @@ public class LectorCSVObras {
      * de obra (por ejemplo, dimensiones, color, etc.).
      *
      * @param centroExposicion Centro de exposicion que lee las obras.
-     * @param filename Archivo del que se leen las obras.
+     * @param fileName Archivo del que se leen las obras.
      */
     public static void leerObras(CentroExposicion centroExposicion, String fileName) throws ExcepcionMensaje {
         String line = ""; // Variable para almacenar cada línea leída del archivo.

@@ -96,10 +96,16 @@ public class AjustarClimatizacion extends JPanel {
 
     }
 
+    /**
+     * Método que actualiza el valor de la temperatura
+     */
     public void updateTemperatura() {
         temperaturaValue.setText("" + temperaturaSlider.getValue());
     }
 
+    /**
+     * Método que actualiza el valor de la humedad
+     */
     public void updateHumedad() {
         humedadValue.setText("" + humedadSlider.getValue());
     }
@@ -108,6 +114,9 @@ public class AjustarClimatizacion extends JPanel {
      * Método que establece el controlador de la vista
      * 
      * @param ActionListener cAtras
+     * @param ActionListener cConfirmar
+     * @param ChangeListener cTemperatura
+     * @param ChangeListener cHumedad
      */
     public void setControlador(ActionListener cAtras, ActionListener cConfirmar, ChangeListener cTemperatura,
             ChangeListener cHumedad) {
@@ -117,14 +126,29 @@ public class AjustarClimatizacion extends JPanel {
         humedadSlider.addChangeListener(cHumedad);
     }
 
+    /**
+     * Método que devuelve la tabla de salas
+     * 
+     * @return JTable tablaSalas
+     */
     public JTable getTablaSalas() {
         return tablaSalas;
     }
 
+    /**
+     * Método que devuelve la temperatura
+     * 
+     * @return int de la temperatura
+     */
     public int getTemperatura(){
         return temperaturaSlider.getValue();
     }
 
+    /**
+     * Método que devuelve la humedad
+     * 
+     * @return int de la humedad
+     */
     public int getHumedad(){
         return humedadSlider.getValue();
     }
