@@ -214,13 +214,8 @@ public class Exposicion implements Serializable {
      * Cambia el estado de la exposición a CANCELADA.
      */
     public boolean expoCancelar(LocalDate fechaCancelacion) {
-        if (this.estado == EstadoExposicion.EN_CREACION) {
-            System.out.println("No se puede cancelar una exposición que esta en creacion");
-            return false;
-        }
-
-        if (this.estado == EstadoExposicion.CANCELADA) {
-            System.out.println("La exposición ya ha sido cancelada");
+        if (this.estado == EstadoExposicion.EN_CREACION || this.estado == EstadoExposicion.CANCELADA) {
+            System.out.println("No se puede cancelar una exposición que esta en creacion o ya ha sido cancelada");
             return false;
         }
 
@@ -274,7 +269,7 @@ public class Exposicion implements Serializable {
      * @param fechaFin La nueva fecha de fin para la exposición.
      */
     public boolean expoProrrogar(LocalDate fechaFin) {
-        if (this.estado != EstadoExposicion.PUBLICADA || this.estado != EstadoExposicion.PRORROGADA) {
+        if (this.estado != EstadoExposicion.PUBLICADA && this.estado != EstadoExposicion.PRORROGADA) {
             System.out.println("No se puede prorrogar una exposición que no ha sido publicada");
             return false;
         }

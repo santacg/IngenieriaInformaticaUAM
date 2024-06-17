@@ -249,8 +249,8 @@ public abstract class Obra implements Serializable {
      * @return true en caso de poder ejecutarse la acción, false en caso contrario
      */
     public Boolean retirarObra() {
-        if (this.estado != Estado.ALMACENADA) {
-            System.out.println("No se puede retirar una obra que no está almacenada");
+        if (this.estado != Estado.ALMACENADA && this.estado != Estado.EXPUESTA) {
+            System.out.println("No se puede retirar una obra que no está almacenada o expuesta");
             return false;
         }
 

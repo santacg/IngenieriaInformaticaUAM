@@ -134,7 +134,6 @@ public class ControladorGestor {
         vista.actualizarInfo(centro);
     }
 
-
     /**
      * Método que muestra las notificaciones en la vista.
      */
@@ -198,16 +197,53 @@ public class ControladorGestor {
                             switch (accion) {
                                 case "Retirar Obra":
 
+                                    if (obra.getEstado() == Estado.RETIRADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede retirar la obra " + nombreObra
+                                                        + " porque ya está retirada.");
+                                        continue;
+                                    }
+
+                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede retirar la obra " + nombreObra
+                                                        + " porque no está almacenada o expuesta.");
+                                        continue;
+                                    }
+
                                     if (obra.retirarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
                                                 "No se puede retirar la obra " + nombreObra);
                                         continue;
                                     }
 
+                                    for (Exposicion exposicion : centro.getExposiciones()) {
+                                        for (SalaExposicion salaExpo : exposicion.getSalas()) {
+                                            if (salaExpo.getObras().contains(obra)) {
+                                                salaExpo.removeObra(obra);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     modelo.setValueAt(Estado.RETIRADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra retirada correctamente.");
                                     break;
                                 case "Almacenar Obra":
+
+                                    if (obra.getEstado() == Estado.ALMACENADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                nombreObra + " ya está almacenada.");
+                                        continue;
+                                    }
+
+                                    if (obra.getEstado() == Estado.RETIRADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede almacenar la obra " + nombreObra
+                                                        + " porque está retirada");
+                                        continue;
+                                    }
 
                                     if (obra.almacenarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
@@ -215,10 +251,25 @@ public class ControladorGestor {
                                         continue;
                                     }
 
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     modelo.setValueAt(Estado.ALMACENADA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra almacenada correctamente.");
                                     break;
                                 case "Exponer Obra":
+
+                                    if (obra.getEstado() == Estado.EXPUESTA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede exponer la obra " + nombreObra
+                                                        + " porque ya está expuesta.");
+                                        continue;
+                                    }
+
+                                    if (obra.getEstado() != Estado.ALMACENADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede exponer la obra " + nombreObra
+                                                        + " porque no está almacenada.");
+                                        continue;
+                                    }
 
                                     if (obra.exponerObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
@@ -226,10 +277,19 @@ public class ControladorGestor {
                                         continue;
                                     }
 
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     modelo.setValueAt(Estado.EXPUESTA, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra expuesta correctamente.");
                                     break;
                                 case "Asignar Obra a Sala":
+
+                                    if (obra.getEstado() == Estado.PRESTADA || obra.getEstado() == Estado.RESTAURACION
+                                            || obra.getEstado() == Estado.RETIRADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede asignar la obra " + nombreObra
+                                                        + " porque está prestada o en restauración o retirada.");
+                                        continue;
+                                    }
 
                                     Map<String, Set<SalaExposicion>> exposicionesYSalas = new HashMap<>();
                                     for (Exposicion exposicion : centro.getExposiciones()) {
@@ -314,11 +374,10 @@ public class ControladorGestor {
                                         continue;
                                     }
 
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     JOptionPane.showMessageDialog(frame,
                                             "Obra " + nombreObra + " añadida correctamente en "
                                                     + exposicionSeleccionada + " - " + salaSeleccionadaNombre);
-
-                                    vista.actualizarTablaSalasExposicion(centro);
 
                                     break;
                                 case "Eliminar Obra de Sala":
@@ -369,15 +428,32 @@ public class ControladorGestor {
                                         }
                                     }
 
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     JOptionPane.showMessageDialog(frame,
                                             "Obra " + nombreObra + " eliminada correctamente de " + nombreExposicion
                                                     + " - " + nombreSala);
-
-                                    vista.actualizarTablaSalasExposicion(centro);
-
                                     break;
-
                                 case "Prestar Obra":
+
+                                    if (obra.getEstado() == Estado.PRESTADA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede prestar la obra " + nombreObra
+                                                        + " porque ya está prestada.");
+                                        continue;
+                                    }
+
+                                    if (obra.getExterna() == true) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede prestar la obra " + nombreObra + " porque es externa.");
+                                        continue;
+                                    }
+
+                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede prestar la obra " + nombreObra
+                                                        + " porque no está almacenada o expuesta.");
+                                        continue;
+                                    }
 
                                     Expofy expofy = Expofy.getInstance();
                                     Set<CentroExposicion> centros = expofy.getCentrosExposicion();
@@ -437,14 +513,27 @@ public class ControladorGestor {
                                         }
                                     }
 
-                                    vista.actualizarTablaSalasExposicion(centro);
-
                                     centroDestino.addObra(obra);
+                                    vista.actualizarTablaSalasExposicion(centro);
                                     modelo.setValueAt(Estado.PRESTADA, i, 8);
                                     JOptionPane.showMessageDialog(frame,
                                             "Obra prestada correctamente al centro " + nombreCentroSeleccionado + ".");
                                     break;
                                 case "Restaurar Obra":
+
+                                    if (obra.getEstado() == Estado.RESTAURACION) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede restaurar la obra " + nombreObra
+                                                        + " porque ya está en restauración.");
+                                        continue;
+                                    }
+
+                                    if (obra.getEstado() != Estado.ALMACENADA && obra.getEstado() != Estado.EXPUESTA) {
+                                        JOptionPane.showMessageDialog(frame,
+                                                "No se puede restaurar la obra " + nombreObra
+                                                        + " porque no está almacenada o expuesta.");
+                                        continue;
+                                    }
 
                                     if (obra.restaurarObra() == false) {
                                         JOptionPane.showMessageDialog(frame,
@@ -452,19 +541,7 @@ public class ControladorGestor {
                                         continue;
                                     }
 
-                                    for (Exposicion exposicionPublicada : centro.getExposiciones()) {
-                                        if (!exposicionPublicada.getEstado().equals(EstadoExposicion.EN_CREACION)) {
-                                            for (SalaExposicion salaExpo : exposicionPublicada.getSalas()) {
-                                                if (salaExpo.getObras().contains(obra)) {
-                                                    salaExpo.removeObra(obra);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-
                                     vista.actualizarTablaSalasExposicion(centro);
-
                                     modelo.setValueAt(Estado.RESTAURACION, i, 8);
                                     JOptionPane.showMessageDialog(frame, "Obra puesta en restauracion correctamente.");
                                     break;
@@ -474,6 +551,7 @@ public class ControladorGestor {
                     }
                 }
             }
+
             vista.deseleccionarTabla();
         }
     };
