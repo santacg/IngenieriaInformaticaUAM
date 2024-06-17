@@ -310,8 +310,8 @@ public class Sala implements Serializable {
 
     /**
      * Elimina esta subsala de la sala padre. Si la subsala no tiene sala padre, no
-     * se
-     * elimina.
+     * se elimina.
+     * Con la GUI YA NO SE USA
      */
     public void removeSubsala() {
 
