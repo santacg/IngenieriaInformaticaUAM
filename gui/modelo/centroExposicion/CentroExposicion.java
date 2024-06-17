@@ -522,7 +522,10 @@ public class CentroExposicion implements Serializable {
 
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
         for (Exposicion exposicion : getExposicionesPublicadas()) {
-            if (!(exposicion.getFechaFin().isBefore(fechaInicio) || exposicion.getFechaInicio().isAfter(fechaFinal))) {
+            if ((exposicion.getFechaInicio().isAfter(fechaInicio)
+                    || exposicion.getFechaInicio().isEqual(fechaInicio))
+                    && (exposicion.getFechaFin().isBefore(fechaFinal)
+                            || exposicion.getFechaFin().isEqual(fechaFinal))) {
                 exposicionesPorFecha.add(exposicion);
             }
         }
