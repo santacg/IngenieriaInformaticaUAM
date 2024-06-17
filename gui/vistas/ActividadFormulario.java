@@ -20,7 +20,7 @@ public class ActividadFormulario extends JDialog {
     private TipoActividad tipoActividad;
     private Map<String, TipoActividad> tipoActividadMap;
     private JTextField descripcion;
-    private JComboBox<String> salas;
+    private JComboBox<String> salas = new JComboBox<>();
     private JTextField fechaActividad;
     private JTextField maxParticipantes;
     private JTextField horaActividad;
@@ -237,6 +237,9 @@ public class ActividadFormulario extends JDialog {
      * @param cCancelar ActionListener que se añadirá al botón de cancelar
      */
     public void setControlador(ActionListener cAceptar, ActionListener cCancelar) {
+        if (aceptarBtn == null || cancelarBtn == null) {
+            return;
+        }
         aceptarBtn.addActionListener(cAceptar);
         cancelarBtn.addActionListener(cCancelar);
         setVisible(true);

@@ -522,7 +522,7 @@ public class CentroExposicion implements Serializable {
 
         Set<Exposicion> exposicionesPorFecha = new HashSet<>();
         for (Exposicion exposicion : getExposicionesPublicadas()) {
-            if (!exposicion.getFechaFin().isBefore(fechaInicio) && !exposicion.getFechaInicio().isAfter(fechaFinal)) {
+            if (!(exposicion.getFechaFin().isBefore(fechaInicio) || exposicion.getFechaInicio().isAfter(fechaFinal))) {
                 exposicionesPorFecha.add(exposicion);
             }
         }
@@ -563,18 +563,18 @@ public class CentroExposicion implements Serializable {
     /**
      * Obtiene las exposiciones por tipo de obra.
      * 
-     * @param tipoObra el tipo de obra a buscar
+     * @param tipoObraClase el tipo de obra a buscar
      * @return un conjunto de exposiciones que contienen obras del tipo
      *         proporcionado
      */
-    public Set<Exposicion> getExposicionesPorTipoObra(Class<? extends Obra> tipoObra) {
+    public Set<Exposicion> getExposicionesPorTipoObra(String tipoObraClase) {
         Set<Exposicion> exposicionesPorTipoObra = new HashSet<>();
         for (Exposicion exposicion : getExposicionesPublicadas()) {
             for (SalaExposicion salaExpo : exposicion.getSalas()) {
                 for (Obra obra : salaExpo.getObras()) {
-                    if (tipoObra.isInstance(obra)) {
+                    if (obra.getClass().getSimpleName().equals(tipoObraClase)) {
                         exposicionesPorTipoObra.add(exposicion);
-                        break;
+                        continue;
                     }
                 }
             }
@@ -987,7 +987,7 @@ public class CentroExposicion implements Serializable {
      * @param empleado el empleado a eliminar
      */
     public Boolean removeEmpleado(Empleado empleado) {
-        if (gestor.isLoged()) {
+        if (gestor.isLoged() == false) {
             System.out.println("No puedes eliminar empleados si no eres el gestor");
             return false;
         }

@@ -127,12 +127,7 @@ public class ControladorObraFormulario {
                 return;
             }
 
-            Object[] obraData = new Object[] { false, obra.getNombre(), obra.getAutores(), obra.getDescripcion(),
-                    obra.getAnio(), obra.getExterna(), obra.getCuantiaSeguro(), obra.getNumeroSeguro(),
-                    obra.getEstado(),
-                    obra.getTipoObra() };
-
-            frame.añadirFilaTablaObras(obraData);
+            frame.actualizarTablaExposiciones(centroExposicion);
             JOptionPane.showMessageDialog(vista, "Obra añadida correctamente.");
             vista.dispose();
         }

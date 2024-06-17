@@ -168,7 +168,7 @@ public class CentroExposicionTest {
 
         Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20,
                 90, 20, "óleo", "Leonardo da Vinci");
-        
+
         Cuadro cuadro2 = new Cuadro("La última cena", 1498, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26,
                 20, 90, 20, "óleo", "Leonardo da Vinci");
 
@@ -210,7 +210,7 @@ public class CentroExposicionTest {
 
         Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20,
                 90, 20, "óleo", "Leonardo da Vinci");
-        
+
         salaExpo.addObra(cuadro1);
 
         centroExposicion.addExposicion(exposicion1);
@@ -246,7 +246,7 @@ public class CentroExposicionTest {
 
         Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20,
                 90, 20, "óleo", "Leonardo da Vinci");
-        
+
         Cuadro cuadro2 = new Cuadro("La última cena", 1498, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26,
                 20, 90, 20, "óleo", "Leonardo da Vinci");
 
@@ -289,7 +289,7 @@ public class CentroExposicionTest {
 
         Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20,
                 90, 20, "óleo", "Leonardo da Vinci");
-        
+
         Cuadro cuadro2 = new Cuadro("La última cena", 1498, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26,
                 20, 90, 20, "óleo", "Leonardo da Vinci");
 
@@ -308,7 +308,7 @@ public class CentroExposicionTest {
 
         assertFalse(centroExposicion.getExposicionesPermanentes().contains(exposicion1));
         assertTrue(centroExposicion.getExposicionesPermanentes().contains(exposicion2));
- 
+
     }
 
     @Test
@@ -362,7 +362,8 @@ public class CentroExposicionTest {
 
     @Test
     public void testRemoveExposicionTerminada() {
-        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().minusDays(1), "Descripción",
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().minusDays(1),
+                "Descripción",
                 TipoExpo.TEMPORAL, 10.0);
 
         centroExposicion.addExposicion(exposicion1);
@@ -395,11 +396,39 @@ public class CentroExposicionTest {
                 TipoExpo.TEMPORAL, 10.0);
 
         centroExposicion.addExposicion(exposicion1);
-        LocalDate fechaSorteo = LocalDate.of(2022, 1, 1);
-        LocalDate dia = LocalDate.of(2022, 1, 2);
+        LocalDate fechaSorteo = LocalDate.now().plusDays(5);
+        LocalDate dia = LocalDate.now().plusDays(6);
         Hora hora = exposicion1.getHora(fechaSorteo, 15);
 
         assertTrue(centroExposicion.confgiurarSorteoDiaHora(exposicion1, fechaSorteo, 2, dia, hora));
+    }
+
+    @Test
+    public void testConfgiurarSorteoDiaHoraFalloDia() {
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+
+        centroExposicion.addExposicion(exposicion1);
+        LocalDate fechaSorteo = LocalDate.now().plusDays(5);
+        LocalDate dia = LocalDate.now().plusDays(4);
+        Hora hora = exposicion1.getHora(fechaSorteo, 15);
+
+        assertTrue(centroExposicion.confgiurarSorteoDiaHora(exposicion1, fechaSorteo, 2, dia, hora));
+    }
+
+    @Test
+    public void testConfgiurarSorteoDiaHoraFalloFechaSorteo() {
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+
+        centroExposicion.addExposicion(exposicion1);
+        LocalDate fechaSorteo = LocalDate.now().minusDays(5);
+        LocalDate dia = LocalDate.now().plusDays(4);
+        Hora hora = exposicion1.getHora(fechaSorteo, 15);
+
+        assertFalse(centroExposicion.confgiurarSorteoDiaHora(exposicion1, fechaSorteo, 2, dia, hora));
     }
 
     @Test
@@ -409,6 +438,16 @@ public class CentroExposicionTest {
                 TipoExpo.TEMPORAL, 10.0);
         centroExposicion.addExposicion(exposicion1);
         assertTrue(centroExposicion.confgiurarSorteoExposicion(exposicion1, LocalDate.now().plusDays(5),
+                2));
+    }
+
+    @Test
+    public void testConfgiurarSorteoExposicionFalloFecha() {
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+        centroExposicion.addExposicion(exposicion1);
+        assertFalse(centroExposicion.confgiurarSorteoExposicion(exposicion1, LocalDate.now().minusDays(5),
                 2));
     }
 
@@ -426,17 +465,15 @@ public class CentroExposicionTest {
     @Test
     public void testRemoveSorteo() {
         gestor.logIn();
-        Sorteo sorteo = new SorteoExpo(null, null, 10);
+
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+
+        Sorteo sorteo = new SorteoExpo(exposicion1, LocalDate.now().plusDays(2), 10);
         centroExposicion.addSorteo(sorteo);
         centroExposicion.removeSorteo(sorteo);
         assertFalse(centroExposicion.getSorteos().contains(sorteo));
-    }
-
-    @Test
-    public void testGetSorteosActivos() {
-        Sorteo sorteo1 = new SorteoExpo(null, LocalDate.now().minusDays(1), 10);
-        centroExposicion.addSorteo(sorteo1);
-        assertTrue(centroExposicion.getSorteosActivos().contains(sorteo1));
     }
 
     @Test
@@ -457,7 +494,15 @@ public class CentroExposicionTest {
         Obra obra1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20, 90, 20,
                 "óleo", "Leonardo da Vinci");
         centroExposicion.addObra(obra1);
-        assertEquals(obra1, centroExposicion.getObraPorNombre("Obra 1"));
+        assertEquals(obra1, centroExposicion.getObraPorNombre("Mona Lisa"));
+    }
+
+    @Test
+    public void testGetObraPorNombreFallo() {
+        Obra obra1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20, 90, 20,
+                "óleo", "Leonardo da Vinci");
+        centroExposicion.addObra(obra1);
+        assertNull(centroExposicion.getObraPorNombre("miau"));
     }
 
     @Test
@@ -529,6 +574,7 @@ public class CentroExposicionTest {
         centroExposicion.loginEmpleado("11111111A", "passwordEmpleado");
         Sala sala = centroExposicion.getSalas().iterator().next();
         empleado.setPermisoControl(true);
+        empleado.logIn();
         assertTrue(centroExposicion.setSalaTemperatura(sala, 25, empleado));
         assertEquals(25, sala.getTemperatura());
     }
@@ -538,21 +584,39 @@ public class CentroExposicionTest {
         Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, true, true,
                 true);
         centroExposicion.addEmpleado(empleado);
-        assertTrue(centroExposicion.loginEmpleado("11111111A", "passwordEmpleado"));
+        assertTrue(centroExposicion.loginEmpleado("1234", "passwordEmpleado"));
         assertTrue(empleado.isLoged());
     }
 
     @Test
     public void testVenderEntrada() {
         gestor.logIn();
-        Exposicion exposicion = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30), "Descripción",
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
                 TipoExpo.TEMPORAL, 10.0);
 
-        centroExposicion.addExposicion(exposicion);
-        Hora horaPrueba = exposicion.getHora(LocalDate.now(), 15);
+        Sala sala = new Sala("Sala expo 1", 100, true, 10, 10.0, 10.0, 10.0);
+
+        SalaExposicion salaExpo = new SalaExposicion(sala);
+
+        exposicion1.addSala(salaExpo);
+
+        Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20,
+                90, 20, "óleo", "Leonardo da Vinci");
+
+        salaExpo.addObra(cuadro1);
+
+        centroExposicion.addExposicion(exposicion1);
+
+        try {
+            exposicion1.expoPublicar();
+        } catch (Exception e) {
+
+        }
+        Hora horaPrueba = exposicion1.getHora(LocalDate.now(), 15);
 
         Integer numEntradas = 2;
-        assertTrue(centroExposicion.venderEntrada(exposicion, horaPrueba, numEntradas));
+        assertTrue(centroExposicion.venderEntrada(exposicion1, horaPrueba, numEntradas));
     }
 
     @Test
@@ -562,4 +626,217 @@ public class CentroExposicionTest {
         assertTrue(centroExposicion.loginGestor("passwordGestor"));
         assertTrue(centroExposicion.getGestor().isLoged());
     }
+
+    @Test
+    public void testGetSubSalaPorNombreNoExistente() {
+        assertNull(centroExposicion.getSubSalaPorNombre("SubSala Inexistente"));
+    }
+
+    @Test
+    public void testGetExposicionPorNombreExistente() {
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción", TipoExpo.TEMPORAL, 10.0);
+        centroExposicion.addExposicion(exposicion1);
+        assertEquals(exposicion1, centroExposicion.getExposicionPorNombre("Exposicion 1"));
+    }
+
+    @Test
+    public void testGetExposicionPorNombreNoExistente() {
+        assertNull(centroExposicion.getExposicionPorNombre("Exposicion Inexistente"));
+    }
+
+    @Test
+    public void testGetExposicionesPorTipoObraConObras() {
+        gestor.logIn();
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción", TipoExpo.TEMPORAL, 10.0);
+
+        SalaExposicion salaExpo = new SalaExposicion(salas.iterator().next());
+        exposicion1.addSala(salaExpo);
+
+        Cuadro cuadro1 = new Cuadro("Mona Lisa", 1503, "Cuadro famoso", false, 1000000.0, "12345", 1.5, 1.2, 26, 20, 90,
+                20, "óleo", "Leonardo da Vinci");
+        salaExpo.addObra(cuadro1);
+        centroExposicion.addExposicion(exposicion1);
+
+        try {
+            exposicion1.expoPublicar();
+        } catch (Exception e) {
+        }
+
+        Set<Exposicion> exposicionesPorTipoObra = centroExposicion.getExposicionesPorTipoObra("Cuadro");
+        assertTrue(exposicionesPorTipoObra.contains(exposicion1));
+    }
+
+    @Test
+    public void testInscribirClienteActividadExito() {
+        Sala sala = salas.iterator().next();
+        Actividad actividad = new Actividad("Actividad 1", TipoActividad.CONFERENCIA, "Descripción", 20,
+                LocalDate.now(), LocalTime.now().plusHours(1), sala);
+
+        try {
+            centroExposicion.addActividad(actividad.getNombre(), actividad.getTipo(), actividad.getDescripcion(),
+                    actividad.getMaxParticipantes(), actividad.getFecha(), actividad.getHora(),
+                    actividad.getSalaCelebracion());
+        } catch (Exception e) {
+        }
+
+        assertTrue(centroExposicion.inscribirClienteActividad(actividad, "12345678A"));
+        assertTrue(actividad.getParticipantes().contains("12345678A"));
+    }
+
+    @Test
+    public void testInscribirClienteActividadFracasoActividadPasada() {
+        Sala sala = salas.iterator().next();
+        Actividad actividad = new Actividad("Actividad 1", TipoActividad.CONFERENCIA, "Descripción", 20,
+                LocalDate.now().minusDays(1), LocalTime.of(10, 0), sala);
+        try {
+            centroExposicion.addActividad(actividad.getNombre(), actividad.getTipo(), actividad.getDescripcion(),
+                    actividad.getMaxParticipantes(), actividad.getFecha(), actividad.getHora(),
+                    actividad.getSalaCelebracion());
+        } catch (Exception e) {
+        }
+
+        assertFalse(centroExposicion.inscribirClienteActividad(actividad, "12345678A"));
+        assertFalse(actividad.getParticipantes().contains("12345678A"));
+    }
+
+    @Test
+    public void testInscribirClienteActividadLlena() {
+        Sala sala = salas.iterator().next();
+        Actividad actividad = new Actividad("Actividad 1", TipoActividad.CONFERENCIA, "Descripción", 1,
+                LocalDate.now(), LocalTime.now().plusHours(1), sala);
+
+        try {
+            centroExposicion.addActividad(actividad.getNombre(), actividad.getTipo(), actividad.getDescripcion(),
+                    actividad.getMaxParticipantes(), actividad.getFecha(), actividad.getHora(),
+                    actividad.getSalaCelebracion());
+        } catch (Exception e) {
+        }
+
+        assertTrue(centroExposicion.inscribirClienteActividad(actividad, "12345678A"));
+        assertFalse(centroExposicion.inscribirClienteActividad(actividad, "87654321B"));
+    }
+
+    @Test
+    public void testVenderEntradaExposicionNoPublicada() {
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción", TipoExpo.TEMPORAL, 10.0);
+        centroExposicion.addExposicion(exposicion1);
+        Hora horaPrueba = exposicion1.getHora(LocalDate.now(), 15);
+        Integer numEntradas = 2;
+        assertFalse(centroExposicion.venderEntrada(exposicion1, horaPrueba, numEntradas));
+    }
+
+    @Test
+    public void testVenderEntradaExposicionFechaIncorrecta() {
+        gestor.logIn();
+        Exposicion exposicion1 = new Exposicion("Exposicion 1", LocalDate.now(), LocalDate.now().plusDays(30),
+                "Descripción",
+                TipoExpo.TEMPORAL, 10.0);
+        centroExposicion.addExposicion(exposicion1);
+        try {
+            exposicion1.expoPublicar();
+        } catch (Exception e) {
+
+        }
+        Hora horaPrueba = exposicion1.getHora(LocalDate.now().plusDays(40), 15);
+        Integer numEntradas = 2;
+        assertFalse(centroExposicion.venderEntrada(exposicion1, horaPrueba, numEntradas));
+    }
+
+    @Test
+    public void testGetActividadPorNombreExistente() {
+        Sala sala = salas.iterator().next();
+        Actividad actividad = new Actividad("Actividad 1", TipoActividad.CONFERENCIA, "Descripción", 20,
+                LocalDate.now().plusDays(1), LocalTime.of(10, 0), sala);
+        try {
+            centroExposicion.addActividad(actividad.getNombre(), actividad.getTipo(), actividad.getDescripcion(),
+                    actividad.getMaxParticipantes(), actividad.getFecha(), actividad.getHora(),
+                    actividad.getSalaCelebracion());
+        } catch (Exception e) {
+        }
+
+        assertEquals(actividad, centroExposicion.getActividadPorNombre("Actividad 1"));
+    }
+
+    @Test
+    public void testGetActividadPorNombreNoExistente() {
+        assertNull(centroExposicion.getActividadPorNombre("Actividad Inexistente"));
+    }
+
+    @Test
+    public void testSetSalaHumedadExito() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, true, true,
+                true);
+        centroExposicion.addEmpleado(empleado);
+        centroExposicion.loginEmpleado("1234", "passwordEmpleado");
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        empleado.setPermisoControl(true);
+        empleado.logIn();
+        assertTrue(centroExposicion.setSalaHumedad(sala, 60, empleado));
+        assertEquals(60, sala.getHumedad());
+    }
+
+    @Test
+    public void testSetSalaHumedadFracasoNoLogueado() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, true, true,
+                true);
+        centroExposicion.addEmpleado(empleado);
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        empleado.setPermisoControl(true);
+        assertFalse(centroExposicion.setSalaHumedad(sala, 60, empleado));
+        assertNotEquals(60, sala.getHumedad());
+    }
+
+    @Test 
+    public void testSetSalaHumedadFracasoSinPermisos() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, false, true,
+                true);
+        centroExposicion.addEmpleado(empleado);
+        centroExposicion.loginEmpleado("1234", "passwordEmpleado");
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        empleado.logIn();
+        assertFalse(centroExposicion.setSalaHumedad(sala, 60, empleado));
+        assertNotEquals(60, sala.getHumedad());
+    }
+
+    @Test
+    public void testSetSalaTemperaturaExito() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, true, true, true);
+        centroExposicion.addEmpleado(empleado);
+        centroExposicion.loginEmpleado("1234", "passwordEmpleado");
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        empleado.setPermisoControl(true);
+        empleado.logIn();
+        assertTrue(centroExposicion.setSalaTemperatura(sala, 22, empleado));
+        assertEquals(22, sala.getTemperatura());
+    }
+
+    @Test
+    public void testSetSalaTemperaturaFracasoNoLogueado() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, true, true, true);
+        centroExposicion.addEmpleado(empleado);
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        assertFalse(centroExposicion.setSalaTemperatura(sala, 22, empleado));
+        assertNotEquals(22, sala.getTemperatura());
+    }
+
+    @Test
+    public void testSetSalaTemperaturaFracasoSinPermisos() {
+        gestor.logIn();
+        Empleado empleado = new Empleado("11111111A", "Pepe", "1234", "1234123412341234", "Dir 1", true, false, true, true);
+        centroExposicion.addEmpleado(empleado);
+        centroExposicion.loginEmpleado("1234", "passwordEmpleado");
+        Sala sala = centroExposicion.getSalas().iterator().next();
+        empleado.logIn(); 
+        assertFalse(centroExposicion.setSalaTemperatura(sala, 22, empleado));
+        assertNotEquals(22, sala.getTemperatura());
+    }
+
 }

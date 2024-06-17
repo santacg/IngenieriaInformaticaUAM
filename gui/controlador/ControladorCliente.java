@@ -12,7 +12,6 @@ import gui.modelo.centroExposicion.*;
 import gui.modelo.expofy.*;
 import gui.modelo.exposicion.Exposicion;
 import gui.modelo.exposicion.TipoExpo;
-import gui.modelo.obra.Obra;
 import gui.vistas.ClientePrincipal;
 import gui.vistas.Ventana;
 
@@ -83,23 +82,16 @@ public class ControladorCliente {
     public void filtrarPorFecha(LocalDate fechaInicio, LocalDate fechaFin) {
         ArrayList<Object[]> data = new ArrayList<>();
         for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-            for (Exposicion exposicion : centro.getExposiciones()) {
-                if ((exposicion.getFechaInicio().isAfter(fechaInicio)
-                        || exposicion.getFechaInicio().isEqual(fechaInicio))
-                        && (exposicion.getFechaFin().isBefore(fechaFin)
-                                || exposicion.getFechaFin().isEqual(fechaFin))) {
-
-                    data.add(new Object[] {
-                            exposicion.getNombre(),
-                            exposicion.getDescripcion(),
-                            exposicion.getFechaInicio(),
-                            exposicion.getFechaFin(),
-                            exposicion.getPrecio(),
-                            centro.getNombre(),
-                            centro.getLocalizacion()
-                    });
-                }
-            }
+            for (Exposicion exposicion : centro.getExposicionesPorFecha(fechaInicio, fechaFin))
+                data.add(new Object[] {
+                        exposicion.getNombre(),
+                        exposicion.getDescripcion(),
+                        exposicion.getFechaInicio(),
+                        exposicion.getFechaFin(),
+                        exposicion.getPrecio(),
+                        centro.getNombre(),
+                        centro.getLocalizacion()
+                });
         }
         vista.actualizarTablaExposiciones(data);
     }
@@ -110,8 +102,20 @@ public class ControladorCliente {
     public void filtrarPorTemp(TipoExpo tipo) {
         ArrayList<Object[]> data = new ArrayList<>();
         for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-            for (Exposicion exposicion : centro.getExposiciones()) {
-                if ((exposicion.getTipo().equals(tipo))) {
+            if (tipo == TipoExpo.PERMANENTE) {
+                for (Exposicion exposicion : centro.getExposicionesPermanentes()) {
+                    data.add(new Object[] {
+                            exposicion.getNombre(),
+                            exposicion.getDescripcion(),
+                            exposicion.getFechaInicio(),
+                            exposicion.getFechaFin(),
+                            exposicion.getPrecio(),
+                            centro.getNombre(),
+                            centro.getLocalizacion()
+                    });
+                }
+            } else {
+                for (Exposicion exposicion : centro.getExposicionesTemporales()) {
                     data.add(new Object[] {
                             exposicion.getNombre(),
                             exposicion.getDescripcion(),
@@ -133,22 +137,16 @@ public class ControladorCliente {
     public void filtrarPorTipoObra(String tipoObra) {
         ArrayList<Object[]> data = new ArrayList<>();
         for (CentroExposicion centro : expofy.getCentrosExposicion()) {
-            for (Exposicion exposicion : centro.getExposiciones()) {
-                for (Obra obra : exposicion.getObras()) {
-                    if (obra.getTipoObra().equalsIgnoreCase(tipoObra)) {
-                        data.add(new Object[] {
-                                exposicion.getNombre(),
-                                exposicion.getDescripcion(),
-                                exposicion.getFechaInicio(),
-                                exposicion.getFechaFin(),
-                                exposicion.getPrecio(),
-                                centro.getNombre(),
-                                centro.getLocalizacion()
-                        });
-                        break; // Solo necesitamos agregar la exposición una vez, no importa cuántas obras
-                               // coincidan
-                    }
-                }
+            for (Exposicion exposicion : centro.getExposicionesPorTipoObra(tipoObra)) {
+                data.add(new Object[] {
+                        exposicion.getNombre(),
+                        exposicion.getDescripcion(),
+                        exposicion.getFechaInicio(),
+                        exposicion.getFechaFin(),
+                        exposicion.getPrecio(),
+                        centro.getNombre(),
+                        centro.getLocalizacion()
+                });
             }
         }
         vista.actualizarTablaExposiciones(data);
@@ -364,6 +362,14 @@ public class ControladorCliente {
                     "Filtro por fecha",
                     JOptionPane.QUESTION_MESSAGE);
 
+            if (fechaInicioStr == null) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de inicio no válida.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             if (fechaInicioStr.isEmpty()) {
                 JOptionPane.showMessageDialog(frame,
                         "Fecha de inicio no válida.",
@@ -385,6 +391,14 @@ public class ControladorCliente {
                     "Introduce la fecha de fin (yyyy-mm-dd):",
                     "Filtro por fecha",
                     JOptionPane.QUESTION_MESSAGE);
+
+            if (fechaFinStr == null) {
+                JOptionPane.showMessageDialog(frame,
+                        "Fecha de fin no válida.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             if (fechaFinStr.isEmpty()) {
                 JOptionPane.showMessageDialog(frame,
