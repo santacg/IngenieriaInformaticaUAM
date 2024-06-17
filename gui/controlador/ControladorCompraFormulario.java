@@ -97,20 +97,20 @@ public class ControladorCompraFormulario {
             fecha = LocalDate.of(anioExpo, mesExpo, diaExpo);
             if (fecha.isBefore(LocalDate.now()) || fecha.isBefore(exposicion.getFechaInicio())
                     || fecha.isAfter(exposicion.getFechaFin())) {
-                JOptionPane.showMessageDialog(frame, "La fecha de la exposición no es válida.");
+                JOptionPane.showMessageDialog(frame, "La fecha de la exposición no es válida.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             fechaTarj = LocalDate.of(anioTarj, mesTarj, diaTarj);
             if (fechaTarj.isBefore(LocalDate.now())) {
-                JOptionPane.showMessageDialog(frame, "La tarjeta introducida está caducada.");
+                JOptionPane.showMessageDialog(frame, "La tarjeta introducida está caducada.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (nEntradas <= 0 || nEntradas >= exposicion.getHora(fecha, hora).getnEntradasDisp()) {
-                JOptionPane.showMessageDialog(frame, "No hay ese número de entradas disponibles para la exposición.");
+                JOptionPane.showMessageDialog(frame, "No hay ese número de entradas disponibles para la exposición.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (numeroTarjetadeCredito.length() != 16) {
-                JOptionPane.showMessageDialog(frame, "El número de la tarjeta de crédito no es válido.");
+                JOptionPane.showMessageDialog(frame, "El número de la tarjeta de crédito no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
