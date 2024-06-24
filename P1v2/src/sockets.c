@@ -1,3 +1,10 @@
+/**
+ * @file sockets.c 
+ * 
+ * @brief Socket functions implementation
+ * @author Carlos Garcia Santa
+ */
+
 #include "../includes/sockets.h"
 
 int init_socket(server_t *server) {

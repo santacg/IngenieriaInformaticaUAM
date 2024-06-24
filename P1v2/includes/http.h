@@ -1,3 +1,13 @@
+/**
+ * @file http.h
+ * 
+ * @brief HTTP request handling functions
+ * 
+ * This header file contains the HTTP request handling functions
+ * declarations
+ * 
+ * @author Carlos Garcia Santa
+ */
 #ifndef HTTP_H
 #define HTTP_H
 
@@ -8,8 +18,18 @@
 #include <sys/types.h>
 #include <time.h>
 
-#define MAX_URI_LENGTH 512
-#define MAX_TIME_STR_LENGTH 32
+#define MAX_URI_LENGTH 512 // 512 bytes for URI
+#define MAX_TIME_STR_LENGTH 32 // 32 bytes for time string
+
+/**
+ * @brief Handles an HTTP request
+ * 
+ * @param thread_data Thread data
+ * @param buffer Buffer to store the request
+ * @param bytes_received Number of bytes received
+ * 
+ * @return int 0 if success, -1 otherwise
+ */
 int handle_http_request(thread_data_t *thread_data, char *buffer,
                         ssize_t bytes_received);
 
@@ -18,6 +38,12 @@ typedef struct {
   const char *mime_type;
 } mime_map_t;
 
+/**
+ * @brief MIME types map
+ * 
+ * This map contains the MIME types for the supported extensions
+ *
+ */
 static mime_map_t mime_map[] = {{"html", "text/html"},
                                 {"txt", "text/plain"},
                                 {"jpg", "image/jpeg"},
@@ -28,6 +54,12 @@ static mime_map_t mime_map[] = {{"html", "text/html"},
                                 {"doc", "application/msword"},
                                 {"pdf", "application/pdf"}};
 
+/**
+ * @brief HTTP response data structure
+ * 
+ * This data structure contains the HTTP response data
+ * 
+ */
 typedef struct http_response {
   int protocol_version;
   int status_code;

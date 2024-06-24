@@ -1,3 +1,10 @@
+/**
+ * @file svr_config.c
+ * 
+ * @brief Server configuration functions implementation
+ * @author Carlos Garcia Santa
+ */
+
 #include "../includes/svr_config.h"
 
 int server_set_config(server_t *server) {

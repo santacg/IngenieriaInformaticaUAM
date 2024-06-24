@@ -1,3 +1,10 @@
+/**
+ * @file server.c
+ * 
+ * @brief Server implementation
+ * @author Carlos Garcia Santa
+ */
+
 #include "../includes/server.h"
 #include "../includes/http.h"
 #include "../includes/sockets.h"
@@ -13,25 +20,46 @@
 
 static volatile sig_atomic_t got_int_signal = 0;
 
-void sig_handler(int sig) {
-  if (sig == SIGINT) {
+/**
+ * @brief Signal handler for SIGINT
+ *
+ * @param sig Signal number
+ */
+void sig_handler(int sig)
+{
+  if (sig == SIGINT)
+  {
     got_int_signal = 1;
   }
 
   return;
 }
 
+/**
+ * @brief Initializes the server socket
+ *
+ * @param server Server configuration
+ * @return int File descriptor of the server socket
+ */
 static void *conn_handler(void *conn_fd);
 
+/**
+ * @brief Initializes the server socket
+ *
+ * @param server Server configuration
+ * @return int File descriptor of the server socket
+ */
 int server_init(server_t *server);
 
-static void *conn_handler(void *args) {
+static void *conn_handler(void *args)
+{
   int bytes_received, keep_alive = 1;
   char buffer[MAX_BUFFER_SIZE] = "\0";
   thread_data_t *thread_data = (thread_data_t *)args;
   struct timeval timeout;
 
-  if (pthread_detach(pthread_self()) == ERROR) {
+  if (pthread_detach(pthread_self()) == ERROR)
+  {
     dprintf(thread_data->server_data->log_fd, "Error detaching thread\n");
     thread_data->server_data->n_sockets--;
     close(thread_data->conn_socket);
@@ -43,7 +71,8 @@ static void *conn_handler(void *args) {
   timeout.tv_usec = 5000;
 
   if (setsockopt(thread_data->conn_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-                 sizeof(timeout)) == ERROR) {
+                 sizeof(timeout)) == ERROR)
+  {
     dprintf(thread_data->server_data->log_fd, "Error setting socket timeout\n");
     thread_data->server_data->n_sockets--;
     close(thread_data->conn_socket);
@@ -52,7 +81,8 @@ static void *conn_handler(void *args) {
   }
 
   if (setsockopt(thread_data->conn_socket, SOL_SOCKET, SO_KEEPALIVE,
-                 &keep_alive, sizeof(keep_alive)) == ERROR) {
+                 &keep_alive, sizeof(keep_alive)) == ERROR)
+  {
     dprintf(thread_data->server_data->log_fd, "Error setting socket timeout\n");
     thread_data->server_data->n_sockets--;
     close(thread_data->conn_socket);
@@ -60,18 +90,25 @@ static void *conn_handler(void *args) {
     return NULL;
   }
 
-  while (keep_alive) {
+  while (keep_alive)
+  {
     bytes_received =
         socket_recv(thread_data->conn_socket, buffer, MAX_BUFFER_SIZE, 0);
 
-    if (bytes_received > 0) {
-      if (handle_http_request(thread_data, buffer, bytes_received) == ERROR) {
+    if (bytes_received > 0)
+    {
+      if (handle_http_request(thread_data, buffer, bytes_received) == ERROR)
+      {
         dprintf(thread_data->server_data->log_fd, "Error in http_request\n");
         break;
       }
-    } else if (bytes_received == 0) {
+    }
+    else if (bytes_received == 0)
+    {
       keep_alive = 0;
-    } else {
+    }
+    else
+    {
       dprintf(thread_data->server_data->log_fd, "Error in socket_recv: %s\n",
               strerror(errno));
       break;
@@ -83,32 +120,38 @@ static void *conn_handler(void *args) {
   free(thread_data);
   return NULL;
 }
-int server_init(server_t *server) {
-  if (server_set_config(server) == ERROR) {
+int server_init(server_t *server)
+{
+  if (server_set_config(server) == ERROR)
+  {
     fprintf(stderr, "Error setting server configuration");
     return EXIT_FAILURE;
   }
 
   server->log_fd =
       open("log_file.txt", O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
-  if (server->log_fd == ERROR) {
+  if (server->log_fd == ERROR)
+  {
     perror("Error opening file");
     return EXIT_FAILURE;
   }
 
-  if (dprintf(server->log_fd, "server PID: %d\n", getpid()) == ERROR) {
+  if (dprintf(server->log_fd, "server PID: %d\n", getpid()) == ERROR)
+  {
     perror("Error saving PID to file");
     close(server->log_fd);
     return EXIT_FAILURE;
   }
 
   server->listen_fd = init_socket(server);
-  if (server->listen_fd == ERROR) {
+  if (server->listen_fd == ERROR)
+  {
     dprintf(server->log_fd, "Error initializing socket\n");
     return EXIT_FAILURE;
   }
 
-  if (listen(server->listen_fd, server->backlog) == ERROR) {
+  if (listen(server->listen_fd, server->backlog) == ERROR)
+  {
     dprintf(server->log_fd, "Error setting socket to listen\n");
     return EXIT_FAILURE;
   }
@@ -118,7 +161,8 @@ int server_init(server_t *server) {
   return EXIT_SUCCESS;
 }
 
-int main() {
+int main()
+{
   int conn_fd, status = OK;
   pthread_t thread_id;
   server_t *server = NULL;
@@ -126,65 +170,79 @@ int main() {
   sigset_t mask;
   struct sigaction act;
 
-  if (sigfillset(&mask) == ERROR) {
+  if (sigfillset(&mask) == ERROR)
+  {
     perror("Error filling signal set");
     return EXIT_FAILURE;
   }
 
-  if (sigprocmask(SIG_BLOCK, &mask, NULL) == ERROR) {
+  if (sigprocmask(SIG_BLOCK, &mask, NULL) == ERROR)
+  {
     perror("Error setting mask");
     return EXIT_FAILURE;
   }
 
-  if (sigfillset(&act.sa_mask) == ERROR) {
+  if (sigfillset(&act.sa_mask) == ERROR)
+  {
     perror("Error filling act mask");
     return EXIT_FAILURE;
   }
 
   act.sa_flags = 0;
   act.sa_handler = &sig_handler;
-  if (sigaction(SIGINT, &act, NULL) == ERROR) {
+  if (sigaction(SIGINT, &act, NULL) == ERROR)
+  {
     perror("Error setting signal action");
     return EXIT_FAILURE;
   }
 
-  if (sigprocmask(SIG_UNBLOCK, &mask, NULL) == ERROR) {
+  if (sigprocmask(SIG_UNBLOCK, &mask, NULL) == ERROR)
+  {
     perror("Error setting mask");
     return EXIT_FAILURE;
   }
 
   server = (server_t *)malloc(sizeof(server_t));
-  if (!server) {
+  if (!server)
+  {
     perror("Error allocating memory for server");
     return EXIT_FAILURE;
   }
 
-  if (server_init(server) == EXIT_FAILURE) {
+  if (server_init(server) == EXIT_FAILURE)
+  {
     close(server->log_fd);
     free(server);
     return EXIT_FAILURE;
   }
 
-  while (got_int_signal == 0) {
+  while (got_int_signal == 0)
+  {
 
-    if (server->n_sockets >= server->max_open_sockets) {
+    if (server->n_sockets >= server->max_open_sockets)
+    {
       usleep(5000);
       continue;
     }
 
     thread_data = (thread_data_t *)malloc(sizeof(thread_data_t));
-    if (!thread_data) {
+    if (!thread_data)
+    {
       dprintf(server->log_fd,
               "Error allocating memory for thread connection\n");
       status = ERROR;
       break;
     }
 
-    if ((conn_fd = accept(server->listen_fd, NULL, NULL)) == ERROR) {
-      if (errno == EINTR) {
+    if ((conn_fd = accept(server->listen_fd, NULL, NULL)) == ERROR)
+    {
+      if (errno == EINTR)
+      {
         dprintf(server->log_fd, "Finishing by signal\n");
         break;
-      } else {
+      }
+      else
+      {
         dprintf(server->log_fd, "Error accepting connection\n");
         status = ERROR;
         break;
@@ -195,7 +253,8 @@ int main() {
     thread_data->server_data = server;
     thread_data->conn_socket = conn_fd;
 
-    if (pthread_create(&thread_id, NULL, &conn_handler, thread_data) == ERROR) {
+    if (pthread_create(&thread_id, NULL, &conn_handler, thread_data) == ERROR)
+    {
       dprintf(server->log_fd, "Error creating thread\n");
       status = ERROR;
       break;
