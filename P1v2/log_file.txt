@@ -1,5 +1,15 @@
-server PID: 4490
+server PID: 7727
 Server listening on port: 8081
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
+Error in socket_recv: Resource temporarily unavailable
 Error in socket_recv: Resource temporarily unavailable
 Error in socket_recv: Resource temporarily unavailable
 Error in socket_recv: Resource temporarily unavailable

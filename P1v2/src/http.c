@@ -460,6 +460,7 @@ int exe_script(http_response_t *http_response, char *path, char *params,
   {
     http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
     http_response->status_message = "Internal Server Error";
+    pclose(fd);
     return ERROR;
   }
 
@@ -469,6 +470,7 @@ int exe_script(http_response_t *http_response, char *path, char *params,
   {
     http_response->status_code = HTTP_404_NOT_FOUND;
     http_response->status_message = "Not Found";
+    pclose(fd);
     return ERROR;
   }
 
@@ -480,6 +482,7 @@ int exe_script(http_response_t *http_response, char *path, char *params,
   {
     http_response->status_code = HTTP_400_BAD_REQUEST;
     http_response->status_message = "Bad Request";
+    pclose(fd);
     return ERROR;
   }
 
@@ -487,6 +490,7 @@ int exe_script(http_response_t *http_response, char *path, char *params,
   {
     http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
     http_response->status_message = "Internal Server Error";
+    pclose(fd);
     return ERROR;
   }
 
@@ -494,9 +498,11 @@ int exe_script(http_response_t *http_response, char *path, char *params,
   {
     http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
     http_response->status_message = "Internal Server Error";
+    pclose(fd);
     return ERROR;
   }
 
+  pclose(fd);
   return OK;
 }
 
