@@ -39,8 +39,8 @@ static void *conn_handler(void *args) {
     return NULL;
   }
 
-  timeout.tv_sec = 5;
-  timeout.tv_usec = 0;
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 5000;
 
   if (setsockopt(thread_data->conn_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
                  sizeof(timeout)) == ERROR) {
@@ -168,7 +168,7 @@ int main() {
   while (got_int_signal == 0) {
 
     if (server->n_sockets >= server->max_open_sockets) {
-      sleep(1);
+      usleep(5000);
       continue;
     }
 
@@ -203,7 +203,7 @@ int main() {
   }
 
   free(thread_data);
-  dprintf(server->log_fd, "Server exited with status: %d", status);
+  dprintf(server->log_fd, "Server exited with status: %d\n", status);
   close(server->log_fd);
   free(server);
   return status;

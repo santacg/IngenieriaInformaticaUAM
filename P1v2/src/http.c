@@ -20,7 +20,11 @@ int http_response_headers(http_response_t *http_response, char *method,
 
 int handle_get(http_response_t *http_response, char *path, int socket_fd);
 
-int handle_post(http_response_t *http_response, char *path, int socket_fd);
+int handle_post(http_response_t *http_response, char *path, int socket_fd,
+                char *request_body);
+
+int exe_script(http_response_t *http_response, char *path, char *params,
+               int socket_fd, char *method);
 
 int handle_http_request(thread_data_t *thread_data, char *buffer,
                         ssize_t bytes_received) {
@@ -74,6 +78,17 @@ int handle_http_request(thread_data_t *thread_data, char *buffer,
       }
     }
   } else if (strncmp("POST", method, method_len) == 0) {
+    char *request_body = strstr(buffer, "\r\n\r\n");
+
+    if (handle_post(http_response, aux_path, thread_data->conn_socket,
+                    request_body + 4) == ERROR) {
+      if (http_response_headers(http_response, aux_method, method_len,
+                                thread_data->conn_socket) == ERROR) {
+        free(http_response);
+        return ERROR;
+      }
+    }
+
   } else if (strncmp("OPTIONS", method, method_len) == 0) {
     http_response->status_code = HTTP_204_NO_CONTENT;
     http_response->status_message = "No Content";
@@ -104,6 +119,29 @@ int handle_get(http_response_t *http_response, char *path, int socket_fd) {
     http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
     http_response->status_message = "Internal Server Error";
     return ERROR;
+  }
+
+  if (strchr(path, '?') != NULL) {
+    int params_len = 0;
+    params_len = strchr(path, '?') - path;
+
+    if (params_len <= 0) {
+      http_response->status_code = HTTP_400_BAD_REQUEST;
+      http_response->status_message = "Bad Request";
+    }
+
+    char *params;
+    params = strchr(path, '?');
+    if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
+        strncmp(strchr(path, '.'), ".py", 3) == 0) {
+
+      if (exe_script(http_response, path + 1, params + 1, socket_fd, "GET") ==
+          ERROR) {
+        return ERROR;
+      }
+
+      return OK;
+    }
   }
 
   if (stat(path + 1, &statbuf) == ERROR) {
@@ -150,6 +188,37 @@ int handle_get(http_response_t *http_response, char *path, int socket_fd) {
   return OK;
 }
 
+int handle_post(http_response_t *http_response, char *path, int socket_fd,
+                char *request_body) {
+
+  if (path == NULL) {
+    http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
+    http_response->status_message = "Internal Server Error";
+    return ERROR;
+  }
+
+  if (strncmp(strchr(path, '.'), ".php", 4) == 0 ||
+      strncmp(strchr(path, '.'), ".py", 3) == 0) {
+    
+    if (exe_script(http_response, path + 1, request_body, socket_fd, "POST") ==
+        ERROR) {
+      return ERROR;
+    }
+
+    return OK;
+  }
+
+  http_response->status_code = HTTP_200_OK;
+  http_response->status_message = "OK";
+  if (http_response_headers(http_response, "POST", 4, socket_fd) == ERROR) {
+    http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
+    http_response->status_message = "Internal Server Error";
+    return ERROR;
+  }
+
+  return OK;
+}
+
 int http_response_headers(http_response_t *http_response, char *method,
                           int method_len, int socket_fd) {
   int bytes_written = 0, bytes_send = 0;
@@ -175,7 +244,8 @@ int http_response_headers(http_response_t *http_response, char *method,
   if (http_response->status_code == HTTP_200_OK ||
       http_response->status_code == HTTP_204_NO_CONTENT) {
 
-    if (strncmp("GET", method, method_len) == 0) {
+    if (strncmp("GET", method, method_len) == 0 ||
+        strncmp("POST", method, method_len) == 0) {
       format_http_date(&http_response->last_modified, mod_time_str,
                        sizeof(mod_time_str));
 
@@ -184,6 +254,7 @@ int http_response_headers(http_response_t *http_response, char *method,
                    "Last-Modified: %s\r\n"
                    "Content-Length: %ld\r\n"
                    "Content-Type: %s\r\n"
+                   "Keep-Alive: timeout=1, max=100\r\n"
                    "Connection: keep-alive\r\n",
                    mod_time_str, http_response->content_size,
                    http_response->content_type);
@@ -193,6 +264,9 @@ int http_response_headers(http_response_t *http_response, char *method,
                    "Allow: GET, POST, OPTIONS\r\n");
     }
   } else {
+    bytes_written +=
+        snprintf(headers + bytes_written, MAX_BUFFER_SIZE - bytes_written,
+                 "Connection: close\r\n");
   }
 
   bytes_written += snprintf(headers + bytes_written,
@@ -200,6 +274,72 @@ int http_response_headers(http_response_t *http_response, char *method,
 
   bytes_send = socket_send(socket_fd, headers, bytes_written, 0);
   if (bytes_send <= 0) {
+    return ERROR;
+  }
+
+  return OK;
+}
+
+int exe_script(http_response_t *http_response, char *path, char *params,
+               int socket_fd, char *method) {
+  int resource_fd;
+  FILE *fd = NULL;
+  char *tok = NULL, *save;
+  char command[MAX_URI_LENGTH];
+
+  if (strncmp(strchr(path, '.'), ".php", 4) == 0) {
+    strcpy(command, "php ");
+  } else if (strncmp(strchr(path, '.'), ".py", 3) == 0) {
+    strcpy(command, "python3 ");
+  } else {
+    http_response->status_code = HTTP_400_BAD_REQUEST;
+    http_response->status_message = "Bad Request";
+    return ERROR;
+  }
+
+  path = strtok(path, "?");
+  strcat(command, path);
+  tok = strtok_r(params, "=", &save);
+  strcat(command, " ");
+  strcat(command, tok);
+  while (tok) {
+    tok = strtok_r(NULL, "&", &save);
+    if (!tok)
+      break;
+    strcat(command, " ");
+    strcat(command, tok);
+  }
+
+  strcat(command, " < /dev/null");
+  fd = popen(command, "r");
+
+  resource_fd = fileno(fd);
+
+  struct stat statbuf;
+
+  if (stat(path, &statbuf) == ERROR) {
+    http_response->status_code = HTTP_404_NOT_FOUND;
+    http_response->status_message = "Not Found";
+    return ERROR;
+  }
+
+  http_response->content_size = statbuf.st_size;
+  http_response->last_modified = statbuf.st_mtime;
+  http_response->content_type = get_mime_type(path);
+
+  if (http_response->content_type == NULL) {
+    http_response->status_code = HTTP_400_BAD_REQUEST;
+    http_response->status_message = "Bad Request";
+    return ERROR;
+  }
+
+  if (http_response_headers(http_response, method, 3, socket_fd) == ERROR) {
+    http_response->status_code = HTTP_500_INTERNAL_SERVER_ERROR;
+    http_response->status_message = "Internal Server Error";
+    return ERROR;
+  }
+
+  if (send_file_content(resource_fd, socket_fd) == ERROR) {
     return ERROR;
   }
 

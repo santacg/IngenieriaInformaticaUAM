@@ -1,5 +1,5 @@
 server_root www
-max_open_sockets 3 
+max_open_sockets 6 
 listen_port 8081
 server_signature carlos_server
-backlog 5 
+backlog 3 

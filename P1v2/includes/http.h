@@ -19,7 +19,6 @@ typedef struct {
 } mime_map_t;
 
 static mime_map_t mime_map[] = {{"html", "text/html"},
-                                {"htm", "text/html"},
                                 {"txt", "text/plain"},
                                 {"jpg", "image/jpeg"},
                                 {"jpeg", "image/jpeg"},
@@ -27,10 +26,7 @@ static mime_map_t mime_map[] = {{"html", "text/html"},
                                 {"mpeg", "video/mpeg"},
                                 {"mpg", "video/mpeg"},
                                 {"doc", "application/msword"},
-                                {"pdf", "application/pdf"},
-                                {"png", "image/png"},
-                                {"json", "application/json"},
-                                {"js", "application/javascript"}};
+                                {"pdf", "application/pdf"}};
 
 typedef struct http_response {
   int protocol_version;
