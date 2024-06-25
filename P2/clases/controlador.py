@@ -21,8 +21,12 @@ class Controlador:
             queue='2323_04_controlador_robots_produccion', durable=False, auto_delete=True)
         self.channel.queue_declare(
             queue='2323_04_controlador_robots_consumo', durable=False, auto_delete=True)
+
         self.channel.queue_declare(
-            queue='2323_04_controlador_repartidores', durable=False, auto_delete=True)
+            queue='2323_04_controlador_repartidores_produccion', durable=False, auto_delete=True)
+        self.channel.queue_declare(
+            queue='2323_04_controlador_repartidores_consumo', durable=False, auto_delete=True)
+
         self.channel.queue_declare(
             queue='2323_04_controlador_clientes', durable=False, auto_delete=True)
 
@@ -36,6 +40,11 @@ class Controlador:
                                    on_message_callback=self.robots_callback,
                                    auto_ack=True)
         print("Esperando resultados de los robots...")
+
+        self.channel.basic_consume(queue='2323_04_controlador_repartidores_consumo',
+                                   on_message_callback=self.repartidores_callback,
+                                   auto_ack=True)
+        print("Esperando resultados de los repartidores...")
 
         self.channel.start_consuming()
 
@@ -51,6 +60,27 @@ class Controlador:
                 return pedido
 
         return None
+
+    def repartidores_callback(self, ch, method, props, body):
+        body = body.decode('utf-8')
+        print(body)
+
+        if body.find('NO_ENTREGADO') != -1:
+            pedido_id = body[13:]
+            pedido = self.get_pedido_por_id(pedido_id)
+            if pedido is None:
+                return
+
+            pedido.actualizar_estado('En cinta')
+            return
+
+        pedido_id = body[10:]
+
+        pedido = self.get_pedido_por_id(pedido_id)
+        if pedido is None:
+            return
+
+        pedido.actualizar_estado('Entregado')
 
     def robots_callback(self, ch, method, props, body):
         body = body.decode('utf-8')
@@ -145,6 +175,17 @@ class Controlador:
         self.channel.basic_publish(
             exchange='',
             routing_key='2323_04_controlador_robots_produccion',
+            body=body_msg,
+            properties=pika.BasicProperties(
+                delivery_mode=pika.DeliveryMode.Persistent
+            ))
+
+    def asignar_repartidor(self, pedido_id):
+        body_msg = f"ENTREGA {pedido_id}"
+
+        self.channel.basic_publish(
+            exchange='',
+            routing_key='2323_04_controlador_repartidores_produccion',
             body=body_msg,
             properties=pika.BasicProperties(
                 delivery_mode=pika.DeliveryMode.Persistent

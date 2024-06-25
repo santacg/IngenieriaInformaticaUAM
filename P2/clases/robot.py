@@ -46,7 +46,7 @@ class Robot:
         # P_ALMACEN de probabilidad de éxito
         return random.randint(0, 100) < P_ALMACEN
 
-    def detener(self):
+    def close(self):
         self.channel.close()
         self.connection.close()
         print("Robot detenido y conexión cerrada.")

@@ -1,44 +1,55 @@
 import pika
 import time
 import random
-from .config import RABBITMQ_SERVER
+from .config import RABBITMQ_SERVER, P_ENTREGA
 
 
-class Repartidor:
+class Robot:
     def __init__(self):
-        self.pedidos_pendientes = []
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=RABBITMQ_SERVER))
         self.channel = self.connection.channel()
+
         self.channel.queue_declare(
-            queue=QUEUE_NAME, durable=True, auto_delete=False)
+            queue="2323_04_controlador_repartidores_produccion", durable=False, auto_delete=True)
+        self.channel.queue_declare(
+            queue="2323_04_controlador_repartidores_consumo", durable=False, auto_delete=True)
 
-    def empezar_reparto(self):
-        def callback(ch, method, properties, body):
-            print(f"Recibido pedido: {body.decode()}")
-            pedido_id = body.decode().split(',')[0]
-            self.pedidos_pendientes.append(pedido_id)
-            self.procesar_pedido(pedido_id, ch, method)
+    def iiniciar_repartidor(self):
+        self.channel.basic_qos(prefetch_count=1)
+        self.channel.basic_consume(queue="2323_04_controlador_repartidores_produccion",
+                                   on_message_callback=self.realizar_entrega,
+                                   auto_ack=False)
 
-        self.channel.basic_consume(
-            queue=QUEUE_NAME, on_message_callback=callback, auto_ack=False)
-        print('El repartidor está esperando órdenes. Para salir presione CTRL+C')
+        print("Repartidor empieza a escuchar mensajes...")
         self.channel.start_consuming()
 
-    def procesar_pedido(self, pedido_id, ch, method):
-        # Simulación del proceso de entrega con reintento
-        if self.intentar_entregar():
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            print(f"Pedido {pedido_id} entregado con éxito.")
-            self.pedidos_pendientes.remove(pedido_id)
+    def realizar_entrega(self, ch, method, properties, body):
+        body = body.decode('utf-8')
+        print(body)
+
+        pedido_id = body[6:]
+
+        for i in range(2):
+            entregado = self.intentar_entrega()
+        
+        if entregado:
+            response = f"ENTREGADO {pedido_id}"
         else:
-            print(f"Fallo al entregar pedido {pedido_id}, se reintentara.")
+            response = f"NO_ENTREGADO {pedido_id}"
 
-    def intentar_entregar(self):
-        # Simulación con un cierto umbral de éxito
-        time.sleep(random.randint(5, 10))
-        return random.random() < 0.8
+        ch.basic_publish(exchange='',
+                         routing_key='2323_04_controlador_repartidores_consumo',
+                         body=response)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    def stop(self):
+    def intentar_entrega(self):
+        time.sleep(random.randint(10, 20))
+        # P_ENTREGA de probabilidad de éxito
+        return True if random.randint(0, 100) < P_ENTREGA else False 
+
+    def close(self):
+        self.channel.close()
         self.connection.close()
-        print("Repartidor parado y conexion cerrada")
+        print("Repartidor detenido y conexión cerrada.")
+
