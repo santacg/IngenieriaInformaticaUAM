@@ -1,0 +1,3 @@
+RABBITMQ_SERVER = 'localhost' 
+
+
