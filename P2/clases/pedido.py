@@ -1,5 +1,6 @@
 import uuid
 
+
 class Pedido:
     def __init__(self, cliente_id, productos_ids):
         self.pedido_id = str(uuid.uuid4())
@@ -32,7 +33,6 @@ class Pedido:
             print(
                 f"No se puede cancelar el pedido {self.pedido_id} en estado {self.status}.")
             return False
-
 
     def __str__(self):
         return f"Pedido ID: {self.pedido_id}, Cliente ID: {self.cliente_id}, Productos: {self.productos_ids}, Estado: {self.status}"

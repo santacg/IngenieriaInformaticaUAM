@@ -5,7 +5,13 @@ def main():
     robot = Robot()
 
     print("Iniciando robot...")
-    robot.iniciar_robot()
+    
+    try:
+        robot.iniciar_robot()
+    except KeyboardInterrupt:
+        print("Robot interrumpido terminando ejecucion...")
+        robot.close()
+
 
 if __name__ == '__main__':
     main()
