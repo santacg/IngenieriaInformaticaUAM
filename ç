@@ -42,29 +42,22 @@ class Controlador:
 
         return str(uuid.uuid4())
 
-
     def get_pedido_por_id(self, pedido_id):
         for pedido in self.pedidos:
-            if pedido.pedido_id == pedido_id:
-                return pedido
-                
+            if pedido.pedido_id in pedidos_ids:
+
         return None
     
 
     def robots_callback(self, ch, method, props, body):
         body = body.decode('utf-8')
-        print(body)
 
-        if body.find('NO_MOVIDO') != -1:
-            return 
+        if body.find('NOT_MOVED') != -1:
+            return False
 
-        pedido_id = body[7:]
+        pedido_id = body[6:]
 
-        pedido = self.get_pedido_por_id(pedido_id) 
-        if pedido is None:
-            return
-
-        pedido.actualizar_estado('En cinta')
+        for pedido
 
 
     def cliente_callback(self, ch, method, props, body):
@@ -116,8 +109,7 @@ class Controlador:
         self.pedidos.append(new_pedido)
 
         response = f"PEDIDO_REALIZADO {new_pedido.pedido_id}"
-        
-        self.asignar_robot(new_pedido.pedido_id)
+
         return response
 
     
@@ -127,9 +119,9 @@ class Controlador:
         response = "MOSTRAR_PEDIDOS "
         detalles_pedidos = []
 
-        for id in pedidos_ids:
-            pedido = self.get_pedido_por_id(id)
-            if pedido != None:
+
+        for pedido in self.pedidos:
+            if pedido.pedido_id in pedidos_ids:
                 detalles_pedidos.append(pedido.__str__())  
 
         if detalles_pedidos:
@@ -141,7 +133,7 @@ class Controlador:
 
 
     def asignar_robot(self, pedido_id):
-        body_msg = f"MUEVE {pedido_id}"
+        body_msg = f"MOVE {pedido_id}"
 
         self.channel.basic_publish(
             exchange='',

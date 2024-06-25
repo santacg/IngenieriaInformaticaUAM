@@ -10,6 +10,8 @@ def main():
     try:
         controlador.iniciar_controlador()
     except KeyboardInterrupt:
+        print("Imprimiendo resultado...")
+        print(controlador.__str__())
         print("Controlador interrumpido terminando ejecucion...")
         controlador.close()
 

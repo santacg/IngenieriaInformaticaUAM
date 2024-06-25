@@ -5,13 +5,12 @@ class Pedido:
         self.pedido_id = str(uuid.uuid4())
         self.cliente_id = cliente_id
         self.productos_ids = productos_ids
-        self.status = 'Pendiente'
+        self.status = 'En almacen'
 
     def actualizar_estado(self, new_status):
         transiciones_permitidas = {
-            'Pendiente': ['En almacen'],
-            'En almacen': ['Listo'],
-            'Listo': ['En reparto'],
+            'En almacen': ['En cinta'],
+            'En cinta': ['En reparto'],
             'En reparto': ['Entregado']
         }
         if self.status in transiciones_permitidas and new_status in transiciones_permitidas[self.status]:
@@ -25,7 +24,7 @@ class Pedido:
             return False
 
     def cancelar(self):
-        if self.status in ['Pendiente', 'En almacen', 'Listo']:
+        if self.status in ['En almacen', 'En cinta']:
             self.actualizar_estado('Cancelled')
             print(f"Pedido {self.pedido_id} cancelado.")
             return True
@@ -33,3 +32,7 @@ class Pedido:
             print(
                 f"No se puede cancelar el pedido {self.pedido_id} en estado {self.status}.")
             return False
+
+
+    def __str__(self):
+        return f"Pedido ID: {self.pedido_id}, Cliente ID: {self.cliente_id}, Productos: {self.productos_ids}, Estado: {self.status}"
