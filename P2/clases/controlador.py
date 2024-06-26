@@ -29,6 +29,8 @@ class Controlador:
 
         self.channel.queue_declare(
             queue='2323_04_controlador_clientes', durable=False, auto_delete=True)
+        
+        self.cargar_estado()
 
     def iniciar_controlador(self):
         self.channel.basic_consume(
@@ -227,6 +229,7 @@ class Controlador:
             self.pedidos = []
 
     def close(self):
+        self.guardar_estado()
         self.channel.close()
         self.connection.close()
 
