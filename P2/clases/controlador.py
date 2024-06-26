@@ -31,7 +31,6 @@ class Controlador:
             queue='2323_04_controlador_clientes', durable=False, auto_delete=True)
 
     def iniciar_controlador(self):
-        self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(
             queue='2323_04_controlador_clientes', on_message_callback=self.cliente_callback)
         print("Esperando peticion RPC de los clientes...")
@@ -63,8 +62,18 @@ class Controlador:
 
     def repartidores_callback(self, ch, method, props, body):
         body = body.decode('utf-8')
-        print(body)
 
+        if body.find('EN_ENTREGA') != -1:
+            pedido_id = body[11:]
+            pedido = self.get_pedido_por_id(pedido_id)
+            if pedido is None:
+                return
+
+            print(body)
+            pedido.actualizar_estado('En entrega')
+            return
+
+        print(body)
         if body.find('NO_ENTREGADO') != -1:
             pedido_id = body[13:]
             pedido = self.get_pedido_por_id(pedido_id)
@@ -72,6 +81,7 @@ class Controlador:
                 return
 
             pedido.actualizar_estado('En cinta')
+            self.asignar_repartidor(pedido_id)
             return
 
         pedido_id = body[10:]
@@ -97,6 +107,7 @@ class Controlador:
             return
 
         pedido.actualizar_estado('En cinta')
+        self.asignar_repartidor(pedido_id)
 
     def cliente_callback(self, ch, method, props, body):
         # Hay que decodificar a formato de string sino no funciona
@@ -110,7 +121,7 @@ class Controlador:
         elif body.find("VER_PEDIDOS") != -1:
             response = self.mostrar_pedidos(body)
         elif body.find("CANCELAR_PEDIDO") != -1:
-            response = " "
+            response = self.cancelar_pedido(body)
         else:
             return
 
@@ -168,6 +179,18 @@ class Controlador:
             response += "ERROR no se han encontrado pedidos del cliente."
 
         return response
+
+    def cancelar_pedido(self, body):
+        pedido_id = body[16:].strip()
+
+        pedido = self.get_pedido_por_id(pedido_id)
+        if pedido is None:
+            return f"CANCELAR_PEDIDO ERROR {pedido_id}"
+
+        if pedido.cancelar():
+            return f"PEDIDO_CANCELADO {pedido_id}"
+        else:
+            return f"CANCELAR_PEDIDO ERROR no se puede cancelar el pedido {pedido_id} en estado {pedido.status}."
 
     def asignar_robot(self, pedido_id):
         body_msg = f"MUEVE {pedido_id}"

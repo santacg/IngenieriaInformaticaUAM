@@ -1,15 +1,19 @@
 from clases.cliente import Cliente 
 import sys
+import random
 
 def main():
 
     print("Iniciando cliente...")
     cliente = Cliente()
 
-    cliente.registrar("usuario1")
+    usuario_random = random.randint(1, 10000)
+    cliente.registrar(usuario_random)
 
-    cliente.realizar_pedido("1,2,3")
-    cliente.realizar_pedido("4,5,6")
+    
+    for _ in range(0, random.randint(1, 5)):
+        producto_random = random.randint(1, 100000)
+        cliente.realizar_pedido(producto_random)
 
     cliente.ver_pedidos()
     

@@ -11,8 +11,8 @@ class Pedido:
     def actualizar_estado(self, new_status):
         transiciones_permitidas = {
             'En almacen': ['En cinta'],
-            'En cinta': ['En reparto'],
-            'En reparto': ['Entregado']
+            'En cinta': ['En entrega'],
+            'En entrega': ['Entregado']
         }
         if self.status in transiciones_permitidas and new_status in transiciones_permitidas[self.status]:
             self.status = new_status
@@ -26,7 +26,7 @@ class Pedido:
 
     def cancelar(self):
         if self.status in ['En almacen', 'En cinta']:
-            self.actualizar_estado('Cancelled')
+            self.actualizar_estado('Cancelado')
             print(f"Pedido {self.pedido_id} cancelado.")
             return True
         else:

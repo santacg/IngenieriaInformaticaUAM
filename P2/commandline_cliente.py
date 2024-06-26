@@ -16,14 +16,14 @@ def main():
 
         if choice == '1':
             nombre_usuario = input("Ingrese el numbre de usuario a introducir: ")
-            respuesta = cliente.registrar(nombre_usuario)
+            cliente.registrar(nombre_usuario)
         elif choice == '2':
             productos_ids = input("Introduzca los ids de los productos a añadir en el pedido (separador por comas): ")
-            respuesta = cliente.realizar_pedido(productos_ids)
+            cliente.realizar_pedido(productos_ids)
         elif choice == '3':
-            respuesta = cliente.ver_pedidos()
+            cliente.ver_pedidos()
         elif choice == '4':
-            print("miau")
+            cliente.cancelar_pedido() 
         elif choice == '5':
             break
         else:
