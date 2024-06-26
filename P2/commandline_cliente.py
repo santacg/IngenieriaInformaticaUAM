@@ -1,5 +1,4 @@
 from clases.cliente import Cliente
-import sys
 
 def main():
     print("Iniciando cliente...")
@@ -29,6 +28,8 @@ def main():
             break
         else:
             print("Opción no válida, intente de nuevo.")
+    
+    cliente.close()
 
 if __name__ == '__main__':
     main()

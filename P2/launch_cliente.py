@@ -1,6 +1,6 @@
 from clases.cliente import Cliente 
-import sys
 import random
+import time
 
 def main():
 
@@ -9,11 +9,11 @@ def main():
 
     usuario_random = random.randint(1, 10000)
     cliente.registrar(usuario_random)
-
     
-    for _ in range(0, random.randint(1, 5)):
+    for _ in range(0, random.randint(1, 8)):
         producto_random = random.randint(1, 100000)
         cliente.realizar_pedido(producto_random)
+        time.sleep(random.randint(1, 5))
 
     cliente.ver_pedidos()
     

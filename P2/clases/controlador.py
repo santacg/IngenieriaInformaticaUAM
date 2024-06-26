@@ -2,9 +2,6 @@ import pika
 import pickle
 import uuid
 from .config import RABBITMQ_SERVER
-from .robot import Robot
-from .repartidor import Repartidor
-from .cliente import Cliente
 from .pedido import Pedido
 
 
