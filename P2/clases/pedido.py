@@ -10,8 +10,8 @@ class Pedido:
 
     def actualizar_estado(self, new_status):
         transiciones_permitidas = {
-            'En almacen': ['En cinta'],
-            'En cinta': ['En entrega'],
+            'En almacen': ['En cinta', 'Cancelado'],
+            'En cinta': ['En entrega', 'Cancelado'],
             'En entrega': ['Entregado']
         }
         if self.status in transiciones_permitidas and new_status in transiciones_permitidas[self.status]:

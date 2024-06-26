@@ -23,14 +23,14 @@ def main():
         elif choice == '3':
             cliente.ver_pedidos()
         elif choice == '4':
-            cliente.cancelar_pedido() 
+            pedido_id = input("Introduzca el id del pedido a cancelar: ")
+            cliente.cancelar_pedido(pedido_id) 
         elif choice == '5':
             break
         else:
             print("Opción no válida, intente de nuevo.")
 
-        cliente.close()
-
 if __name__ == '__main__':
     main()
+
 

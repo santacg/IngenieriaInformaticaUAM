@@ -50,6 +50,10 @@ class Cliente:
             print(self.response)
 
     def registrar(self, nombre_usuario):
+        if self.cliente_id != None:
+            print("Ya estás registrado")
+            return False
+
         self.response = None
         self.corr_id = str(uuid.uuid4())
 
@@ -113,7 +117,6 @@ class Cliente:
         if self.send_rpc_message(body_msg) == False:
             return False
 
-        self.pedidos.remove(pedido_id)
         return True
 
     def __str__(self):
