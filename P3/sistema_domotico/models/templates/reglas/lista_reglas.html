@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista de Reglas</title>
+    </head>
+    <body>
+        <h1>Reglas del Sistema Domótico</h1>
+
+        {% if reglas %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Condición</th>
+                    <th>Sensor Asociado</th>
+                    <th>Acción</th>
+                    <th>Switch Asociado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for regla in reglas %}
+                <tr>
+                    <td>{{ regla.nombre }}</td>
+                    <td>{{ regla.condicion }}</td>
+                    <td>{{ regla.sensor_asociado.nombre }}</td>
+                    <td>{{ regla.accion }}</td>
+                    <td>{{ regla.switch_asociado.nombre }}</td>
+                    <td>
+                        <a href="{% url 'regla_update' regla.id %}">Editar</a> |
+                        <a href="{% url 'regla_delete' regla.id %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">No hay reglas configuradas</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay reglas disponibles</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'regla_create' %}">Crear una nueva regla</a>
+        <br><br>
+        <a href="{% url 'base' %}">Volver al menú principal</a>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Actualizar Reloj</title>
+    </head>
+    <body>
+        <h1>Actualizar Reloj</h1>
+        <form action="{% url 'reloj_update' reloj.id %}" method="post">
+            {% csrf_token %}
+            <label for="nombre">Nombre del Reloj:</label>
+            <input type="text" id="nombre" name="nombre"
+                value="{{ reloj.nombre }}" required><br><br>
+
+            <label for="tiempo">Tiempo:</label>
+            <input type="time" id="tiempo" name="tiempo"
+                value="{{ reloj.tiempo }}" required><br><br>
+
+            <button type="submit">Actualizar Reloj</button>
+        </form>
+        <a href="{% url 'lista_dispositivos' %}">Volver a la lista de dispositivos</a>
+    </body>
+</html>

@@ -1,153 +1,269 @@
 /**
  * @file server.c
- * @brief Implementation of a basic HTTP server.
- *
- * This file contains the main function to initialize a socket, bind it to a
- * specific port, and listen for incoming connections. Upon accepting a
- * connection, it dispatches the handling of the connection to a separate
- * thread. This allows the server to handle multiple requests simultaneously.
- *
- * @author Carlos García Santa Eduardo Junoy Ortega
- * @date 12/03/2024
+ * 
+ * @brief Server implementation
+ * @author Carlos Garcia Santa
  */
 
-#include "../includes/httpresponse.h"
 #include "../includes/server.h"
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <netinet/in.h>
+#include "../includes/http.h"
+#include "../includes/sockets.h"
+#include "../includes/svr_config.h"
+#include <bits/types/sigset_t.h>
+#include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <signal.h>
 #include <unistd.h>
 
-#define LINE 32
-#define SA struct sockaddr
+static volatile sig_atomic_t got_int_signal = 0;
 
-int socket_fd;
+/**
+ * @brief Signal handler for SIGINT
+ *
+ * @param sig Signal number
+ */
+void sig_handler(int sig)
+{
+  if (sig == SIGINT)
+  {
+    got_int_signal = 1;
+  }
 
-void termination_handler (int signum){
-  close(socket_fd);
-  exit(EXIT_SUCCESS);
+  return;
 }
 
 /**
- * @brief Handles a new connection in a separate thread.
+ * @brief Initializes the server socket
  *
- * This function is the thread routine to handle HTTP requests from clients. It
- * detaches the thread to ensure that resources are freed upon completion,
- * processes the HTTP request using the provided connection file descriptor, and
- * then closes the connection.
- *
- * @param arg A pointer to the argument passed to the thread, which is the
- *            connection file descriptor cast to a void pointer.
- * @return Always returns NULL.
+ * @param server Server configuration
+ * @return int File descriptor of the server socket
  */
-void *handle_conn(void *arg) {
-  struct server_connection svr_conn;
-  svr_conn = *(struct server_connection *) arg;
-  pthread_detach(pthread_self());
-  process_http_request(svr_conn.connfd, svr_conn.server_root, svr_conn.server_signature);
-  close(svr_conn.connfd);
+static void *conn_handler(void *conn_fd);
+
+/**
+ * @brief Initializes the server socket
+ *
+ * @param server Server configuration
+ * @return int File descriptor of the server socket
+ */
+int server_init(server_t *server);
+
+static void *conn_handler(void *args)
+{
+  int bytes_received, keep_alive = 1;
+  char buffer[MAX_BUFFER_SIZE] = "\0";
+  thread_data_t *thread_data = (thread_data_t *)args;
+  struct timeval timeout;
+
+  if (pthread_detach(pthread_self()) == ERROR)
+  {
+    dprintf(thread_data->server_data->log_fd, "Error detaching thread\n");
+    thread_data->server_data->n_sockets--;
+    close(thread_data->conn_socket);
+    free(thread_data);
+    return NULL;
+  }
+
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 5000;
+
+  if (setsockopt(thread_data->conn_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                 sizeof(timeout)) == ERROR)
+  {
+    dprintf(thread_data->server_data->log_fd, "Error setting socket timeout\n");
+    thread_data->server_data->n_sockets--;
+    close(thread_data->conn_socket);
+    free(thread_data);
+    return NULL;
+  }
+
+  if (setsockopt(thread_data->conn_socket, SOL_SOCKET, SO_KEEPALIVE,
+                 &keep_alive, sizeof(keep_alive)) == ERROR)
+  {
+    dprintf(thread_data->server_data->log_fd, "Error setting socket timeout\n");
+    thread_data->server_data->n_sockets--;
+    close(thread_data->conn_socket);
+    free(thread_data);
+    return NULL;
+  }
+
+  while (keep_alive)
+  {
+    bytes_received =
+        socket_recv(thread_data->conn_socket, buffer, MAX_BUFFER_SIZE, 0);
+
+    if (bytes_received > 0)
+    {
+      if (handle_http_request(thread_data, buffer, bytes_received) == ERROR)
+      {
+        dprintf(thread_data->server_data->log_fd, "Error in http_request\n");
+        break;
+      }
+    }
+    else if (bytes_received == 0)
+    {
+      keep_alive = 0;
+    }
+    else
+    {
+      dprintf(thread_data->server_data->log_fd, "Error in socket_recv: %s\n",
+              strerror(errno));
+      break;
+    }
+  }
+
+  thread_data->server_data->n_sockets--;
+  close(thread_data->conn_socket);
+  free(thread_data);
   return NULL;
 }
-
-/**
- * @brief The main function to start the HTTP server.
- *
- * Initializes a socket, sets up the address structure, binds the socket to the
- * specified port, listens for incoming connections, and dispatches each
- * connection to a new thread for handling.
- *
- * @param argc The argument count.
- * @param argv The argument vector.
- * @return EXIT_SUCCESS on successful execution, EXIT_FAILURE on error.
- */
-int main(int argc, char *argv[]) {
-  FILE *config_file = NULL;
-  char line[LINE];
-  char *tok = NULL;
-  long int conn_fd, port, max_clients;
-  pthread_t tid;
-  struct sockaddr_in address;
-  struct sigaction new_action, old_action;
-  struct server_connection svr_conn;
-  
-  new_action.sa_handler = termination_handler;
-  sigemptyset(&new_action.sa_mask);
-  new_action.sa_flags = 0;
-
-  sigaction(SIGINT, NULL, &old_action);
-  if (old_action.sa_handler != SIG_IGN)
-    sigaction(SIGINT, &new_action, NULL);
-
-  config_file = fopen("server.conf", "r");
-  while (fgets(line, sizeof(line), config_file)) {
-    if (strncmp(line, "server_root", 11) == 0) {
-      strtok(line, "=");
-      tok = strtok(NULL, "\0");
-      strncpy(svr_conn.server_root, tok, strlen(tok));
-    }
-    else if (strncmp(line, "max_clients", 11) == 0) {
-      strtok(line, "=");
-      tok = strtok(NULL, "\0");
-      max_clients = atol(tok);
-    }
-    else if (strncmp(line, "listen_port", 11) == 0) {
-      strtok(line, "=");
-      tok = strtok(NULL, "\0");
-      port = atol(tok);
-    }
-    else if (strncmp(line, "server_signature", 16) == 0) {
-      strtok(line, "=");
-      tok = strtok(NULL, "\0");
-      strncpy(svr_conn.server_signature, tok, strlen(tok));
-    }
-    else {
-
-    }
-  } 
-
-  socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_fd < 0) {
-    perror("Error in socket");
+int server_init(server_t *server)
+{
+  if (server_set_config(server) == ERROR)
+  {
+    fprintf(stderr, "Error setting server configuration");
     return EXIT_FAILURE;
   }
 
-  address.sin_family = AF_INET;
-  address.sin_port = htons(port);
-  address.sin_addr.s_addr = INADDR_ANY;
-  fprintf(stdout, "port: %ld\n", port);
-
-  if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address))) {
-    perror("Binding socket");
+  server->log_fd =
+      open("log_file.txt", O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+  if (server->log_fd == ERROR)
+  {
+    perror("Error opening file");
     return EXIT_FAILURE;
   }
 
-  fprintf(stdout, "Listening...\n");
-  if (listen(socket_fd, max_clients) < 0) {
-    perror("Error in listen");
+  if (dprintf(server->log_fd, "server PID: %d\n", getpid()) == ERROR)
+  {
+    perror("Error saving PID to file");
+    close(server->log_fd);
     return EXIT_FAILURE;
   }
 
-  if (daemon(1, 0) == -1) {
-    perror("Error setting daemon");
+  server->listen_fd = init_socket(server);
+  if (server->listen_fd == ERROR)
+  {
+    dprintf(server->log_fd, "Error initializing socket\n");
     return EXIT_FAILURE;
   }
 
-  while (1) {
-    conn_fd = accept(socket_fd, (SA *)NULL, NULL);
-    if (conn_fd < 0) {
-      perror("Error in receiving connection");
-      return EXIT_FAILURE;
+  if (listen(server->listen_fd, server->backlog) == ERROR)
+  {
+    dprintf(server->log_fd, "Error setting socket to listen\n");
+    return EXIT_FAILURE;
+  }
+  dprintf(server->log_fd, "Server listening on port: %d\n",
+          server->listen_port);
+
+  return EXIT_SUCCESS;
+}
+
+int main()
+{
+  int conn_fd, status = OK;
+  pthread_t thread_id;
+  server_t *server = NULL;
+  thread_data_t *thread_data = NULL;
+  sigset_t mask;
+  struct sigaction act;
+
+  if (sigfillset(&mask) == ERROR)
+  {
+    perror("Error filling signal set");
+    return EXIT_FAILURE;
+  }
+
+  if (sigprocmask(SIG_BLOCK, &mask, NULL) == ERROR)
+  {
+    perror("Error setting mask");
+    return EXIT_FAILURE;
+  }
+
+  if (sigfillset(&act.sa_mask) == ERROR)
+  {
+    perror("Error filling act mask");
+    return EXIT_FAILURE;
+  }
+
+  act.sa_flags = 0;
+  act.sa_handler = &sig_handler;
+  if (sigaction(SIGINT, &act, NULL) == ERROR)
+  {
+    perror("Error setting signal action");
+    return EXIT_FAILURE;
+  }
+
+  if (sigprocmask(SIG_UNBLOCK, &mask, NULL) == ERROR)
+  {
+    perror("Error setting mask");
+    return EXIT_FAILURE;
+  }
+
+  server = (server_t *)malloc(sizeof(server_t));
+  if (!server)
+  {
+    perror("Error allocating memory for server");
+    return EXIT_FAILURE;
+  }
+
+  if (server_init(server) == EXIT_FAILURE)
+  {
+    close(server->log_fd);
+    free(server);
+    return EXIT_FAILURE;
+  }
+
+  while (got_int_signal == 0)
+  {
+
+    if (server->n_sockets >= server->max_open_sockets)
+    {
+      usleep(5000);
+      continue;
     }
-    svr_conn.connfd = conn_fd;
-    pthread_create(&tid, NULL, &handle_conn, (void *)&svr_conn);
+
+    thread_data = (thread_data_t *)malloc(sizeof(thread_data_t));
+    if (!thread_data)
+    {
+      dprintf(server->log_fd,
+              "Error allocating memory for thread connection\n");
+      status = ERROR;
+      break;
+    }
+
+    if ((conn_fd = accept(server->listen_fd, NULL, NULL)) == ERROR)
+    {
+      if (errno == EINTR)
+      {
+        dprintf(server->log_fd, "Finishing by signal\n");
+        break;
+      }
+      else
+      {
+        dprintf(server->log_fd, "Error accepting connection\n");
+        status = ERROR;
+        break;
+      }
+    }
+
+    server->n_sockets++;
+    thread_data->server_data = server;
+    thread_data->conn_socket = conn_fd;
+
+    if (pthread_create(&thread_id, NULL, &conn_handler, thread_data) == ERROR)
+    {
+      dprintf(server->log_fd, "Error creating thread\n");
+      status = ERROR;
+      break;
+    }
   }
+
+  free(thread_data);
+  dprintf(server->log_fd, "Server exited with status: %d\n", status);
+  close(server->log_fd);
+  free(server);
+  return status;
 }

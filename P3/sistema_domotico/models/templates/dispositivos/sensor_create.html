@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Añadir Sensor</title>
+    </head>
+    <body>
+        <h1>Añadir un nuevo Sensor</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="nombre">Nombre del Sensor:</label>
+            <input type="text" id="nombre" name="nombre" required><br><br>
+
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" required><br><br>
+
+            <label for="unidad_de_medida">Unidad de Medida:</label>
+            <input type="text" id="unidad_de_medida" name="unidad_de_medida"
+                required><br><br>
+
+            <button type="submit">Crear Sensor</button>
+        </form>
+    </body>
+</html>

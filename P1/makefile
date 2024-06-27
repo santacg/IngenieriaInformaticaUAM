@@ -1,33 +1,34 @@
-CC=gcc
-CFLAGS=-g -Wall -pthread
-LIBFLAGS=-pthread
+TARGET_EXEC := server
 
-SRCPATH=./src/
-INCLUDEPATH=./includes/
-OBJPATH=./obj/
-OBJS=server.o picohttpparser.o httpresponse.o 
+CC := gcc
+CFLAGS := -g -Wall -Wextra -pthread 
+LDFLAGS := 
 
-EXE=server 
+SRC_DIR := src
+OBJ_DIR := obj
+INC_DIR := includes
 
-all: clean folders $(EXE)
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst %.c,%.o,$(subst src,obj,$(SRCS)))
 
-folders:
-	mkdir $(OBJPATH)
+INC_FLAGS := $(addprefix -I,$(INC_DIR))
 
-server: $(OBJPATH)server.o $(OBJPATH)httpresponse.o $(OBJPATH)picohttpparser.o
-	$(CC) $^ -o $@ 
+all: $(TARGET_EXEC) 
 
-$(OBJPATH)server.o: $(SRCPATH)server.c $(SRCPATH)httpresponse.c $(INCLUDEPATH)httpresponse.h
-	$(CC) $(CFLAGS) -c $(SRCPATH)server.c -o $(OBJPATH)server.o 
+$(TARGET_EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
-$(OBJPATH)picohttpparser.o: $(SRCPATH)picohttpparser.c $(INCLUDEPATH)picohttpparser.h
-	$(CC) $(CFLAGS) -c $(SRCPATH)picohttpparser.c -o $(OBJPATH)picohttpparser.o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
+	$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
 
-$(OBJPATH)httpresponse.o: $(SRCPATH)httpresponse.c $(SRCPATH)picohttpparser.c $(INCLUDEPATH)httpresponse.h $(INCLUDEPATH)picohttpparser.h
-	$(CC) $(CFLAGS) -c $(SRCPATH)httpresponse.c -o $(OBJPATH)httpresponse.o
+$(OBJS): | $(OBJ_DIR)
 
-valgrind:
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(EXE)
+$(OBJ_DIR):
+	@echo "Making objects dir..."
+	mkdir -p $(OBJ_DIR)
 
-clean: 
-	rm -rf $(OBJPATH) $(EXE)
+.PHONY: clean
+
+clean:
+	@echo "Cleaning..."
+	rm -r $(OBJ_DIR) $(TARGET_EXEC)
