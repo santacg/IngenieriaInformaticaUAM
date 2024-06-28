@@ -29,8 +29,8 @@ class RuleEngine:
         self.topic_send = self.topic + '/send'
 
         # Se suscribe a la cola donde recibe los mensajes del controlador
-        self.client.message_callback_add(self.topic, self.on_message)
-        self.client.subscribe(self.topic)
+        self.client.message_callback_add(self.topic_send, self.on_message)
+        self.client.subscribe(self.topic_send)
 
     def on_message(self, client, userdata, msg):
         # Se recibe un evento
@@ -83,7 +83,7 @@ class RuleEngine:
             switch_id = regla.switch_asociado.id
             message = f"{switch_id}/{accion}"
             print(f"Enviando ejecuion de accion: {message}")
-            self.client.publish(self.topic_send, message)
+            self.client.publish(self.topic, message)
 
 
 def main(host, port):

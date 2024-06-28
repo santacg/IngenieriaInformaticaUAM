@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import os
 import sys
 import django
+import pdb
 
 sys.path.append("..")
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sistema_domotico.settings')
@@ -14,10 +15,10 @@ topic_str = "home/"
 
 class Controller:
 
-    def __init__(self):
+    def __init__(self, host, port):
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
-        self.client.connect('localhost', 1883, 60)
+        self.client.connect(host, port)
 
         self.client.loop_forever()
         self.client.disconnect()
@@ -131,12 +132,25 @@ class Controller:
 
         message = f"{evento.sensor.id}/{evento.valor}"
 
-        self.client.publish(self.topic_rule_engine_send, message)
+        topic_rule_engine_send = topic_str + "rule_engine/send"
 
+        self.client.publish(topic_rule_engine_send, message)
+
+
+def main(host, port):
+    Controller(host, port)
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--host', default='localhost', help='MQTT broker host')
+    parser.add_argument(
+        '--port', default=1883, type=int, help='MQTT broker port')
+    args = parser.parse_args()
+
     try:
-        controller = Controller()
+        main(args.host, args.port)
     except KeyboardInterrupt:
         print("Saliendo...")
         sys.exit(0)
