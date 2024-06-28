@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sistema_domotico.settings')
 django.setup()
 
 
-from models.models import Switch, Sensor, Evento
+from models.models import Switch, Sensor, Evento, Reloj
 
 
 class Controller:
@@ -46,6 +46,14 @@ class Controller:
 
             # Cola donde recibe los mensajes de los sensores
             self.client.message_callback_add(topic, self.on_sensor_message)
+            self.client.subscribe(topic)
+
+        for reloj in Reloj.objects.all():
+
+            topic = f"home/clock/{reloj.id}"
+
+            # Cola donde recibe los mensajes de los relojes
+            self.client.message_callback_add(topic, self.on_clock_message)
             self.client.subscribe(topic)
 
     def on_switch_message(self, client, userdata, msg):
@@ -88,6 +96,18 @@ class Controller:
         sensor = Sensor.objects.get(id=sensor_id)
         self.enviar_evento_a_rule_engine(sensor, valor)
 
+    def on_clock_message(self, client, userdata, msg):
+
+        msg = str(msg.payload.decode())
+
+        partes = msg.split('/')
+
+        reloj_id = partes[0]
+        tiempo = partes[1]
+
+        print(f"Mensaje recibido del reloj: {reloj_id} actualizado a {tiempo}")
+
+
     def on_rule_engine_message(self, client, userdata, msg):
 
         msg = str(msg.payload.decode())
@@ -111,7 +131,6 @@ class Controller:
         message = f"{evento.sensor.id}/{evento.valor}"
 
         self.client.publish(self.topic_rule_engine_send, message)
-
 
 
 if __name__ == '__main__':
