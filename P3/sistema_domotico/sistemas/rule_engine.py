@@ -23,19 +23,25 @@ class RuleEngine:
     def on_connect(self, client, userdata, flags, rc):
         print("Conectado con codigo de resultado "+str(rc))
 
-        topic = "home/rule_engine/send"
-        self.topic_controller = "home/rule_engine"
+        self.topic = "home/rule_engine/send"
+        self.topic_send = "home/rule_engine"
 
         # Se suscribe a la cola donde recibe los mensajes del controlador
-        self.client.message_callback_add(topic, self.on_message)
-        self.client.subscribe(topic)
+        self.client.message_callback_add(self.topic, self.on_message)
+        self.client.subscribe(self.topic)
 
     def on_message(self, client, userdata, msg):
         # Se recibe un evento
 
         # Se obtiene el id del sensor y el valor del mensaje
-        sensor_id, valor = msg.payload.decode().split('/')
+        msg = str(msg.payload.decode())
 
+        partes = msg.split('/')
+
+        sensor_id = partes[0]
+        valor = float(partes[1])
+
+        print(f"Evento recibido: {sensor_id} {valor}")
         self.evaluar_reglas(sensor_id, valor)
 
     def evaluar_reglas(self, sensor_id, valor):
@@ -51,23 +57,31 @@ class RuleEngine:
         condicion = (str)(regla.condicion)
 
         # Se evalua la condicion
-        if condicion.find("==") != -1 and valor == condicion.split("==")[1]:
-            self.ejecutar_accion(regla)
-        elif condicion.find(">") != -1 and valor > condicion.split(">")[1]:
-            self.ejecutar_accion(regla)
-        elif condicion.find("<") != -1 and valor < condicion.split("<")[1]:
-            self.ejecutar_accion(regla)
+        if "==" in condicion:
+            limite = float(condicion.split("==")[1])
+            if valor == limite:
+                self.ejecutar_accion(regla)
+        elif ">" in condicion:
+            limite = float(condicion.split(">")[1])
+            if valor > limite:
+                self.ejecutar_accion(regla)
+        elif "<" in condicion:
+            limite = float(condicion.split("<")[1])
+            if valor < limite:
+                self.ejecutar_accion(regla)
         else:
-            return 
+            return False
 
-    def ejecutar_accion(self, sensor_id, rule):  
+    def ejecutar_accion(self, regla):
         # Se ejecuta la accion de la regla
-        accion = rule.accion.split(' ')[0]
+        accion = (str)(regla.accion)
+        accion = accion.split(" ")[0]
 
         if accion == 'ON' or accion == 'OFF':
-            switch_id = rule.switch_asociado.id
+            switch_id = regla.switch_asociado.id
             message = f"{switch_id}/{accion}"
-            self.client.publish(self.topic_controller, message)
+            print(f"Enviando ejecuion de accion: {message}")
+            self.client.publish(self.topic_send, message)
 
 
 def main(host, port):
@@ -80,7 +94,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--host', default='localhost', help='MQTT broker host')
     parser.add_argument(
-        '--port', default='1889', type=int, help='MQTT broker port')
+        '--port', default=1883, type=int, help='MQTT broker port')
     args = parser.parse_args()
 
-    main(args.host, args.port)
+    try:
+        main(args.host, args.port)
+    except KeyboardInterrupt:
+        print("Saliendo...")
+        sys.exit(0)

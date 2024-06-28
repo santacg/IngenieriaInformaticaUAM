@@ -5,29 +5,16 @@ from django.urls import reverse
 
 
 class DispositivoIot(models.Model):
-    TYPE_CHOICES = (
-        ('switch', 'Switch'),
-        ('sensor', 'Sensor'),
-        ('reloj', 'Reloj'),
-    )
-
     nombre = models.CharField(max_length=50)
-    topic = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         abstract = True
-
-    @property
-    def set_device_type(self, device_type):
-        self.device_type = device_type
 
     def __str__(self):
         return f"{self.nombre} ({self.device_type})"
 
 
 class Switch(DispositivoIot):
-    device_type = 'switch'
-
     state = models.CharField(
         max_length=3,
         choices=(('ON', 'On'), ('OFF', 'Off')),
@@ -45,7 +32,7 @@ class Sensor(DispositivoIot):
     unidad_de_medida = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.nombre}: {self.valor} {self.unidad_de_medida}"
+        return f"{self.id}: {self.valor} {self.unidad_de_medida}"
 
 
 class Reloj(DispositivoIot):
@@ -65,7 +52,7 @@ class Regla(models.Model):
         Switch, on_delete=models.CASCADE, related_name='reglas_switch', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.nombre}: If {self.sensor_asociado.__str__()} {self.condicion}, entonces {self.switch_asociado.__str__()} {self.accion}"
+        return f"{self.nombre}: Si {self.condicion}, entonces {self.switch_asociado.__str__()} {self.accion}"
 
 
 class Evento(models.Model):

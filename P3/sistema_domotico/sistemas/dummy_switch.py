@@ -22,8 +22,8 @@ class DummySwitch(object):
         # Busca el interruptor en la base de datos
         try:
             self.switch = Switch.objects.get(id=id)
-            self.topic = f"home/switch/{self.switch.nombre}/{self.switch.id}"
-            self.topic_set = f"{self.topic}/set"
+            self.topic = f"home/switch/{self.switch.id}"
+            self.topic_set = self.topic + '/set'
 
             # Configura las suscripciones y callbacks
             self.client.message_callback_add(
@@ -44,28 +44,27 @@ class DummySwitch(object):
     def on_set_message(self, client, userdata, msg):
 
         # Cambia el estado del interruptor si el mensaje es 'ON' o 'OFF'
-        message = msg.payload.decode()
+        accion = str(msg.payload.decode())
 
-        if message in ['ON', 'OFF']:
+        if accion in ['ON', 'OFF']:
+            if self.switch.state == accion:
+                print(f"El interruptor ya está en estado {accion}")
+                self.informar_controlador(f"ALREADY_SET/{self.switch.id}/{accion}")
+                return
             # Cambia el estado del interruptor con una probabilidad dada
             if random.random() <= self.probability:
-                self.switch.state = message
+                self.switch.state = accion
                 self.switch.save()
                 print(f"Cambio de estado de switch a: {self.switch.state}")
                 # Informa al controlador del cambio de estado
-                self.informar_controlador(f"{self.switch.nombre}/{self.switch.state}")
+                self.informar_controlador(f"{self.switch.id}/{self.switch.state}")
             else:
                 # Informa al controlador que el cambio de estado falló
-                self.informar_controlador(f"FAIL/{self.switch.id}/{message}")
-
-    def on_get_message(self, client, userdata, msg):
-        # Informa al controlador del estado actual del interruptor
-        self.informar_controlador(self.switch.state)
-        print(f"Peticion de estado: {self.switch.state}")
+                self.informar_controlador(f"FAIL/{self.switch.id}/{accion}")
 
     def informar_controlador(self, message):
         # Publica el mensaje en el topic del controlador
-        self.client.publish(self.topic_get, message)
+        self.client.publish(self.topic, message)
 
 
 def main(host, port, probability, id):

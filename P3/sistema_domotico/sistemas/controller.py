@@ -34,7 +34,7 @@ class Controller:
 
         for switch in Switch.objects.all():
 
-            topic = f"home/switch/{switch.nombre}/{switch.id}"
+            topic = f"home/switch/{switch.id}"
 
             # Cola donde recibe los mensajes de los interruptores
             self.client.message_callback_add(topic, self.on_switch_message)
@@ -42,7 +42,7 @@ class Controller:
 
         for sensor in Sensor.objects.all():
 
-            topic = f"home/sensor/{sensor.nombre}/{sensor.id}"
+            topic = f"home/sensor/{sensor.id}"
 
             # Cola donde recibe los mensajes de los sensores
             self.client.message_callback_add(topic, self.on_sensor_message)
@@ -50,46 +50,59 @@ class Controller:
 
     def on_switch_message(self, client, userdata, msg):
 
-        msg = (str)(msg.payload.decode())
+        msg = str(msg.payload.decode())
 
-        switch_nombre = msg.split('/')[0]
-        if switch_nombre == 'FAIL':
-            switch_id = msg.split('/')[1]
-            accion = msg.split('/')[2]
-            print(f"Error al cambiar el estado del interruptor con id {switch_id}")
-            self.client.publish(f"home/switch/{switch_nombre}/{switch_id}/set", accion)
+        partes = msg.split('/')
+
+        if "FAIL" in msg:
+            switch_id = partes[1]
+            accion = partes[2]
+
+            print(f"Error al cambiar al estado {accion} del interruptor con id {switch_id}")
+            print("Reintentando...")
+            self.enviar_mensaje_a_switch(switch_id, accion)
+            return
+        elif "ALREADY_SET" in msg:
+            switch_id = partes[1]
+            state = partes[2]
+
+            print(f"El interruptor con id {switch_id} ya está en estado {state}")
             return
 
-        state = msg.split('/')[1]
+        switch_id = partes[0]
+        state = partes[1]
 
-        print(f"Mensaje recibido del interruptor: {switch_nombre} con estado {state}")
+        print(f"Cambio de estado del switch {switch_id} a estado {state}")
 
     def on_sensor_message(self, client, userdata, msg):
 
-        msg = msg.payload.decode()
+        msg = str(msg.payload.decode())
+
         partes = msg.split('/')
 
-        sensor = partes[0]
+        sensor_id = partes[0]
         valor = partes[1]
 
-        print(f"Mensaje recibido del sensor: {sensor} con valor {valor}")
+        print(f"Mensaje recibido del sensor: {sensor_id} con valor {valor}")
 
+        sensor = Sensor.objects.get(id=sensor_id)
         self.enviar_evento_a_rule_engine(sensor, valor)
 
     def on_rule_engine_message(self, client, userdata, msg):
 
-        msg = msg.payload.decode()
+        msg = str(msg.payload.decode())
         partes = msg.split('/')
 
         switch_id = partes[0]
         accion = partes[1]
 
-        print(f"Mensaje recibido del motor de reglas: {switch_id} con accion {accion}")
-        
-        switch = Switch.objects.get(id=switch_id)
-        topic = f"home/switch/{switch.nombre}/{switch_id}/set"
+        print(f"Mensaje recibido del motor de reglas: interruptor {switch_id} con accion {accion}")
 
-        self.client.publish(topic, accion)
+        self.enviar_mensaje_a_switch(switch_id, accion)
+
+    def enviar_mensaje_a_switch(self, switch_id, accion):
+
+        self.client.publish(f"home/switch/{switch_id}/set", accion)
 
     def enviar_evento_a_rule_engine(self, sensor, valor):
 
@@ -98,6 +111,7 @@ class Controller:
         message = f"{evento.sensor.id}/{evento.valor}"
 
         self.client.publish(self.topic_rule_engine_send, message)
+
 
 
 if __name__ == '__main__':

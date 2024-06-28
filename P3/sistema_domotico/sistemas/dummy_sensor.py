@@ -26,7 +26,7 @@ class DummySensor:
 
         try:
             self.sensor = Sensor.objects.get(id=sensor_id)
-            self.topic = f"home/sensor/{self.sensor.nombre}/{self.sensor.id}"
+            self.topic = f"home/sensor/{self.sensor.id}"
 
             print(
                 f"Sensor inicializado: {self.sensor.nombre} con valor: {self.sensor.valor} e id: {self.sensor.id}")
@@ -48,17 +48,24 @@ class DummySensor:
     def publicar_valor(self):
         print(f"Informando de valor de sensor: {self.sensor.valor}")
         self.client.publish(self.topic, str(
-            f"{self.sensor.nombre}/{self.sensor.valor}"))
+            f"{self.sensor.id}/{self.sensor.valor}"))
 
     def simular_valores(self):
         current_value = self.min
-        while current_value <= self.max:
-            self.sensor.valor = current_value
-            self.sensor.save()
-            self.publicar_valor()
-            time.sleep(self.interval)
-            current_value += self.increment
-
+        if self.increment > 0:  # Incrementando valores
+            while current_value <= self.max:
+                self.sensor.valor = current_value
+                self.sensor.save()
+                self.publicar_valor()
+                time.sleep(self.interval)
+                current_value += self.increment
+        else:  # Decrementando valores (increment es negativo)
+            while current_value >= self.max:
+                self.sensor.valor = current_value
+                self.sensor.save()
+                self.publicar_valor()
+                time.sleep(self.interval)
+                current_value += self.increment
 
 def main(host, port, min, max, increment, interval, sensor_id):
     DummySensor(host, port, min, max, increment, interval, sensor_id)
