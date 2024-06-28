@@ -1,16 +1,41 @@
 #!/bin/bash
 
-echo "Ejecutando simulador..."
+echo "Iniciando MQTT broker..."
+mosquitto &
 
-gnome-terminal --title="Controller" -- python3 controller.py
-sleep 0.5 
-gnome-terminal --title="Interruptor1" -- python3 dummy_switch.py Interruptor1
-sleep 0.5
-gnome-terminal --title="Rule Engine" -- python3 rule_engine.py
-sleep 0.5
-gnome-terminal --title="Sensor1" -- python3 dummy_sensor.py --min 1 --max 15 Sensor1
-sleep 0.5 
-gnome-terminal --title="Reloj1" -- python3 dummy_clock.py --time 08:00:00 Reloj1
-sleep 0.5
+HOST="localhost"
+PORT=1883
 
-echo "Simulador ejecutado correctamente."
+echo "Ejecutando creador de la simulacion..."
+python3 set_simulation.py 
+
+sleep 2
+
+echo "Lanzando controlador..."
+python3 ../scripts/controller.py --host $HOST --port $PORT &
+
+sleep 2
+
+echo "Lanzando Rule Engine..."
+python3 ../scripts/rule_engine.py --host $HOST --port $PORT &
+
+sleep 2
+
+echo "Lanzando Dummy Sensores..."
+python3 ../scripts/dummy_sensor.py --host $HOST --port $PORT --min 250 --max 275 --increment 1 --interval 5 1 &
+
+sleep 2
+
+echo "Lanzando Dummy Switches..."
+python3 ../scripts/dummy_switch.py --host $HOST --port $PORT --probability 0.9 1 &
+
+sleep 2
+
+echo "Lanzando Dummy Relojes..."
+python ../scripts/dummy_clock_simulator.py --host $HOST --port $PORT --time "12:00:00" --increment 3600 1 &
+
+
+echo "Simulacion ejecutandose. Pulsa CTRL+C para salir"
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+wait

@@ -41,7 +41,7 @@ class Controlador:
 
         self.channel.basic_consume(queue='2323_04_controlador_repartidores_consumo',
                                    on_message_callback=self.repartidores_callback,
-                                   auto_ack=True)
+                                   auto_ack=False)
         print("Esperando resultados de los repartidores...")
 
         self.channel.start_consuming()
@@ -90,6 +90,7 @@ class Controlador:
             return
 
         pedido.actualizar_estado('Entregado')
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
     def robots_callback(self, ch, method, props, body):
         body = body.decode('utf-8')
