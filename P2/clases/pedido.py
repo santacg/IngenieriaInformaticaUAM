@@ -12,7 +12,7 @@ class Pedido:
         transiciones_permitidas = {
             'En almacen': ['En cinta', 'Cancelado'],
             'En cinta': ['En entrega', 'Cancelado'],
-            'En entrega': ['Entregado']
+            'En entrega': ['Entregado', 'En cinta'],
         }
         if self.status in transiciones_permitidas and new_status in transiciones_permitidas[self.status]:
             self.status = new_status

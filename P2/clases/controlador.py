@@ -80,6 +80,7 @@ class Controlador:
                 return
 
             pedido.actualizar_estado('En cinta')
+            ch.basic_ack(delivery_tag=method.delivery_tag)
             self.asignar_repartidor(pedido_id)
             return
 
