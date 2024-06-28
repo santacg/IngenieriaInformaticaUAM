@@ -10,6 +10,8 @@ django.setup()
 
 from models.models import Switch, Sensor, Regla, Evento
 
+topic_str = "home/"
+
 
 class RuleEngine:
 
@@ -23,8 +25,8 @@ class RuleEngine:
     def on_connect(self, client, userdata, flags, rc):
         print("Conectado con codigo de resultado "+str(rc))
 
-        self.topic = "home/rule_engine/send"
-        self.topic_send = "home/rule_engine"
+        self.topic = topic_str + "rule_engine"
+        self.topic_send = self.topic + '/send'
 
         # Se suscribe a la cola donde recibe los mensajes del controlador
         self.client.message_callback_add(self.topic, self.on_message)

@@ -12,6 +12,8 @@ django.setup()
 
 from models.models import Sensor
 
+topic_str = "home/"
+
 
 class DummySensor:
     def __init__(self, host, port, minimum, maximum, increment, interval, sensor_id):
@@ -26,7 +28,7 @@ class DummySensor:
 
         try:
             self.sensor = Sensor.objects.get(id=sensor_id)
-            self.topic = f"home/sensor/{self.sensor.id}"
+            self.topic = topic_str + f"sensor/{self.sensor.id}"
 
             print(
                 f"Sensor inicializado: {self.sensor.nombre} con valor: {self.sensor.valor} e id: {self.sensor.id}")

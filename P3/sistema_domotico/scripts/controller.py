@@ -7,8 +7,9 @@ sys.path.append("..")
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sistema_domotico.settings')
 django.setup()
 
-
 from models.models import Switch, Sensor, Evento, Reloj
+
+topic_str = "home/"
 
 
 class Controller:
@@ -24,7 +25,7 @@ class Controller:
     def on_connect(self, client, userdata, flags, rc):
         print("Conectado con codigo de resultado: " + str(rc))
 
-        topic_rule_engine = "home/rule_engine"
+        topic_rule_engine = topic_str + "rule_engine" 
         
         # Cola donde recibe los mensajes del motor de reglas
         self.client.message_callback_add(topic_rule_engine, self.on_rule_engine_message)
@@ -34,7 +35,7 @@ class Controller:
 
         for switch in Switch.objects.all():
 
-            topic = f"home/switch/{switch.id}"
+            topic = topic_str + f"switch/{switch.id}" 
 
             # Cola donde recibe los mensajes de los interruptores
             self.client.message_callback_add(topic, self.on_switch_message)
@@ -42,7 +43,7 @@ class Controller:
 
         for sensor in Sensor.objects.all():
 
-            topic = f"home/sensor/{sensor.id}"
+            topic = topic_str + f"sensor/{sensor.id}" 
 
             # Cola donde recibe los mensajes de los sensores
             self.client.message_callback_add(topic, self.on_sensor_message)
@@ -50,7 +51,7 @@ class Controller:
 
         for reloj in Reloj.objects.all():
 
-            topic = f"home/clock/{reloj.id}"
+            topic = topic_str + f"clock/{reloj.id}" 
 
             # Cola donde recibe los mensajes de los relojes
             self.client.message_callback_add(topic, self.on_clock_message)

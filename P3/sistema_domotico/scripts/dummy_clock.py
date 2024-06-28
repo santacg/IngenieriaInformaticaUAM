@@ -13,6 +13,8 @@ django.setup()
 
 from models.models import Reloj
 
+topic_str = "home/"
+
 
 class DummyClock:
     def __init__(self, host, port, start_time, increment, rate, clock_id):
@@ -21,7 +23,7 @@ class DummyClock:
 
         try:
             self.reloj = Reloj.objects.get(id=clock_id)
-            self.topic = f"home/clock/{self.reloj.id}"
+            self.topic = topic_str + f"clock/{self.reloj.id}"
 
             print(
                 f"Reloj inicializado: {self.reloj.nombre} con tiempo inicial: {self.reloj.tiempo}")

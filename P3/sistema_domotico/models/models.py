@@ -1,6 +1,4 @@
 from django.db import models
-import paho.mqtt.client as mqtt
-from django.urls import reverse
 # Create your models here.
 
 
@@ -9,9 +7,6 @@ class DispositivoIot(models.Model):
 
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return f"{self.nombre} ({self.device_type})"
 
 
 class Switch(DispositivoIot):

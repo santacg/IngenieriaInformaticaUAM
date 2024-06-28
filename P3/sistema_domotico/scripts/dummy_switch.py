@@ -11,6 +11,8 @@ django.setup()
 
 from models.models import Switch
 
+topic_str = "home/"
+
 
 class DummySwitch(object):
 
@@ -22,7 +24,7 @@ class DummySwitch(object):
         # Busca el interruptor en la base de datos
         try:
             self.switch = Switch.objects.get(id=id)
-            self.topic = f"home/switch/{self.switch.id}"
+            self.topic = topic_str + f"switch/{self.switch.id}"
             self.topic_set = self.topic + '/set'
 
             # Configura las suscripciones y callbacks
