@@ -9,4 +9,8 @@ poder analizar el funcionamiento del sistema.
 
 Para poder ejecutar se necesitan instalar las librerias presentes en requirements.txt (solo hacen falta pika y pickle).
 
-Para borrar el estado del controlador, basta con borrar el archivo state.pk1
+Para borrar el estado del controlador, basta con borrar el archivo state.pk1.
+
+Las probabilidades de éxito de repartidores y robots se encuentran en un archivo de configuración 
+en el directorio clases, en este mismo archivo también se puede cambiar el servidor RABBIT_MQTT 
+que se ha dejado por defecto en localhost
