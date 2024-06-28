@@ -6,6 +6,9 @@ from .config import RABBITMQ_SERVER
 class Cliente:
 
     def __init__(self):
+        """
+        Inicializa el cliente y se conecta al servidor de RabbitMQ.
+        """
         self.cliente_id = None
         self.nombre_usuario = None
         self.pedidos = []
@@ -27,6 +30,9 @@ class Cliente:
         self.corr_id = None
 
     def send_rpc_message(self, body_msg):
+        """
+        Envía un mensaje al servidor y espera por una respuesta
+        """
         self.channel.basic_publish(
             exchange='',
             routing_key='2323_04_controlador_clientes',
@@ -45,11 +51,17 @@ class Cliente:
         return True
 
     def on_response(self, ch, method, props, body):
+        """
+        Callback que se ejecuta cuando se recibe una respuesta del servidor
+        """
         if self.corr_id == props.correlation_id:
             self.response = body.decode('utf-8')
             print(self.response)
 
     def registrar(self, nombre_usuario):
+        """
+        Registra al cliente en el sistema y le asigna un id
+        """
         if self.cliente_id != None:
             print("Ya estás registrado")
             return False
@@ -69,6 +81,9 @@ class Cliente:
         return True
 
     def realizar_pedido(self, productos_ids):
+        """
+        Realiza un pedido con los productos especificados
+        """
         if self.cliente_id == None:
             print("No puedes realizar un pedido sin estar registrado")
             return False
@@ -87,6 +102,9 @@ class Cliente:
         return True
 
     def ver_pedidos(self):
+        """
+        Muestra los pedidos realizados por el cliente
+        """
         if self.cliente_id == None:
             print("No puedes ver pedidos sin estar registrado")
             return False
@@ -105,6 +123,9 @@ class Cliente:
         return True
 
     def cancelar_pedido(self, pedido_id):
+        """
+        Cancela un pedido realizado por el cliente
+        """
         if self.cliente_id == None:
             print("No puedes cancelar un pedido sin estar registrado")
             return False
@@ -120,9 +141,15 @@ class Cliente:
         return True
 
     def __str__(self):
+        """
+        Representación en string del cliente
+        """
         return f"nombre de usuario: {self.nombre_usuario}\nid de cliente: {self.cliente_id}"
 
     def close(self):
+        """
+        Detiene el cliente y cierra la conexión con el servidor
+        """
         self.channel.close()
         self.connection.close()
         print("Cliente detenido y conexión cerrada.")

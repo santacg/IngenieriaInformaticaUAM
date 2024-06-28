@@ -3,12 +3,20 @@ import uuid
 
 class Pedido:
     def __init__(self, cliente_id, productos_ids):
+        """
+        Crea un pedido con los productos especificados
+        """
+
         self.pedido_id = str(uuid.uuid4())
         self.cliente_id = cliente_id
         self.productos_ids = productos_ids
         self.status = 'En almacen'
 
     def actualizar_estado(self, new_status):
+        """
+        Actualiza el estado del pedido
+        """
+
         transiciones_permitidas = {
             'En almacen': ['En cinta', 'Cancelado'],
             'En cinta': ['En entrega', 'Cancelado'],
@@ -25,6 +33,10 @@ class Pedido:
             return False
 
     def cancelar(self):
+        """
+        Cancela el pedido
+        """
+
         if self.status in ['En almacen', 'En cinta']:
             self.actualizar_estado('Cancelado')
             print(f"Pedido {self.pedido_id} cancelado.")
