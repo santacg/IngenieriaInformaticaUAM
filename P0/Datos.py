@@ -33,9 +33,4 @@ class Datos:
     # Devuelve el subconjunto de los datos cuyos �ndices se pasan como
     # argumento
     def extraeDatos(self, idx):
-        subconjuntoDatos = []
-
-        for i in idx:
-            subconjuntoDatos.append(self.datos.iloc[i])
-
-        return subconjuntoDatos
+        return self.datos.iloc[idx]

@@ -32,8 +32,10 @@ class ValidacionSimple(EstrategiaParticionado):
     # Crea particiones segun el metodo tradicional de division de los datos segun el porcentaje deseado y el número de ejecuciones deseado
     # Devuelve una lista de particiones (clase Particion)
     # TODO: implementar
-    def creaParticiones(self, datos, seed=None):
+    def creaParticiones(self, datos, porcentaje, nEjecuciones, seed=None):
+        particiones = []
         random.seed(seed)
+
         return []
 
 
