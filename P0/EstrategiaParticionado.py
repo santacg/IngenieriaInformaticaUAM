@@ -9,6 +9,9 @@ class Particion():
         self.indicesTrain = []
         self.indicesTest = []
 
+    def __str__(self):
+        return f'train: {self.indicesTrain} test: {self.indicesTest}'
+
 #####################################################################################################
 
 
@@ -33,10 +36,31 @@ class ValidacionSimple(EstrategiaParticionado):
     # Devuelve una lista de particiones (clase Particion)
     # TODO: implementar
     def creaParticiones(self, datos, porcentaje, nEjecuciones, seed=None):
-        particiones = []
         random.seed(seed)
+        lista_seeds = []
 
-        return []
+        for _ in range(nEjecuciones):
+            lista_seeds.append(random.random())
+
+        lista_particiones = []
+        for i in range(nEjecuciones):
+            random.seed(lista_seeds[i])
+
+            datos_len = datos.datos.shape[0]
+            test_len = int(datos_len * porcentaje)
+
+            lista_test = random.sample(range(datos_len), test_len)
+
+            particion = Particion()
+
+            lista_numeros = set(range(datos_len))
+            lista_entranamiento = list(lista_numeros - set(lista_test))
+
+            particion.indicesTest = sorted(lista_test)
+            particion.indicesTrain = sorted(lista_entranamiento)
+            lista_particiones.append(particion)
+
+        return lista_particiones
 
 
 #####################################################################################################
