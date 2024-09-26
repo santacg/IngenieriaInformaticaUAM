@@ -1,8 +1,8 @@
 from Datos import Datos
-import matplotlib.pyplot as plt
-import numpy as np
-
+from EstrategiaParticionado import ValidacionSimple
+import random
 
 datos = Datos('heart.csv')
 print(datos.nominalAtributos)
 print(datos.diccionarios)
+print(datos.extraeDatos([1, 2, 3, 4]))
