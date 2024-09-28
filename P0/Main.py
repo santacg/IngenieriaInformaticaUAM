@@ -11,12 +11,12 @@ for i in range(len(lista_particiones_simples)):
     print(datos.extraeDatos(lista_particiones_simples[i].indicesTest))
     print(datos.extraeDatos(lista_particiones_simples[i].indicesTrain))
 
-# lista_particiones_cruzadas = ValidacionCruzada.creaParticiones(
-#     EstrategiaParticionado, datos.datos, 4, 0)
-#
-# print("Particion cruzada: ")
-# for i in range(len(lista_particiones_cruzadas)):
-#     print("Particion test: ")
-#     print(datos.extraeDatos(lista_particiones_cruzadas[i].indicesTest))
-#     print("Particion entrenamiento: ")
-#     print(datos.extraeDatos(lista_particiones_cruzadas[i].indicesTrain))
+lista_particiones_cruzadas = ValidacionCruzada.creaParticiones(
+    EstrategiaParticionado, datos.datos, 4, 0)
+
+print("Particion cruzada: ")
+for i in range(len(lista_particiones_cruzadas)):
+    print("Particion test: ")
+    print(datos.extraeDatos(lista_particiones_cruzadas[i].indicesTest))
+    print("Particion entrenamiento: ")
+    print(datos.extraeDatos(lista_particiones_cruzadas[i].indicesTrain))
