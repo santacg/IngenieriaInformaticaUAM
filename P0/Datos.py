@@ -17,12 +17,15 @@ class Datos:
         self.diccionarios = {}
 
         for i in range(len(cols)):
-            if self.datos[cols[i]].dtype == 'object':
+            tipo_columna = self.datos[cols[i]].dtype
+            if tipo_columna == 'object':
                 self.nominalAtributos.append(True)
-            else:
+            elif tipo_columna in ['int64', 'float64']:
                 self.nominalAtributos.append(False)
-            diccionario = {}
+            else:
+                raise ValueError(f"El tipo de dato en la columna {cols[i]} no es válido.")
 
+            diccionario = {}
             if self.nominalAtributos[i] is True:
                 valores = self.datos[cols[i]].unique()
                 for j in range(len(valores)):

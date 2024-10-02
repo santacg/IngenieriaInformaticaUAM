@@ -25,7 +25,7 @@ class EstrategiaParticionado:
     @abstractmethod
     # TODO: esta funcion deben ser implementadas en cada estrategia concreta
     def creaParticiones(self, datos, seed=None):
-        pass
+        return [] 
 
 
 #####################################################################################################
@@ -85,12 +85,16 @@ class ValidacionCruzada(EstrategiaParticionado):
         random.seed(seed)
 
         datos_len = datos.shape[0]
-        folds_len = int(datos_len / self.nFolds)
+        folds_len_base = datos_len // self.nFolds
+        resto = datos_len % self.nFolds
 
         lista_filas = set(range(datos_len))
 
+        indice = 0
         for i in range(self.nFolds):
-            lista_test = list(range(folds_len * i, folds_len * (i + 1)))
+            folds_len = folds_len_base + 1 if i < resto else folds_len_base
+
+            lista_test = list(range(indice, indice + folds_len))
             lista_entranamiento = list(lista_filas - set(lista_test))
 
             particion = Particion()
@@ -98,5 +102,7 @@ class ValidacionCruzada(EstrategiaParticionado):
             particion.indicesTrain = lista_entranamiento
 
             self.particiones.append(particion)
+
+            indice += folds_len
 
         return self.particiones

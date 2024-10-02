@@ -1,12 +1,9 @@
 from Datos import Datos
 import EstrategiaParticionado
-import matplotlib.plt as plt
-import mimesis as mim
-import pandas as pd
 import time as t
 
-dataset = Datos('balloons.csv')
-# dataset=Datos('./datasets/heart.csv')
+# dataset = Datos('balloons.csv')
+dataset=Datos('heart.csv')
 print("NOMINAL ATRIBUTOS")
 print(dataset.nominalAtributos)
 print("DICCIONARIO")
