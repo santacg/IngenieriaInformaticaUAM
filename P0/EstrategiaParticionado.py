@@ -43,22 +43,19 @@ class ValidacionSimple(EstrategiaParticionado):
 
     def creaParticiones(self, datos, seed=None):
         random.seed(seed)
-        lista_seeds = []
-
-        for _ in range(self.nEjecuciones):
-            lista_seeds.append(random.random())
 
         datos_len = datos.shape[0]
         test_len = round(datos_len * self.porcentaje)
-        datos_secuencia = range(datos_len)
+        filas = list(range(datos_len))
 
-        for i in range(self.nEjecuciones):
-            random.seed(lista_seeds[i])
-            random.shuffle(datos_secuencia)
+        for _ in range(self.nEjecuciones):
+            random.seed(random.random())
+            secuencia_aleatoria = filas[:]
+            random.shuffle(secuencia_aleatoria)
 
             particion = Particion()
-            particion.indicesTest = datos_secuencia[:test_len]
-            particion.indicesTrain = datos_secuencia[test_len:]
+            particion.indicesTest = secuencia_aleatoria[:test_len]
+            particion.indicesTrain = secuencia_aleatoria[test_len:]
 
             self.particiones.append(particion)
 
@@ -84,15 +81,15 @@ class ValidacionCruzada(EstrategiaParticionado):
         folds_len_base = datos_len // self.nFolds
         resto = datos_len % self.nFolds
 
-        lista_filas = set(range(datos_len))
+        lista_filas = list(range(datos_len))
 
         indice = 0
         for i in range(self.nFolds):
             folds_len = folds_len_base + 1 if i < resto else folds_len_base
 
-            lista_test = list(range(indice, indice + folds_len))
-            lista_entranamiento = list(lista_filas - set(lista_test))
-
+            lista_test = lista_filas[indice:indice + folds_len]
+            lista_entranamiento = lista_filas[:indice] + lista_filas[indice + folds_len:]
+           
             particion = Particion()
             particion.indicesTest = lista_test
             particion.indicesTrain = lista_entranamiento

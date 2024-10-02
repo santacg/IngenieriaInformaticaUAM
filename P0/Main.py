@@ -2,8 +2,8 @@ from Datos import Datos
 import EstrategiaParticionado
 import time as t
 
-# dataset = Datos('balloons.csv')
-dataset=Datos('heart.csv')
+dataset = Datos('balloons.csv')
+# dataset=Datos('heart.csv')
 print("NOMINAL ATRIBUTOS")
 print(dataset.nominalAtributos)
 print("DICCIONARIO")
