@@ -6,35 +6,20 @@
 #include <string.h>
 #include <time.h>
 
-int afin_encrypt(FILE *in, FILE *out, int m, int a, int b) {
+int affine(FILE *in, FILE *out, int mode, int m, int a, int b) {
   if (in == NULL || out == NULL)
     return ERR;
 
   int c;
   while ((c = fgetc(in)) != EOF) {
     if (c >= 'a' && c <= 'z') {
-      int e = ((a * (c - 'a') + b) % m + m) % m + 'a';
-      fputc(e, out);
-    } else {
-      fputc(c, out);
+      if (mode == 0) {
+        c = ((a * (c - 'a') + b) % m + m) % m + 'a';
+      } else {
+        c = (((c - 'a' - b + m) * 15) % m + m) % m + 'a';
+      }
     }
-  }
-
-  return OK;
-}
-
-int afin_decrypt(FILE *in, FILE *out, int m, int a, int b) {
-  if (in == NULL || out == NULL)
-    return ERR;
-
-  int e;
-  while ((e = fgetc(in)) != EOF) {
-    if (e >= 'a' && e <= 'z') {
-      int d = (((e - 'a' - b + m) * 15) % m + m) % m + 'a';
-      fputc(d, out);
-    } else {
-      fputc(e, out);
-    }
+    fputc(c, out);
   }
 
   return OK;
@@ -100,51 +85,27 @@ int main(int argc, char **argv) {
 
   struct timespec start_time, end_time;
 
-  if (mode == 0) {
-    mpz_t a_mpz, b_mpz, one;
-    mpz_init_set_ui(a_mpz, a);
-    mpz_init_set_ui(b_mpz, b);
-    mpz_init_set_str(one, "1", 10);
+  mpz_t a_mpz, b_mpz, one;
+  mpz_init_set_ui(a_mpz, a);
+  mpz_init_set_ui(b_mpz, b);
+  mpz_init_set_str(one, "1", 10);
 
-    int res = euclidian_gcd(a_mpz, b_mpz);
+  int res = euclidian_gcd(a_mpz, b_mpz);
 
-    if (res != 1) {
-      fprintf(stdout, "numbers %d and %d have a gcd = 1, cannot encrypt text\n",
-              a, b);
-      mpz_clears(a_mpz, b_mpz, one, NULL);
-
-      fclose(in);
-      fclose(out);
-      return ERR;
-    }
-
+  if (res != 1) {
+    fprintf(stdout, "numbers %d and %d have a gcd = 1, cannot encrypt text\n",
+            a, b);
     mpz_clears(a_mpz, b_mpz, one, NULL);
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
-    afin_encrypt(in, out, m, a, b);
-    clock_gettime(CLOCK_MONOTONIC, &end_time);
-  } else {
-    mpz_t a_mpz, b_mpz, one;
-    mpz_init_set_ui(a_mpz, a);
-    mpz_init_set_ui(b_mpz, b);
-    mpz_init_set_str(one, "1", 10);
 
-    int res = euclidian_gcd(a_mpz, b_mpz);
-
-    if (res != 1) {
-      fprintf(stdout, "numbers %d and %d have a gcd = 1, cannot encrypt text\n",
-              a, b);
-      mpz_clears(a_mpz, b_mpz, one, NULL);
-
-      fclose(in);
-      fclose(out);
-      return ERR;
-    }
-
-    mpz_clears(a_mpz, b_mpz, one, NULL);
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
-    afin_decrypt(in, out, m, a, b);
-    clock_gettime(CLOCK_MONOTONIC, &end_time);
+    fclose(in);
+    fclose(out);
+    return ERR;
   }
+
+  mpz_clears(a_mpz, b_mpz, one, NULL);
+  clock_gettime(CLOCK_MONOTONIC, &start_time);
+  affine(in, out, mode, m, a, b);
+  clock_gettime(CLOCK_MONOTONIC, &end_time);
 
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
