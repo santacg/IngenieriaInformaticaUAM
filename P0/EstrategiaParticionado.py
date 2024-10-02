@@ -25,7 +25,7 @@ class EstrategiaParticionado:
     @abstractmethod
     # TODO: esta funcion deben ser implementadas en cada estrategia concreta
     def creaParticiones(self, datos, seed=None):
-        return [] 
+        return []
 
 
 #####################################################################################################
@@ -49,20 +49,16 @@ class ValidacionSimple(EstrategiaParticionado):
             lista_seeds.append(random.random())
 
         datos_len = datos.shape[0]
-        test_len = int(datos_len * self.porcentaje)
-
-        lista_filas = set(range(datos_len))
+        test_len = round(datos_len * self.porcentaje)
+        datos_secuencia = range(datos_len)
 
         for i in range(self.nEjecuciones):
             random.seed(lista_seeds[i])
-
-            lista_test = random.sample(range(datos_len), test_len)
-
-            lista_entranamiento = list(lista_filas - set(lista_test))
+            random.shuffle(datos_secuencia)
 
             particion = Particion()
-            particion.indicesTest = sorted(lista_test)
-            particion.indicesTrain = sorted(lista_entranamiento)
+            particion.indicesTest = datos_secuencia[:test_len]
+            particion.indicesTrain = datos_secuencia[test_len:]
 
             self.particiones.append(particion)
 
