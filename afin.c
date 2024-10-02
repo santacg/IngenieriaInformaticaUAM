@@ -13,8 +13,7 @@ int afin_encrypt(FILE *in, FILE *out, int m, int a, int b) {
   int c;
   while ((c = fgetc(in)) != EOF) {
     if (c >= 'a' && c <= 'z') {
-      int e = ((a * (c - 'a') + b) % m + m) % m +
-              'a'; // Ajuste para que quede en el rango
+      int e = ((a * (c - 'a') + b) % m + m) % m + 'a';
       fputc(e, out);
     } else {
       fputc(c, out);
@@ -31,8 +30,7 @@ int afin_decrypt(FILE *in, FILE *out, int m, int a, int b) {
   int e;
   while ((e = fgetc(in)) != EOF) {
     if (e >= 'a' && e <= 'z') {
-      int d = (((e - 'a' - b + m) * 15) % m + m) % m +
-              'a'; // Ajuste del rango y uso de inverse_a
+      int d = (((e - 'a' - b + m) * 15) % m + m) % m + 'a';
       fputc(d, out);
     } else {
       fputc(e, out);
