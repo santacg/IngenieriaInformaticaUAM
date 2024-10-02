@@ -1,13 +1,19 @@
-$FLAGS = -Wall -Wextra -pedantic -g 
+FLAGS = -Wall -Wextra -pedantic -g 
 
-$TARGET = main
-$OBJS = main.o
+TARGET = afin
+OBJS = afin.o utils.o
 
-main: main.o
-	gcc -o $@ $^ 
+all: $(TARGET)
 
-main.o: main.c utils.h
-	gcc -c $(FLAGS) main.c
+$(TARGET): $(OBJS)
+	gcc -o $@ $^ -lgmp -L.
+
+afin.o: afin.c utils.o 
+	gcc -c $(FLAGS) $^
+
+utils.o: utils.c utils.h
+	gcc -c $(FLAGS) $^
 
 clean: 
-	rm -f main.o main
+	rm -f $(TARGET) $(OBJS)
+
