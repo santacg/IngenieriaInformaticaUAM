@@ -9,6 +9,6 @@
 
 int euclidian_gcd(const mpz_t a, const mpz_t b);
 
-mpz_t *extended_euclidian(const mpz_t a, const mpz_t m);
+mpz_t *extended_euclidian(const mpz_t m, const mpz_t a);
 
 #endif
