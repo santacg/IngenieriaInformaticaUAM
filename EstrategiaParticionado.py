@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import random
+import numpy as np
 
 
 class Particion():
@@ -32,71 +33,68 @@ class EstrategiaParticionado:
 
 class ValidacionSimple(EstrategiaParticionado):
 
-    # Crea particiones segun el metodo tradicional de division de los datos segun el porcentaje deseado y el número de ejecuciones deseado
+    # Crea partitions segun el metodo tradicional de division de los datos segun el porcentaje deseado y el número de ejecuciones deseado
     # Devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
-    def __init__(self, nEjecuciones, porcentaje):
-        self.particiones = []
-        self.nEjecuciones = nEjecuciones
-        self.porcentaje = porcentaje
+    def __init__(self, n_executions, percentage):
+        self.partitions = []
+        self.executions = n_executions
+        self.percentage = percentage
 
     def creaParticiones(self, datos, seed=None):
         random.seed(seed)
 
-        datos_len = datos.shape[0]
-        test_len = round(datos_len * self.porcentaje)
-        filas = list(range(datos_len))
+        data_len = datos.shape[0]
+        test_len = round(data_len * self.percentage)
+        data_rows = np.arange(data_len)
 
-        for _ in range(self.nEjecuciones):
-            random.seed(random.random())
-            secuencia_aleatoria = filas[:]
-            random.shuffle(secuencia_aleatoria)
+        for _ in range(self.executions):
+            np.random.shuffle(data_rows)
 
-            particion = Particion()
-            particion.indicesTest = secuencia_aleatoria[:test_len]
-            particion.indicesTrain = secuencia_aleatoria[test_len:]
+            partition = Particion()
+            partition.indicesTest = data_rows[:test_len].tolist()
+            partition.indicesTrain = data_rows[test_len:].tolist()
 
-            self.particiones.append(particion)
+            self.partitions.append(partition)
 
-        return self.particiones
+        return self.partitions
 
 
 #####################################################################################################
 class ValidacionCruzada(EstrategiaParticionado):
 
-    # Crea particiones segun el metodo de validacion cruzada.
-    # El conjunto de entrenamiento se crea con las nfolds-1 particiones y el de test con la particion restante
+    # Crea partitions segun el metodo de validacion cruzada.
+    # El conjunto de entrenamiento se crea con las nfolds-1 particiones y el de test con la partición restante
     # Esta funcion devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
-    def __init__(self, nFolds):
-        self.particiones = []
-        self.nFolds = nFolds
+    def __init__(self, n_folds):
+        self.partitions = []
+        self.folds = n_folds 
 
     def creaParticiones(self, datos, seed=None):
         random.seed(seed)
 
-        datos_len = datos.shape[0]
-        folds_len_base = datos_len // self.nFolds
-        resto = datos_len % self.nFolds
+        data_len = datos.shape[0]
+        folds_len_base = data_len // self.folds
+        remainder = data_len % self.folds
 
-        lista_filas = list(range(datos_len))
+        rows = np.arange(data_len)
 
-        indice = 0
-        for i in range(self.nFolds):
-            folds_len = folds_len_base + 1 if i < resto else folds_len_base
+        index = 0
+        for i in range(self.folds):
+            folds_len = folds_len_base + 1 if i < remainder else folds_len_base
 
-            lista_test = lista_filas[indice:indice + folds_len]
-            lista_entranamiento = lista_filas[:indice] + \
-                lista_filas[indice + folds_len:]
+            test_rows = rows[index:index + folds_len]
+            train_rows = np.concatenate((rows[:index], rows[index + folds_len:]))
 
-            particion = Particion()
-            particion.indicesTest = lista_test
-            particion.indicesTrain = lista_entranamiento
+            partition = Particion()
+            partition.indicesTest = test_rows 
+            partition.indicesTrain = train_rows.tolist() 
 
-            self.particiones.append(particion)
+            self.partitions.append(partition)
 
-            indice += folds_len
+            index += folds_len
 
-        return self.particiones
+        return self.partitions
