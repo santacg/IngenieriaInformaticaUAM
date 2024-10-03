@@ -6,14 +6,15 @@ OBJS = afin.o utils.o
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	gcc -o $@ $^ -lgmp -L.
+	gcc -o $@ $^ -lgmp 
+	rm *.gch
 
-afin.o: afin.c utils.o 
+afin.o: afin.c utils.h
 	gcc -c $(FLAGS) $^
 
 utils.o: utils.c utils.h
 	gcc -c $(FLAGS) $^
 
 clean: 
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) $(OBJS) 
 
