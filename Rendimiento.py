@@ -55,7 +55,7 @@ for i in range(n_interations):
 particionado_simple_times = []
 for i in range(n_interations):
     start_time = t.time()
-    estrategia = EstrategiaParticionado.ValidacionSimple(10, 0.3)
+    estrategia = EstrategiaParticionado.ValidacionSimple(4, 0.3)
     estrategia.creaParticiones(datasets[i].datos)
     particionado_simple_times.append(t.time() - start_time)
 

@@ -88,8 +88,9 @@ class ValidacionCruzada(EstrategiaParticionado):
             folds_len = folds_len_base + 1 if i < resto else folds_len_base
 
             lista_test = lista_filas[indice:indice + folds_len]
-            lista_entranamiento = lista_filas[:indice] + lista_filas[indice + folds_len:]
-           
+            lista_entranamiento = lista_filas[:indice] + \
+                lista_filas[indice + folds_len:]
+
             particion = Particion()
             particion.indicesTest = lista_test
             particion.indicesTrain = lista_entranamiento
