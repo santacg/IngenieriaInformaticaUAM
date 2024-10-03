@@ -11,9 +11,9 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   if (in == NULL || out == NULL)
     return ERR;
 
-  mpz_t *inverse;
+  mpz_t *inverse = NULL;
   if (mode != 0)
-    inverse = extended_euclidian(a, m);
+    inverse = extended_euclidian(m, a);
 
   mpz_t acc;
   mpz_init(acc);
@@ -49,8 +49,10 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   }
 
   mpz_clear(acc);
-  if (mode != 0)
+  if (mode != 0) {
     mpz_clear(*inverse);
+    free(inverse);
+  }
   return OK;
 }
 
