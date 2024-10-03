@@ -60,46 +60,63 @@ int main(int argc, char **argv) {
   char *file_in = NULL, *file_out = NULL;
   int mode = ERR;
   mpz_t a_mpz, b_mpz, m_mpz;
+  mpz_inits(a_mpz, b_mpz, m_mpz, NULL);
 
   for (int i = 1; i < argc; i++) {
-    if (strncmp("-C", argv[i], 2) == 0) {
+    if (strcmp("-C", argv[i]) == 0) {
       if (mode == 1) {
-        fprintf(stdout, "Cannot set both modes at the same time\n");
+        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
         return ERR;
       }
-      mode = 0;
-    } else if (strncmp("-D", argv[i], 2) == 0) {
+      mode = 0; // Cifrar
+    } else if (strcmp("-D", argv[i]) == 0) {
       if (mode == 0) {
-        fprintf(stdout, "Cannot set both modes at the same time\n");
+        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
         return ERR;
       }
-      mode = 1;
-    } else if (strncmp(argv[i], "-m", 2) == 0) {
-      if (atoi(argv[i + 1]) == 0)
+      mode = 1; // Descifrar
+    } else if (strcmp(argv[i], "-m") == 0) {
+      if (i + 1 >= argc || mpz_set_str(m_mpz, argv[++i], 10) != 0) {
+        fprintf(stderr, "Error: Invalid value for -m\n");
         return ERR;
-      mpz_init_set_str(m_mpz, argv[++i], 10);
-    } else if (strncmp(argv[i], "-a", 2) == 0) {
-      if (atoi(argv[i + 1]) == 0)
-        return ERR;
-      mpz_init_set_str(a_mpz, argv[++i], 10);
-    } else if (strncmp(argv[i], "-b", 2) == 0) {
-      if (atoi(argv[i + 1]) == 0)
-        return ERR;
-      mpz_init_set_str(b_mpz, argv[++i], 10);
-    } else if (strncmp(argv[i], "-i", 2) == 0) {
-      if (strstr(argv[++i], ".txt") != NULL) {
-        file_in = argv[i];
       }
-    } else if (strncmp(argv[i], "-o", 2) == 0) {
-      char *str = strstr(argv[++i], ".txt");
-      if (str != NULL && strcmp(str, "\0")) {
-        file_out = argv[i];
+    } else if (strcmp(argv[i], "-a") == 0) {
+      if (i + 1 >= argc || mpz_set_str(a_mpz, argv[++i], 10) != 0) {
+        fprintf(stderr, "Error: Invalid value for -a\n");
+        return ERR;
       }
+    } else if (strcmp(argv[i], "-b") == 0) {
+      if (i + 1 >= argc || mpz_set_str(b_mpz, argv[++i], 10) != 0) {
+        fprintf(stderr, "Error: Invalid value for -b\n");
+        return ERR;
+      }
+    } else if (strcmp(argv[i], "-i") == 0) {
+      if (i + 1 >= argc || strstr(argv[++i], ".txt") == NULL) {
+        fprintf(stderr, "Error: Invalid input file\n");
+        return ERR;
+      }
+      file_in = argv[i];
+    } else if (strcmp(argv[i], "-o") == 0) {
+      if (i + 1 >= argc || strstr(argv[++i], ".txt") == NULL) {
+        fprintf(stderr, "Error: Invalid output file\n");
+        return ERR;
+      }
+      file_out = argv[i];
+    } else {
+      fprintf(stderr, "Error: Unknown parameter %s\n", argv[i]);
+      return ERR;
     }
   }
 
   if (mode == ERR) {
-    fprintf(stdout, "Invalid format\n");
+    fprintf(stderr, "Error: -C or -D must be specified\n");
+    mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+    return ERR;
+  }
+
+  if (mpz_cmp_ui(m_mpz, 0) == 0 || mpz_cmp_ui(a_mpz, 0) == 0 ||
+      mpz_cmp_ui(b_mpz, 0) == 0) {
+    fprintf(stderr, "Error: Parameters -m, -a, and -b must be non-zero\n");
     mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
     return ERR;
   }
@@ -128,8 +145,8 @@ int main(int argc, char **argv) {
   int res = euclidian_gcd(a_mpz, b_mpz);
 
   if (res != 1) {
-    fprintf(stdout,
-            "Introduced numbers dont have a gcd = 1, cannot encrypt text\n");
+    fprintf(stdout, "Introduced numbers dont have a gcd = 1, cannot encrypt "
+                    "nor decrypt text\n");
     mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
 
     fclose(in);
