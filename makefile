@@ -1,20 +1,19 @@
 FLAGS = -Wall -Wextra -pedantic -g 
 
-TARGET = afin
-OBJS = afin.o utils.o
+OBJS = afin.o hill.o utils.o
 
-all: $(TARGET)
+hill: hill.o utils.o
+	gcc -o $@ $^ -lgmp
 
-$(TARGET): $(OBJS)
-	gcc -o $@ $^ -lgmp 
-	rm *.gch
+hill.o: hill.c utils.h
+	gcc -c $(FLAGS) $^
 
 afin.o: afin.c utils.h
 	gcc -c $(FLAGS) $^
 
 utils.o: utils.c utils.h
-	gcc -c $(FLAGS) $^
+	gcc -c $(FLAGS) $^ -lgmp
 
 clean: 
-	rm -f $(TARGET) $(OBJS) 
+	rm -f hill afin $(OBJS) 
 

@@ -77,3 +77,78 @@ mpz_t *extended_euclidian(const mpz_t m, const mpz_t a) {
 
   return res;
 }
+
+void cofactorize(int p, int q, int n, int temp[n][n], int matrix[n][n]) {
+  int i = 0, j = 0;
+
+  for (int row = 0; row < n; row++) {
+    for (int col = 0; col < n; col++) {
+      if (row != p && col != q) {
+        temp[i][j++] = matrix[row][col];
+
+        if (j == n - 1) {
+          j = 0;
+          i++;
+        }
+      }
+    }
+  }
+}
+
+int determinant(int n, int matrix[n][n]) {
+  int det = 0;
+
+  if (n == 1) {
+    return matrix[0][0];
+  }
+
+  int temp[n][n];
+  int sign = 1;
+
+  for (int f = 0; f < n; f++) {
+    cofactorize(0, f, n, temp, matrix);
+    det += sign * matrix[0][f] * determinant(n - 1, matrix);
+
+    sign = -sign;
+  }
+
+  return det;
+}
+
+void adjoint(int n, int matrix[n][n], int adj[n][n]) {
+
+  if (n == 1) {
+    adj[0][0] = 1;
+    return;
+  }
+
+  int sign = 1;
+  int temp[n][n];
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      cofactorize(i, j, n, temp, matrix);
+
+      sign = ((i + j) % 2 == 0) ? 1 : -1;
+      adj[j][i] = (sign) * (determinant(n, temp));
+    }
+  }
+}
+
+int inverse(int n, int matrix[n][n], int inverse[n][n]) {
+  int det = determinant(n, matrix);
+  if (det == 0) {
+    return ERR;
+  }
+
+  int adj[n][n];
+  adjoint(n, matrix, adj);
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      inverse[i][j] = adj[i][j] / det;
+    }
+  }
+
+  return 0;
+}

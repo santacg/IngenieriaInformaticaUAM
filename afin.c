@@ -124,8 +124,10 @@ int main(int argc, char **argv) {
   FILE *in, *out;
   if (file_in != NULL) {
     in = fopen(file_in, "r");
-    if (in == NULL)
+    if (in == NULL) {
+      mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
       return ERR;
+    }
   } else {
     in = stdin;
   }
@@ -133,6 +135,7 @@ int main(int argc, char **argv) {
   if (file_out != NULL) {
     out = fopen(file_out, "w");
     if (out == NULL) {
+      mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
       fclose(in);
       return ERR;
     }
@@ -157,12 +160,13 @@ int main(int argc, char **argv) {
   clock_gettime(CLOCK_MONOTONIC, &start_time);
   affine(in, out, mode, m_mpz, a_mpz, b_mpz);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
-  mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
 
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
 
   printf("time: %lf \n", elapsed_time);
+
+  mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
   fclose(in);
   fclose(out);
   return OK;
