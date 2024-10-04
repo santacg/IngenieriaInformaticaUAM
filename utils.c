@@ -152,3 +152,17 @@ int inverse(int n, int matrix[n][n], int inverse[n][n]) {
 
   return 0;
 }
+
+void matrix_multiplication(int n, int *matrix_r, int matrix_a[n],
+                           int matrix_b[n][n]) {
+  int acc = 0;
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      acc += matrix_a[j] * matrix_b[i][j];
+    }
+    matrix_r[i] = acc;
+  }
+
+  return;
+}
