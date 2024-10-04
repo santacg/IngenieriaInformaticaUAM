@@ -40,10 +40,10 @@ def reduce(imagen):
         imagen, gaussian_kernel, 'same')
 
     i = 0
-    for x in range(0, 2, rows):
+    for x in range(0, rows, 2):
         j = 0
         for y in range(0, cols, 2):
-            output[x][y] = imagen_suavizada[x, y]
+            output[i][j] = imagen_suavizada[x, y]
             j += 1
         i += 1
 
@@ -60,10 +60,26 @@ def expand(imagen):
     # Devuelve:
     #    output: numpy array de tamaño [imagen_height*2, imagen_width*2].
     """
-    output = np.empty(
-        shape=[0, 0])  # iniciamos la variable de salida (numpy array)
+    rows = imagen.shape[0]
+    cols = imagen.shape[1]
 
-    # ...
+    output_rows = rows * 2
+    output_cols = cols * 2
+
+    output = np.empty(shape=(output_rows, output_cols))
+
+    i = 0
+    for x in range(0, rows, 2):
+        j = 0
+        for y in range(0, cols, 2):
+            output[i][j] = imagen[x, y]
+            j += 1
+        i += 1
+
+    gaussian_kernel = generar_kernel_suavizado(0.4)
+
+    output = scipy.signal.convolve2d(output, gaussian_kernel, 'same')
+    output * 5
 
     return output
 
