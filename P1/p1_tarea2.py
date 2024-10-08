@@ -2,12 +2,14 @@
 # Practica 1: Fusion de imagenes mediante piramides
 # Tarea 2: piramide Gaussiana y piramide laplaciana
 
-# AUTOR1: APELLIDO1 APELLIDO1, NOMBRE1
-# AUTOR2: APELLIDO2 APELLIDO2, NOMBRE2
-# PAREJA/TURNO: NUMERO_PAREJA/NUMERO_TURNO
-import numpy as np
+# AUTOR1: GARCÍA SANTA, CARLOS
+# AUTOR2: GONZÁLEZ GALLEGO, MIGUEL ÁNGEL
+# PAREJA/TURNO: 02/TARDE
+import scipy.signal
+
 from p1_tests import test_p1_tarea2
 from p1_tarea1 import reduce, expand
+from p1_utils import generar_kernel_suavizado
 
 def gaus_piramide(imagen, niveles):
     """ 
@@ -24,10 +26,16 @@ def gaus_piramide(imagen, niveles):
     #       output[0] es la imagen de entrada
     #       output[i] es el nivel i de la piramide
     #  
-    """ 
-    gaus_pyr = []  # iniciamos la variable de salida (lista)
+    """
+    gaussian_kernel = generar_kernel_suavizado(0.4)    
+    gaus_pyr = [imagen]  # iniciamos la variable de salida (lista)
+    
+    for i in range(niveles):   
+        output = scipy.signal.convolve2d(gaus_pyr[-1], gaussian_kernel, 'same')
+        img_red = output[::2,::2]
 
-    #...
+        gaus_pyr.append(img_red)
+   
 
     return gaus_pyr
 
@@ -54,8 +62,27 @@ def lapl_piramide(gaus_pyr):
     #   columna para obtener una imagen de tamaño 5x7 donde pueda aplicar la resta      
     """ 
     lapl_pyr = [] # iniciamos la variable de salida (lista) 
+    niveles = len(gaus_pyr)
 
-    #...
+    for k in range(niveles-1):
+
+        img_expand = expand(gaus_pyr[k+1])
+
+        #Comprobacion del numero de filas de la imagen expandida y la original
+        if img_expand.shape[0] > gaus_pyr[k].shape[0]:
+            img_expand = img_expand[:gaus_pyr[k].shape[0], :]
+        elif img_expand.shape[1] > gaus_pyr[k].shape[1]:
+
+            img_expand = img_expand[:, :gaus_pyr[k].shape[1]]
+      
+        # Resta entre el nivel actual de la pirámide Gaussiana y la imagen expandida
+        laplaciano = gaus_pyr[k] - img_expand
+
+        # Añadir el nivel Laplaciano a la lista
+        lapl_pyr.append(laplaciano)
+    
+    # El último nivel de la pirámide Laplaciana es igual al último nivel Gaussiano
+    lapl_pyr.append(gaus_pyr[-1])
 
     return lapl_pyr
    
