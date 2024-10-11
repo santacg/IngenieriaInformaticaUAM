@@ -33,7 +33,7 @@ def reduce(imagen):
     output_rows = math.ceil(rows / 2)
     output_cols = math.ceil(cols / 2)
 
-   output = np.empty(shape=(output_rows, output_cols))
+    output = np.empty(shape=(output_rows, output_cols))
 
     gaussian_kernel = generar_kernel_suavizado(0.4)
     imagen_suavizada = scipy.signal.convolve2d(

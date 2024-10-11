@@ -31,9 +31,22 @@ def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
     #       fusion_pyr[i] es el nivel i de la piramide que contiene bordes
     #       fusion_pyr[niveles] es una imagen (RGB o escala de grises)
     """ 
+    if len(lapl_pyr_imgA) != len(lapl_pyr_imgB) or len(lapl_pyr_imgA) != len(gaus_pyr_mask) or len(lapl_pyr_imgB) != len(gaus_pyr_mask):
+        return ValueError("Error, las pirámides A y B no tienen el mismo número de niveles.")
+    
     fusion_pyr = [] # iniciamos la variable
+    for i in range(len(lapl_pyr_imgA)):
+        
+        L_a = lapl_pyr_imgA[i]
+        L_b = lapl_pyr_imgB[i]
+        G_m = gaus_pyr_mask[i]
 
-    #...
+        if L_a.shape != L_b.shape or L_a.shape != G_m.shape:
+            return ValueError("Error, los niveles no seon correctos")
+        
+        L_f = L_a[i] * G_m[i] + (1-G_m[i])*L_b[i]
+
+        fusion_pyr.append(L_f)
     
     return fusion_pyr
 
