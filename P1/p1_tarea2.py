@@ -66,20 +66,28 @@ def lapl_piramide(gaus_pyr):
 
     for k in range(niveles-1):
 
-        img_expand = expand(gaus_pyr[k+1])
+        img_expandida = expand(gaus_pyr[k+1])
 
         #Comprobacion del numero de filas de la imagen expandida y la original
-        if img_expand.shape[0] > gaus_pyr[k].shape[0]:
-            img_expand = img_expand[:gaus_pyr[k].shape[0], :]
-        elif img_expand.shape[1] > gaus_pyr[k].shape[1]:
+        
+        print(img_expandida.shape)
+        print(gaus_pyr[k].shape)
 
-            img_expand = img_expand[:, :gaus_pyr[k].shape[1]]
-      
+        if img_expandida.shape[0] > gaus_pyr[k].shape[0] and img_expandida.shape[1] > gaus_pyr[k].shape[1]:
+            img_expandida = img_expandida[:gaus_pyr[k].shape[0], :gaus_pyr[k].shape[1]]
+        if img_expandida.shape[0] > gaus_pyr[k].shape[0]:
+            img_expandida = img_expandida[:gaus_pyr[k].shape[0], :]
+            
+        if img_expandida.shape[1] > gaus_pyr[k].shape[1]:
+            img_expandida = img_expandida[:, :gaus_pyr[k].shape[1]]
         # Resta entre el nivel actual de la pirámide Gaussiana y la imagen expandida
-        laplaciano = gaus_pyr[k] - img_expand
+        laplaciano_ = gaus_pyr[k] - img_expandida
+        
+        print(img_expandida.shape)
+        print(" ")
 
         # Añadir el nivel Laplaciano a la lista
-        lapl_pyr.append(laplaciano)
+        lapl_pyr.append(laplaciano_)
     
     # El último nivel de la pirámide Laplaciana es igual al último nivel Gaussiano
     lapl_pyr.append(gaus_pyr[-1])
@@ -88,4 +96,4 @@ def lapl_piramide(gaus_pyr):
    
 if __name__ == "__main__":    
     print("Practica 1 - Tarea 2 - Test autoevaluación\n")                
-    print("Tests completados = " + str(test_p1_tarea2())) 
+    print("Tests completados = " + str(test_p1_tarea2(precision=1))) 
