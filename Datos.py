@@ -10,13 +10,12 @@ class Datos:
     # nominalAtributos, datos y diccionarios
     def __init__(self, nombreFichero):
         self.datos = pd.read_csv(nombreFichero, dtype={'Class': 'object'})
-
-        cols = self.datos.columns
-
         self.nominalAtributos = []
         self.diccionarios = {}
 
-        for i in range(len(cols)):
+        cols = self.datos.columns
+        cols_len = len(cols)
+        for i in range(cols_len):
             tipo_columna = self.datos[cols[i]].dtype
             if tipo_columna == 'object':
                 self.nominalAtributos.append(True)

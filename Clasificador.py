@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
-
+from typing import dataclass_transform
+import numpy as np
+from scipy.stats import norm
 
 class Clasificador:
 
@@ -21,7 +23,7 @@ class Clasificador:
     # nominalAtributos: array bool con la indicatriz de los atributos nominales
     # diccionario: array de diccionarios de la estructura Datos utilizados para la codificacion de variables discretas
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        pass
+        return
 
     # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
     # TODO: implementar
@@ -44,10 +46,44 @@ class Clasificador:
 
 
 class ClasificadorNaiveBayes(Clasificador):
+    
+    def __init__(self):
+        self.priori = {}
+        self.verosimilitude = {}
 
     # TODO: implementar
-    def entrenamiento(self, datostrain, nominalAtributos, diccionario):
-        pass
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        rows = datosTrain.shape[0]
+        class_series = datosTrain.loc[:, 'Class']
+        class_values, class_counts = np.unique(class_series, return_counts=True)
+
+        # Calculate a priori probabilities
+        for idx, class_value in enumerate(class_values):
+            self.priori[class_value] = class_counts[idx] / rows
+
+        # Calculate verosimilitude probabilities
+        cols = datosTrain.shape[1]
+        for i in range(cols):
+            series = datosTrain.iloc[:, i]
+            
+            if nominalAtributos[i] is True:
+                unique_values= np.unique(series)
+                for unique_value in unique_values:
+                    self.verosimilitude[unique_value] = {}
+                    for idx, class_value in enumerate(class_values):
+                        count = ((series == unique_value) & (class_series == class_value)).sum()
+                        self.verosimilitude[unique_value][class_value] = count / class_counts[idx]
+            else:
+                series_name = datosTrain.columns[i]
+                self.verosimilitude[series_name] = {}
+                for class_value in class_values:
+                    # Calculate mean and variance
+                    mean = np.mean(series)
+                    std_dev = np.std(series)
+                    self.verosimilitude[series_name][class_value] = norm(loc=mean, scale=std_dev)
+
+        print(self.verosimilitude)
+        return 
 
     # TODO: implementar
     def clasifica(self, datostest, nominalAtributos, diccionario):
