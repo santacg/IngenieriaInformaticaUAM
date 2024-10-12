@@ -65,7 +65,7 @@ class ClasificadorNaiveBayes(Clasificador):
         cols = datosTrain.shape[1]
         for i in range(cols):
             series = datosTrain.iloc[:, i]
-            
+
             if nominalAtributos[i] is True:
                 unique_values= np.unique(series)
                 for unique_value in unique_values:
@@ -77,9 +77,9 @@ class ClasificadorNaiveBayes(Clasificador):
                 series_name = datosTrain.columns[i]
                 self.verosimilitude[series_name] = {}
                 for class_value in class_values:
-                    # Calculate mean and variance
-                    mean = np.mean(series)
-                    std_dev = np.std(series)
+                    class_data = series[class_series == class_value]
+                    mean = np.mean(class_data)
+                    std_dev = np.std(class_data)
                     self.verosimilitude[series_name][class_value] = norm(loc=mean, scale=std_dev)
 
         print(self.verosimilitude)
