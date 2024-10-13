@@ -31,3 +31,9 @@ clasificador = ClasificadorNaiveBayes()
 training_index = estrategia.partitions[0].indicesTrain
 training_data = dataset.extraeDatos(training_index)
 clasificador.entrenamiento(training_data, dataset.nominalAtributos, dataset.diccionarios)
+
+test_index = estrategia.partitions[0].indicesTest
+test_data = dataset.extraeDatos(test_index)
+classification = clasificador.clasifica(test_data, dataset.nominalAtributos, dataset.diccionarios)
+print(classification)
+print(clasificador.error(test_data, classification))
