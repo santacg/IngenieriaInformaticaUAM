@@ -145,6 +145,7 @@ int main(int argc, char **argv) {
 
   struct timespec start_time, end_time;
 
+/*
   int res = euclidian_gcd(a_mpz, b_mpz);
 
   if (res != 1) {
@@ -156,7 +157,19 @@ int main(int argc, char **argv) {
     fclose(out);
     return ERR;
   }
+  */
+  int res = euclidian_gcd(a_mpz, m_mpz);
 
+  if (res != 1) {
+    fprintf(stdout, "Introduced numbers dont make up an injetive affine function"
+                    ", cannot encrypt nor decrypt text\n ");
+    mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+
+    fclose(in);
+    fclose(out);
+    return ERR;
+  }
+           
   clock_gettime(CLOCK_MONOTONIC, &start_time);
   affine(in, out, mode, m_mpz, a_mpz, b_mpz);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
