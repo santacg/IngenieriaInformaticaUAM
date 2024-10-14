@@ -31,23 +31,26 @@ def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
     #       fusion_pyr[i] es el nivel i de la piramide que contiene bordes
     #       fusion_pyr[niveles] es una imagen (RGB o escala de grises)
     """ 
-    if len(lapl_pyr_imgA) != len(lapl_pyr_imgB) or len(lapl_pyr_imgA) != len(gaus_pyr_mask) or len(lapl_pyr_imgB) != len(gaus_pyr_mask):
-        return ValueError("Error, las pirámides A y B no tienen el mismo número de niveles.")
-    
     fusion_pyr = [] # iniciamos la variable
-    for i in range(len(lapl_pyr_imgA)):
-        
-        L_a = lapl_pyr_imgA[i]
-        L_b = lapl_pyr_imgB[i]
-        G_m = gaus_pyr_mask[i]
 
-        if L_a.shape != L_b.shape or L_a.shape != G_m.shape:
-            return ValueError("Error, los niveles no seon correctos")
-        
-        L_f = L_a[i] * G_m[i] + (1-G_m[i])*L_b[i]
+    lapl_pyr_imgA_size = len(lapl_pyr_imgA)
+    lapl_pyr_imgB_size = len(lapl_pyr_imgB)
+    gaus_pyr_size = len(gaus_pyr_mask)
 
-        fusion_pyr.append(L_f)
+    if lapl_pyr_imgA_size != lapl_pyr_imgB_size:
+        raise ValueError("Las listas de pirámides Laplacianas no tienen el mismo número de niveles");
+
+    if lapl_pyr_imgA_size != gaus_pyr_size:
+        raise ValueError("Las listas de pirámides Laplacianas no tienen el mismo número de niveles que la lista de Gaussianas");
     
+    for level in range(lapl_pyr_imgA_size):
+        lapl_A = lapl_pyr_imgA[level]
+        lapl_B = lapl_pyr_imgB[level]
+        gaus_pyr = gaus_pyr_mask[level]
+        
+        fusion = lapl_A * gaus_pyr + lapl_B * (1 - gaus_pyr)
+        fusion_pyr.append(fusion)
+
     return fusion_pyr
 
 def reconstruir_lapl_pyr(lapl_pyr):
@@ -71,8 +74,16 @@ def reconstruir_lapl_pyr(lapl_pyr):
     """ 
     output = np.empty(shape=[0,0]) # iniciamos la variable de salida (numpy array)
 
-    #...
-    
+    output = lapl_pyr[-1]  
+    lapl_pyr_size = len(lapl_pyr)
+    for level in range(lapl_pyr_size - 2, -1, -1):
+        expanded_img = expand(output)
+
+        if expanded_img.shape != lapl_pyr[level].shape:
+            expanded_img = expanded_img[:lapl_pyr[level].shape[0], :lapl_pyr[level].shape[1]]
+
+        output = expanded_img + lapl_pyr[level]
+
     return output
 
 if __name__ == "__main__":    

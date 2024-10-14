@@ -27,15 +27,10 @@ def gaus_piramide(imagen, niveles):
     #       output[i] es el nivel i de la piramide
     #  
     """
-    gaussian_kernel = generar_kernel_suavizado(0.4)    
     gaus_pyr = [imagen]  # iniciamos la variable de salida (lista)
     
-    for i in range(niveles):   
-        output = scipy.signal.convolve2d(gaus_pyr[-1], gaussian_kernel, 'same')
-        img_red = output[::2,::2]
-
-        gaus_pyr.append(img_red)
-   
+    for _ in range(niveles):   
+        gaus_pyr.append(reduce(gaus_pyr[-1]))
 
     return gaus_pyr
 
@@ -65,14 +60,9 @@ def lapl_piramide(gaus_pyr):
     niveles = len(gaus_pyr)
 
     for k in range(niveles-1):
-
         img_expandida = expand(gaus_pyr[k+1])
 
         #Comprobacion del numero de filas de la imagen expandida y la original
-        
-        print(img_expandida.shape)
-        print(gaus_pyr[k].shape)
-
         if img_expandida.shape[0] > gaus_pyr[k].shape[0] and img_expandida.shape[1] > gaus_pyr[k].shape[1]:
             img_expandida = img_expandida[:gaus_pyr[k].shape[0], :gaus_pyr[k].shape[1]]
         if img_expandida.shape[0] > gaus_pyr[k].shape[0]:
@@ -81,13 +71,10 @@ def lapl_piramide(gaus_pyr):
         if img_expandida.shape[1] > gaus_pyr[k].shape[1]:
             img_expandida = img_expandida[:, :gaus_pyr[k].shape[1]]
         # Resta entre el nivel actual de la pirámide Gaussiana y la imagen expandida
-        laplaciano_ = gaus_pyr[k] - img_expandida
-        
-        print(img_expandida.shape)
-        print(" ")
+        laplaciana = gaus_pyr[k] - img_expandida
 
         # Añadir el nivel Laplaciano a la lista
-        lapl_pyr.append(laplaciano_)
+        lapl_pyr.append(laplaciana)
     
     # El último nivel de la pirámide Laplaciana es igual al último nivel Gaussiano
     lapl_pyr.append(gaus_pyr[-1])
