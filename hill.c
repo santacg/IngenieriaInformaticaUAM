@@ -26,21 +26,44 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   }
 
   int count = 0;
-  int matrix_text[n], matrix_e[n];
-  while ((c = fgetc(in)) != EOF) {
-    if (count == n) {
-      count = 0;
-      matrix_multiplication(n, matrix_e, matrix_text, matrix_k);
-      for (int i = 0; i < n; i++) {
-        fputc((matrix_e[i] % m) + 'a', out);
+  int matrix_text[n], matrix_e[n], matrix_d[n];
+  if (mode == 0) {
+    while ((c = fgetc(in)) != EOF) {
+      if (count == n) {
+        count = 0;
+        matrix_multiplication(n, matrix_e, matrix_text, matrix_k);
+        for (int i = 0; i < n; i++) {
+          fputc((matrix_e[i] % m) + 'a', out);
+        }
+      }
+
+      if (c >= 'a' && c <= 'z') {
+        matrix_text[count] = c - 'a';
+        count++;
+      } else {
+        fputc(c, out);
       }
     }
+  } else {
 
-    if (c >= 'a' && c <= 'z') {
-      matrix_text[count] = c - 'a';
-      count++;
-    } else {
-      fputc(c, out);
+    int matrix_inverse[n][n];
+    inverse(n, matrix_k, matrix_inverse);
+
+    while ((c = fgetc(in)) != EOF) {
+      if (count == n) {
+        count = 0;
+        matrix_multiplication(n, matrix_d, matrix_text, matrix_inverse);
+        for (int i = 0; i < n; i++) {
+          fputc((matrix_d[i] % m) + 'a', out);
+        }
+      }
+
+      if (c >= 'a' && c <= 'z') {
+        matrix_text[count] = c - 'a';
+        count++;
+      } else {
+        fputc(c, out);
+      }
     }
   }
 
