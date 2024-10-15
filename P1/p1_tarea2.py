@@ -63,13 +63,8 @@ def lapl_piramide(gaus_pyr):
         img_expandida = expand(gaus_pyr[k+1])
 
         #Comprobacion del numero de filas de la imagen expandida y la original
-        if img_expandida.shape[0] > gaus_pyr[k].shape[0] and img_expandida.shape[1] > gaus_pyr[k].shape[1]:
-            img_expandida = img_expandida[:gaus_pyr[k].shape[0], :gaus_pyr[k].shape[1]]
-        if img_expandida.shape[0] > gaus_pyr[k].shape[0]:
-            img_expandida = img_expandida[:gaus_pyr[k].shape[0], :]
-            
-        if img_expandida.shape[1] > gaus_pyr[k].shape[1]:
-            img_expandida = img_expandida[:, :gaus_pyr[k].shape[1]]
+        img_expandida = img_expandida[:gaus_pyr[k].shape[0], :gaus_pyr[k].shape[1]]
+
         # Resta entre el nivel actual de la pirámide Gaussiana y la imagen expandida
         laplaciana = gaus_pyr[k] - img_expandida
 

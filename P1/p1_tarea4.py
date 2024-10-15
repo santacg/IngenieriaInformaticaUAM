@@ -44,20 +44,18 @@ def run_fusion(imgA, imgB, mask, niveles):
     """ 
     
     # iniciamos las variables de salida    
-    Gpyr_imgA = []      # Pirámide Gaussiana imagen A
-    Gpyr_imgB = []      # Pirámide Gaussiana imagen B
-    Gpyr_mask = []      # Pirámide Gaussiana máscara    
-    Lpyr_imgA = []      # Pirámide Laplaciana imagen A
-    Lpyr_imgB = []      # Pirámide Laplaciana imagen B
-    Lpyr_fus = []       # Pirámide Laplaciana fusionada
-    Lpyr_fus_rec = []   # Imagen reconstruida de la pirámide Laplaciana fusionada
+    Gpyr_imgA = p1_tarea2.gaus_piramide(imgA, niveles)      # Pirámide Gaussiana imagen A
+    Gpyr_imgB = p1_tarea2.gaus_piramide(imgB, niveles)      # Pirámide Gaussiana imagen B
+    Gpyr_mask = p1_tarea2.gaus_piramide(mask, niveles)      # Pirámide Gaussiana máscara    
+    Lpyr_imgA = p1_tarea2.lapl_piramide(Gpyr_imgA)          # Pirámide Laplaciana imagen A
+    Lpyr_imgB = p1_tarea2.lapl_piramide(Gpyr_imgB)          # Pirámide Laplaciana imagen B
+    Lpyr_fus = p1_tarea3.fusionar_lapl_pyr(Lpyr_imgA, Lpyr_imgB, Gpyr_mask)       # Pirámide Laplaciana fusionada
+    Lpyr_fus_rec = p1_tarea3.reconstruir_lapl_pyr(Lpyr_fus)                       # Imagen reconstruida de la pirámide Laplaciana fusionada
 
-    #...
-    
     return Gpyr_imgA, Gpyr_imgB, Gpyr_mask, Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec
 if __name__ == "__main__":    
     
-    path_imagenes = "./p1_sol/img/"
+    path_imagenes = "./p1/img/"
     print("Practica 1 - Tarea 4 - Test autoevaluación\n")    
     result,imgAgray,imgBgray,maskgray,\
         Gpyr_imgA, Gpyr_imgB, Gpyr_mask, Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec \
