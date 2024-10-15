@@ -42,7 +42,15 @@ def run_fusion(imgA, imgB, mask, niveles):
     #   Lpyr_fus_rec:  numpy array de tamaño [imagen_height, imagen_width] correspondiente
     #               a la reconstruccion de la pirámide Lpyr_fus
     """ 
+    # Verificamos que las imágenes sean matrices bidimensionales
+    if np.ndim(imgA) != 2 or np.ndim(imgB) != 2:
+        raise ValueError("Las imágenes no están en escala de griss") 
     
+    # Convertimos las imágenes y la máscara a tipo float
+    imgA = np.array(imgA, dtype=np.float64)
+    imgB = np.array(imgB, dtype=np.float64)
+    mask = np.array(mask, dtype=np.float64)
+
     # iniciamos las variables de salida    
     Gpyr_imgA = p1_tarea2.gaus_piramide(imgA, niveles)      # Pirámide Gaussiana imagen A
     Gpyr_imgB = p1_tarea2.gaus_piramide(imgB, niveles)      # Pirámide Gaussiana imagen B
@@ -51,6 +59,9 @@ def run_fusion(imgA, imgB, mask, niveles):
     Lpyr_imgB = p1_tarea2.lapl_piramide(Gpyr_imgB)          # Pirámide Laplaciana imagen B
     Lpyr_fus = p1_tarea3.fusionar_lapl_pyr(Lpyr_imgA, Lpyr_imgB, Gpyr_mask)       # Pirámide Laplaciana fusionada
     Lpyr_fus_rec = p1_tarea3.reconstruir_lapl_pyr(Lpyr_fus)                       # Imagen reconstruida de la pirámide Laplaciana fusionada
+
+    # Recortamos los valores que esten fuera del rango [0, 1]
+    Lpyr_fus_rec = np.clip(Lpyr_fus_rec, 0, 1)
 
     return Gpyr_imgA, Gpyr_imgB, Gpyr_mask, Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec
 if __name__ == "__main__":    
