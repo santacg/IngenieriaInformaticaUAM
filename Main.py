@@ -15,5 +15,5 @@ estrategia_simple = EstrategiaParticionado.ValidacionSimple(5, 0.2)
 estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(5)
 clasificador = ClasificadorNaiveBayes()
 print("Error: ")
-print(clasificador.validacion(estrategia_cruzada, dataset, clasificador))
+print(clasificador.validacion(estrategia_simple, dataset, clasificador))
 

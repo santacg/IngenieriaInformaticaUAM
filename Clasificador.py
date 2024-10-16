@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import dataclass_transform
 import numpy as np
+from pandas.core.arrays import categorical
 from scipy import stats as st
 from EstrategiaParticionado import ValidacionCruzada
-import sklearn
+from sklearn import naive_bayes as nb
 
 class Clasificador:
 
@@ -33,12 +33,13 @@ class Clasificador:
         # Aqui se compara la prediccion (pred) con las clases reales y se calcula el error
         rows = datos.shape[0]
         class_series = datos.loc[:, 'Class']
+        class_values = np.unique(class_series)
 
         n_succes = 0
         n_error = 0
         for i in range(rows):
-            pred_class = int(np.argmax(pred[i]))
-            real_class = int(class_series.iloc[i])
+            pred_class = pred[i]
+            real_class = class_series.iloc[i]
 
             if pred_class == real_class:
                 n_succes += 1
@@ -138,11 +139,12 @@ class ClasificadorNaiveBayes(Clasificador):
 
         return 
 
-    # TODO: implementar
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         rows = datosTest.shape[0]
         cols = datosTest.shape[1] - 1
-        classification = np.empty((rows, len(self.priori)))
+        map = np.empty((rows, len(self.priori)))
+        class_values = np.unique(datosTest.loc[:, 'Class'])
+        classification = []
 
         for i in range(rows):
             row = datosTest.iloc[i]
@@ -158,9 +160,26 @@ class ClasificadorNaiveBayes(Clasificador):
                         std_dev = self.verosimilitude[attribute][priori]['std_dev']
                         posteriori *= st.norm.pdf(value, loc=mean, scale=std_dev)
 
-                classification[i][idx] = posteriori
+                map[i][idx] = posteriori
 
-            classification[i] /= np.sum(classification[i])
+            map[i] /= np.sum(map[i])
+            classification.append(class_values[np.argmax(map[i])])
 
-        return classification
+        return np.array(classification)
+
+class ClasificadorNaiveBayesSK(Clasificador):
+    def __init__(self):
+        self.gaussianNB = nb.GaussianNB()
+        self.categoricalNB = nb.CategoricalNB()
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        categorical_data = datosTrain.loc[:, nominalAtributos]
+        numerical_data = datosTrain.select_dtypes(include='number')
+
+        target = datosTrain['Class']
+        categorical_data = categorical_data.drop('Class', axis=1)
+        categorical_data = categorical_data.get_dummies(categorical_data, drop_first=True)
+
+        self.gaussianNB.fit(numerical_data, target)
+        self.categoricalNB.fit(categorical_data, target)
 
