@@ -23,7 +23,7 @@ def mostrar_piramides(piramides, titulo, niveles):
     for nivel in range(niveles):
         axes[nivel].imshow(np.clip(piramides[nivel], 0, 1))  
         axes[nivel].set_title(f'Nivel {nivel}')
-        axes[nivel].axis('off')  n
+        axes[nivel].axis('off') 
     
     plt.show()
 
