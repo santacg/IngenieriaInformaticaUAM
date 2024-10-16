@@ -17,13 +17,13 @@ def cargar_imagenes(rutas):
 
 def mostrar_piramides(piramides, titulo, niveles):
     """Muestra las pirámides (gaussianas o laplacianas) en subplots."""
-    fig, axs = plt.subplots(1, niveles, figsize=(15, 5))
+    fig, axes = plt.subplots(1, niveles, figsize=(15, 5))
     fig.suptitle(titulo)
     
     for nivel in range(niveles):
-        axs[nivel].imshow(np.clip(piramides[nivel], 0, 1))  # Clip para evitar valores fuera de rango
-        axs[nivel].set_title(f'Nivel {nivel}')
-        axs[nivel].axis('off')  # Oculta los ejes para mejorar la visualización
+        axes[nivel].imshow(np.clip(piramides[nivel], 0, 1))  
+        axes[nivel].set_title(f'Nivel {nivel}')
+        axes[nivel].axis('off')  n
     
     plt.show()
 
