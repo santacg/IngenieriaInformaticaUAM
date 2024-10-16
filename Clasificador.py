@@ -44,6 +44,8 @@ class Clasificador:
             else:
                 n_error += 1
 
+        print(f"n_error: {n_error}")
+        print(f"n_succes: {n_succes}")
         error_ratio = n_error / (n_succes + n_error) 
         return error_ratio
 
@@ -62,7 +64,7 @@ class Clasificador:
         nominalAtributos = dataset.nominalAtributos
         diccionarios = dataset.diccionarios
 
-        if type == ValidacionCruzada:
+        if isinstance(particionado, ValidacionCruzada):
             n_folds = particionado.folds
             for i in range(n_folds):
                 training_data = dataset.extraeDatos(partitions[i].indicesTrain)

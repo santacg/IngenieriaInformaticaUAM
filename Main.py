@@ -11,8 +11,9 @@ print(dataset.diccionarios)
 print("MATRIZ DE DATOS")
 print(dataset.datos.head(10))
 
-estrategia = EstrategiaParticionado.ValidacionSimple(1, 0.2)
+estrategia_simple = EstrategiaParticionado.ValidacionSimple(5, 0.2)
+estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(5)
 clasificador = ClasificadorNaiveBayes()
 print("Error: ")
-print(clasificador.validacion(estrategia, dataset, clasificador))
+print(clasificador.validacion(estrategia_cruzada, dataset, clasificador))
 
