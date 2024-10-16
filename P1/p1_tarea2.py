@@ -7,7 +7,6 @@
 # PAREJA/TURNO: 02/TARDE
 import scipy.signal
 
-from p1_tests import test_p1_tarea2
 from p1_tarea1 import reduce, expand
 from p1_utils import generar_kernel_suavizado
 

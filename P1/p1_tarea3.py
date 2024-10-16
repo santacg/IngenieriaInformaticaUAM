@@ -7,7 +7,6 @@
 # PAREJA/TURNO: NUMERO_PAREJA/NUMERO_TURNO
 
 import numpy as np
-from p1_tests import test_p1_tarea3
 from p1_tarea1 import expand
 
 def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
