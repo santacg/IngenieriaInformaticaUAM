@@ -167,19 +167,7 @@ class ClasificadorNaiveBayes(Clasificador):
 
         return np.array(classification)
 
-class ClasificadorNaiveBayesSK(Clasificador):
-    def __init__(self):
-        self.gaussianNB = nb.GaussianNB()
-        self.categoricalNB = nb.CategoricalNB()
+class KNeighborsClassifier(Clasificador):
 
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        categorical_data = datosTrain.loc[:, nominalAtributos]
-        numerical_data = datosTrain.select_dtypes(include='number')
-
-        target = datosTrain['Class']
-        categorical_data = categorical_data.drop('Class', axis=1)
-        categorical_data = categorical_data.get_dummies(categorical_data, drop_first=True)
-
-        self.gaussianNB.fit(numerical_data, target)
-        self.categoricalNB.fit(categorical_data, target)
-
+    def __init__(self) -> None:
+        super().__init__()
