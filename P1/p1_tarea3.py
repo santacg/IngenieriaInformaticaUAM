@@ -30,24 +30,33 @@ def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
     #       fusion_pyr[i] es el nivel i de la piramide que contiene bordes
     #       fusion_pyr[niveles] es una imagen (RGB o escala de grises)
     """ 
-    fusion_pyr = [] # iniciamos la variable
+    # Iniciamos la lista de la piramide fusionada
+    fusion_pyr = [] 
 
+    # Tomamos los tamaños de la piramide laplaciana de la imgA y de imgB
     lapl_pyr_imgA_size = len(lapl_pyr_imgA)
     lapl_pyr_imgB_size = len(lapl_pyr_imgB)
+
+    # Tomamos el tamaño de la piramide gaussiana
     gaus_pyr_size = len(gaus_pyr_mask)
 
+    # Comprobamos su las piramides tienen el mismo tamaño
     if lapl_pyr_imgA_size != lapl_pyr_imgB_size:
         raise ValueError("Las listas de pirámides Laplacianas no tienen el mismo número de niveles");
 
     if lapl_pyr_imgA_size != gaus_pyr_size:
         raise ValueError("Las listas de pirámides Laplacianas no tienen el mismo número de niveles que la lista de Gaussianas");
     
+    # Realizamos la fusion por cada nivel
     for level in range(lapl_pyr_imgA_size):
         lapl_A = lapl_pyr_imgA[level]
         lapl_B = lapl_pyr_imgB[level]
         gaus_pyr = gaus_pyr_mask[level]
         
+       
         fusion = lapl_A * gaus_pyr + lapl_B * (1 - gaus_pyr)
+
+        # Añadimos el resultado fusionado a la piramide fusionada
         fusion_pyr.append(fusion)
 
     return fusion_pyr
@@ -71,16 +80,24 @@ def reconstruir_lapl_pyr(lapl_pyr):
     #   obtendremos una imagen de tamaño 6x8. En este caso, elimine la 6 fila y 8 
     #   columna para obtener una imagen de tamaño 5x7 donde pueda aplicar la resta
     """ 
-    output = np.empty(shape=[0,0]) # iniciamos la variable de salida (numpy array)
+    # Iniciamos la variable de salida (numpy array)
+    output = np.empty(shape=[0,0]) 
 
+    # Ultimo nivel de la piramide laplaciana
     output = lapl_pyr[-1]  
+    
+    #Obtenemos el número de niveles en la piramide laplaciana
     lapl_pyr_size = len(lapl_pyr)
+
+    # Reconstruimos la imagen expandiendo y sumando los niveles
     for level in range(lapl_pyr_size - 2, -1, -1):
         expanded_img = expand(output)
 
+        # Si la imagen expandida es mayor en tamaño que el nivel actual, ajustamos el tamaño 
         if expanded_img.shape != lapl_pyr[level].shape:
             expanded_img = expanded_img[:lapl_pyr[level].shape[0], :lapl_pyr[level].shape[1]]
-
+        
+        # Sumamos la imagen expandida con el nivel actual de la piramide para obtener la imagen reconstruida parcial
         output = expanded_img + lapl_pyr[level]
 
     return output
