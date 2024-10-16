@@ -13,12 +13,11 @@ int vignere(FILE *in, FILE *out, FILE *k, int mode, int n) {
 
   int i = 0;
   int key[n];
-  /* First read the key and save it to array */
+
   for (int i = 0; i < n; i++) {
     key[i] = fgetc(k) - 'A';
   }
 
-  /* Encrypt or decrypt with the key */
   i = 0;
   char c;
   while ((c = fgetc(in)) != EOF) {

@@ -70,19 +70,19 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
       }
 
       for (int i = 0; i < n; i++) {
-        int e = (matrix_out[i] % m) + 'a';
+        int e = (matrix_out[i] % m) + 'A';
         fputc(e, out);
       }
       count = 0;
     }
 
-    matrix_text[count] = c - 'a';
+    matrix_text[count] = c - 'A';
     count++;
   }
 
   if (count != 0) {
     for (int i = count; i < n; i++) {
-      matrix_text[i] = 'x' - 'a';
+      matrix_text[i] = 'x' - 'A';
     }
 
     if (mode == 0) {
@@ -92,7 +92,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
     }
 
     for (int i = 0; i < n; i++) {
-      int e = (matrix_out[i] % m) + 'a';
+      int e = (matrix_out[i] % m) + 'A';
       fputc(e, out);
     }
   }
