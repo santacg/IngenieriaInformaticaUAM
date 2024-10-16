@@ -82,7 +82,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
 
   if (count != 0) {
     for (int i = count; i < n; i++) {
-      matrix_text[i] = 'x' - 'A';
+      matrix_text[i] = 'X' - 'A';
     }
 
     if (mode == 0) {
