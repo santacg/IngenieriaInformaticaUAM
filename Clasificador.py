@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from typing import dataclass_transform
 import numpy as np
 from scipy import stats as st
+from EstrategiaParticionado import ValidacionCruzada
 
 class Clasificador:
 
@@ -35,11 +36,13 @@ class Clasificador:
         n_succes = 0
         n_error = 0
         for i in range(rows):
-            pred_idx = np.argmax(pred[i])
-            if pred_idx == class_series.iloc[i]:
+            pred_class = int(np.argmax(pred[i]))
+            real_class = int(class_series.iloc[i])
+
+            if pred_class == real_class:
                 n_succes += 1
             else:
-                n_succes += 1
+                n_error += 1
 
         error_ratio = n_error / (n_succes + n_error) 
         return error_ratio
@@ -53,7 +56,42 @@ class Clasificador:
         # y obtenemos el error en la particion de test i
         # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
         # y obtenemos el error en la particion test. Otra opción es repetir la validación simple un número especificado de veces, obteniendo en cada una un error. Finalmente se calcularía la media.
-        pass
+        error = []
+
+        partitions = particionado.creaParticiones(dataset.datos, seed)
+        nominalAtributos = dataset.nominalAtributos
+        diccionarios = dataset.diccionarios
+
+        if type == ValidacionCruzada:
+            n_folds = particionado.folds
+            for i in range(n_folds):
+                training_data = dataset.extraeDatos(partitions[i].indicesTrain)
+                clasificador.entrenamiento(training_data, nominalAtributos, diccionarios)
+
+                test_data = dataset.extraeDatos(partitions[i].indicesTest)
+                classification = clasificador.clasifica(test_data, nominalAtributos, diccionarios)
+
+                error.append(clasificador.error(test_data, classification))
+        else:
+            n_executions = particionado.executions;
+            for i in range(n_executions):
+                training_data = dataset.extraeDatos(partitions[i].indicesTrain)
+                clasificador.entrenamiento(training_data, nominalAtributos, diccionarios)
+
+                test_data = dataset.extraeDatos(partitions[i].indicesTest)
+                classification = clasificador.clasifica(test_data, nominalAtributos, diccionarios)
+
+                error.append(clasificador.error(test_data, classification))
+
+            error_len = len(error)
+            if (error_len > 0):
+                error = np.sum(error) / error_len
+
+        return error
+
+
+
+
 
 ##############################################################################
 
@@ -103,7 +141,6 @@ class ClasificadorNaiveBayes(Clasificador):
         cols = datosTest.shape[1] - 1
         classification = np.empty((rows, len(self.priori)))
 
-        print(self.verosimilitude)
         for i in range(rows):
             row = datosTest.iloc[i]
             for idx, priori in enumerate(self.priori):
