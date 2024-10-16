@@ -3,6 +3,7 @@ from typing import dataclass_transform
 import numpy as np
 from scipy import stats as st
 from EstrategiaParticionado import ValidacionCruzada
+import sklearn
 
 class Clasificador:
 
