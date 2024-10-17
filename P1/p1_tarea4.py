@@ -13,6 +13,7 @@ from p1_utils import visualizar_fusion
 import p1_tarea1
 import p1_tarea2
 import p1_tarea3
+from p1_tests import test_p1_tarea4
 
 def run_fusion(imgA, imgB, mask, niveles): 
     """ 
