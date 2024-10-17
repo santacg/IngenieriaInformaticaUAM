@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import p1_tarea4
 
 def cargar_imagenes(rutas):
-    """Carga imágenes desde las rutas dadas y las normaliza (0-1)."""
+    """Carga imágenes desde las rutas dadas y las normaliza."""
     return [io.imread(ruta) / 255.0 for ruta in rutas]
 
 def mostrar_fusiones_en_ventana(list_img_fusion, niveles_list, imagen_num):
@@ -35,25 +35,21 @@ def procesar_fusion_con_niveles(imgA_list, imgB_list, mask_list, niveles_list):
         list_img_fusion = []
 
         for niveles in niveles_list:
-            print(f"\nProcesando fusión con {niveles} niveles de pirámide para Imagen {j+1}...")
-
-            # Inicializar listas para almacenar los resultados de los 3 canales
+            # Inicializamos una lista para almacenar los distintos niveles de fusion
             Lpyr_fus_rec_l = []
 
-            for i in range(3):  # Procesar los 3 canales (R, G, B)
+            for i in range(3):  # Procesamos los 3 canales
                 _, _, _, _, _, _, Lpyr_fus_rec = p1_tarea4.run_fusion(
                     imgA_list[j][:, :, i], imgB_list[j][:, :, i], mask_list[j][:, :, i], niveles
                 )
-                # Guardar los resultados de la pirámide fusionada por canal
+                # Guardamos los resultados de la piramide fusionada por canal
                 Lpyr_fus_rec_l.append(Lpyr_fus_rec)
 
-            # Recomponer la imagen fusionada a partir de los 3 canales
+            # Recomponemos la imagen fusionada a partir de los 3 canales
             Lpyr_fus_rec_stack = np.stack([Lpyr_fus_rec_l[i] for i in range(3)], axis=2)
-
-            # Añadir la imagen fusionada a la lista
             list_img_fusion.append(Lpyr_fus_rec_stack)
 
-        # Mostrar todas las imágenes fusionadas en una sola ventana
+        # Mostramos todas las imágenes fusionadas en una sola ventana
         mostrar_fusiones_en_ventana(list_img_fusion, niveles_list, j)
 
 if __name__ == "__main__":
@@ -62,11 +58,10 @@ if __name__ == "__main__":
     rutas_imgB = ["./img/apple1.jpg", "./img/apple2.jpg"]
     rutas_mask = ["./img/mask_apple1_orange1.jpg", "./img/mask_apple2_orange2.jpg"]
 
-    # Cargar imágenes y máscaras
+    # Cargamos imágenes y máscaras
     imgA_list = cargar_imagenes(rutas_imgA)
     imgB_list = cargar_imagenes(rutas_imgB)
     mask_list = cargar_imagenes(rutas_mask)
 
-    # Explorar la fusión con distintos niveles de pirámides
     niveles_list = [3, 5, 7]  # Niveles a explorar
     procesar_fusion_con_niveles(imgA_list, imgB_list, mask_list, niveles_list)

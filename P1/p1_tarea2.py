@@ -28,6 +28,7 @@ def gaus_piramide(imagen, niveles):
     """
     gaus_pyr = [imagen]  # iniciamos la variable de salida (lista)
     
+    # Por cada nivel llamamos a la funcion reduce que genera el nuevo nivel
     for _ in range(niveles):   
         gaus_pyr.append(reduce(gaus_pyr[-1]))
 
@@ -56,18 +57,20 @@ def lapl_piramide(gaus_pyr):
     #   columna para obtener una imagen de tamaño 5x7 donde pueda aplicar la resta      
     """ 
     lapl_pyr = [] # iniciamos la variable de salida (lista) 
+    # Los niveles equivaldran a la longitud de la lista de la piramide gaussiana
     niveles = len(gaus_pyr)
 
+    # Iteramos hasta el ultimo penúltimo nivel de la pirámide gaussiana
     for k in range(niveles-1):
+        # Se expande el nivel k + 1
         img_expandida = expand(gaus_pyr[k+1])
 
-        #Comprobacion del numero de filas de la imagen expandida y la original
+        # Comprobacion del numero de filas de la imagen expandida y la original
         img_expandida = img_expandida[:gaus_pyr[k].shape[0], :gaus_pyr[k].shape[1]]
 
-        # Resta entre el nivel actual de la pirámide Gaussiana y la imagen expandida
+        # Restamos entre el nivel actual de la pirámide Gaussiana y la imagen expandida
         laplaciana = gaus_pyr[k] - img_expandida
 
-        # Añadir el nivel Laplaciano a la lista
         lapl_pyr.append(laplaciana)
     
     # El último nivel de la pirámide Laplaciana es igual al último nivel Gaussiano

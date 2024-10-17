@@ -33,14 +33,14 @@ def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
     # Iniciamos la lista de la piramide fusionada
     fusion_pyr = [] 
 
-    # Tomamos los tamaños de la piramide laplaciana de la imgA y de imgB
+    # Tomamos los tamaños de las listas de piramides laplacianas de la imgA y de imgB
     lapl_pyr_imgA_size = len(lapl_pyr_imgA)
     lapl_pyr_imgB_size = len(lapl_pyr_imgB)
 
-    # Tomamos el tamaño de la piramide gaussiana
+    # Tomamos el tamaño de la lista de la piramide gaussiana
     gaus_pyr_size = len(gaus_pyr_mask)
 
-    # Comprobamos su las piramides tienen el mismo tamaño
+    # Comprobamos que las piramides tienen el mismo número de niveles 
     if lapl_pyr_imgA_size != lapl_pyr_imgB_size:
         raise ValueError("Las listas de pirámides Laplacianas no tienen el mismo número de niveles");
 
@@ -53,10 +53,8 @@ def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
         lapl_B = lapl_pyr_imgB[level]
         gaus_pyr = gaus_pyr_mask[level]
         
-       
         fusion = lapl_A * gaus_pyr + lapl_B * (1 - gaus_pyr)
 
-        # Añadimos el resultado fusionado a la piramide fusionada
         fusion_pyr.append(fusion)
 
     return fusion_pyr
@@ -86,18 +84,18 @@ def reconstruir_lapl_pyr(lapl_pyr):
     # Ultimo nivel de la piramide laplaciana
     output = lapl_pyr[-1]  
     
-    #Obtenemos el número de niveles en la piramide laplaciana
+    # Obtenemos el número de niveles en la piramide laplaciana
     lapl_pyr_size = len(lapl_pyr)
 
     # Reconstruimos la imagen expandiendo y sumando los niveles
     for level in range(lapl_pyr_size - 2, -1, -1):
         expanded_img = expand(output)
 
-        # Si la imagen expandida es mayor en tamaño que el nivel actual, ajustamos el tamaño 
+        # Si la imagen expandida es mayor en tamaño que el nivel actual, ajustamos el tamaño
         if expanded_img.shape != lapl_pyr[level].shape:
             expanded_img = expanded_img[:lapl_pyr[level].shape[0], :lapl_pyr[level].shape[1]]
         
-        # Sumamos la imagen expandida con el nivel actual de la piramide para obtener la imagen reconstruida parcial
+        # Sumamos la imagen expandida con el nivel actual de la piramide para obtener la imagen reconstruida
         output = expanded_img + lapl_pyr[level]
 
     return output
