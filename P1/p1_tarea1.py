@@ -8,6 +8,8 @@
 import numpy as np
 import math
 import scipy.signal
+from p1_tests import test_p1_tarea1
+
 
 from p1_utils import generar_kernel_suavizado
 

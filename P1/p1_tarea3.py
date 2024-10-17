@@ -8,6 +8,8 @@
 
 import numpy as np
 from p1_tarea1 import expand
+from p1_tests import test_p1_tarea3
+
 
 def fusionar_lapl_pyr(lapl_pyr_imgA, lapl_pyr_imgB, gaus_pyr_mask):
     """ 

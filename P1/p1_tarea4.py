@@ -66,7 +66,7 @@ def run_fusion(imgA, imgB, mask, niveles):
     return Gpyr_imgA, Gpyr_imgB, Gpyr_mask, Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec
 if __name__ == "__main__":    
     
-    path_imagenes = "./p1/img/"
+    path_imagenes = "./img/"
     print("Practica 1 - Tarea 4 - Test autoevaluación\n")    
     result,imgAgray,imgBgray,maskgray,\
         Gpyr_imgA, Gpyr_imgB, Gpyr_mask, Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec \
