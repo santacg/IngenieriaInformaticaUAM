@@ -84,10 +84,11 @@ if __name__ == "__main__":
     imgB_list = cargar_imagenes(rutas_imgB)
     mask_list = cargar_imagenes(rutas_mask)
 
-    niveles = 10 
+    # Se usaran niveles - 1 para las pirámides
+    niveles = 7
     for i in range(len(rutas_imgA)):
         Gpyr_imgA, Gpyr_imgB, Gpyr_mask, \
-        Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec = run_fusion_rgb(imgA_list[i], imgB_list[i], mask_list[i], niveles=5)
+        Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec = run_fusion_rgb(imgA_list[i], imgB_list[i], mask_list[i], niveles)
 
         # Mostramos las piramides gaussianas de cada imagen
         mostrar_piramides(Gpyr_imgA, "Piramide Gaussiana - imgA", niveles)
