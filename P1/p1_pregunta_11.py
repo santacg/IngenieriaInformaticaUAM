@@ -84,7 +84,7 @@ if __name__ == "__main__":
     imgB_list = cargar_imagenes(rutas_imgB)
     mask_list = cargar_imagenes(rutas_mask)
 
-    niveles = 5
+    niveles = 10 
     for i in range(len(rutas_imgA)):
         Gpyr_imgA, Gpyr_imgB, Gpyr_mask, \
         Lpyr_imgA, Lpyr_imgB, Lpyr_fus, Lpyr_fus_rec = run_fusion_rgb(imgA_list[i], imgB_list[i], mask_list[i], niveles=5)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         mostrar_piramides(Gpyr_imgB, "Piramide Gaussiana - imgB", niveles)
         mostrar_piramides(Gpyr_mask, "Piramide Gaussiana - mask", niveles)
 
-        # Mostrar pirámides laplacianas de cada imagen
+        # Mostramos pirámides laplacianas de cada imagen
         mostrar_piramides(Lpyr_imgA, "Piramide Laplaciana - imgA", niveles)
         mostrar_piramides(Lpyr_imgB, "Piramide Laplaciana - imgB", niveles)
         mostrar_piramides(Lpyr_fus, "Piramide Laplaciana - fusion", niveles)
