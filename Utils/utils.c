@@ -148,7 +148,46 @@ int adjoint(int n, int *matrix, int *adj) {
   return 0;
 }
 
+int inverse(int n, int *matrix, int *inverse) {
+
+  if (matrix == NULL || inverse == NULL) {
+    return ERR;
+  }
+
+  int det = determinant(n, matrix);
+
+  if (det == 0) {
+    return ERR;
+  }
+
+  int *adj = (int *)malloc(sizeof(int) * n * n);
+  if (adj == NULL) {
+    return ERR;
+  }
+
+  if (adjoint(n, matrix, adj) == ERR) {
+    free(adj);
+    return ERR;
+  }
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      inverse[i * n + j] = (adj[i * n + j] * det);
+    }
+  }
+
+  free(adj);
+
+  display_matrix(n, matrix);
+  return 0;
+}
+
 int mod_inverse(int n, int mod, int *matrix, int *inverse) {
+
+  if (matrix == NULL || inverse == NULL) {
+    return ERR;
+  }
+
   int det = determinant(n, matrix);
 
   if (det == 0) {
@@ -170,9 +209,9 @@ int mod_inverse(int n, int mod, int *matrix, int *inverse) {
   mpz_clear(*mp_det_inv);
   free(mp_det_inv);
 
-  int *adj = (int *)malloc(sizeof(int) * n * n); // Cambiado a double
+  int *adj = (int *)malloc(sizeof(int) * n * n);
   if (adj == NULL) {
-    return ERR; // Verifica que malloc haya tenido éxito
+    return ERR;
   }
 
   if (adjoint(n, matrix, adj) == ERR) {
@@ -211,4 +250,28 @@ void display_matrix(int n, int *matrix) {
   for (int i = 0; i < n; i++) {
     printf("%d\t", matrix[i]);
   }
+}
+
+int permutate(int n, int *array, int *permutation) {
+  if (array == NULL || permutation == NULL) {
+    return ERR;
+  }
+
+  int *tmp = (int *)malloc(sizeof(int) * n);
+  if (tmp == NULL) {
+    return ERR;
+  }
+
+  int perm_idx;
+  for (int i = 0; i < n; i++) {
+    perm_idx = permutation[i];
+    tmp[i] = array[perm_idx];
+  }
+
+  for (int i = 0; i < n; i++) {
+    array[i] = tmp[i];
+  }
+
+  free(tmp);
+  return 0;
 }

@@ -1,37 +1,50 @@
-FLAGS = -g -Wall -Wextra -pedantic 
+CC = gcc
+FLAGS = -g -Wall -Wextra -pedantic
+LIBS = -lgmp
 
-OBJS = Afin/afin.o Hill/hill.o Vignere/vignere.o Flujo/flujo.o utils.o Procesado/preprocesado.o
+OBJS = Afin/afin.o Hill/hill.o Vignere/vignere.o Flujo/flujo.o Transposicion/transposicion.o Utils/utils.o Procesado/preprocesado.o 
 
-hill: Hill/hill.o utils.o
-	gcc -o $@ $^ -lgmp
+all: hill afin vignere flujo transposicion procesado
 
-hill.o: Hill/hill.c utils.h
-	gcc -c $(FLAGS) $< -o $@
+hill: Hill/hill.o Utils/utils.o
+	$(CC) -o $@ $^ $(LIBS)
 
-afin.o: Afin/afin.c utils.h
-	gcc -c $(FLAGS) $< -o $@
+afin: Afin/afin.o Utils/utils.o
+	$(CC) -o $@ $^ $(LIBS)
 
-vignere: Vignere/vignere.o 
-	gcc -o $@ $^
-
-vignere.o: Vignere/vignere.c
-	gcc -c $(FLAGS) $< -o $@
+vignere: Vignere/vignere.o
+	$(CC) -o $@ $^
 
 flujo: Flujo/flujo.o
-	gcc -o $@ $^
+	$(CC) -o $@ $^
 
-flujo.o: Flujo/flujo.c
-	gcc -c $(FLAGS) $< -o $@
+transposicion: Transposicion/transposicion.o Utils/utils.o
+	$(CC) -o $@ $^ $(LIBS)
 
 procesado: Procesado/preprocesado.o
-	gcc -o $@ $^
+	$(CC) -o $@ $^
+
+Hill/hill.o: Hill/hill.c Utils/utils.h
+	$(CC) -c $(FLAGS) $< -o $@
+
+Afin/afin.o: Afin/afin.c Utils/utils.h
+	$(CC) -c $(FLAGS) $< -o $@
+
+Vignere/vignere.o: Vignere/vignere.c
+	$(CC) -c $(FLAGS) $< -o $@
+
+Flujo/flujo.o: Flujo/flujo.c
+	$(CC) -c $(FLAGS) $< -o $@
+
+Transposicion/transposicion.o: Transposicion/transposicion.c Utils/utils.h
+	$(CC) -c $(FLAGS) $< -o $@
 
 Procesado/preprocesado.o: Procesado/preprocesado.c
-	gcc -c $(FLAGS) $< -o $@
+	$(CC) -c $(FLAGS) $< -o $@
 
-utils.o: Utils/utils.c
-	gcc -c $(FLAGS) $< -o $@
+Utils/utils.o: Utils/utils.c
+	$(CC) -c $(FLAGS) $< -o $@
 
-clean: 
-	rm -f hill afin vignere flujo procesado $(OBJS)
+clean:
+	rm -f hill afin vignere flujo transposicion procesado $(OBJS)
 
