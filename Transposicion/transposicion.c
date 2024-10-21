@@ -30,8 +30,12 @@ int transposition(FILE *in, FILE *out, int mode, char *p, int n) {
       free(permutation);
       return ERR;
     }
-    for (int i = n - 1, j = 0; i >= 0; i--, j++) {
-      inv[j] = permutation[i];
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i == permutation[j]) {
+          inv[i] = j;
+        }
+      }
     }
   }
 
@@ -64,17 +68,7 @@ int transposition(FILE *in, FILE *out, int mode, char *p, int n) {
   }
 
   if (count != 0) {
-    for (int i = count; i < n; i++) {
-      matrix_text[i] = 'X' - 'A';
-    }
-
-    if (mode == 0) {
-      permutate(n, matrix_text, permutation);
-    } else {
-      permutate(n, matrix_text, inv);
-    }
-
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < count; i++) {
       int e = matrix_text[i] + 'A';
       fputc(e, out);
     }
