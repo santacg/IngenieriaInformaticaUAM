@@ -5,6 +5,7 @@ from scipy import stats as st
 from EstrategiaParticionado import ValidacionCruzada
 from sklearn import naive_bayes as nb
 
+
 class Clasificador:
 
     # Clase abstracta
@@ -46,9 +47,7 @@ class Clasificador:
             else:
                 n_error += 1
 
-        print(f"n_error: {n_error}")
-        print(f"n_succes: {n_succes}")
-        error_ratio = n_error / (n_succes + n_error) 
+        error_ratio = n_error / (n_succes + n_error)
         return error_ratio
 
     # Realiza una clasificacion utilizando una estrategia de particionado determinada
@@ -70,20 +69,24 @@ class Clasificador:
             n_folds = particionado.folds
             for i in range(n_folds):
                 training_data = dataset.extraeDatos(partitions[i].indicesTrain)
-                clasificador.entrenamiento(training_data, nominalAtributos, diccionarios)
+                clasificador.entrenamiento(
+                    training_data, nominalAtributos, diccionarios)
 
                 test_data = dataset.extraeDatos(partitions[i].indicesTest)
-                classification = clasificador.clasifica(test_data, nominalAtributos, diccionarios)
+                classification = clasificador.clasifica(
+                    test_data, nominalAtributos, diccionarios)
 
                 error.append(clasificador.error(test_data, classification))
         else:
-            n_executions = particionado.executions;
+            n_executions = particionado.executions
             for i in range(n_executions):
                 training_data = dataset.extraeDatos(partitions[i].indicesTrain)
-                clasificador.entrenamiento(training_data, nominalAtributos, diccionarios)
+                clasificador.entrenamiento(
+                    training_data, nominalAtributos, diccionarios)
 
                 test_data = dataset.extraeDatos(partitions[i].indicesTest)
-                classification = clasificador.clasifica(test_data, nominalAtributos, diccionarios)
+                classification = clasificador.clasifica(
+                    test_data, nominalAtributos, diccionarios)
 
                 error.append(clasificador.error(test_data, classification))
 
@@ -94,14 +97,11 @@ class Clasificador:
         return error
 
 
-
-
-
 ##############################################################################
 
 
 class ClasificadorNaiveBayes(Clasificador):
-    
+
     def __init__(self):
         self.priori = {}
         self.verosimilitude = {}
@@ -110,7 +110,8 @@ class ClasificadorNaiveBayes(Clasificador):
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         rows = datosTrain.shape[0]
         class_series = datosTrain.loc[:, 'Class']
-        class_values, class_counts = np.unique(class_series, return_counts=True)
+        class_values, class_counts = np.unique(
+            class_series, return_counts=True)
 
         # Calculate a priori probabilities
         for idx, class_value in enumerate(class_values):
@@ -122,12 +123,14 @@ class ClasificadorNaiveBayes(Clasificador):
             series = datosTrain.iloc[:, i]
 
             if nominalAtributos[i] is True:
-                unique_values= np.unique(series)
+                unique_values = np.unique(series)
                 for unique_value in unique_values:
                     self.verosimilitude[unique_value] = {}
                     for idx, class_value in enumerate(class_values):
-                        count = ((series == unique_value) & (class_series == class_value)).sum()
-                        self.verosimilitude[unique_value][class_value] = count / class_counts[idx]
+                        count = ((series == unique_value) & (
+                            class_series == class_value)).sum()
+                        self.verosimilitude[unique_value][class_value] = count / \
+                            class_counts[idx]
             else:
                 series_name = datosTrain.columns[i]
                 self.verosimilitude[series_name] = {}
@@ -135,9 +138,10 @@ class ClasificadorNaiveBayes(Clasificador):
                     count = series[class_series == class_value]
                     mean = np.mean(count)
                     std_dev = np.std(count)
-                    self.verosimilitude[series_name][class_value] = {"mean": mean, "std_dev": std_dev}
+                    self.verosimilitude[series_name][class_value] = {
+                        "mean": mean, "std_dev": std_dev}
 
-        return 
+        return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         rows = datosTest.shape[0]
@@ -158,7 +162,8 @@ class ClasificadorNaiveBayes(Clasificador):
                         attribute = datosTest.columns[j]
                         mean = self.verosimilitude[attribute][priori]['mean']
                         std_dev = self.verosimilitude[attribute][priori]['std_dev']
-                        posteriori *= st.norm.pdf(value, loc=mean, scale=std_dev)
+                        posteriori *= st.norm.pdf(value,
+                                                  loc=mean, scale=std_dev)
 
                 map[i][idx] = posteriori
 
@@ -166,6 +171,7 @@ class ClasificadorNaiveBayes(Clasificador):
             classification.append(class_values[np.argmax(map[i])])
 
         return np.array(classification)
+
 
 class KNeighborsClassifier(Clasificador):
 
