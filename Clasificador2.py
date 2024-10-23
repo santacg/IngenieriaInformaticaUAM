@@ -192,7 +192,84 @@ class ClasificadorNaiveBayes(Clasificador):
         return np.array(classification)
 
 
-class KNeighborsClassifier(Clasificador):
-
-    def __init__(self) -> None:
+class ClasificadorKNN(Clasificador):
+    def __init__(self, K=3, normalize=True):
         super().__init__()
+        self.K = K
+        self.training_data = None
+        self.normalize = normalize
+        self.min_vals = {}
+        self.max_vals = {}
+        self.nominalAtributos = None
+        self.diccionarios = None
+        self.class_mapping = {}
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionarios):
+        self.nominalAtributos = nominalAtributos
+        self.diccionarios = diccionarios
+        self.training_data = datosTrain.copy()
+
+        for i, column in enumerate(self.training_data.columns):
+            if nominalAtributos[i] and column != 'Class':
+                mapping = diccionarios[column]
+                self.training_data[column] = self.training_data[column].map(mapping)
+
+        if 'Class' in self.training_data.columns:
+            mapping = diccionarios['Class']
+            self.training_data['Class'] = self.training_data['Class'].map(mapping)
+            self.class_mapping = {v: k for k, v in mapping.items()}
+            self.training_data['Class'] = self.training_data['Class'].astype(int)
+
+        if self.normalize:
+            #Normalizar x = (x-x_min)/(x_max-x_min)
+            for i, column in enumerate(self.training_data.columns):
+                if not nominalAtributos[i] and column != 'Class':
+                    min_val = self.training_data[column].min()
+                    max_val = self.training_data[column].max()
+                    self.min_vals[column] = min_val
+                    self.max_vals[column] = max_val
+                    self.training_data[column] = (self.training_data[column] - min_val) / (max_val - min_val)
+        else:
+            for i, column in enumerate(self.training_data.columns):
+                if not nominalAtributos[i] and column != 'Class':
+                    self.min_vals[column] = 0
+                    self.max_vals[column] = 1
+
+    def clasifica(self, datosTest, nominalAtributos, diccionarios):
+        test_data = datosTest.copy()
+
+        #nominales
+        for i, column in enumerate(test_data.columns):
+            if nominalAtributos[i] and column != 'Class':
+                mapping = diccionarios[column]
+                test_data[column] = test_data[column].map(mapping)
+
+        if 'Class' in test_data.columns:
+            mapping = diccionarios['Class']
+            test_data['Class'] = test_data['Class'].map(mapping)
+            test_data['Class'] = test_data['Class'].astype(int)
+
+        if self.normalize:
+            for i, column in enumerate(test_data.columns):
+                if not nominalAtributos[i] and column != 'Class':
+                    min_val = self.min_vals[column]
+                    max_val = self.max_vals[column]
+                    test_data[column] = (test_data[column] - min_val) / (max_val - min_val)
+                    
+        training_features = self.training_data.drop(columns=['Class']).values
+        test_features = test_data.drop(columns=['Class']).values
+        training_labels = self.training_data['Class'].values.astype(int)
+
+        predictions = []
+        #distancias euclidianas
+        for test_instance in test_features:
+            distances = np.sqrt(np.sum((training_features - test_instance) ** 2, axis=1))
+            neighbor_indices = distances.argsort()[:self.K]
+            neighbor_classes = training_labels[neighbor_indices]
+
+            counts = np.bincount(neighbor_classes)
+            prediction = counts.argmax()
+            prediction_label = self.class_mapping.get(prediction, prediction)
+            predictions.append(prediction_label)
+
+        return np.array(predictions)
