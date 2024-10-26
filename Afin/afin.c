@@ -68,13 +68,14 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   return OK;
 }
 
-int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
-  /* Encriptacion para afin no trivial. y = (a + b + x) mod m. Para que |K| = |Zn|^2 en vez de |K| = |Zn| * |Zn*| */
+int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, const mpz_t c, mpz_t acc) {
+  /* Encriptacion para afin no trivial. y = (a * x + b + c) mod m. Para que |K| = |Zn*| * |Zn|^2 en vez de |K| = |Zn| * |Zn*| */
   e = e - 'a';
 
   mpz_set_ui(acc, e);
-  mpz_add(acc, a, acc);
+  mpz_mul(acc, a, acc);
   mpz_add(acc, b, acc);
+  mpz_add(acc, c, acc);
   mpz_mod(acc, acc, m);
 
   e = mpz_get_ui(acc);
@@ -83,14 +84,16 @@ int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   return e;
 }
 
-int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc,
+int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, const mpz_t c, mpz_t acc,
             mpz_t inverse) {
   /* Desencriptacion para afin no trivial.*/
   d = d - 'a';
 
   mpz_set_ui(acc, d);
-  mpz_sub(acc, acc, a);
   mpz_sub(acc, acc, b);
+  mpz_sub(acc, acc, c);
+  mpz_mod(acc, acc, m);
+  mpz_mul(acc, acc, inverse);
   mpz_mod(acc, acc, m);
 
   d = mpz_get_ui(acc);
