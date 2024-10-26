@@ -1,50 +1,64 @@
 #include "../Utils/utils.h"
-#include <stdint.h>
+#include <bits/getopt_core.h>
+#include <bits/time.h>
+#include <gmp.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 
-#define LFSR_FEED 0xB400
-#define LFSR_SEED 0xACE1
-
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s {-C|-D} -i infile -o outfile\n", argv[0]);
+  fprintf(stderr, "Usage: %s {-C|-D} -k cadena -i infile -o outfile\n",
+          argv[0]);
 }
 
-uint8_t stream() {
+int vigenere(FILE *in, FILE *out, char *key, int mode) {
 
-  uint8_t key_stream = 0;
-  uint16_t lfsr = LFSR_FEED;
+  if (in == NULL || out == NULL || key == NULL)
+    return ERR;
 
-  for (int i = 0; i < 8; i++) {
-    uint16_t bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
-    lfsr = (lfsr >> 1) | (bit << 15);
-
-    key_stream = (key_stream << 1) | bit;
+  int n = strlen(key);
+  if (n <= 0) {
+    return ERR;
   }
 
-  return key_stream;
-}
+  int i = 0;
+  int k[n];
+  while (key[i] != '\0') {
+    if (key[i] >= 'A' && key[i] <= 'Z') {
+      k[i] = key[i] - 'A';
+    }
+    i++;
+  }
 
-void stream_cipher(FILE *in, FILE *out) {
+  i = 0;
   char c;
   while ((c = fgetc(in)) != EOF) {
     if (c >= 'A' && c <= 'Z') {
-      c = c - 'A';
-      uint8_t keystream = stream();
-      uint8_t cipher_byte = (c ^ keystream) + 'A';
-      fputc(cipher_byte, out);
+      if (i == n)
+        i = 0;
+
+      if (mode == MODE_ENCRYPT) {
+        c = ((k[i] + (c - 'A')) % 26) + 'A';
+      } else {
+        c = (((c - 'A' - k[i] + 26) % 26) + 'A');
+      }
+      fputc(c, out);
+      i++;
     }
   }
+
+  return 1;
 }
 
 int main(int argc, char **argv) {
   char *file_in = NULL, *file_out = NULL;
+  char *key = NULL;
   int mode = ERR;
 
   int opt;
-  while ((opt = getopt(argc, argv, "CDk:n:i:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "CDk:i:o:")) != -1) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {
@@ -60,6 +74,9 @@ int main(int argc, char **argv) {
       }
       mode = MODE_DECRYPT;
       break;
+    case 'k':
+      key = optarg;
+      break;
     case 'i':
       file_in = optarg;
       break;
@@ -72,7 +89,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (mode == ERR || file_in == NULL || file_out == NULL) {
+  if (mode == ERR || key == NULL || file_in == NULL || file_out == NULL) {
     fprintf(stderr, "Error: Missing required arguments.\n");
     help(argv);
     return ERR;
@@ -82,11 +99,8 @@ int main(int argc, char **argv) {
 
   if (file_in != NULL) {
     in = fopen(file_in, "r");
-    if (in == NULL) {
+    if (in == NULL)
       return ERR;
-    }
-  } else {
-    in = stdin;
   }
 
   if (file_out != NULL) {
@@ -95,14 +109,12 @@ int main(int argc, char **argv) {
       fclose(in);
       return ERR;
     }
-  } else {
-    out = stdout;
   }
 
   struct timespec start_time, end_time;
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  stream_cipher(in, out);
+  vigenere(in, out, key, mode);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
