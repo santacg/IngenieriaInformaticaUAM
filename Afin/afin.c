@@ -115,14 +115,14 @@ int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   mpz_t acc;
   mpz_init(acc);
 
-  int c;
-  while ((c = fgetc(in)) != EOF) {
-    if (c >= 'a' && c <= 'z') {
-      c = encrypt_nt(c, m, a, b, acc);
+  int d;
+  while ((d = fgetc(in)) != EOF) {
+    if (d >= 'a' && d <= 'z') {
+      d = encrypt_nt(d, m, a, b, c, acc);
     } else {
-      c = decrypt_nt(c, m, a, b, acc, *inverse);
+      d = decrypt_nt(d, m, a, b, c, acc, *inverse);
     }
-    fputc(c, out);
+    fputc(d, out);
     mpz_set_ui(acc, 0);
   }
 
