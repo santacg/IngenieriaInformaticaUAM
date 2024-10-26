@@ -248,7 +248,10 @@ void matrix_multiplication(int n, int *matrix_out, int *matrix_a,
 
 void display_matrix(int n, int *matrix) {
   for (int i = 0; i < n; i++) {
-    printf("%d\t", matrix[i]);
+    for (int j = 0; j < n; j++) {
+      printf("%d\t", matrix[i * n + j]);
+    }
+    printf("\n");
   }
 }
 

@@ -6,76 +6,80 @@
 #include <string.h>
 #include <time.h>
 
-int transposition(FILE *in, FILE *out, int mode, char *p, int n) {
+int hill_transposition(FILE *in, FILE *out, int mode, char *p, int n, int m) {
 
-  if (in == NULL || out == NULL || p == NULL)
+  if (in == NULL || out == NULL)
     return ERR;
 
-  int *permutation = (int *)malloc(sizeof(int) * n);
-  if (permutation == NULL)
+  int *matrix_t = (int *)calloc(n * n, sizeof(int));
+  if (matrix_t == NULL)
     return ERR;
 
-  for (int i = 0, j = 0; p[i] != '\0'; i++) {
+  int i = 0, j = 0;
+  while (p[i] != '\0') {
     if (p[i] >= '0' && p[i] <= '9') {
-      permutation[j] = (p[i] - '0') - 1;
+      int col = (p[i] - '0') - 1;
+      matrix_t[j * n + col] = 1;
       j++;
     }
+    i++;
   }
 
-  char c;
   int *inv = NULL;
   if (mode == 1) {
-    inv = (int *)malloc(sizeof(int *) * n);
+    inv = (int *)calloc(n * n, sizeof(int *));
     if (inv == NULL) {
-      free(permutation);
+      free(matrix_t);
       return ERR;
     }
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < n; j++) {
-        if (i == permutation[j]) {
-          inv[i] = j;
-        }
-      }
+    if (mod_inverse(n, m, matrix_t, inv) == ERR) {
+      free(matrix_t);
+      free(inv);
+      return ERR;
     }
   }
 
   int *matrix_text = (int *)malloc(sizeof(int) * n);
   if (matrix_text == NULL) {
-    free(permutation);
+    free(matrix_t);
+    if (mode == 1)
+      free(inv);
+    return ERR;
+  }
+
+  int *matrix_out = (int *)malloc(sizeof(int) * n);
+  if (matrix_text == NULL) {
+    free(matrix_t);
+    free(matrix_text);
     if (mode == 1)
       free(inv);
     return ERR;
   }
 
   int count = 0;
+  char c;
   while ((c = fgetc(in)) != EOF) {
+    matrix_text[count] = c - 'A';
+    count++;
+
     if (count == n) {
       if (mode == 0) {
-        permutate(n, matrix_text, permutation);
+        matrix_multiplication(n, matrix_out, matrix_text, matrix_t);
       } else {
-        permutate(n, matrix_text, inv);
+        matrix_multiplication(n, matrix_out, matrix_text, inv);
       }
 
       for (int i = 0; i < n; i++) {
-        int e = matrix_text[i] + 'A';
+        int e = (matrix_out[i] % m) + 'A';
         fputc(e, out);
       }
       count = 0;
     }
-
-    matrix_text[count] = c - 'A';
-    count++;
   }
 
-  if (count != 0) {
-    for (int i = 0; i < count; i++) {
-      int e = matrix_text[i] + 'A';
-      fputc(e, out);
-    }
-  }
-
-  free(permutation);
+  free(matrix_t);
   free(matrix_text);
+  free(matrix_out);
 
   if (mode == 1)
     free(inv);
@@ -84,9 +88,9 @@ int transposition(FILE *in, FILE *out, int mode, char *p, int n) {
 }
 
 int main(int argc, char **argv) {
-  char *file_in = NULL, *file_out = NULL, *k_file = NULL;
+  char *file_in = NULL, *file_out = NULL;
   char *p = NULL;
-  int mode = ERR, n = ERR;
+  int mode = ERR, n = ERR, m = ERR;
 
   for (int i = 1; i < argc; i++) {
     if (strcmp("-C", argv[i]) == 0) {
@@ -113,7 +117,12 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Error: Invalid value for -n\n");
         return ERR;
       }
-
+    } else if (strcmp(argv[i], "-m") == 0) {
+      m = atoi(argv[++i]);
+      if (m == 0) {
+        fprintf(stderr, "Error: Invalid value for -m\n");
+        return ERR;
+      }
     } else if (strcmp(argv[i], "-i") == 0) {
       if (i + 1 >= argc || strstr(argv[++i], ".txt") == NULL) {
         fprintf(stderr, "Error: Invalid input file\n");
@@ -166,7 +175,7 @@ int main(int argc, char **argv) {
   struct timespec start_time, end_time;
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  transposition(in, out, mode, p, n);
+  hill_transposition(in, out, mode, p, n, m);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
