@@ -16,7 +16,8 @@ void help(char **argv) {
 }
 
 int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
-  e = e - 'A';
+  if (e >= 'A' && e <= 'Z') e = e - 'A';
+  else e = e - 'a';
 
   mpz_set_ui(acc, e);
   mpz_mul(acc, a, acc);
@@ -24,13 +25,15 @@ int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   mpz_mod(acc, acc, m);
 
   e = mpz_get_ui(acc);
-  e = e + 'A';
+  if (e >= 'A' && e <= 'Z') e = e + 'A';
+  else e = e + 'a';
 
   return e;
 }
 
 int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
-  d = d - 'A';
+  if (d >= 'A' && d <= 'Z') d = d - 'A';
+  else d = d - 'a';
 
   mpz_set_ui(acc, d);
   mpz_sub(acc, acc, b);
@@ -39,7 +42,8 @@ int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
   mpz_mod(acc, acc, m);
 
   d = mpz_get_ui(acc);
-  d = d + 'A';
+  if (d >= 'A' && d <= 'Z') d = d + 'A';
+  else d = d + 'a';
 
   return d;
 }
@@ -73,7 +77,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   int c;
   while ((c = fgetc(in)) != EOF) {
-    if (c >= 'A' && c <= 'Z') {
+    if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
       if (mode == MODE_ENCRYPT) {
         c = encrypt(c, m, a, b, acc);
       } else {
@@ -99,94 +103,66 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   return OK;
 }
-//
-// <<<<<<< HEAD
-// int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc)
-// {
-//   /* Encriptacion para afin no trivial. y = (a + b + x) mod m. Para que |K| =
-//    * |Zn|^2 en vez de |K| = |Zn| * |Zn*| */
-//   e = e - 'A';
-// =======
-// int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, const
-// mpz_t c, mpz_t acc) {
-//   /* Encriptacion para afin no trivial. y = (a * x + b + c) mod m. Para que
-//   |K| = |Zn*| * |Zn|^2 en vez de |K| = |Zn| * |Zn*| */ e = e - 'a';
-// >>>>>>> refs/remotes/origin/main
-//
-//   mpz_set_ui(acc, e);
-//   mpz_mul(acc, a, acc);
-//   mpz_add(acc, b, acc);
-//   mpz_add(acc, c, acc);
-//   mpz_mod(acc, acc, m);
-//
-//   e = mpz_get_ui(acc);
-//   e = e + 'A';
-//
-//   return e;
-// }
-//
-//
-// int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, const
-// mpz_t c, mpz_t acc,
-//             mpz_t inverse) {
-//   /* Desencriptacion para afin no trivial.*/
-//   d = d - 'A';
-//
-//   mpz_set_ui(acc, d);
-//   mpz_sub(acc, acc, b);
-//   mpz_sub(acc, acc, c);
-//   mpz_mod(acc, acc, m);
-//   mpz_mul(acc, acc, inverse);
-//   mpz_mod(acc, acc, m);
-//
-//   d = mpz_get_ui(acc);
-//   d = d + 'A';
-//
-//   return d;
-// }
-//
-// int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
-// ivial */
-// =======
-//            const mpz_t b, const mpz_t c) {
-//     /* Afin no trivial */
-// >>>>>>> refs/remotes/origin/main
-//   if (in == NULL || out == NULL)
-//     return ERR;
-//
-//   mpz_t *inverse = NULL;
-//   if (mode != 0)
-//     inverse = extended_euclidian(m, a);
-//
-//   mpz_t acc;
-//   mpz_init(acc);
-//
-// <<<<<<< HEAD
-//   int c;
-//   while ((c = fgetc(in)) != EOF) {
-//     if (c >= 'A' && c <= 'Z') {
-//       c = encrypt_nt(c, m, a, b, acc);
-// =======
-//   int d;
-//   while ((d = fgetc(in)) != EOF) {
-//     if (d >= 'a' && d <= 'z') {
-//       d = encrypt_nt(d, m, a, b, c, acc);
-// >>>>>>> refs/remotes/origin/main
-//     } else {
-//       d = decrypt_nt(d, m, a, b, c, acc, *inverse);
-//     }
-//     fputc(d, out);
-//     mpz_set_ui(acc, 0);
-//   }
-//
-//   mpz_clear(acc);
-//   if (mode != 0) {
-//     mpz_clear(*inverse);
-//     free(inverse);
-//   }
-//
-//   return OK;
-// }
+
+int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
+           const mpz_t b, const mpz_t c) {
+  if (in == NULL || out == NULL)
+    return ERR;
+
+  mpz_t *inverse = NULL;
+  if (mode != 0)
+    inverse = extended_euclidian(m, a);
+
+  mpz_t acc, b_c;
+  mpz_init(acc);
+  mpz_init(b_c);
+  mpz_set_ui(b_c, b);
+  mpz_add(b_c, c, b_c);
+
+  FILE *pf_in = NULL, *pf_out = NULL;
+  if (in == stdin) {
+    char buffer[MAX_LINE];
+    fgets(buffer, MAX_LINE, in);
+    pf_in = fopen("in.txt", "w+");
+    pf_out = fopen("out.txt", "w+");
+    fputs(buffer, pf_in);
+    fseek(pf_in, 0, SEEK_SET);
+    procesado(pf_in, pf_out);
+    fseek(pf_out, 0, SEEK_SET);
+    fclose(pf_in);
+    remove("in.txt");
+    in = pf_out;
+  }
+
+  int d;
+  while ((d = fgetc(in)) != EOF) {
+    if (d >= 'A' && d <= 'Z' || d >= 'a' && d <= 'z') {
+      if (mode == MODE_ENCRYPT) {
+        d = encrypt(d, m, a, b_c, acc);
+      } else {
+        d = decrypt(d, m, b_c, acc, *inverse);
+      }
+
+      fputc(d, out);
+      mpz_set_ui(acc, 0);
+    }
+  }
+
+  if (out == stdout)
+    printf("\n");
+
+  mpz_clear(acc);
+  mpz_clear(b_c);
+  if (mode != 0) {
+    mpz_clear(*inverse);
+    free(inverse);
+  }
+
+  if (pf_out != NULL)
+    fclose(pf_out);
+
+  return OK;
+}
 
 int main(int argc, char **argv) {
   char *file_in = NULL, *file_out = NULL;
