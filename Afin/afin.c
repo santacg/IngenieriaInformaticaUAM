@@ -103,7 +103,7 @@ int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, const mpz_t c
 }
 
 int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
-           const mpz_t b) {
+           const mpz_t b, const mpz_t c) {
     /* Afin no trivial */
   if (in == NULL || out == NULL)
     return ERR;
