@@ -100,14 +100,21 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   return OK;
 }
 
+<<<<<<< HEAD
 int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   /* Encriptacion para afin no trivial. y = (a + b + x) mod m. Para que |K| =
    * |Zn|^2 en vez de |K| = |Zn| * |Zn*| */
   e = e - 'A';
+=======
+int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, const mpz_t c, mpz_t acc) {
+  /* Encriptacion para afin no trivial. y = (a * x + b + c) mod m. Para que |K| = |Zn*| * |Zn|^2 en vez de |K| = |Zn| * |Zn*| */
+  e = e - 'a';
+>>>>>>> refs/remotes/origin/main
 
   mpz_set_ui(acc, e);
-  mpz_add(acc, a, acc);
+  mpz_mul(acc, a, acc);
   mpz_add(acc, b, acc);
+  mpz_add(acc, c, acc);
   mpz_mod(acc, acc, m);
 
   e = mpz_get_ui(acc);
@@ -116,14 +123,21 @@ int encrypt_nt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   return e;
 }
 
+<<<<<<< HEAD
 int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc,
                mpz_t inverse) {
+=======
+int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, const mpz_t c, mpz_t acc,
+            mpz_t inverse) {
+>>>>>>> refs/remotes/origin/main
   /* Desencriptacion para afin no trivial.*/
   d = d - 'A';
 
   mpz_set_ui(acc, d);
-  mpz_sub(acc, acc, a);
   mpz_sub(acc, acc, b);
+  mpz_sub(acc, acc, c);
+  mpz_mod(acc, acc, m);
+  mpz_mul(acc, acc, inverse);
   mpz_mod(acc, acc, m);
 
   d = mpz_get_ui(acc);
@@ -133,8 +147,13 @@ int decrypt_nt(int d, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc,
 }
 
 int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
+<<<<<<< HEAD
               const mpz_t b) {
   /* Afin no trivial */
+=======
+           const mpz_t b, const mpz_t c) {
+    /* Afin no trivial */
+>>>>>>> refs/remotes/origin/main
   if (in == NULL || out == NULL)
     return ERR;
 
@@ -145,14 +164,21 @@ int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   mpz_t acc;
   mpz_init(acc);
 
+<<<<<<< HEAD
   int c;
   while ((c = fgetc(in)) != EOF) {
     if (c >= 'A' && c <= 'Z') {
       c = encrypt_nt(c, m, a, b, acc);
+=======
+  int d;
+  while ((d = fgetc(in)) != EOF) {
+    if (d >= 'a' && d <= 'z') {
+      d = encrypt_nt(d, m, a, b, c, acc);
+>>>>>>> refs/remotes/origin/main
     } else {
-      c = decrypt_nt(c, m, a, b, acc, *inverse);
+      d = decrypt_nt(d, m, a, b, c, acc, *inverse);
     }
-    fputc(c, out);
+    fputc(d, out);
     mpz_set_ui(acc, 0);
   }
 
