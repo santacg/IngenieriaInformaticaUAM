@@ -278,3 +278,15 @@ int permutate(int n, int *array, int *permutation) {
   free(tmp);
   return 0;
 }
+
+void procesado(FILE *in, FILE *out) {
+  char c;
+  while ((c = fgetc(in)) != EOF) {
+    if (c >= 'A' && c <= 'Z') {
+      fputc(c, out);
+    } else if (c >= 'a' && c <= 'z') {
+      c = c + ('A' - 'a');
+      fputc(c, out);
+    }
+  }
+}

@@ -2,6 +2,18 @@
 
 void help() { printf("Use: preprocesado file_in file_out\n"); }
 
+void procesado(FILE *in, FILE *out) {
+  char c;
+  while ((c = fgetc(in)) != EOF) {
+    if (c >= 'A' && c <= 'Z') {
+      fputc(c, out);
+    } else if (c >= 'a' && c <= 'z') {
+      c = c + ('A' - 'a');
+      fputc(c, out);
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     printf("Error: Input and output files needed\n");
@@ -31,25 +43,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  char c;
-  while ((c = fgetc(in)) != EOF) {
-    if (c >= 'A' && c <= 'Z') {
-      if (fputc(c, out) == EOF) {
-        printf("Error: Fputc EOF\n");
-        fclose(in);
-        fclose(out);
-        return 1;
-      }
-    } else if (c >= 'a' && c <= 'z') {
-      c = c + ('A' - 'a');
-      if (fputc(c, out) == EOF) {
-        printf("Error: Fputc EOF\n");
-        fclose(in);
-        fclose(out);
-        return 1;
-      }
-    }
-  }
+  procesado(in, out);
 
   fclose(in);
   fclose(out);
