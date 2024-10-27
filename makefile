@@ -2,7 +2,7 @@ CC = gcc
 FLAGS = -g -Wall -Wextra -pedantic
 LIBS = -lgmp
 
-OBJS = Afin/afin.o Hill/hill.o Vigenere/vigenere.o Flujo/flujo.o Transposicion/transposicion.o Utils/utils.o Procesado/preprocesado.o Vigenere/kasiski.o Vigenere/ic.o
+OBJS = Afin/afin.o Hill/hill.o Vigenere/vigenere.o Flujo/flujo.o Transposicion/transposicion.o Utils/utils.o Procesado/preprocesado.o Vigenere/kasiski.o Vigenere/ic.o utils.o
 
 all: hill afin vigenere flujo transposicion procesado
 

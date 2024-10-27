@@ -8,7 +8,21 @@
 #include <unistd.h>
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s -l value -i filein\n", argv[0]);
+  fprintf(stderr, "Usage: %s -l ngramas -i filein\n", argv[0]);
+}
+
+void add_ngrama(GHashTable *table, char *ngrama, int posicion) {
+  // Obtemos la lista si ya existe el ngrama
+  // Añandimos la posicion a la lista
+  GSList *list_pos = g_hash_table_lookup(table, ngrama);
+
+  // Agregamos la posicion a la lista del ngrama correspondiente
+  // Si la lista no existe se crea con g_slist_append
+  list_pos = g_slist_append(list_pos, GINT_TO_POINTER(posicion + 1));
+  // Si el n-grama es nuevo lo insertarmos en la tabla hash
+  if (g_hash_table_lookup(table, ngrama) == NULL) {
+    g_hash_table_insert(table, g_strdup(ngrama), list_pos);
+  }
 }
 
 int kasiski(FILE *in, int n_grama) {
@@ -17,43 +31,51 @@ int kasiski(FILE *in, int n_grama) {
     return ERR;
   }
 
-  // Obtenemos el tamaño del archivo y lo dividimos entre el tamaño de n-grama
-  // para saber cuantos n-gramas vamos a tener
-  fseek(in, 0, SEEK_END);
-  long file_size = ftell(in);
-  fseek(in, 0, SEEK_SET);
+  // Empleamos un hash con listas enlazadas simples de la biblioteca GLIB para
+  // almacenar los ngramas
+  GHashTable *hash_ngramas = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_slist_free);
 
-  // Reservamos memoria para el array de strings
-  long gramas_size = file_size / n_grama;
-  printf("%ld\n", gramas_size);
-  char **gramas = (char **)malloc(gramas_size * sizeof(char *));
-
-  if (gramas == NULL)
-    return ERR;
-
-  for (int i = 0; i < gramas_size; i++) {
-    gramas[i] = (char *)malloc((n_grama * sizeof(char)) + 1);
-    if (gramas[i] == NULL) {
-      for (int j = 0; j < i; j++) {
-        free(gramas[j]);
+  // Se lee el archivo con fread para obtener todos los ngramas posibles del
+  // texto
+  char buffer[n_grama + 1]; // +1 para el \0
+  while (fread(buffer, sizeof(char), n_grama, in) == (size_t)(n_grama)) {
+    // Elimanamos los saltos de línea del buffer
+    int j = 0;
+    for (int i = 0; i < n_grama; i++) {
+      if (buffer[i] != '\n') {
+        buffer[j++] = buffer[i];
       }
-      free(gramas);
-      return ERR;
     }
-  }
+    buffer[j] = '\0';
 
-  // Leer los n-gramas del archivo
-  for (int i = 0; i < gramas_size; i++) {
-    if (fread(gramas[i], sizeof(char), n_grama, in) != (size_t)n_grama) {
-      for (int j = 0; j <= i; j++) {
-        free(gramas[j]);
-      }
-      free(gramas);
-      return ERR;
+    // Verificamos si el n-grama resultante es del tamaño deseado
+    if (j == n_grama) {
+      // Añadimos el n_grama al hash con su posicion
+      int pos = ftell(in) - n_grama;
+      add_ngrama(hash_ngramas, buffer, pos);
     }
-    gramas[i][n_grama] = '\0'; // Añadir terminador nulo
-  }
 
+    // Movemos el puntero del archivo n_grama - 1 posiciones hacia atrás
+    fseek(in, -(n_grama - 1), SEEK_CUR);
+  }
+  // Imprimir todos los n-gramas y sus posiciones
+  GHashTableIter iter;
+  gpointer key, value;
+  g_hash_table_iter_init(&iter, hash_ngramas);
+
+  printf("N-gramas y sus posiciones:\n");
+  while (g_hash_table_iter_next(&iter, &key, &value)) {
+    char *ngram = (char *)key;
+    GSList *positions = (GSList *)value;
+
+    printf("N-grama: %s, posiciones: ", ngram);
+    for (GSList *pos = positions; pos != NULL; pos = pos->next) {
+      printf("%d ", GPOINTER_TO_INT(pos->data));
+    }
+    printf("\n");
+  }
+  g_hash_table_destroy(hash_ngramas);
   return 0;
 }
 

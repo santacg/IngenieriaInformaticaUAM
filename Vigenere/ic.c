@@ -8,7 +8,8 @@
 #define ERR -1
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s -l value -i filein\n", argv[0]);
+  fprintf(stderr, "Usage: %s -l maxima longtitud de clave -i filein\n",
+          argv[0]);
 }
 
 long double indice_coincidencia(FILE *in, int key_len) {
