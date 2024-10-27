@@ -1,7 +1,5 @@
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 #define N_LETRAS 26
@@ -96,6 +94,11 @@ int main(int argc, char *argv[]) {
   int max_key_len = 0;
 
   int opt;
+  if (argc < 3) {
+    help(argv);
+    return ERR;
+  }
+
   while ((opt = getopt(argc, argv, "l:i:")) != -1) {
     switch (opt) {
     case 'l':

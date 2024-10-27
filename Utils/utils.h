@@ -25,8 +25,6 @@ void matrix_multiplication(int n, int *matrix_out, int *matrix_a,
 
 void display_matrix(int n, int *matrix);
 
-int permutate(int n, int *array, int *permutation);
-
 void procesado(FILE *in, FILE *out);
 
 #endif

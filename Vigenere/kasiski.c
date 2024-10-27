@@ -1,10 +1,7 @@
 #include "../Utils/utils.h"
 #include <glib.h>
-#include <gmp.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 void help(char **argv) {
@@ -136,20 +133,24 @@ int kasiski(FILE *in, int n_grama) {
 
   printf("Factores y numero de apariciones:\n");
   g_hash_table_iter_init(&iter, hash_factores);
-  int max_factor = -1;
-  int factor = -1;
+  int max_apariciones = -1;
+  int max_n_factor = -1;
   while (g_hash_table_iter_next(&iter, &clave, &valor)) {
-    factor = *(int *)valor;
-    if (factor > max_factor)
-      max_factor = factor;
+    int apariciones = *(int *)valor;
+    int factor = GPOINTER_TO_INT(clave);
 
-    printf("Factor %d aparece %d veces\n", GPOINTER_TO_INT(clave), factor);
+    if (apariciones > max_apariciones) {
+      max_apariciones = apariciones;
+      max_n_factor = factor;
+    }
+
+    printf("Factor %d aparece %d veces\n", factor, apariciones);
   }
   printf("\n");
 
   g_hash_table_destroy(hash_ngramas);
   g_hash_table_destroy(hash_factores);
-  return factor;
+  return max_n_factor;
 }
 
 int main(int argc, char *argv[]) {
@@ -157,6 +158,11 @@ int main(int argc, char *argv[]) {
   int n_grama;
 
   int opt;
+  if (argc < 3) {
+    help(argv);
+    return ERR;
+  }
+
   while ((opt = getopt(argc, argv, "l:i:")) != -1) {
     switch (opt) {
     case 'l':

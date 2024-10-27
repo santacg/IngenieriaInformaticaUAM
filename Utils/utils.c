@@ -249,34 +249,10 @@ void matrix_multiplication(int n, int *matrix_out, int *matrix_a,
 void display_matrix(int n, int *matrix) {
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      printf("%d\t", matrix[i * n + j]);
+      printf("%d ", matrix[i * n + j]);
     }
     printf("\n");
   }
-}
-
-int permutate(int n, int *array, int *permutation) {
-  if (array == NULL || permutation == NULL) {
-    return ERR;
-  }
-
-  int *tmp = (int *)malloc(sizeof(int) * n);
-  if (tmp == NULL) {
-    return ERR;
-  }
-
-  int perm_idx;
-  for (int i = 0; i < n; i++) {
-    perm_idx = permutation[i];
-    tmp[i] = array[perm_idx];
-  }
-
-  for (int i = 0; i < n; i++) {
-    array[i] = tmp[i];
-  }
-
-  free(tmp);
-  return 0;
 }
 
 void procesado(FILE *in, FILE *out) {

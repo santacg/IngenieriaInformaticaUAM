@@ -1,7 +1,4 @@
 #include "../Utils/utils.h"
-#include <bits/getopt_core.h>
-#include <bits/time.h>
-#include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,6 +55,11 @@ int main(int argc, char **argv) {
   int mode = ERR;
 
   int opt;
+  if (argc < 5) {
+    help(argv);
+    return ERR;
+  }
+
   while ((opt = getopt(argc, argv, "CDk:i:o:")) != -1) {
     switch (opt) {
     case 'C':

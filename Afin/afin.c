@@ -1,5 +1,4 @@
 #include "../Utils/utils.h"
-#include <bits/time.h>
 #include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,8 +15,10 @@ void help(char **argv) {
 }
 
 int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
-  if (e >= 'A' && e <= 'Z') e = e - 'A';
-  else e = e - 'a';
+  if (e >= 'A' && e <= 'Z')
+    e = e - 'A';
+  else
+    e = e - 'a';
 
   mpz_set_ui(acc, e);
   mpz_mul(acc, a, acc);
@@ -25,15 +26,19 @@ int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   mpz_mod(acc, acc, m);
 
   e = mpz_get_ui(acc);
-  if (e >= 'A' && e <= 'Z') e = e + 'A';
-  else e = e + 'a';
+  if (e >= 'A' && e <= 'Z')
+    e = e + 'A';
+  else
+    e = e + 'a';
 
   return e;
 }
 
 int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
-  if (d >= 'A' && d <= 'Z') d = d - 'A';
-  else d = d - 'a';
+  if (d >= 'A' && d <= 'Z')
+    d = d - 'A';
+  else
+    d = d - 'a';
 
   mpz_set_ui(acc, d);
   mpz_sub(acc, acc, b);
@@ -42,8 +47,10 @@ int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
   mpz_mod(acc, acc, m);
 
   d = mpz_get_ui(acc);
-  if (d >= 'A' && d <= 'Z') d = d + 'A';
-  else d = d + 'a';
+  if (d >= 'A' && d <= 'Z')
+    d = d + 'A';
+  else
+    d = d + 'a';
 
   return d;
 }
@@ -105,7 +112,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 }
 
 int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
-           const mpz_t b, const mpz_t c) {
+              const mpz_t b, const mpz_t c) {
   if (in == NULL || out == NULL)
     return ERR;
 
@@ -177,6 +184,10 @@ int main(int argc, char **argv) {
   mpz_inits(a_mpz, b_mpz, m_mpz, NULL);
 
   int opt;
+  if (argc < 7) {
+    help(argv);
+    return ERR;
+  }
 
   while ((opt = getopt(argc, argv, "CDm:a:b:i:o:")) != -1) {
     switch (opt) {

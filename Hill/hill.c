@@ -1,17 +1,14 @@
 #include "../Utils/utils.h"
-#include <bits/time.h>
-#include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
 void help(char **argv) {
-  fprintf(
-      stderr,
-      "Usage: %s {-C|-D} -m value -n value -k keyfile -i infile -o outfile\n",
-      argv[0]);
+  fprintf(stderr,
+          "Usage: %s {-C|-D} -m tamaño alfabeto -n tamaño matrix -k keyfile -i "
+          "infile -o outfile\n",
+          argv[0]);
 }
 
 int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
@@ -20,8 +17,8 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
     return ERR;
 
   // Se reserva memoria para la matriz de claves
-  int *matrix_k = (int *)malloc(sizeof(int) * n * n);
-  if (matrix_k == NULL)
+  int *matriz_k = (int *)malloc(sizeof(int) * n * n);
+  if (matriz_k == NULL)
     return ERR;
 
   int i = 0, j = 0;
@@ -29,7 +26,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   // Leemos la matriz de claves
   while ((c = fgetc(k)) != EOF) {
     if (c >= '0' && c <= '9') {
-      matrix_k[i * n + j] = c - '0';
+      matriz_k[i * n + j] = c - '0';
       j++;
     }
 
@@ -41,9 +38,9 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
 
   // Verificamos que la matriz de claves define una funcion inyectiva para ello
   // se calcula el determinante
-  if (determinant(n, matrix_k) == 0) {
+  if (determinant(n, matriz_k) == 0) {
     printf("Error: Determinant of matrix K is zero\n");
-    free(matrix_k);
+    free(matriz_k);
     return ERR;
   }
 
@@ -53,11 +50,11 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   if (mode == MODE_DECRYPT) {
     inv = (int *)malloc(sizeof(int *) * n * n);
     if (inv == NULL) {
-      free(matrix_k);
+      free(matriz_k);
       return ERR;
     }
-    if (mod_inverse(n, m, matrix_k, inv) == ERR) {
-      free(matrix_k);
+    if (mod_inverse(n, m, matriz_k, inv) == ERR) {
+      free(matriz_k);
       free(inv);
       return ERR;
     }
@@ -65,9 +62,9 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
 
   // Se reserva memoria para la matriz en la que se va a almacenar el texto que
   // se va leyendo
-  int *matrix_text = (int *)malloc(sizeof(int) * n);
-  if (matrix_text == NULL) {
-    free(matrix_k);
+  int *matriz_texto = (int *)malloc(sizeof(int) * n);
+  if (matriz_texto == NULL) {
+    free(matriz_k);
     if (mode == MODE_DECRYPT)
       free(inv);
     return ERR;
@@ -75,10 +72,10 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
 
   // Se reserva memoria para la matriz en la que se va a almacenar el texto
   // cifrado o discifrado para su posterior impresion
-  int *matrix_out = (int *)malloc(sizeof(int) * n);
-  if (matrix_text == NULL) {
-    free(matrix_k);
-    free(matrix_text);
+  int *matriz_salida = (int *)malloc(sizeof(int) * n);
+  if (matriz_texto == NULL) {
+    free(matriz_k);
+    free(matriz_texto);
     if (mode == MODE_DECRYPT)
       free(inv);
     return ERR;
@@ -87,7 +84,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   int count = 0;
   // Se procesa el archivo de entrada proporcionado caracater a caracter
   while ((c = fgetc(in)) != EOF) {
-    matrix_text[count] = c - 'A';
+    matriz_texto[count] = c - 'A';
     count++;
 
     // Cuando hayan suficientes caracteres en la matriz de texto estos se
@@ -96,16 +93,16 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
       // Si estamos encriptando se multiplica la matriz de texto por la matriz
       // de claves
       if (mode == MODE_ENCRYPT) {
-        matrix_multiplication(n, matrix_out, matrix_text, matrix_k);
+        matrix_multiplication(n, matriz_salida, matriz_texto, matriz_k);
       } else {
         // Si estamos desencriptando se multiplica la matriz de texto por el
         // inverso modular de la matriz de claves
-        matrix_multiplication(n, matrix_out, matrix_text, inv);
+        matrix_multiplication(n, matriz_salida, matriz_texto, inv);
       }
 
       // Se imprimen los caracteres en el archivo de salida
       for (int i = 0; i < n; i++) {
-        int e = (matrix_out[i] % m) + 'A';
+        int e = (matriz_salida[i] % m) + 'A';
         fputc(e, out);
       }
       // Reseteamos la cuenta
@@ -113,9 +110,9 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
     }
   }
 
-  free(matrix_k);
-  free(matrix_text);
-  free(matrix_out);
+  free(matriz_k);
+  free(matriz_texto);
+  free(matriz_salida);
 
   if (mode == 1)
     free(inv);
@@ -210,10 +207,10 @@ int main(int argc, char **argv) {
 
   // Verificamos que el tamaño del fichero de entrada sea mutliplo de n
   // de lo contrario aplicamos padding
-  long size_remainder = in_size % n;
-  if (size_remainder != 0) {
+  long size_resto = in_size % n;
+  if (size_resto != 0) {
     fseek(in, -1, SEEK_END);
-    for (int i = 0; i < size_remainder; i++) {
+    for (int i = 0; i < size_resto; i++) {
       fputc('X', in);
     }
   }

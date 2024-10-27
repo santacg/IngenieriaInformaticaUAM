@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void help() { printf("Use: preprocesado file_in file_out\n"); }
+void help(char **argv) { printf("Use: %s file_in file_out\n", argv[0]); }
 
 void procesado(FILE *in, FILE *out) {
   char c;
@@ -17,7 +17,7 @@ void procesado(FILE *in, FILE *out) {
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     printf("Error: Input and output files needed\n");
-    help();
+    help(argv);
     return 1;
   }
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 
   if (file_in == NULL || file_out == NULL) {
     printf("Error: Input and output files needed\n");
-    help();
+    help(argv);
     return 1;
   }
 

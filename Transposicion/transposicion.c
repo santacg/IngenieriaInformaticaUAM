@@ -1,9 +1,6 @@
 #include "../Utils/utils.h"
-#include <bits/time.h>
-#include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -15,56 +12,54 @@ void help(char **argv) {
           argv[0]);
 }
 
-int hill_transposition(FILE *in, FILE *out, int mode, char *p, int n, int m) {
+int hill_transposicion(FILE *in, FILE *out, int mode, char *p, int n, int m) {
 
-  // Verifica que los archivos de entrada y salida no sean nulos
   if (in == NULL || out == NULL)
     return ERR;
 
-  // Reserva memoria para la matriz de transposición
-  int *matrix_t = (int *)calloc(n * n, sizeof(int));
-  if (matrix_t == NULL)
+  // Reservamos memoria para la matriz de transposición
+  int *matriz_transpuesta = (int *)calloc(n * n, sizeof(int));
+  if (matriz_transpuesta == NULL)
     return ERR;
 
-  // Rellena la matriz de transposición según los valores de 'p'
+  // Rellenamos la matriz de transposición según los valores de p
   int i = 0, j = 0;
   while (p[i] != '\0') {
     if (p[i] >= '0' && p[i] <= '9') {
       int col = (p[i] - '0') - 1;
-      matrix_t[j * n + col] = 1;
+      matriz_transpuesta[j * n + col] = 1;
       j++;
     }
     i++;
   }
 
-  // Si está en modo descifrado, calcula la inversa de la matriz
+  // Si está en modo descifrado calcula la inversa de la matriz de transposición
   int *inv = NULL;
   if (mode == 1) {
     inv = (int *)calloc(n * n, sizeof(int *));
     if (inv == NULL) {
-      free(matrix_t);
+      free(matriz_transpuesta);
       return ERR;
     }
-    if (mod_inverse(n, m, matrix_t, inv) == ERR) {
-      free(matrix_t);
+    if (mod_inverse(n, m, matriz_transpuesta, inv) == ERR) {
+      free(matriz_transpuesta);
       free(inv);
       return ERR;
     }
   }
 
-  // Reserva memoria para las matrices de texto y salida
-  int *matrix_text = (int *)malloc(sizeof(int) * n);
-  if (matrix_text == NULL) {
-    free(matrix_t);
+  int *matriz_texto = (int *)malloc(sizeof(int) * n);
+  if (matriz_texto == NULL) {
+    free(matriz_transpuesta);
     if (mode == 1)
       free(inv);
     return ERR;
   }
 
-  int *matrix_out = (int *)malloc(sizeof(int) * n);
-  if (matrix_out == NULL) {
-    free(matrix_t);
-    free(matrix_text);
+  int *matriz_out = (int *)malloc(sizeof(int) * n);
+  if (matriz_out == NULL) {
+    free(matriz_transpuesta);
+    free(matriz_texto);
     if (mode == 1)
       free(inv);
     return ERR;
@@ -72,32 +67,28 @@ int hill_transposition(FILE *in, FILE *out, int mode, char *p, int n, int m) {
 
   int count = 0;
   char c;
-  // Lee y procesa el archivo de entrada en bloques de tamaño 'n'
   while ((c = fgetc(in)) != EOF) {
-    matrix_text[count] = c - 'A';
+    matriz_texto[count] = c - 'A';
     count++;
 
-    // Si se ha leído un bloque completo, realiza la multiplicación de matrices
     if (count == n) {
       if (mode == 0) {
-        matrix_multiplication(n, matrix_out, matrix_text, matrix_t);
+        matrix_multiplication(n, matriz_out, matriz_texto, matriz_transpuesta);
       } else {
-        matrix_multiplication(n, matrix_out, matrix_text, inv);
+        matrix_multiplication(n, matriz_out, matriz_texto, inv);
       }
 
-      // Escribe el resultado en el archivo de salida
       for (int i = 0; i < n; i++) {
-        int e = (matrix_out[i] % m) + 'A';
+        int e = (matriz_out[i] % m) + 'A';
         fputc(e, out);
       }
       count = 0;
     }
   }
 
-  // Libera la memoria reservada
-  free(matrix_t);
-  free(matrix_text);
-  free(matrix_out);
+  free(matriz_transpuesta);
+  free(matriz_texto);
+  free(matriz_out);
 
   if (mode == 1)
     free(inv);
@@ -203,7 +194,7 @@ int main(int argc, char **argv) {
   struct timespec start_time, end_time;
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  hill_transposition(in, out, mode, p, n, m);
+  hill_transposicion(in, out, mode, p, n, m);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
