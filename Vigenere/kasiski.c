@@ -12,6 +12,8 @@ void help(char **argv) {
 }
 
 int *factorizar(int num, int *n_factores) {
+  // Reservamos memoria dinamica para el peor caso (numero de factores igual al
+  // numero)
   int *factores = malloc(sizeof(int) * num);
   if (factores == NULL)
     return NULL;
@@ -95,23 +97,6 @@ int kasiski(FILE *in, int n_grama) {
     // Movemos el puntero del archivo n_grama - 1 posiciones hacia atrás
     fseek(in, -(n_grama - 1), SEEK_CUR);
   }
-  // Imprimir todos los n-gramas y sus posiciones
-  // GHashTableIter iter;
-  // gpointer key, value;
-  // g_hash_table_iter_init(&iter, hash_ngramas);
-  //
-  // printf("N-gramas y sus posiciones:\n");
-  // while (g_hash_table_iter_next(&iter, &key, &value)) {
-  //   char *ngram = (char *)key;
-  //   GSList *positions = (GSList *)value;
-  //
-  //   printf("N-grama: %s, posiciones: ", ngram);
-  //   for (GSList *pos = positions; pos != NULL; pos = pos->next) {
-  //     printf("%d ", GPOINTER_TO_INT(pos->data));
-  //   }
-  //   printf("\n");
-  // }
-  //
 
   // Buscamos las listas que tengan mas de una distancia
   GHashTableIter iter;
