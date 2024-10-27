@@ -123,50 +123,52 @@ int main(int argc, char *argv[]) {
     return ERR;
   }
 
-  long double *indices =
-      (long double *)malloc(max_key_len * sizeof(long double));
-  if (indices == NULL) {
-    fprintf(stderr, "Error de asignación de memoria.\n");
-    fclose(in);
-    return ERR;
-  }
+  long double indices[max_key_len];
+  long double max_ic = -1;
 
-  for (int i = 1, j = 0; i <= max_key_len; i++, j++) {
-    indices[j] = indice_coincidencia(in, i);
-    if (indices[j] == ERR) {
+  for (int i = 1; i <= max_key_len; i++) {
+    indices[i - 1] = indice_coincidencia(in, i);
+    if (indices[i - 1] == ERR) {
       fclose(in);
-      free(indices);
       return ERR;
     }
+    if (indices[i - 1] > max_ic) {
+      max_ic = indices[i - 1];
+    }
   }
-
   fclose(in);
 
-  long double eng_ic = 0.068;
-  long double min_dist = -1;
-  int min_idx = -1;
+  long double lim_ic = max_ic * 0.9;
+  int key_len = -1;
+  long double ic = -1;
 
-  for (int i = 0; i < max_key_len; i++) {
-    long double val = indices[i];
-    long double distancia = val - eng_ic;
-    if (distancia < 0) {
-      distancia = -distancia;
-    }
+  for (int i = 1; i <= max_key_len; i++) {
+    long double val = indices[i - 1];
+    int current_len = i;
+    int multiplo = 0;
 
-    if (min_dist == -1 || distancia < min_dist) {
-      min_dist = distancia;
-      min_idx = i;
+    // Considerar solo las longitudes con IC por encima del umbral
+    if (val >= lim_ic) {
+      // Verificar si la longitud actual es múltiplo de una longitud menor ya
+      // seleccionada
+      for (int j = 1; j < current_len; j++) {
+        if (indices[j - 1] >= lim_ic && current_len % j == 0) {
+          multiplo = 1;
+          break;
+        }
+      }
+
+      if (!multiplo) {
+        // Seleccionar esta longitud de clave
+        key_len = current_len;
+        ic = val;
+        // Romper el bucle para obtener la longitud más pequeña posible
+        break;
+      }
     }
   }
 
-  if (min_idx >= 0) {
-    printf("La clave más probable es %d con un IC %Lf\n", min_idx + 1,
-           indices[min_idx]);
-  } else {
-    printf("Error: no se encontró un índice de coincidencia válido.\n");
-  }
-
-  free(indices);
+  printf("La clave más probable es %d con un IC %Lf\n", key_len, ic);
 
   return 0;
 }
