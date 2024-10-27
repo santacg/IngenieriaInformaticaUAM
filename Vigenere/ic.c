@@ -16,17 +16,18 @@ long double indice_coincidencia(FILE *in, int key_len) {
     return ERR;
   }
 
-  // Inicializar contadores
-  long long **frec_c = (long long **)malloc(key_len * sizeof(long long *));
+  // Asignamos memoria para contadores de frecuencia por subsecuencia
+  long long **frec_c = malloc(key_len * sizeof(long long *));
   if (frec_c == NULL) {
     fprintf(stderr, "Error de asignación de memoria.\n");
     return ERR;
   }
 
   for (int i = 0; i < key_len; i++) {
-    frec_c[i] = (long long *)calloc(N_LETRAS, sizeof(long long));
+    frec_c[i] = calloc(N_LETRAS, sizeof(long long));
     if (frec_c[i] == NULL) {
       fprintf(stderr, "Error de asignación de memoria.\n");
+      // Liberamos memoria previamente asignada en caso de error
       for (int j = 0; j < i; j++) {
         free(frec_c[j]);
       }
@@ -35,7 +36,8 @@ long double indice_coincidencia(FILE *in, int key_len) {
     }
   }
 
-  long long *N_i = (long long *)calloc(key_len, sizeof(long long));
+  // Contador de letras por subsecuencia
+  long long *N_i = calloc(key_len, sizeof(long long));
   if (N_i == NULL) {
     fprintf(stderr, "Error de asignación de memoria.\n");
     for (int i = 0; i < key_len; i++) {
@@ -45,7 +47,7 @@ long double indice_coincidencia(FILE *in, int key_len) {
     return ERR;
   }
 
-  // Leer el archivo y actualizar frecuencias
+  // Leemos el archivo y actualizamos las frecuencias
   int c;
   long long pos = 0;
   while ((c = fgetc(in)) != EOF) {
@@ -57,7 +59,7 @@ long double indice_coincidencia(FILE *in, int key_len) {
     }
   }
 
-  // Calcular IC para cada subsecuencia
+  // Calcular el indice de coincidencia para cada subsecuencia
   long double ic_total = 0.0;
   for (int i = 0; i < key_len; i++) {
     long long acc = 0;
@@ -70,19 +72,19 @@ long double indice_coincidencia(FILE *in, int key_len) {
     }
   }
 
-  // Obtener la media de los IC
+  // Calculamos la media del IC y mostramos el resultado por pantalla
   ic_total /= key_len;
   printf("Indice de coincidencia para longitud de clave %d: %Lf\n", key_len,
          ic_total);
 
-  // Liberar memoria
+  // Liberamos la memoria dinamica asignada
   for (int i = 0; i < key_len; i++) {
     free(frec_c[i]);
   }
   free(frec_c);
   free(N_i);
 
-  // Regresar el archivo al inicio para la siguiente iteración
+  // Reiniciamos el puntero del archivo para las proximas lecturas
   fseek(in, 0, SEEK_SET);
 
   return ic_total;
@@ -126,6 +128,8 @@ int main(int argc, char *argv[]) {
   long double indices[max_key_len];
   long double max_ic = -1;
 
+  // Para la longitud de clave maxima dada calculamos el IC promedio de cada
+  // longitud hasta llegar al máximo
   for (int i = 1; i <= max_key_len; i++) {
     indices[i - 1] = indice_coincidencia(in, i);
     if (indices[i - 1] == ERR) {
@@ -138,6 +142,7 @@ int main(int argc, char *argv[]) {
   }
   fclose(in);
 
+  // Establecemos un umbral para que solo se seleccionen los ICs más altos
   long double lim_ic = max_ic * 0.9;
   int key_len = -1;
   long double ic = -1;
@@ -147,9 +152,9 @@ int main(int argc, char *argv[]) {
     int current_len = i;
     int multiplo = 0;
 
-    // Considerar solo las longitudes con IC por encima del umbral
+    // Consideramos solo las longitudes con IC por encima del umbral
     if (val >= lim_ic) {
-      // Verificar si la longitud actual es múltiplo de una longitud menor ya
+      // Verificamos si la longitud actual es múltiplo de una longitud menor ya
       // seleccionada
       for (int j = 1; j < current_len; j++) {
         if (indices[j - 1] >= lim_ic && current_len % j == 0) {
@@ -162,7 +167,7 @@ int main(int argc, char *argv[]) {
         // Seleccionar esta longitud de clave
         key_len = current_len;
         ic = val;
-        // Romper el bucle para obtener la longitud más pequeña posible
+        // Rompemos el bucle para obtener la longitud más pequeña posible
         break;
       }
     }
