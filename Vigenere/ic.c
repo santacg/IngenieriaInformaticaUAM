@@ -174,7 +174,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  printf("La clave más probable es %d con un IC %Lf\n", key_len, ic);
+  printf("La longitud de clave más probable es %d con un IC %Lf\n", key_len,
+         ic);
 
   return 0;
 }
