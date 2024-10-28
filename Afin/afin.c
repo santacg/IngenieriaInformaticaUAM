@@ -15,10 +15,7 @@ void help(char **argv) {
 }
 
 int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
-  if (e >= 'A' && e <= 'Z')
-    e = e - 'A';
-  else
-    e = e - 'a';
+  e = e - 'A';
 
   mpz_set_ui(acc, e);
   mpz_mul(acc, a, acc);
@@ -26,19 +23,13 @@ int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   mpz_mod(acc, acc, m);
 
   e = mpz_get_ui(acc);
-  if (e >= 'A' && e <= 'Z')
-    e = e + 'A';
-  else
-    e = e + 'a';
+  e = e + 'A';
 
   return e;
 }
 
 int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
-  if (d >= 'A' && d <= 'Z')
-    d = d - 'A';
-  else
-    d = d - 'a';
+  d = d - 'A';
 
   mpz_set_ui(acc, d);
   mpz_sub(acc, acc, b);
@@ -47,10 +38,7 @@ int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
   mpz_mod(acc, acc, m);
 
   d = mpz_get_ui(acc);
-  if (d >= 'A' && d <= 'Z')
-    d = d + 'A';
-  else
-    d = d + 'a';
+  d = d + 'A';
 
   return d;
 }
@@ -62,7 +50,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   mpz_t *inverse = NULL;
   if (mode != 0)
-    inverse = extended_euclidian(m, a);
+    inverse = extended_euclidian(a, m);
 
   mpz_t acc;
   mpz_init(acc);
@@ -75,7 +63,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
     pf_out = fopen("out.txt", "w+");
     fputs(buffer, pf_in);
     fseek(pf_in, 0, SEEK_SET);
-    procesado(pf_in, pf_out);
+    procesado(pf_in, pf_out); // Aqui se convierten en mayusculas
     fseek(pf_out, 0, SEEK_SET);
     fclose(pf_in);
     remove("in.txt");
@@ -84,7 +72,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   int c;
   while ((c = fgetc(in)) != EOF) {
-    if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z') {
+    if (c >= 'A' && c <= 'Z') {
       if (mode == MODE_ENCRYPT) {
         c = encrypt(c, m, a, b, acc);
       } else {
@@ -118,13 +106,13 @@ int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   mpz_t *inverse = NULL;
   if (mode != 0)
-    inverse = extended_euclidian(m, a);
+    inverse = extended_euclidian(a, m);
 
   mpz_t acc, b_c;
   mpz_init(acc);
   mpz_init(b_c);
-  mpz_set_ui(b_c, b);
-  mpz_add(b_c, c, b_c);
+  mpz_set_ui(b_c, 0);
+  mpz_add(b_c, c, b);
 
   FILE *pf_in = NULL, *pf_out = NULL;
   if (in == stdin) {
@@ -143,7 +131,7 @@ int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   int d;
   while ((d = fgetc(in)) != EOF) {
-    if (d >= 'A' && d <= 'Z' || d >= 'a' && d <= 'z') {
+    if (d >= 'A' && d <= 'Z') {
       if (mode == MODE_ENCRYPT) {
         d = encrypt(d, m, a, b_c, acc);
       } else {
@@ -274,10 +262,7 @@ int main(int argc, char **argv) {
   }
 
   struct timespec start_time, end_time;
-
-  int res = euclidian_gcd(a_mpz, m_mpz);
-
-  if (res != 1) {
+  if (euclidian_gcd(a_mpz, m_mpz) != 1) {
     fprintf(stdout,
             "Introduced numbers dont make up an injetive affine function"
             ", cannot encrypt nor decrypt text\n ");
