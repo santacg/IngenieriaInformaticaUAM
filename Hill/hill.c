@@ -37,9 +37,19 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   }
 
   // Verificamos que la matriz de claves define una funcion inyectiva para ello
-  // se calcula el determinante
-  if (determinant(n, matriz_k) == 0) {
-    printf("Error: Determinant of matrix K is zero\n");
+  mpz_t det_mpz, m_mpz;
+  mpz_inits(det_mpz, m_mpz, NULL);
+  mpz_set_ui(m_mpz, m);
+
+  int det = determinant(n, matriz_k);
+  if (det < 0)
+    mpz_set_si(det_mpz, -det); // Convierte a positivo
+  else
+    mpz_set_ui(det_mpz, det);
+
+  if (euclidian_gcd(det_mpz, m_mpz) != 1) {
+    printf("Error: matrix k doesn't define an injective function for %d m\n", m);
+    mpz_clears(det_mpz, m_mpz, NULL);
     free(matriz_k);
     return ERR;
   }
@@ -51,11 +61,13 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
     inv = (int *)malloc(sizeof(int *) * n * n);
     if (inv == NULL) {
       free(matriz_k);
+      mpz_clears(det_mpz, m_mpz, NULL);
       return ERR;
     }
     if (mod_inverse(n, m, matriz_k, inv) == ERR) {
       free(matriz_k);
       free(inv);
+      mpz_clears(det_mpz, m_mpz, NULL);
       return ERR;
     }
   }
@@ -64,6 +76,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   // se va leyendo
   int *matriz_texto = (int *)malloc(sizeof(int) * n);
   if (matriz_texto == NULL) {
+    mpz_clears(det_mpz, m_mpz, NULL);
     free(matriz_k);
     if (mode == MODE_DECRYPT)
       free(inv);
@@ -76,6 +89,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   if (matriz_texto == NULL) {
     free(matriz_k);
     free(matriz_texto);
+    mpz_clears(det_mpz, m_mpz, NULL);
     if (mode == MODE_DECRYPT)
       free(inv);
     return ERR;
@@ -113,6 +127,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   free(matriz_k);
   free(matriz_texto);
   free(matriz_salida);
+  mpz_clears(det_mpz, m_mpz, NULL);
 
   if (mode == 1)
     free(inv);
