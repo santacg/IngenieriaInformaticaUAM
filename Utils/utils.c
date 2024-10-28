@@ -134,7 +134,7 @@ int adjunta(int n, int *matriz, int *adj) {
     return ERR;
   }
 
-  int sign = 1;
+  int signo = 1;
   int *tmp = (int *)malloc(sizeof(int *) * n * n);
   if (tmp == NULL) {
     return ERR;
@@ -144,8 +144,8 @@ int adjunta(int n, int *matriz, int *adj) {
     for (int j = 0; j < n; j++) {
       cofactorizar(i, j, n, tmp, matriz);
 
-      sign = ((i + j) % 2 == 0) ? 1 : -1;
-      adj[j * n + i] = sign * determinante(n - 1, tmp);
+      signo = ((i + j) % 2 == 0) ? 1 : -1;
+      adj[j * n + i] = signo * determinante(n - 1, tmp);
     }
   }
 
