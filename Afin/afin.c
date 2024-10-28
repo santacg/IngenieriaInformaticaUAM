@@ -64,7 +64,7 @@ int afin(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
     pf_out = fopen("out.txt", "w+");
     fputs(buffer, pf_in);
     fseek(pf_in, 0, SEEK_SET);
-    procesado(pf_in, pf_out); // Aqui se convierten en mayusculas
+    procesado(pf_in, pf_out);
     fseek(pf_out, 0, SEEK_SET);
     fclose(pf_in);
     remove("in.txt");
