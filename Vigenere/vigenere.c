@@ -14,23 +14,23 @@ void help(char **argv) {
   fprintf(stderr, "Uso: %s {-C|-D} -k cadena -i infile -o outfile\n", argv[0]);
 }
 
-int vigenere(FILE *in, FILE *out, char *key, int mode) {
+int vigenere(FILE *in, FILE *out, char *clave, int mode) {
 
-  if (in == NULL || out == NULL || key == NULL)
+  if (in == NULL || out == NULL || clave == NULL)
     return ERR;
 
-  int n = strlen(key);
+  int n = strlen(clave);
   if (n <= 0) {
     return ERR;
   }
 
   int i = 0;
   int k[n];
-  while (key[i] != '\0') {
-    if (key[i] >= 'A' && key[i] <= 'Z') {
-      k[i] = key[i] - 'A';
-    } else if (key[i] >= 'a' && key[i] <= 'z') {
-      k[i] = key[i] - 'a';
+  while (clave[i] != '\0') {
+    if (clave[i] >= 'A' && clave[i] <= 'Z') {
+      k[i] = clave[i] - 'A';
+    } else if (clave[i] >= 'a' && clave[i] <= 'z') {
+      k[i] = clave[i] - 'a';
     } else {
       k[i] = 0;
     }
@@ -59,7 +59,7 @@ int vigenere(FILE *in, FILE *out, char *key, int mode) {
 
 int main(int argc, char **argv) {
   char *file_in = NULL, *file_out = NULL;
-  char *key = NULL;
+  char *clave = NULL;
   int mode = ERR;
 
   int opt;
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
       mode = MODE_DECRYPT;
       break;
     case 'k':
-      key = optarg;
+      clave = optarg;
       break;
     case 'i':
       file_in = optarg;
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (mode == ERR || key == NULL || file_in == NULL || file_out == NULL) {
+  if (mode == ERR || clave == NULL || file_in == NULL || file_out == NULL) {
     fprintf(stderr, "Error: Faltan argumentos\n");
     help(argv);
     return ERR;
@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
   struct timespec start_time, end_time;
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  vigenere(in, out, key, mode);
+  vigenere(in, out, clave, mode);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;

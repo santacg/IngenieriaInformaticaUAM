@@ -90,14 +90,15 @@ int main(int argc, char *argv[]) {
   int pos = 0;
   char c;
   while ((c = fgetc(in)) != EOF && pos < file_size) {
-    int idx_subseq = pos % longitud_clave;
-    int idx_char = pos / longitud_clave;
-    if (idx_char < subsecuencias_size) {
-      subsecuencias[idx_subseq][idx_char] = c;
+    if (c >= 'A' && c <= 'Z') {
+      int idx_subseq = pos % longitud_clave;
+      int idx_char = pos / longitud_clave;
+      if (idx_char < subsecuencias_size) {
+        subsecuencias[idx_subseq][idx_char] = c;
+      }
+      pos++;
     }
-    pos++;
   }
-
   fclose(in);
 
   int letras_k[longitud_clave];

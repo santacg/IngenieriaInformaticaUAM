@@ -4,7 +4,7 @@ LIBS = -lgmp
 
 OBJS = Afin/afin.o Hill/hill.o Vigenere/vigenere.o Flujo/flujo.o Transposicion/transposicion.o Utils/utils.o Procesado/preprocesado.o Vigenere/kasiski.o Vigenere/ic.o Vigenere/criptoanalisis.o utils.o 
 
-all: hill afin vigenere flujo transposicion procesado
+all: hill afin vigenere flujo transposicion procesado kasiski ic criptoanalisis
 
 hill: Hill/hill.o Utils/utils.o
 	$(CC) -o $@ $^ $(LIBS)

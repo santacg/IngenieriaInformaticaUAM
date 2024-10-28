@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     return ERR;
   }
 
-  while ((opt = getopt(argc, argv, "CDk:n:i:o:")) != -1) {
+  while ((opt = getopt(argc, argv, "CDi:o:")) != -1) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {

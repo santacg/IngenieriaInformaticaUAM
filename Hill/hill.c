@@ -11,7 +11,7 @@
 
 void help(char **argv) {
   fprintf(stderr,
-          "Usage: %s {-C|-D} -m tamaño alfabeto -n tamaño matrix -k archivo "
+          "Uso: %s {-C|-D} -m tamaño alfabeto -n tamaño matriz -k archivo "
           "matriz -i "
           "infile -o outfile\n",
           argv[0]);
@@ -90,29 +90,31 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
   int count = 0;
   // Se procesa el archivo de entrada proporcionado caracater a caracter
   while ((c = fgetc(in)) != EOF) {
-    matriz_texto[count] = c - 'A';
-    count++;
+    if (c >= 'A' && c <= 'Z') {
+      matriz_texto[count] = c - 'A';
+      count++;
 
-    // Cuando hayan suficientes caracteres en la matriz de texto estos se
-    // encriptan o desencriptan
-    if (count == n) {
-      // Si estamos encriptando se multiplica la matriz de texto por la matriz
-      // de claves
-      if (mode == MODE_ENCRYPT) {
-        multiplicacion_matrices(n, matriz_salida, matriz_texto, matriz_k);
-      } else {
-        // Si estamos desencriptando se multiplica la matriz de texto por el
-        // inverso modular de la matriz de claves
-        multiplicacion_matrices(n, matriz_salida, matriz_texto, inv);
-      }
+      // Cuando hayan suficientes caracteres en la matriz de texto estos se
+      // encriptan o desencriptan
+      if (count == n) {
+        // Si estamos encriptando se multiplica la matriz de texto por la matriz
+        // de claves
+        if (mode == MODE_ENCRYPT) {
+          multiplicacion_matrices(n, matriz_salida, matriz_texto, matriz_k);
+        } else {
+          // Si estamos desencriptando se multiplica la matriz de texto por el
+          // inverso modular de la matriz de claves
+          multiplicacion_matrices(n, matriz_salida, matriz_texto, inv);
+        }
 
-      // Se imprimen los caracteres en el archivo de salida
-      for (int i = 0; i < n; i++) {
-        int e = (matriz_salida[i] % m) + 'A';
-        fputc(e, out);
+        // Se imprimen los caracteres en el archivo de salida
+        for (int i = 0; i < n; i++) {
+          int e = (matriz_salida[i] % m) + 'A';
+          fputc(e, out);
+        }
+        // Reseteamos la cuenta
+        count = 0;
       }
-      // Reseteamos la cuenta
-      count = 0;
     }
   }
 
@@ -243,7 +245,7 @@ int main(int argc, char **argv) {
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
 
-  printf("time: %lf \n", elapsed_time);
+  printf("time: %lf\n", elapsed_time);
 
   fclose(k);
   if (in != stdin)

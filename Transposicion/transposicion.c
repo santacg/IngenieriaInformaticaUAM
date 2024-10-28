@@ -97,22 +97,24 @@ int hill_transposicion(FILE *in, FILE *out, int mode, char *p, int n, int m) {
   int count = 0;
   char c;
   while ((c = fgetc(in)) != EOF) {
-    matriz_texto[count] = c - 'A';
-    count++;
+    if (c >= 'A' && c <= 'Z') {
+      matriz_texto[count] = c - 'A';
+      count++;
 
-    if (count == n) {
-      if (mode == 0) {
-        multiplicacion_matrices(n, matriz_salida, matriz_texto,
-                                matriz_transposicion);
-      } else {
-        multiplicacion_matrices(n, matriz_salida, matriz_texto, inv);
-      }
+      if (count == n) {
+        if (mode == 0) {
+          multiplicacion_matrices(n, matriz_salida, matriz_texto,
+                                  matriz_transposicion);
+        } else {
+          multiplicacion_matrices(n, matriz_salida, matriz_texto, inv);
+        }
 
-      for (int i = 0; i < n; i++) {
-        int e = (matriz_salida[i] % m) + 'A';
-        fputc(e, out);
+        for (int i = 0; i < n; i++) {
+          int e = (matriz_salida[i] % m) + 'A';
+          fputc(e, out);
+        }
+        count = 0;
       }
-      count = 0;
     }
   }
 
@@ -195,8 +197,14 @@ int main(int argc, char **argv) {
     }
   }
 
+  if (mode == MODE_DECRYPT && n != 0) {
+    fprintf(stderr, "Error: No se puede desencriptar con la opción -n\n");
+    help(argv);
+    return ERR;
+  }
+
   if (mode == ERR || m == 0 || file_in == NULL || file_out == NULL) {
-    fprintf(stderr, "Error: faltan argumentos\n");
+    fprintf(stderr, "Error: Faltan argumentos\n");
     help(argv);
     return ERR;
   }

@@ -15,7 +15,7 @@ void help(char **argv) {
           argv[0]);
 }
 
-int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
+int encriptar(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   e = e - 'A';
 
   mpz_set_ui(acc, e);
@@ -29,7 +29,8 @@ int encrypt(int e, const mpz_t m, const mpz_t a, const mpz_t b, mpz_t acc) {
   return e;
 }
 
-int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
+int desencriptar(int d, const mpz_t m, const mpz_t b, mpz_t acc,
+                 mpz_t inverse) {
   d = d - 'A';
 
   mpz_set_ui(acc, d);
@@ -75,9 +76,9 @@ int afin(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   while ((c = fgetc(in)) != EOF) {
     if (c >= 'A' && c <= 'Z') {
       if (mode == MODE_ENCRYPT) {
-        c = encrypt(c, m, a, b, acc);
+        c = encriptar(c, m, a, b, acc);
       } else {
-        c = decrypt(c, m, b, acc, *inverse);
+        c = desencriptar(c, m, b, acc, *inverse);
       }
 
       fputc(c, out);
@@ -224,7 +225,7 @@ int main(int argc, char **argv) {
                         (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
 
   if (in != stdin && out != stdout) {
-    printf("time: %lf \n", elapsed_time);
+    printf("time: %lf\n", elapsed_time);
   }
 
   mpz_clears(a_mpz, b_mpz, m_mpz, NULL);

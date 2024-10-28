@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 void help(char **argv) { printf("Use: %s file_in file_out\n", argv[0]); }
 
@@ -33,15 +34,20 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  if (strcmp(file_in, file_out) == 0) {
+    fprintf(stderr, "Error: Los archivos no pueden tener el mismo nombre\n");
+    return -1;
+  }
+
   FILE *in = fopen(file_in, "r");
   if (in == NULL) {
-    fprintf(stderr, "Error: No se ha podido abrir el archivo de entrada");
+    fprintf(stderr, "Error: No se ha podido abrir el archivo de entrada\n");
     return -1;
   }
 
   FILE *out = fopen(file_out, "w");
   if (out == NULL) {
-    fprintf(stderr, "Error: No se ha podido abrir el archivo de salida");
+    fprintf(stderr, "Error: No se ha podido abrir el archivo de salida\n");
     fclose(in);
     return -1;
   }
