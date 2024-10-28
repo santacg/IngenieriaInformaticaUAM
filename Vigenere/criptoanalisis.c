@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "../Utils/utils.h"
 #include <math.h>
 #include <stdio.h>
@@ -13,7 +18,7 @@ const double frecuencias_eng[N_LETRAS] = {
     0.063, 0.091, 0.028, 0.010, 0.023, 0.001, 0.020, 0.001};
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s -l longtitud de clave -i filein\n", argv[0]);
+  fprintf(stderr, "Uso: %s -l longtitud de clave -i filein\n", argv[0]);
 }
 
 int main(int argc, char *argv[]) {
@@ -45,7 +50,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (file_in == NULL || longitud_clave == 0) {
-    fprintf(stderr, "Error: Faltan argumentos requeridos.\n");
+    fprintf(stderr, "Error: Faltan argumentos.\n");
     help(argv);
     return ERR;
   }

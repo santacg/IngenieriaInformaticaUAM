@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include <stdio.h>
 
 void help(char **argv) { printf("Use: %s file_in file_out\n", argv[0]); }
@@ -16,31 +21,29 @@ void procesado(FILE *in, FILE *out) {
 
 int main(int argc, char *argv[]) {
   if (argc < 3) {
-    printf("Error: Input and output files needed\n");
     help(argv);
-    return 1;
+    return -1;
   }
 
   char *file_in = argv[1];
   char *file_out = argv[2];
 
   if (file_in == NULL || file_out == NULL) {
-    printf("Error: Input and output files needed\n");
     help(argv);
-    return 1;
+    return -1;
   }
 
   FILE *in = fopen(file_in, "r");
   if (in == NULL) {
-    printf("Error: File in is null\n");
-    return 1;
+    fprintf(stderr, "Error: No se ha podido abrir el archivo de entrada");
+    return -1;
   }
 
   FILE *out = fopen(file_out, "w");
   if (out == NULL) {
-    printf("Error: File out is null\n");
+    fprintf(stderr, "Error: No se ha podido abrir el archivo de salida");
     fclose(in);
-    return 1;
+    return -1;
   }
 
   procesado(in, out);

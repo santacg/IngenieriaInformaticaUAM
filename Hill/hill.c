@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "../Utils/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +11,8 @@
 
 void help(char **argv) {
   fprintf(stderr,
-          "Usage: %s {-C|-D} -m tamaño alfabeto -n tamaño matrix -k keyfile -i "
+          "Usage: %s {-C|-D} -m tamaño alfabeto -n tamaño matrix -k archivo "
+          "matriz -i "
           "infile -o outfile\n",
           argv[0]);
 }
@@ -38,8 +44,8 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
 
   // Verificamos que la matriz de claves define una funcion inyectiva para ello
   // se calcula el determinante
-  if (determinant(n, matriz_k) == 0) {
-    printf("Error: Determinant of matrix K is zero\n");
+  if (determinante(n, matriz_k) == 0) {
+    printf("Error: La matriz no forma una funcion inyectiva\n");
     free(matriz_k);
     return ERR;
   }
@@ -53,7 +59,7 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
       free(matriz_k);
       return ERR;
     }
-    if (mod_inverse(n, m, matriz_k, inv) == ERR) {
+    if (mod_inversa(n, m, matriz_k, inv) == ERR) {
       free(matriz_k);
       free(inv);
       return ERR;
@@ -93,11 +99,11 @@ int hill(FILE *in, FILE *out, FILE *k, int mode, int m, int n) {
       // Si estamos encriptando se multiplica la matriz de texto por la matriz
       // de claves
       if (mode == MODE_ENCRYPT) {
-        matrix_multiplication(n, matriz_salida, matriz_texto, matriz_k);
+        multiplicacion_matrices(n, matriz_salida, matriz_texto, matriz_k);
       } else {
         // Si estamos desencriptando se multiplica la matriz de texto por el
         // inverso modular de la matriz de claves
-        matrix_multiplication(n, matriz_salida, matriz_texto, inv);
+        multiplicacion_matrices(n, matriz_salida, matriz_texto, inv);
       }
 
       // Se imprimen los caracteres en el archivo de salida
@@ -134,14 +140,16 @@ int main(int argc, char **argv) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         return ERR;
       }
       mode = MODE_ENCRYPT;
       break;
     case 'D':
       if (mode == MODE_ENCRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         return ERR;
       }
       mode = MODE_DECRYPT;
@@ -149,14 +157,14 @@ int main(int argc, char **argv) {
     case 'm':
       m = atoi(optarg);
       if (m <= 0) {
-        fprintf(stderr, "Error: Invalid value for -m\n");
+        fprintf(stderr, "Error: Valor incorrecto para -m\n");
         return ERR;
       }
       break;
     case 'n':
       n = atoi(optarg);
       if (n <= 0) {
-        fprintf(stderr, "Error: Invalid value for -n\n");
+        fprintf(stderr, "Error: Valor incorrecto para -n\n");
         return ERR;
       }
       break;
@@ -177,7 +185,7 @@ int main(int argc, char **argv) {
 
   if (mode == ERR || m <= 0 || n <= 0 || k_file == NULL || file_in == NULL ||
       file_out == NULL) {
-    fprintf(stderr, "Error: Missing required arguments.\n");
+    fprintf(stderr, "Error: Faltan argumentos.\n");
     help(argv);
     return ERR;
   }
@@ -187,7 +195,7 @@ int main(int argc, char **argv) {
   if (k_file != NULL) {
     k = fopen(k_file, "r");
     if (k == NULL) {
-      fprintf(stderr, "Error: Could not open key file %s\n", k_file);
+      fprintf(stderr, "Error: No se ha podido abrir el archivo %s\n", k_file);
       return ERR;
     }
   }
@@ -195,7 +203,7 @@ int main(int argc, char **argv) {
   if (file_in != NULL) {
     in = fopen(file_in, "r+");
     if (in == NULL) {
-      fprintf(stderr, "Error: Could not open input file %s\n", file_in);
+      fprintf(stderr, "Error: No se ha podido abrir el archivo %s\n", file_in);
       fclose(k);
       return ERR;
     }
@@ -220,7 +228,7 @@ int main(int argc, char **argv) {
   if (file_out != NULL) {
     out = fopen(file_out, "w");
     if (out == NULL) {
-      fprintf(stderr, "Error: Could not open output file %s\n", file_out);
+      fprintf(stderr, "Error: No se ha podido abrir el archivo %s\n", file_out);
       fclose(k);
       fclose(in);
       return ERR;

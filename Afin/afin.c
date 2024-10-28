@@ -10,7 +10,8 @@
 
 void help(char **argv) {
   fprintf(stderr,
-          "Usage: %s {-C|-D} -m value -a value -b value -i infile -o outfile\n",
+          "Uso: %s {-C|-D} -m tamaño alfabeto -a valor -b valor -i infile -o "
+          "outfile\n",
           argv[0]);
 }
 
@@ -43,14 +44,14 @@ int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
   return d;
 }
 
-int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
-           const mpz_t b) {
+int afin(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
+         const mpz_t b) {
   if (in == NULL || out == NULL)
     return ERR;
 
   mpz_t *inverse = NULL;
   if (mode != 0)
-    inverse = extended_euclidian(a, m);
+    inverse = euclides_extendido(a, m);
 
   mpz_t acc;
   mpz_init(acc);
@@ -106,7 +107,7 @@ int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
 
   mpz_t *inverse = NULL;
   if (mode != 0)
-    inverse = extended_euclidian(a, m);
+    inverse = euclides_extendido(a, m);
 
   mpz_t acc, b_c;
   mpz_init(acc);
@@ -181,7 +182,8 @@ int main(int argc, char **argv) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
         return ERR;
       }
@@ -189,7 +191,8 @@ int main(int argc, char **argv) {
       break;
     case 'D':
       if (mode == MODE_ENCRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
         return ERR;
       }
@@ -198,7 +201,7 @@ int main(int argc, char **argv) {
     case 'm':
       mpz_set_ui(m_mpz, atoi(optarg));
       if (mpz_sgn(m_mpz) == ERR || mpz_sgn(m_mpz) == 0) {
-        fprintf(stderr, "Error: Invalid value for -m\n");
+        fprintf(stderr, "Error: Valor incorrecto para -m\n");
         mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
         return ERR;
       }
@@ -206,7 +209,7 @@ int main(int argc, char **argv) {
     case 'a':
       mpz_set_ui(a_mpz, atoi(optarg));
       if (mpz_sgn(a_mpz) == ERR || mpz_sgn(a_mpz) == 0) {
-        fprintf(stderr, "Error: Invalid value for -a\n");
+        fprintf(stderr, "Error: Valor incorrecto para -a\n");
         mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
         return ERR;
       }
@@ -214,7 +217,7 @@ int main(int argc, char **argv) {
     case 'b':
       mpz_set_ui(b_mpz, atoi(optarg));
       if (mpz_sgn(b_mpz) == ERR || mpz_sgn(b_mpz) == 0) {
-        fprintf(stderr, "Error: Invalid value for -a\n");
+        fprintf(stderr, "Error: Valor incorrecto para -b\n");
         mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
         return ERR;
       }
@@ -233,7 +236,7 @@ int main(int argc, char **argv) {
   }
 
   if (mode == ERR) {
-    fprintf(stderr, "Error: Missing required arguments.\n");
+    fprintf(stderr, "Error: Faltan argumentos.\n");
     help(argv);
     mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
     return ERR;
@@ -262,10 +265,9 @@ int main(int argc, char **argv) {
   }
 
   struct timespec start_time, end_time;
-  if (euclidian_gcd(a_mpz, m_mpz) != 1) {
+  if (euclides_mcd(a_mpz, m_mpz) != 1) {
     fprintf(stdout,
-            "Introduced numbers dont make up an injetive affine function"
-            ", cannot encrypt nor decrypt text\n ");
+            "Los numeros introducidos no forman una función inyectiva\n ");
     mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
     if (in != stdin)
       fclose(in);
@@ -275,7 +277,7 @@ int main(int argc, char **argv) {
   }
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  affine(in, out, mode, m_mpz, a_mpz, b_mpz);
+  afin(in, out, mode, m_mpz, a_mpz, b_mpz);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
 
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +

@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "../Utils/utils.h"
 #include <glib.h>
 #include <stdio.h>
@@ -5,7 +10,7 @@
 #include <unistd.h>
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s -l ngramas -i filein\n", argv[0]);
+  fprintf(stderr, "Uso: %s -l ngramas -i filein\n", argv[0]);
 }
 
 int *factorizar(int num, int *n_factores) {
@@ -182,7 +187,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (file_in == NULL) {
-    fprintf(stderr, "Error: Missing required arguments.\n");
+    fprintf(stderr, "Error: Faltan argumentos\n");
     help(argv);
     return ERR;
   }

@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "../Utils/utils.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -8,7 +13,7 @@
 #define LFSR_SEED 0xACE1 // Semilla inicial para LFSR
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s {-C|-D} -i infile -o outfile\n", argv[0]);
+  fprintf(stderr, "Uso: %s {-C|-D} -i infile -o outfile\n", argv[0]);
 }
 
 uint8_t stream() {
@@ -20,7 +25,7 @@ uint8_t stream() {
     uint16_t bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
     lfsr = (lfsr >> 1) |
            (bit << 15); // Desplaza LFSR a la derecha e inserta el nuevo bit
-    key_stream = (key_stream << 1) | bit; // Construye el flujo de claves
+    key_stream = (key_stream << 1) | bit;
   }
 
   return key_stream;
@@ -52,14 +57,16 @@ int main(int argc, char **argv) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         return ERR;
       }
       mode = MODE_ENCRYPT;
       break;
     case 'D':
       if (mode == MODE_ENCRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No puedes utilizar los dos modos al mismo tiempo\n");
         return ERR;
       }
       mode = MODE_DECRYPT;
@@ -77,7 +84,7 @@ int main(int argc, char **argv) {
   }
 
   if (mode == ERR || file_in == NULL || file_out == NULL) {
-    fprintf(stderr, "Error: Missing required arguments.\n");
+    fprintf(stderr, "Error: Faltan argumentos.\n");
     help(argv);
     return ERR;
   }

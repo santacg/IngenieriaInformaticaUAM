@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "../Utils/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,8 +11,7 @@
 #include <unistd.h>
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s {-C|-D} -k cadena -i infile -o outfile\n",
-          argv[0]);
+  fprintf(stderr, "Uso: %s {-C|-D} -k cadena -i infile -o outfile\n", argv[0]);
 }
 
 int vigenere(FILE *in, FILE *out, char *key, int mode) {
@@ -25,6 +29,10 @@ int vigenere(FILE *in, FILE *out, char *key, int mode) {
   while (key[i] != '\0') {
     if (key[i] >= 'A' && key[i] <= 'Z') {
       k[i] = key[i] - 'A';
+    } else if (key[i] >= 'a' && key[i] <= 'z') {
+      k[i] = key[i] - 'a';
+    } else {
+      k[i] = 0;
     }
     i++;
   }
@@ -64,14 +72,15 @@ int main(int argc, char **argv) {
     switch (opt) {
     case 'C':
       if (mode == MODE_DECRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr, "Error: \n");
         return ERR;
       }
       mode = MODE_ENCRYPT;
       break;
     case 'D':
       if (mode == MODE_ENCRYPT) {
-        fprintf(stderr, "Error: Cannot set both modes at the same time\n");
+        fprintf(stderr,
+                "Error: No se pueden utilizar los dos modos al mismo tiempo\n");
         return ERR;
       }
       mode = MODE_DECRYPT;
@@ -92,7 +101,7 @@ int main(int argc, char **argv) {
   }
 
   if (mode == ERR || key == NULL || file_in == NULL || file_out == NULL) {
-    fprintf(stderr, "Error: Missing required arguments.\n");
+    fprintf(stderr, "Error: Faltan argumentos\n");
     help(argv);
     return ERR;
   }

@@ -10,20 +10,20 @@
 #include <gmp.h>
 #include <stdio.h>
 
-int euclidian_gcd(const mpz_t a, const mpz_t b);
+int euclides_mcd(const mpz_t a, const mpz_t b);
 
-mpz_t *extended_euclidian(const mpz_t m, const mpz_t a);
+mpz_t *euclides_extendido(const mpz_t m, const mpz_t a);
 
-int determinant(int n, int *matrix);
+int determinante(int n, int *matrix);
 
-int inverse(int n, int *matrix, int *inverse);
+int inversa(int n, int *matrix, int *inversa);
 
-int mod_inverse(int n, int mod, int *matrix, int *inverse);
+int mod_inversa(int n, int mod, int *matrix, int *inversa);
 
-void matrix_multiplication(int n, int *matrix_out, int *matrix_a,
-                           int *matrix_b);
+void multiplicacion_matrices(int n, int *matriz_out, int *matriz_a,
+                             int *matriz_b);
 
-void display_matrix(int n, int *matrix);
+void imprimir_matriz(int n, int *matriz);
 
 void procesado(FILE *in, FILE *out);
 

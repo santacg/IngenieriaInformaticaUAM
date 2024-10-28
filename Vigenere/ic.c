@@ -1,3 +1,8 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,8 +11,7 @@
 #define ERR -1
 
 void help(char **argv) {
-  fprintf(stderr, "Usage: %s -l maxima longtitud de clave -i filein\n",
-          argv[0]);
+  fprintf(stderr, "Uso: %s -l maxima longtitud de clave -i filein\n", argv[0]);
 }
 
 long double indice_coincidencia(FILE *in, int key_len) {
@@ -18,14 +22,14 @@ long double indice_coincidencia(FILE *in, int key_len) {
   // Asignamos memoria para contadores de frecuencia por subsecuencia
   long long **frec_c = malloc(key_len * sizeof(long long *));
   if (frec_c == NULL) {
-    fprintf(stderr, "Error de asignación de memoria.\n");
+    fprintf(stderr, "Error: Asignación de memoria.\n");
     return ERR;
   }
 
   for (int i = 0; i < key_len; i++) {
     frec_c[i] = calloc(N_LETRAS, sizeof(long long));
     if (frec_c[i] == NULL) {
-      fprintf(stderr, "Error de asignación de memoria.\n");
+      fprintf(stderr, "Error: Asignación de memoria.\n");
       // Liberamos memoria previamente asignada en caso de error
       for (int j = 0; j < i; j++) {
         free(frec_c[j]);
@@ -38,7 +42,7 @@ long double indice_coincidencia(FILE *in, int key_len) {
   // Contador de letras por subsecuencia
   long long *N_i = calloc(key_len, sizeof(long long));
   if (N_i == NULL) {
-    fprintf(stderr, "Error de asignación de memoria.\n");
+    fprintf(stderr, "Error: Asignación de memoria.\n");
     for (int i = 0; i < key_len; i++) {
       free(frec_c[i]);
     }
@@ -118,7 +122,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (file_in == NULL || max_key_len == 0) {
-    fprintf(stderr, "Error: Faltan argumentos requeridos.\n");
+    fprintf(stderr, "Error: Faltan argumentos\n");
     help(argv);
     return ERR;
   }

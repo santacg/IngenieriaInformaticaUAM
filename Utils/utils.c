@@ -1,9 +1,14 @@
+/**
+ *
+ * @author Carlos Garcia Santa
+ */
+
 #include "utils.h"
 #include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int euclidian_gcd(const mpz_t a, const mpz_t b) {
+int euclides_mcd(const mpz_t a, const mpz_t b) {
   if (a == NULL || b == NULL)
     return ERR;
 
@@ -32,7 +37,7 @@ int euclidian_gcd(const mpz_t a, const mpz_t b) {
   return res;
 }
 
-mpz_t *extended_euclidian(const mpz_t a, const mpz_t m) {
+mpz_t *euclides_extendido(const mpz_t a, const mpz_t m) {
   mpz_t prev_u, u, prev_v, v, tmp, quotient, remainder;
   mpz_t a_cpy, m_cpy;
 
@@ -82,13 +87,13 @@ mpz_t *extended_euclidian(const mpz_t a, const mpz_t m) {
   return res;
 }
 
-void cofactorize(int p, int q, int n, int *temp, int *matrix) {
+void cofactorizar(int p, int q, int n, int *temp, int *matriz) {
   int i = 0, j = 0;
 
   for (int row = 0; row < n; row++) {
     for (int col = 0; col < n; col++) {
       if (row != p && col != q) {
-        temp[i * (n - 1) + j++] = matrix[row * n + col];
+        temp[i * (n - 1) + j++] = matriz[row * n + col];
 
         if (j == n - 1) {
           j = 0;
@@ -99,62 +104,62 @@ void cofactorize(int p, int q, int n, int *temp, int *matrix) {
   }
 }
 
-int determinant(int n, int *matrix) {
+int determinante(int n, int *matriz) {
   int det = 0;
 
   if (n == 1) {
-    return *matrix;
+    return *matriz;
   }
 
-  int *temp = (int *)malloc(sizeof(int) * n * n);
-  if (temp == NULL) {
+  int *tmp = (int *)malloc(sizeof(int) * n * n);
+  if (tmp == NULL) {
     return ERR;
   }
 
-  int sign = 1;
+  int signo = 1;
 
   for (int f = 0; f < n; f++) {
-    cofactorize(0, f, n, temp, matrix);
-    det += sign * matrix[f] * determinant(n - 1, temp);
-    sign = -sign;
+    cofactorizar(0, f, n, tmp, matriz);
+    det += signo * matriz[f] * determinante(n - 1, tmp);
+    signo = -signo;
   }
 
-  free(temp);
+  free(tmp);
   return det;
 }
 
-int adjoint(int n, int *matrix, int *adj) {
+int adjunta(int n, int *matriz, int *adj) {
   if (n == 1) {
     *(adj) = 1;
     return ERR;
   }
 
   int sign = 1;
-  int *temp = (int *)malloc(sizeof(int *) * n * n);
-  if (temp == NULL) {
+  int *tmp = (int *)malloc(sizeof(int *) * n * n);
+  if (tmp == NULL) {
     return ERR;
   }
 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      cofactorize(i, j, n, temp, matrix);
+      cofactorizar(i, j, n, tmp, matriz);
 
       sign = ((i + j) % 2 == 0) ? 1 : -1;
-      adj[j * n + i] = sign * determinant(n - 1, temp);
+      adj[j * n + i] = sign * determinante(n - 1, tmp);
     }
   }
 
-  free(temp);
+  free(tmp);
   return 0;
 }
 
-int inverse(int n, int *matrix, int *inverse) {
+int inversa(int n, int *matriz, int *inversa) {
 
-  if (matrix == NULL || inverse == NULL) {
+  if (matriz == NULL || inversa == NULL) {
     return ERR;
   }
 
-  int det = determinant(n, matrix);
+  int det = determinante(n, matriz);
 
   if (det == 0) {
     return ERR;
@@ -165,30 +170,29 @@ int inverse(int n, int *matrix, int *inverse) {
     return ERR;
   }
 
-  if (adjoint(n, matrix, adj) == ERR) {
+  if (adjunta(n, matriz, adj) == ERR) {
     free(adj);
     return ERR;
   }
 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      inverse[i * n + j] = (adj[i * n + j] * det);
+      inversa[i * n + j] = (adj[i * n + j] * det);
     }
   }
 
   free(adj);
 
-  display_matrix(n, matrix);
   return 0;
 }
 
-int mod_inverse(int n, int mod, int *matrix, int *inverse) {
+int mod_inversa(int n, int mod, int *matriz, int *inversa) {
 
-  if (matrix == NULL || inverse == NULL) {
+  if (matriz == NULL || inversa == NULL) {
     return ERR;
   }
 
-  int det = determinant(n, matrix);
+  int det = determinante(n, matriz);
 
   if (det == 0) {
     return ERR;
@@ -197,7 +201,7 @@ int mod_inverse(int n, int mod, int *matrix, int *inverse) {
   mpz_t m, a;
   mpz_init_set_ui(m, mod);
   mpz_init_set_si(a, det);
-  mpz_t *mp_det_inv = extended_euclidian(a, m);
+  mpz_t *mp_det_inv = euclides_extendido(a, m);
   mpz_clear(m);
   mpz_clear(a);
 
@@ -214,16 +218,16 @@ int mod_inverse(int n, int mod, int *matrix, int *inverse) {
     return ERR;
   }
 
-  if (adjoint(n, matrix, adj) == ERR) {
+  if (adjunta(n, matriz, adj) == ERR) {
     free(adj);
     return ERR;
   }
 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      inverse[i * n + j] = (adj[i * n + j] * det_inv) % mod;
-      if (inverse[i * n + j] < 0) {
-        inverse[i * n + j] += mod;
+      inversa[i * n + j] = (adj[i * n + j] * det_inv) % mod;
+      if (inversa[i * n + j] < 0) {
+        inversa[i * n + j] += mod;
       }
     }
   }
@@ -233,23 +237,23 @@ int mod_inverse(int n, int mod, int *matrix, int *inverse) {
   return 0;
 }
 
-void matrix_multiplication(int n, int *matrix_out, int *matrix_a,
-                           int *matrix_b) {
+void multiplicacion_matrices(int n, int *matriz_out, int *matriz_a,
+                             int *matriz_b) {
   for (int i = 0; i < n; i++) {
-    matrix_out[i] = 0;
+    matriz_out[i] = 0;
   }
 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      matrix_out[i] += matrix_b[i * n + j] * matrix_a[j];
+      matriz_out[i] += matriz_b[i * n + j] * matriz_a[j];
     }
   }
 }
 
-void display_matrix(int n, int *matrix) {
+void imprimir_matriz(int n, int *matriz) {
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      printf("%d ", matrix[i * n + j]);
+      printf("%d ", matriz[i * n + j]);
     }
     printf("\n");
   }
