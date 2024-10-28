@@ -43,8 +43,8 @@ int decrypt(int d, const mpz_t m, const mpz_t b, mpz_t acc, mpz_t inverse) {
   return d;
 }
 
-int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
-           const mpz_t b) {
+int affine_nt(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
+              const mpz_t b, const mpz_t c) {
   if (in == NULL || out == NULL)
     return ERR;
 
@@ -52,8 +52,11 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
   if (mode != 0)
     inverse = extended_euclidian(a, m);
 
-  mpz_t acc;
+  mpz_t acc, b_c;
   mpz_init(acc);
+  mpz_init(b_c);
+  mpz_set_ui(b_c, 0);
+  mpz_add(b_c, c, b);
 
   FILE *pf_in = NULL, *pf_out = NULL;
   if (in == stdin) {
@@ -63,23 +66,23 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
     pf_out = fopen("out.txt", "w+");
     fputs(buffer, pf_in);
     fseek(pf_in, 0, SEEK_SET);
-    procesado(pf_in, pf_out); // Aqui se convierten en mayusculas
+    procesado(pf_in, pf_out);
     fseek(pf_out, 0, SEEK_SET);
     fclose(pf_in);
     remove("in.txt");
     in = pf_out;
   }
 
-  int c;
-  while ((c = fgetc(in)) != EOF) {
-    if (c >= 'A' && c <= 'Z') {
+  int d;
+  while ((d = fgetc(in)) != EOF) {
+    if (d >= 'A' && d <= 'Z') {
       if (mode == MODE_ENCRYPT) {
-        c = encrypt(c, m, a, b, acc);
+        d = encrypt(d, m, a, b_c, acc);
       } else {
-        c = decrypt(c, m, b, acc, *inverse);
+        d = decrypt(d, m, b_c, acc, *inverse);
       }
 
-      fputc(c, out);
+      fputc(d, out);
       mpz_set_ui(acc, 0);
     }
   }
@@ -88,6 +91,7 @@ int affine(FILE *in, FILE *out, int mode, const mpz_t m, const mpz_t a,
     printf("\n");
 
   mpz_clear(acc);
+  mpz_clear(b_c);
   if (mode != 0) {
     mpz_clear(*inverse);
     free(inverse);
@@ -108,8 +112,8 @@ int main(int argc, char **argv) {
     return ERR;
   }
 
-  mpz_t a_mpz, b_mpz, m_mpz;
-  mpz_inits(a_mpz, b_mpz, m_mpz, NULL);
+  mpz_t a_mpz, b_mpz, c_mpz, m_mpz;
+  mpz_inits(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
 
   int opt;
   if (argc < 7) {
@@ -122,7 +126,7 @@ int main(int argc, char **argv) {
     case 'C':
       if (mode == MODE_DECRYPT) {
         fprintf(stderr, "Error: Cannot set both modes at the same time\n");
-        mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
         return ERR;
       }
       mode = MODE_ENCRYPT;
@@ -130,7 +134,7 @@ int main(int argc, char **argv) {
     case 'D':
       if (mode == MODE_ENCRYPT) {
         fprintf(stderr, "Error: Cannot set both modes at the same time\n");
-        mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
         return ERR;
       }
       mode = MODE_DECRYPT;
@@ -139,7 +143,7 @@ int main(int argc, char **argv) {
       mpz_set_ui(m_mpz, atoi(optarg));
       if (mpz_sgn(m_mpz) == ERR || mpz_sgn(m_mpz) == 0) {
         fprintf(stderr, "Error: Invalid value for -m\n");
-        mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
         return ERR;
       }
       break;
@@ -147,7 +151,7 @@ int main(int argc, char **argv) {
       mpz_set_ui(a_mpz, atoi(optarg));
       if (mpz_sgn(a_mpz) == ERR || mpz_sgn(a_mpz) == 0) {
         fprintf(stderr, "Error: Invalid value for -a\n");
-        mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
         return ERR;
       }
       break;
@@ -155,7 +159,15 @@ int main(int argc, char **argv) {
       mpz_set_ui(b_mpz, atoi(optarg));
       if (mpz_sgn(b_mpz) == ERR || mpz_sgn(b_mpz) == 0) {
         fprintf(stderr, "Error: Invalid value for -a\n");
-        mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
+        return ERR;
+      }
+      break;
+    case 'c':
+      mpz_set_ui(c_mpz, atoi(optarg));
+      if (mpz_sgn(c_mpz) == ERR || mpz_sgn(c_mpz) == 0) {
+        fprintf(stderr, "Error: Invalid value for -a\n");
+        mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
         return ERR;
       }
       break;
@@ -167,7 +179,7 @@ int main(int argc, char **argv) {
       break;
     default:
       help(argv);
-      mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+      mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
       return ERR;
     }
   }
@@ -175,7 +187,7 @@ int main(int argc, char **argv) {
   if (mode == ERR) {
     fprintf(stderr, "Error: Missing required arguments.\n");
     help(argv);
-    mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+    mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
     return ERR;
   }
 
@@ -183,7 +195,7 @@ int main(int argc, char **argv) {
   if (file_in != NULL) {
     in = fopen(file_in, "r");
     if (in == NULL) {
-      mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+      mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
       return ERR;
     }
   } else {
@@ -193,7 +205,7 @@ int main(int argc, char **argv) {
   if (file_out != NULL) {
     out = fopen(file_out, "w");
     if (out == NULL) {
-      mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+      mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
       fclose(in);
       return ERR;
     }
@@ -206,7 +218,7 @@ int main(int argc, char **argv) {
     fprintf(stdout,
             "Introduced numbers dont make up an injetive affine function"
             ", cannot encrypt nor decrypt text\n ");
-    mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+    mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
     if (in != stdin)
       fclose(in);
     if (out != stdout)
@@ -215,7 +227,7 @@ int main(int argc, char **argv) {
   }
 
   clock_gettime(CLOCK_MONOTONIC, &start_time);
-  affine(in, out, mode, m_mpz, a_mpz, b_mpz);
+  affine(in, out, mode, m_mpz, a_mpz, b_mpz, c_mpz);
   clock_gettime(CLOCK_MONOTONIC, &end_time);
 
   double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
@@ -225,7 +237,7 @@ int main(int argc, char **argv) {
     printf("time: %lf \n", elapsed_time);
   }
 
-  mpz_clears(a_mpz, b_mpz, m_mpz, NULL);
+  mpz_clears(a_mpz, b_mpz, c_mpz, m_mpz, NULL);
   fclose(in);
   if (out != stdout) {
     remove("out.txt");
