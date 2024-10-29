@@ -2,6 +2,8 @@ import pandas as pd
 from os import listdir
 from sklearn import model_selection
 from sklearn import naive_bayes as nb
+from sklearn.preprocessing import StandardScaler
+from sklearn import neighbors as knn
 
 
 for archivo in listdir('Datasets/'):
@@ -29,36 +31,44 @@ for archivo in listdir('Datasets/'):
     if datos_numericos.empty:
         datos_numericos = None
 
-    # División de los datos en entrenamiento y prueba
+    # Concatenamos los datos numéricos y categóricos codificados
+    X = pd.concat([datos_numericos, datos_categoricos_codificados], axis=1)
+
+    # Realizamos la división de los datos
+    train_X, test_X, train_y, test_y = model_selection.train_test_split(
+        X, target, test_size=0.25)
+
+    # Ahora separamos los datos numéricos y categóricos a partir de los conjuntos de entrenamiento y prueba
     if datos_numericos is not None:
-        train_num, test_num, train_target_num, test_target_num = model_selection.train_test_split(
-            datos_numericos, target, test_size=0.25)
+        train_num = train_X[datos_numericos.columns]
+        test_num = test_X[datos_numericos.columns]
 
-    if datos_categoricos is not None:
-        train_cat, test_cat, train_target_cat, test_target_cat = model_selection.train_test_split(
-            datos_categoricos_codificados, target, test_size=0.25)
+    if datos_categoricos_codificados is not None:
+        train_cat = train_X[datos_categoricos_codificados.columns]
+        test_cat = test_X[datos_categoricos_codificados.columns]
 
+    # NAIVE BAYES
     # Naive Bayes para atributos numéricos
     nb_gaussian = nb.GaussianNB()
     if datos_numericos is not None:
-        nb_gaussian.fit(train_num, train_target_num)
+        nb_gaussian.fit(train_num, train_y)
 
     # Naive Bayes para atributos categóricos con corrección de Laplace
     nb_categorical = nb.CategoricalNB()
     if datos_categoricos is not None:
-        nb_categorical.fit(train_cat, train_target_cat)
+        nb_categorical.fit(train_cat, train_y)
 
     # Cálculo de tasa de error para Naive Bayes
     # ValidaciónSimple
     if datos_categoricos is not None and datos_numericos is not None:
-        error_num = 1 - nb_gaussian.score(test_num, test_target_num)
-        error_cat = 1 - nb_categorical.score(test_cat, test_target_cat)
+        error_num = 1 - nb_gaussian.score(test_num, test_y)
+        error_cat = 1 - nb_categorical.score(test_cat, test_y)
         error_promedio = (error_num + error_cat) / 2
     elif datos_categoricos is None and datos_numericos is not None:
-        error_num = 1 - nb_gaussian.score(test_num, test_target_num)
+        error_num = 1 - nb_gaussian.score(test_num, test_y)
         error_promedio = error_num
     elif datos_categoricos is not None and datos_numericos is None:
-        error_cat = 1 - nb_categorical.score(test_cat, test_target_cat)
+        error_cat = 1 - nb_categorical.score(test_cat, test_y)
         error_promedio = error_cat
     else:
         error_promedio = -1
@@ -69,22 +79,39 @@ for archivo in listdir('Datasets/'):
     if datos_categoricos is not None and datos_numericos is not None:
         error_num = 1 - \
             model_selection.cross_val_score(
-                nb_gaussian, datos_numericos, target, cv=5).mean()
+                nb_gaussian, datos_numericos, target, cv=5)
         error_cat = 1 - \
             model_selection.cross_val_score(
-                nb_categorical, datos_categoricos_codificados, target, cv=5).mean()
+                nb_categorical, datos_categoricos_codificados, target, cv=5)
         error_promedio = (error_num + error_cat) / 2
     elif datos_categoricos is None and datos_numericos is not None:
         error_num = 1 - \
             model_selection.cross_val_score(
-                nb_gaussian, datos_numericos, target, cv=5).mean()
+                nb_gaussian, datos_numericos, target, cv=5)
         error_promedio = error_num
     elif datos_categoricos is not None and datos_numericos is None:
         error_cat = 1 - \
             model_selection.cross_val_score(
-                nb_categorical, datos_categoricos_codificados, target, cv=5).mean()
+                nb_categorical, datos_categoricos_codificados, target, cv=5)
         error_promedio = error_cat
     else:
         error_promedio = -1
     print(
         f"Ratio de error de clasificación - ValidaciónCruzada sklearn: {error_promedio}")
+
+    # KNN
+    # Estandarizamos los datos creando una copia con sklearn standarScaler,
+    # empleamos tanto la media como la desviacion estandar
+    df_std = df.copy()
+    scaler = StandardScaler()
+    # Usamos nuevamente la codificacion One-Hot
+    df_std = df_std.drop('Class', axis=1)
+    df_std = pd.get_dummies(df_std)
+
+    datos_numericos = df_std.select_dtypes(include='number').columns
+
+    df_std[datos_numericos] = scaler.fit_transform(df_std[datos_numericos])
+    # Para knn empleamos la distancia euclidia con el parametro p=2,
+    # que tiene este valor por defecto, así como metric='minkowski' que
+    # resulta en la distancia euclidia estandar
+    neigh = knn.KNeighborsClassifier()
