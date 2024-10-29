@@ -33,12 +33,12 @@ class EstrategiaParticionado:
 
 class ValidacionSimple(EstrategiaParticionado):
 
-    # Crea partitions segun el metodo tradicional de division de los datos segun el porcentaje deseado y el número de ejecuciones deseado
+    # Crea particiones segun el metodo tradicional de division de los datos segun el porcentaje deseado y el número de ejecuciones deseado
     # Devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
     def __init__(self, n_executions, percentage):
-        self.partitions = []
+        self.particiones = []
         self.executions = n_executions
         self.percentage = percentage
 
@@ -52,26 +52,26 @@ class ValidacionSimple(EstrategiaParticionado):
         for _ in range(self.executions):
             np.random.shuffle(data_rows)
 
-            partition = Particion()
-            partition.indicesTest = data_rows[:test_len].tolist()
-            partition.indicesTrain = data_rows[test_len:].tolist()
+            particion = Particion()
+            particion.indicesTest = data_rows[:test_len].tolist()
+            particion.indicesTrain = data_rows[test_len:].tolist()
 
-            self.partitions.append(partition)
+            self.particiones.append(particion)
 
-        return self.partitions
+        return self.particiones
 
 
 #####################################################################################################
 class ValidacionCruzada(EstrategiaParticionado):
 
-    # Crea partitions segun el metodo de validacion cruzada.
+    # Crea particiones segun el metodo de validacion cruzada.
     # El conjunto de entrenamiento se crea con las nfolds-1 particiones y el de test con la partición restante
     # Esta funcion devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
     def __init__(self, n_folds):
-        self.partitions = []
-        self.folds = n_folds 
+        self.particiones = []
+        self.folds = n_folds
 
     def creaParticiones(self, datos, seed=None):
         random.seed(seed)
@@ -87,14 +87,15 @@ class ValidacionCruzada(EstrategiaParticionado):
             folds_len = folds_len_base + 1 if i < remainder else folds_len_base
 
             test_rows = rows[index:index + folds_len]
-            train_rows = np.concatenate((rows[:index], rows[index + folds_len:]))
+            train_rows = np.concatenate(
+                (rows[:index], rows[index + folds_len:]))
 
-            partition = Particion()
-            partition.indicesTest = test_rows 
-            partition.indicesTrain = train_rows.tolist() 
+            particion = Particion()
+            particion.indicesTest = test_rows
+            particion.indicesTrain = train_rows.tolist()
 
-            self.partitions.append(partition)
+            self.particiones.append(particion)
 
             index += folds_len
 
-        return self.partitions
+        return self.particiones

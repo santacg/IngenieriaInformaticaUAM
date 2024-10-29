@@ -104,13 +104,14 @@ class ClasificadorNaiveBayes(Clasificador):
 
     def __init__(self):
         self.priori = {}
-        self.verosimilitude = {}
+        self.verosimilitud = {}
 
     # TODO: implementar
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         rows = datosTrain.shape[0]
         class_series = datosTrain.loc[:, 'Class']
-        class_values, class_counts = np.unique(class_series, return_counts=True)
+        class_values, class_counts = np.unique(
+            class_series, return_counts=True)
 
         # Calcular probabilidades a priori
         for idx, class_value in enumerate(class_values):
@@ -127,37 +128,43 @@ class ClasificadorNaiveBayes(Clasificador):
                 apply_laplace = False
 
                 for unique_value in unique_values:
-                    self.verosimilitude[unique_value] = {}
+                    self.verosimilitud[unique_value] = {}
                     for idx, class_value in enumerate(class_values):
-                        count = ((series == unique_value) & (class_series == class_value)).sum()
+                        count = ((series == unique_value) & (
+                            class_series == class_value)).sum()
                         prob = count / class_counts[idx]
-                        
-                        print(f"Probabilidad de {unique_value} dado {class_value}: {prob:.4f}")
+
+                        print(f"Probabilidad de {unique_value} dado {
+                              class_value}: {prob:.4f}")
 
                         if prob == 0:
-                            print(f"Aplicando correccion de Laplace para el atributo {datosTrain.columns[i]}")
+                            print(f"Aplicando correccion de Laplace para el atributo {
+                                  datosTrain.columns[i]}")
 
                             apply_laplace = True
-                        self.verosimilitude[unique_value][class_value] = prob
+                        self.verosimilitud[unique_value][class_value] = prob
 
                 if apply_laplace:
                     for unique_value in unique_values:
                         for idx, class_value in enumerate(class_values):
-                            count = ((series == unique_value) & (class_series == class_value)).sum()
+                            count = ((series == unique_value) & (
+                                class_series == class_value)).sum()
 
-                            # Aplicar correcci—n de Laplace
-                            laplace_prob = (count + 1) / (class_counts[idx] + total_categories)
-                            print(f"Probabilidad corregida con Laplace de {unique_value} dado {class_value}: {laplace_prob}")
-                            self.verosimilitude[unique_value][class_value] = laplace_prob
+                            # Aplicar correccion de Laplace
+                            laplace_prob = (count + 1) / \
+                                (class_counts[idx] + total_categories)
+                            print(f"Probabilidad corregida con Laplace de {
+                                  unique_value} dado {class_value}: {laplace_prob}")
+                            self.verosimilitud[unique_value][class_value] = laplace_prob
 
             else:
                 series_name = datosTrain.columns[i]
-                self.verosimilitude[series_name] = {}
+                self.verosimilitud[series_name] = {}
                 for class_value in class_values:
                     count = series[class_series == class_value]
                     mean = np.mean(count)
                     std_dev = np.std(count)
-                    self.verosimilitude[series_name][class_value] = {
+                    self.verosimilitud[series_name][class_value] = {
                         "mean": mean, "std_dev": std_dev}
 
         return
@@ -176,11 +183,11 @@ class ClasificadorNaiveBayes(Clasificador):
                 for j in range(cols):
                     value = row.iloc[j]
                     if nominalAtributos[j] is True:
-                        posteriori *= self.verosimilitude[value][priori]
+                        posteriori *= self.verosimilitud[value][priori]
                     else:
                         attribute = datosTest.columns[j]
-                        mean = self.verosimilitude[attribute][priori]['mean']
-                        std_dev = self.verosimilitude[attribute][priori]['std_dev']
+                        mean = self.verosimilitud[attribute][priori]['mean']
+                        std_dev = self.verosimilitud[attribute][priori]['std_dev']
                         posteriori *= st.norm.pdf(value,
                                                   loc=mean, scale=std_dev)
 
@@ -212,23 +219,27 @@ class ClasificadorKNN(Clasificador):
         for i, column in enumerate(self.training_data.columns):
             if nominalAtributos[i] and column != 'Class':
                 mapping = diccionarios[column]
-                self.training_data[column] = self.training_data[column].map(mapping)
+                self.training_data[column] = self.training_data[column].map(
+                    mapping)
 
         if 'Class' in self.training_data.columns:
             mapping = diccionarios['Class']
-            self.training_data['Class'] = self.training_data['Class'].map(mapping)
+            self.training_data['Class'] = self.training_data['Class'].map(
+                mapping)
             self.class_mapping = {v: k for k, v in mapping.items()}
-            self.training_data['Class'] = self.training_data['Class'].astype(int)
+            self.training_data['Class'] = self.training_data['Class'].astype(
+                int)
 
         if self.normalize:
-            #Normalizar x = (x-x_min)/(x_max-x_min)
+            # Normalizar x = (x-x_min)/(x_max-x_min)
             for i, column in enumerate(self.training_data.columns):
                 if not nominalAtributos[i] and column != 'Class':
                     min_val = self.training_data[column].min()
                     max_val = self.training_data[column].max()
                     self.min_vals[column] = min_val
                     self.max_vals[column] = max_val
-                    self.training_data[column] = (self.training_data[column] - min_val) / (max_val - min_val)
+                    self.training_data[column] = (
+                        self.training_data[column] - min_val) / (max_val - min_val)
         else:
             for i, column in enumerate(self.training_data.columns):
                 if not nominalAtributos[i] and column != 'Class':
@@ -238,7 +249,7 @@ class ClasificadorKNN(Clasificador):
     def clasifica(self, datosTest, nominalAtributos, diccionarios):
         test_data = datosTest.copy()
 
-        #nominales
+        # nominales
         for i, column in enumerate(test_data.columns):
             if nominalAtributos[i] and column != 'Class':
                 mapping = diccionarios[column]
@@ -254,16 +265,18 @@ class ClasificadorKNN(Clasificador):
                 if not nominalAtributos[i] and column != 'Class':
                     min_val = self.min_vals[column]
                     max_val = self.max_vals[column]
-                    test_data[column] = (test_data[column] - min_val) / (max_val - min_val)
-                    
+                    test_data[column] = (
+                        test_data[column] - min_val) / (max_val - min_val)
+
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = test_data.drop(columns=['Class']).values
         training_labels = self.training_data['Class'].values.astype(int)
 
         predictions = []
-        #distancias euclidianas
+        # distancias euclidianas
         for test_instance in test_features:
-            distances = np.sqrt(np.sum((training_features - test_instance) ** 2, axis=1))
+            distances = np.sqrt(
+                np.sum((training_features - test_instance) ** 2, axis=1))
             neighbor_indices = distances.argsort()[:self.K]
             neighbor_classes = training_labels[neighbor_indices]
 

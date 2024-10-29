@@ -1,9 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import numpy as np
-from pandas.core.arrays import categorical
 from scipy import stats as st
 from EstrategiaParticionado import ValidacionCruzada
-from sklearn import naive_bayes as nb
 
 
 class Clasificador:
@@ -28,71 +26,59 @@ class Clasificador:
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         return np.array(None)
 
-    # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
-    # TODO: implementar
     def error(self, datos, pred):
-        # Aqui se compara la prediccion (pred) con las clases reales y se calcula el error
-        rows = datos.shape[0]
-        class_series = datos.loc[:, 'Class']
-        class_values = np.unique(class_series)
+        total_filas = datos.shape[0]
+        clases_reales = datos.loc[:, 'Class']
 
-        n_succes = 0
-        n_error = 0
-        for i in range(rows):
-            pred_class = pred[i]
-            real_class = class_series.iloc[i]
+        aciertos = 0
+        errores = 0
+        for i in range(total_filas):
+            clase_predicha = pred[i]
+            clase_real = clases_reales.iloc[i]
 
-            if pred_class == real_class:
-                n_succes += 1
+            if clase_predicha == clase_real:
+                aciertos += 1
             else:
-                n_error += 1
+                errores += 1
 
-        error_ratio = n_error / (n_succes + n_error)
-        return error_ratio
+        ratio_error = errores / (aciertos + errores)
+        return ratio_error
 
-    # Realiza una clasificacion utilizando una estrategia de particionado determinada
-    # TODO: implementar esta funcion
     def validacion(self, particionado, dataset, clasificador, seed=None):
-
-        # Creamos las particiones siguiendo la estrategia llamando a particionado.creaParticiones
-        # - Para validacion cruzada: en el bucle hasta nv entrenamos el clasificador con la particion de train i
-        # y obtenemos el error en la particion de test i
-        # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
-        # y obtenemos el error en la particion test. Otra opción es repetir la validación simple un número especificado de veces, obteniendo en cada una un error. Finalmente se calcularía la media.
         error = []
-
-        partitions = particionado.creaParticiones(dataset.datos, seed)
-        nominalAtributos = dataset.nominalAtributos
-        diccionarios = dataset.diccionarios
+        particiones = particionado.creaParticiones(dataset.datos, seed)
+        atributos_nominales = dataset.nominalAtributos
+        diccionario = dataset.diccionarios
 
         if isinstance(particionado, ValidacionCruzada):
-            n_folds = particionado.folds
-            for i in range(n_folds):
-                training_data = dataset.extraeDatos(partitions[i].indicesTrain)
+            num_folds = particionado.folds
+            for i in range(num_folds):
+                train = dataset.extraeDatos(
+                    particiones[i].indicesTrain)
                 clasificador.entrenamiento(
-                    training_data, nominalAtributos, diccionarios)
+                    train, atributos_nominales, diccionario)
+                test = dataset.extraeDatos(particiones[i].indicesTest)
+                clasificaciones = clasificador.clasifica(
+                    test, atributos_nominales, diccionario)
 
-                test_data = dataset.extraeDatos(partitions[i].indicesTest)
-                classification = clasificador.clasifica(
-                    test_data, nominalAtributos, diccionarios)
-
-                error.append(clasificador.error(test_data, classification))
+                error.append(clasificador.error(
+                    test, clasificaciones))
         else:
-            n_executions = particionado.executions
-            for i in range(n_executions):
-                training_data = dataset.extraeDatos(partitions[i].indicesTrain)
+            num_ejecuciones = particionado.executions
+            for i in range(num_ejecuciones):
+                train = dataset.extraeDatos(
+                    particiones[i].indicesTrain)
                 clasificador.entrenamiento(
-                    training_data, nominalAtributos, diccionarios)
+                    train, atributos_nominales, diccionario)
 
-                test_data = dataset.extraeDatos(partitions[i].indicesTest)
-                classification = clasificador.clasifica(
-                    test_data, nominalAtributos, diccionarios)
+                test = dataset.extraeDatos(particiones[i].indicesTest)
+                clasificaciones = clasificador.clasifica(
+                    test, atributos_nominales, diccionario)
 
-                error.append(clasificador.error(test_data, classification))
+                error.append(clasificador.error(
+                    test, clasificaciones))
 
-            error_len = len(error)
-            if (error_len > 0):
-                error = np.sum(error) / error_len
+            error = np.mean(error)
 
         return error
 
@@ -102,78 +88,82 @@ class Clasificador:
 
 class ClasificadorNaiveBayes(Clasificador):
 
-    def __init__(self):
+    def __init__(self, laplace=False):
         self.priori = {}
-        self.verosimilitude = {}
+        self.verosimilitud = {}
+        self.laplace = laplace
 
     # TODO: implementar
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        rows = datosTrain.shape[0]
-        class_series = datosTrain.loc[:, 'Class']
-        class_values, class_counts = np.unique(
-            class_series, return_counts=True)
+        total_filas = datosTrain.shape[0]
+        clases_reales = datosTrain.loc[:, 'Class']
+        clases_unicas, conteos_clases = np.unique(
+            clases_reales, return_counts=True)
 
-        # Calculate a priori probabilities
-        for idx, class_value in enumerate(class_values):
-            self.priori[class_value] = class_counts[idx] / rows
+        # Calcular probabilidades a priori
+        for idx, clase in enumerate(clases_unicas):
+            self.priori[clase] = conteos_clases[idx] / total_filas
 
-        # Calculate verosimilitude probabilities
-        cols = datosTrain.shape[1] - 1
-        for i in range(cols):
-            series = datosTrain.iloc[:, i]
+        # Calcular probabilidades de verosimilitud
+        total_columnas = datosTrain.shape[1] - 1
+        for i in range(total_columnas):
+            atributo_series = datosTrain.iloc[:, i]
 
             if nominalAtributos[i] is True:
-                unique_values = np.unique(series)
-                for unique_value in unique_values:
-                    self.verosimilitude[unique_value] = {}
-                    for idx, class_value in enumerate(class_values):
-                        count = ((series == unique_value) & (
-                            class_series == class_value)).sum()
-                        self.verosimilitude[unique_value][class_value] = count / \
-                            class_counts[idx]
+                valores_unicos = np.unique(atributo_series)
+                num_valores_unicos = len(valores_unicos)
+                for valor in valores_unicos:
+                    self.verosimilitud[valor] = {}
+                    for idx, clase in enumerate(clases_unicas):
+                        conteo = ((atributo_series == valor) & (
+                            clases_reales == clase)).sum()
+
+                        if self.laplace is True:
+                            conteo += 1
+                            denominador = conteos_clases[idx] + \
+                                num_valores_unicos
+                        else:
+                            denominador = conteos_clases[idx]
+
+                        self.verosimilitud[valor][clase] = conteo / denominador
             else:
-                series_name = datosTrain.columns[i]
-                self.verosimilitude[series_name] = {}
-                for class_value in class_values:
-                    count = series[class_series == class_value]
-                    mean = np.mean(count)
-                    std_dev = np.std(count)
-                    self.verosimilitude[series_name][class_value] = {
-                        "mean": mean, "std_dev": std_dev}
+                nombre_atributo = datosTrain.columns[i]
+                self.verosimilitud[nombre_atributo] = {}
+                for clase in clases_unicas:
+                    valores_clase = atributo_series[clases_reales == clase]
+                    media = np.mean(valores_clase)
+                    std_dev = np.std(valores_clase)
+                    self.verosimilitud[nombre_atributo][clase] = {
+                        "media": media, "std_dev": std_dev}
 
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        rows = datosTest.shape[0]
-        cols = datosTest.shape[1] - 1
-        map = np.empty((rows, len(self.priori)))
-        class_values = np.unique(datosTest.loc[:, 'Class'])
-        classification = []
+        total_filas = datosTest.shape[0]
+        total_columnas = datosTest.shape[1] - 1
+        probabilidades = np.empty((total_filas, len(self.priori)))
+        clases_unicas = np.unique(datosTest.loc[:, 'Class'])
+        clasificaciones = []
 
-        for i in range(rows):
-            row = datosTest.iloc[i]
-            for idx, priori in enumerate(self.priori):
-                posteriori = self.priori[priori]
-                for j in range(cols):
-                    value = row.iloc[j]
+        for i in range(total_filas):
+            fila_datos = datosTest.iloc[i]
+            for idx, clase in enumerate(self.priori):
+                posteriori = self.priori[clase]
+                for j in range(total_columnas):
+                    valor = fila_datos.iloc[j]
                     if nominalAtributos[j] is True:
-                        posteriori *= self.verosimilitude[value][priori]
+                        posteriori *= self.verosimilitud[valor][clase]
                     else:
-                        attribute = datosTest.columns[j]
-                        mean = self.verosimilitude[attribute][priori]['mean']
-                        std_dev = self.verosimilitude[attribute][priori]['std_dev']
-                        posteriori *= st.norm.pdf(value,
-                                                  loc=mean, scale=std_dev)
+                        nombre_atributo = datosTest.columns[j]
+                        media = self.verosimilitud[nombre_atributo][clase]['media']
+                        std_dev = self.verosimilitud[nombre_atributo][clase]['std_dev']
+                        posteriori *= st.norm.pdf(
+                            valor, loc=media, scale=std_dev)
 
-                map[i][idx] = posteriori
+                probabilidades[i][idx] = posteriori
 
-            map[i] /= np.sum(map[i])
-            classification.append(class_values[np.argmax(map[i])])
+            probabilidades[i] /= np.sum(probabilidades[i])
+            clasificaciones.append(
+                clases_unicas[np.argmax(probabilidades[i])])
 
-        return np.array(classification)
-
-
-class KNeighborsClassifier(Clasificador):
-
-    def __init__(self) -> None:
-        super().__init__()
+        return np.array(clasificaciones)
