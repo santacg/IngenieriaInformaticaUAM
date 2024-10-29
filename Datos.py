@@ -22,7 +22,8 @@ class Datos:
             elif tipo_columna in ['int64', 'float64']:
                 self.nominalAtributos.append(False)
             else:
-                raise ValueError(f"El tipo de dato en la columna {cols[i]} no es válido.")
+                raise ValueError(f"El tipo de dato en la columna {
+                                 cols[i]} no es válido.")
 
             diccionario = {}
             if self.nominalAtributos[i] is True:
@@ -36,3 +37,33 @@ class Datos:
     # argumento
     def extraeDatos(self, idx):
         return self.datos.iloc[idx]
+
+    def estandarizarDatos(self, media=True, std=True):
+        # Creamos un nuevo dataframe con los datos estandarizados
+        datos_estandarizados = pd.DataFrame()
+
+        # Empleamos la media y el desviacion estandar por defecto
+        media_vals = {}
+        std_vals = {}
+
+        for i, column in enumerate(self.datos.columns):
+            # Solo se estandarizan los atributos numericos
+            if not self.nominalAtributos[i] and column != 'Class':
+                # Calculamos la media y la desviación estándar de la columna
+                col_media = self.datos[column].mean() if media else 0
+                col_std = self.datos[column].std() if std else 1
+
+                media_vals[column] = col_media
+                std_vals[column] = col_std
+
+                # Estandarizamos la columna
+                if col_std != 0:  # Evitamos dividir por cero
+                    datos_estandarizados[column] = (
+                        self.datos[column] - col_media) / col_std
+                else:
+                    # Si desviación es 0, asigna un valor constante
+                    datos_estandarizados[column] = 0
+            else:
+                datos_estandarizados[column] = self.datos[column]
+
+        return datos_estandarizados
