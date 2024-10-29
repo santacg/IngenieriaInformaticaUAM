@@ -58,6 +58,7 @@ for archivo in listdir('Datasets/'):
     if datos_categoricos is not None:
         nb_categorical.fit(train_cat, train_y)
 
+    print(f"Naive Bayes para el dataset {dataset}:")
     # Cálculo de tasa de error para Naive Bayes
     # ValidaciónSimple
     if datos_categoricos is not None and datos_numericos is not None:
@@ -73,7 +74,7 @@ for archivo in listdir('Datasets/'):
     else:
         error_promedio = -1
     print(
-        f"Ratio de error de clasificación - ValidaciónSimple sklearn: {error_promedio}")
+        f"Ratio de error de clasificación - ValidaciónSimple sklearn NB: {error_promedio}")
 
     # ValidaciónCruzada
     if datos_categoricos is not None and datos_numericos is not None:
@@ -97,9 +98,10 @@ for archivo in listdir('Datasets/'):
     else:
         error_promedio = -1
     print(
-        f"Ratio de error de clasificación - ValidaciónCruzada sklearn: {error_promedio}")
+        f"Ratio de error de clasificación - ValidaciónCruzada sklearn NB: {error_promedio}")
 
     # KNN
+    print(f"KNN para el dataset {dataset}:")
     # Estandarizamos los datos creando una copia con sklearn standarScaler,
     # empleamos tanto la media como la desviacion estandar
     df_std = df.copy()
@@ -111,7 +113,21 @@ for archivo in listdir('Datasets/'):
     datos_numericos = df_std.select_dtypes(include='number').columns
 
     df_std[datos_numericos] = scaler.fit_transform(df_std[datos_numericos])
+    # Hacemos una particionado simple usando los datos estandarizados
+    train_X, test_X, train_y, test_y = model_selection.train_test_split(
+        df_std, target, test_size=0.25, random_state=42)
+
+    # Ahora separamos los datos numéricos y categóricos a partir de los conjuntos de entrenamiento y prueba
+
     # Para knn empleamos la distancia euclidia con el parametro p=2,
     # que tiene este valor por defecto, así como metric='minkowski' que
     # resulta en la distancia euclidia estandar
     neigh = knn.KNeighborsClassifier()
+    neigh.fit(train_X, train_y)
+    knn_error = 1 - neigh.score(test_X, test_y)
+    print(
+        f"Ratio de error de clasificación - ValidaciónSimple sklearn KNN: {knn_error}")
+
+    knn_error = 1 - model_selection.cross_val_score(neigh, df_std, target)
+    print(
+        f"Ratio de error de clasificación - ValidaciónCruzada sklearn KNN: {knn_error}")
