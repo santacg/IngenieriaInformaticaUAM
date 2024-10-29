@@ -36,7 +36,7 @@ for archivo in listdir('Datasets/'):
 
     # Realizamos la división de los datos
     train_X, test_X, train_y, test_y = model_selection.train_test_split(
-        X, target, test_size=0.25)
+        X, target, test_size=0.25, random_state=42)
 
     # Ahora separamos los datos numéricos y categóricos a partir de los conjuntos de entrenamiento y prueba
     if datos_numericos is not None:
