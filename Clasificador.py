@@ -106,7 +106,7 @@ class ClasificadorNaiveBayes(Clasificador):
         filas = datosTrain.shape[0]
         columnas = datosTrain.shape[1] - 1
 
-        # Obtenemos las clases únicas         
+        # Obtenemos las clases únicas
         clases = datosTrain.loc[:, 'Class']
         clases_unicas, count_clases = np.unique(clases, return_counts=True)
 
@@ -132,16 +132,18 @@ class ClasificadorNaiveBayes(Clasificador):
                         self.verosimilitud[nombre_atributo][valor] = {}
                     for idx_clase, clase in enumerate(clases_unicas):
                         # Contamos las ocurrencias del valor dado en la clase actual
-                        count = ((atributos == valor) & (clases == clase)).sum()
+                        count = ((atributos == valor) &
+                                 (clases == clase)).sum()
 
                         # Aplicamos Laplace si esta activado
                         if self.laplace != 0:
-                            count += self.laplace 
-                            denominador = count_clases[idx_clase] + (num_valores_unicos * self.laplace)
+                            count += self.laplace
+                            denominador = count_clases[idx_clase] + \
+                                (num_valores_unicos * self.laplace)
                         else:
                             denominador = count_clases[idx_clase]
                             if denominador == 0:  # Evitamos división por cero
-                                denominador = 1e-6  
+                                denominador = 1e-6
 
                         # Guardamos la probabilidad condicional de cada valor para cada clase
                         self.verosimilitud[nombre_atributo][valor][clase] = count / denominador
@@ -153,7 +155,7 @@ class ClasificadorNaiveBayes(Clasificador):
                     valores_clase = atributos[clases == clase]
                     media = np.mean(valores_clase)
                     std_dev = np.std(valores_clase)
-                    
+
                     # Evitamos una desviación estandar cero que pueda causar errores
                     if std_dev == 0:
                         std_dev = 1e-6
@@ -162,14 +164,16 @@ class ClasificadorNaiveBayes(Clasificador):
                     self.verosimilitud[nombre_atributo][clase] = {
                         "media": media, "std_dev": std_dev}
 
-        return    
+        return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         filas = datosTest.shape[0]
         columnas = datosTest.shape[1] - 1
 
-        probabilidades = np.empty((filas, len(self.priori)))  # Matriz para las probabilidades de cada clase
-        clases_unicas = list(self.priori.keys())  # Usamos las clases obtenidas en el entrenamiento
+        # Matriz para las probabilidades de cada clase
+        probabilidades = np.empty((filas, len(self.priori)))
+        # Usamos las clases obtenidas en el entrenamiento
+        clases_unicas = list(self.priori.keys())
         clasificaciones = []
 
         # Iteramos sobre cada muestra en el conjunto de prueba
@@ -181,11 +185,12 @@ class ClasificadorNaiveBayes(Clasificador):
                 for j in range(columnas):
                     nombre_atributo = datosTest.columns[j]
                     valor = fila_datos.iloc[j]
-                    
+
                     # Para atributos categóricos
                     if nominalAtributos[j]:
                         if valor in self.verosimilitud[nombre_atributo]:
-                            prob_atributo = self.verosimilitud[nombre_atributo][valor].get(clase, 0)
+                            prob_atributo = self.verosimilitud[nombre_atributo][valor].get(
+                                clase, 0)
                             posteriori *= prob_atributo
                         else:
                             # Manejamos los valores no vistos en el entrenamiento
@@ -194,7 +199,8 @@ class ClasificadorNaiveBayes(Clasificador):
                         # Para atributos numericos calculamos la probabilidad usando distribución normal
                         media = self.verosimilitud[nombre_atributo][clase]['media']
                         std_dev = self.verosimilitud[nombre_atributo][clase]['std_dev']
-                        prob_atributo = st.norm.pdf(valor, loc=media, scale=std_dev)
+                        prob_atributo = st.norm.pdf(
+                            valor, loc=media, scale=std_dev)
                         posteriori *= prob_atributo
 
                 # Guardamos la probabilidad total para la clase actual
@@ -205,70 +211,34 @@ class ClasificadorNaiveBayes(Clasificador):
             if suma_probabilidades > 0:
                 probabilidades[i] /= suma_probabilidades
             else:
-                probabilidades[i] = 0 
-            
+                probabilidades[i] = 0
+
             # Asignamos la clase con mayor probabilidad
             clasificaciones.append(clases_unicas[np.argmax(probabilidades[i])])
 
         return np.array(clasificaciones)
 
+
 class ClasificadorKNN(Clasificador):
     def __init__(self, K=3, normalize=True):
-        super().__init__()
         self.K = K
         self.training_data = None
         self.normalize = normalize
-        self.min_vals = {}
-        self.max_vals = {}
-        self.nominalAtributos = None
-        self.diccionarios = None
-        self.class_mapping = {}
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionarios):
-        self.nominalAtributos = nominalAtributos
-        self.diccionarios = diccionarios
-        self.training_data = datosTrain.copy()
-
-        for i, column in enumerate(self.training_data.columns):
-            if nominalAtributos[i] and column != 'Class':
-                mapping = diccionarios[column]
-                self.training_data[column] = self.training_data[column].map(
-                    mapping)
-
-        if 'Class' in self.training_data.columns:
-            mapping = diccionarios['Class']
-            self.training_data['Class'] = self.training_data['Class'].map(
-                mapping)
-            self.class_mapping = {v: k for k, v in mapping.items()}
-            self.training_data['Class'] = self.training_data['Class'].astype(
-                int)
-
-        for i, column in enumerate(self.training_data.columns):
-            if not nominalAtributos[i] and column != 'Class':
-                self.min_vals[column] = 0
-                self.max_vals[column] = 1
+        if self.normalize:
+            self.training_data = datosTrain.estandarizarDatos()
+        else:
+            self.training_data = datosTrain
+        return
 
     def clasifica(self, datosTest, nominalAtributos, diccionarios):
-        test_data = datosTest.copy()
-
-        # nominales
-        for i, column in enumerate(test_data.columns):
-            if nominalAtributos[i] and column != 'Class':
-                mapping = diccionarios[column]
-                test_data[column] = test_data[column].map(mapping)
-
-        if 'Class' in test_data.columns:
-            mapping = diccionarios['Class']
-            test_data['Class'] = test_data['Class'].map(mapping)
-            test_data['Class'] = test_data['Class'].astype(int)
-
-
-        training_features = self.training_data.drop(columns=['Class']).values
-        test_features = test_data.drop(columns=['Class']).values
-        training_labels = self.training_data['Class'].values.astype(int)
-
         predictions = []
         # distancias euclidianas
+        training_features = self.training_data.drop(columns=['Class']).values
+        test_features = datosTest.drop(columns=['Class']).values
+        training_labels = self.training_data['Class'].values.astype(int)
+
         for test_instance in test_features:
             distances = np.sqrt(
                 np.sum((training_features - test_instance) ** 2, axis=1))

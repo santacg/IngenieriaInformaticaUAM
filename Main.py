@@ -1,12 +1,12 @@
 import numpy as np
 import EstrategiaParticionado
 from os import listdir
-from Datos import Datos
+import Datos
 from Clasificador import ClasificadorNaiveBayes
 from sklearn import naive_bayes as nb
 
 for dataset in listdir('Datasets/'):
-    dataset = Datos('Datasets/' + dataset)
+    dataset = Datos.Datos('Datasets/' + dataset)
     print("NOMINAL ATRIBUTOS")
     print(dataset.nominalAtributos)
     print("DICCIONARIO")
@@ -30,11 +30,12 @@ for dataset in listdir('Datasets/'):
         estrategia_cruzada, dataset, clasificador)}")
 
 # Sin correccion de Laplace
-    clasificador.laplace = 1 
+    clasificador.laplace = 1
     print("NB propio sin correccion de Laplace:")
     print(f"Ratio de error de clasificación - ValidacionSimple {n_ejecuciones} ejecuciones: {clasificador.validacion(
         estrategia_simple, dataset, clasificador)}")
     print(f"Ratio de error de clasificación - ValidacionCruzada {n_folds} folds: {clasificador.validacion(
         estrategia_cruzada, dataset, clasificador)}")
+
 
 # KNN

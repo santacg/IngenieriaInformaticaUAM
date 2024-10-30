@@ -38,32 +38,36 @@ class Datos:
     def extraeDatos(self, idx):
         return self.datos.iloc[idx]
 
-    def estandarizarDatos(self, media=True, std=True):
-        # Creamos un nuevo dataframe con los datos estandarizados
-        datos_estandarizados = pd.DataFrame()
 
-        # Empleamos la media y el desviacion estandar por defecto
-        media_vals = {}
-        std_vals = {}
+def estandarizarDatos(df, nominalAtributos, diccionarios, media=True, std=True):
+    datos = df.copy()
+    # Hacemos un mapeado según los valores del diccionario
+    for i, column in enumerate(datos.columns):
+        if nominalAtributos[i] and column != 'Class':
+            mapping = diccionarios[column]
+            datos[column] = datos[column].map(
+                mapping)
 
-        for i, column in enumerate(self.datos.columns):
-            # Solo se estandarizan los atributos numericos
-            if not self.nominalAtributos[i] and column != 'Class':
-                # Calculamos la media y la desviación estándar de la columna
-                col_media = self.datos[column].mean() if media else 0
-                col_std = self.datos[column].std() if std else 1
+    # Empleamos la media y el desviacion estandar por defecto
+    media_vals = {}
+    std_vals = {}
 
-                media_vals[column] = col_media
-                std_vals[column] = col_std
+    for i, column in enumerate(datos.columns):
+        # Solo se estandarizan los atributos numericos
+        if not nominalAtributos[i] and column != 'Class':
+            # Calculamos la media y la desviación estándar de la columna
+            col_media = datos[column].mean() if media else 0
+            col_std = datos[column].std() if std else 1
 
-                # Estandarizamos la columna
-                if col_std != 0: 
-                    datos_estandarizados[column] = (
-                        self.datos[column] - col_media) / col_std
-                else:
-                    # Si la desviación es 0 asignamos un valor constante
-                    datos_estandarizados[column] = 0
+            media_vals[column] = col_media
+            std_vals[column] = col_std
+
+            # Estandarizamos la columna
+            if col_std != 0:
+                datos[column] = (
+                    datos[column] - col_media) / col_std
             else:
-                datos_estandarizados[column] = self.datos[column]
+                # Si la desviación es 0 asignamos un valor constante
+                datos[column] = 0
 
-        return datos_estandarizados
+    return datos
