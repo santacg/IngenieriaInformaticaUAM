@@ -204,8 +204,7 @@ class ClasificadorNaiveBayes(Clasificador):
             if suma_probabilidades > 0:
                 probabilidades[i] /= suma_probabilidades
             else:
-                # Distribuimos probabilidades uniformes si todas son cero
-                probabilidades[i] = np.full(len(clases_unicas), 1 / len(clases_unicas))
+                probabilidades[i] = 0 
             
             # Asignamos la clase con mayor probabilidad
             clasificaciones.append(clases_unicas[np.argmax(probabilidades[i])])
