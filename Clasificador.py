@@ -250,6 +250,7 @@ class ClasificadorKNN(Clasificador):
         # Recorremos cada instancia de prueba
         for test_instance in test_features:
             # Calculamos distancias euclidianas a todas las instancias de entrenamiento
+            print(test_instance)
             distances = np.sqrt(
                 np.sum((training_features - test_instance) ** 2, axis=1))
 

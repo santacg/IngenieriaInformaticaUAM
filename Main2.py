@@ -1,28 +1,65 @@
+import numpy as np
+import pandas as pd
 from Datos import Datos
 import EstrategiaParticionado
 from Clasificador import ClasificadorKNN
-import numpy as np
-import os
+from os import listdir
 
-f_name = 'heart.csv'
-dataset = Datos('Datasets/{}'.format(f_name))
+# Datasets a utilizar
+datasets = ['heart.csv', 'wdbc.csv']
 
-print("NOMINAL ATRIBUTOS")
-print(dataset.nominalAtributos)
-print("DICCIONARIO")
-print(dataset.diccionarios)
-print("MATRIZ DE DATOS")
-print(dataset.datos.head(10))
+# Valores de K a probar
+K_values = [1, 5, 11, 21]
 
-n_folds = 5
+normalizations = [False, True]
+
+# Número de ejecuciones y folds
 n_ejecuciones = 5
+n_folds = 5
 
-# Estrategias de validación
-estrategia_simple = EstrategiaParticionado.ValidacionSimple(n_ejecuciones, 0.2)
-estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(n_folds)
+resultados = []
 
-clasificador_knn = ClasificadorKNN(21)
+for archivo in datasets:
+    dataset = Datos('Datasets/' + archivo)
 
-error = clasificador_knn.validacion(
-    estrategia_cruzada, dataset, clasificador_knn)
-print(f"Ratio de error: {error}")
+    for normalizado in normalizations:
+        if normalizado:
+            normalizacion = 'Normalizado'
+        else:
+            normalizacion = 'No Normalizado'
+
+        estrategia_simple = EstrategiaParticionado.ValidacionSimple(
+            n_ejecuciones, 0.25)
+        estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(n_folds)
+
+        for K in K_values:
+            # Validación Simple
+            clasificador_simple = ClasificadorKNN(K=K, normalize=True)
+            errores_simple = clasificador_simple.validacion(
+                estrategia_simple, dataset, clasificador_simple)
+
+            # Validación Cruzada
+            clasificador_cruzada = ClasificadorKNN(K=K, normalize=True)
+            errores_cruzada = clasificador_cruzada.validacion(
+                estrategia_cruzada, dataset, clasificador_cruzada)
+
+            resultados.append({
+                'Dataset': archivo,
+                'Particionado': 'Simple',
+                'K': K,
+                'Normalizado': normalizacion,
+                'Error Promedio': np.mean(errores_simple),
+                'Desviación Típica': np.std(errores_simple)
+            })
+            resultados.append({
+                'Dataset': archivo,
+                'Particionado': 'Cruzada',
+                'K': K,
+                'Normalizado': normalizacion,
+                'Error Promedio': np.mean(errores_cruzada),
+                'Desviación Típica': np.std(errores_cruzada)
+            })
+
+df_resultados = pd.DataFrame(resultados)
+
+print(df_resultados)
