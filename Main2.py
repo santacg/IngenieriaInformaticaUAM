@@ -21,6 +21,12 @@ resultados = []
 
 for archivo in datasets:
     dataset = Datos('Datasets/' + archivo)
+    print("NOMINAL ATRIBUTOS")
+    print(dataset.nominalAtributos)
+    print("DICCIONARIO")
+    print(dataset.diccionarios)
+    print("MATRIZ DE DATOS")
+    print(dataset.datos.head(10))
 
     for normalizado in normalizations:
         if normalizado:
@@ -34,12 +40,13 @@ for archivo in datasets:
 
         for K in K_values:
             # Validación Simple
-            clasificador_simple = ClasificadorKNN(K=K, normalize=True)
+            clasificador_simple = ClasificadorKNN(
+                K=K, normalize=normalizado)
             errores_simple = clasificador_simple.validacion(
                 estrategia_simple, dataset, clasificador_simple)
 
             # Validación Cruzada
-            clasificador_cruzada = ClasificadorKNN(K=K, normalize=True)
+            clasificador_cruzada = ClasificadorKNN(K=K, normalize=normalizado)
             errores_cruzada = clasificador_cruzada.validacion(
                 estrategia_cruzada, dataset, clasificador_cruzada)
 

@@ -4,6 +4,39 @@
 import pandas as pd
 
 
+def estandarizarDatos(datos, nominalAtributos, diccionarios, media=None, std=None):
+    datos = datos.copy()
+    # Aseguramos que media_vals y std_vals sean diccionarios
+    if media is None:
+        media_vals = {}
+    else:
+        media_vals = media.copy()
+    if std is None:
+        std_vals = {}
+    else:
+        std_vals = std.copy()
+
+    for i, column in enumerate(datos.columns):
+        if not nominalAtributos[i] and column != 'Class':
+            if column not in media_vals or column not in std_vals:
+                # Calculamos la media y desviación estándar de la columna
+                col_media = datos[column].mean()
+                col_std = datos[column].std()
+                media_vals[column] = col_media
+                std_vals[column] = col_std
+            else:
+                # Utilizamos la media y desviación estándar proporcionadas
+                col_media = media_vals[column]
+                col_std = std_vals[column]
+            # Estandarizamos la columna
+            if col_std != 0:
+                datos[column] = (datos[column] - col_media) / col_std
+            else:
+                datos[column] = 0
+
+    return datos, media_vals, std_vals
+
+
 class Datos:
 
     # Constructor: procesar el fichero para asignar correctamente las variables
@@ -37,37 +70,3 @@ class Datos:
     # argumento
     def extraeDatos(self, idx):
         return self.datos.iloc[idx]
-
-
-def estandarizarDatos(df, nominalAtributos, diccionarios, media=True, std=True):
-    datos = df.copy()
-    # Hacemos un mapeado según los valores del diccionario
-    for i, column in enumerate(datos.columns):
-        if nominalAtributos[i] and column != 'Class':
-            mapping = diccionarios[column]
-            datos[column] = datos[column].map(
-                mapping)
-
-    # Empleamos la media y el desviacion estandar por defecto
-    media_vals = {}
-    std_vals = {}
-
-    for i, column in enumerate(datos.columns):
-        # Solo se estandarizan los atributos numericos
-        if not nominalAtributos[i] and column != 'Class':
-            # Calculamos la media y la desviación estándar de la columna
-            col_media = datos[column].mean() if media else 0
-            col_std = datos[column].std() if std else 1
-
-            media_vals[column] = col_media
-            std_vals[column] = col_std
-
-            # Estandarizamos la columna
-            if col_std != 0:
-                datos[column] = (
-                    datos[column] - col_media) / col_std
-            else:
-                # Si la desviación es 0 asignamos un valor constante
-                datos[column] = 0
-
-    return datos

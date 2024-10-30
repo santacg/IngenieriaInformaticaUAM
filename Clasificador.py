@@ -224,36 +224,58 @@ class ClasificadorKNN(Clasificador):
         self.K = K
         self.training_data = None
         self.normalize = normalize
+        self.media_vals = -1
+        self.std_vals = -1
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionarios):
-        # Normalizamos o asignamos directamente los datos de entrenamiento
+        # Empleamos el diccionario para pasar los atributos categoricos a numericos
+        # Hacemos un mapeado según los valores del diccionario
+        for i, column in enumerate(datosTrain.columns):
+            if nominalAtributos[i] and column != 'Class':
+                mapping = diccionarios[column]
+                datosTrain.loc[:, column] = datosTrain[column].map(
+                    mapping)
+
+        # Estandarizamos o asignamos directamente los datos de entrenamiento
         if self.normalize:
-            self.training_data = Datos.estandarizarDatos(
+            self.training_data, self.media_vals, self.std_vals = Datos.estandarizarDatos(
                 datosTrain, nominalAtributos, diccionarios)
         else:
             self.training_data = datosTrain
+
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionarios):
+        # Mapeamos los atributos nominales en datosTest
+        for i, column in enumerate(datosTest.columns):
+            if nominalAtributos[i] and column != 'Class':
+                mapping = diccionarios[column]
+                datosTest.loc[:, column] = datosTest[column].map(mapping)
+
         # Aplicamos la misma transformación que en entrenamiento
         if self.normalize:
-            datosTest = Datos.estandarizarDatos(
-                datosTest, nominalAtributos, diccionarios)
+            datosTest, _, _ = Datos.estandarizarDatos(
+                datosTest, nominalAtributos, diccionarios, self.media_vals, self.std_vals)
 
         # Extraemos las características y etiquetas
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = datosTest.drop(columns=['Class']).values
-        training_labels = self.training_data['Class'].values.astype(int)
+
+        # Mapeamos las etiquetas de clase a enteros
+        training_labels = self.training_data['Class'].map(
+            diccionarios['Class']).astype(int).values
 
         predictions = []
-
         # Recorremos cada instancia de prueba
         for test_instance in test_features:
             # Calculamos distancias euclidianas a todas las instancias de entrenamiento
-            print(test_instance)
-            distances = np.sqrt(
-                np.sum((training_features - test_instance) ** 2, axis=1))
+            distances = []
+            for train_feature in training_features:
+                diferencia = np.sum((train_feature - test_instance) ** 2)
+                raiz = np.sqrt(diferencia)
+                distances.append(raiz)
 
+            distances = np.array(distances)
             # Seleccionamos los índices de los K vecinos más cercanos
             neighbor_indices = distances.argsort()[:self.K]
 
