@@ -74,8 +74,6 @@ class ValidacionCruzada(EstrategiaParticionado):
         self.folds = n_folds
 
     def creaParticiones(self, datos, seed=None):
-        random.seed(seed)
-
         data_len = datos.shape[0]
         folds_len_base = data_len // self.folds
         remainder = data_len % self.folds

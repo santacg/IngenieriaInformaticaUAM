@@ -19,7 +19,7 @@ for dataset in listdir('Datasets/'):
     estrategia_simple = EstrategiaParticionado.ValidacionSimple(
         n_ejecuciones, 0.25)
     estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(n_folds)
-    clasificador = ClasificadorNaiveBayes(laplace=True)
+    clasificador = ClasificadorNaiveBayes(laplace=0)
 
 # Naive Bayes
 # Con correccion de Laplace
@@ -30,7 +30,7 @@ for dataset in listdir('Datasets/'):
         estrategia_cruzada, dataset, clasificador)}")
 
 # Sin correccion de Laplace
-    clasificador.laplace = False
+    clasificador.laplace = 1 
     print("NB propio sin correccion de Laplace:")
     print(f"Ratio de error de clasificación - ValidacionSimple {n_ejecuciones} ejecuciones: {clasificador.validacion(
         estrategia_simple, dataset, clasificador)}")

@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import numpy as np
+from numpy.random import laplace
 from scipy import stats as st
 from EstrategiaParticionado import ValidacionCruzada
 
@@ -96,7 +97,7 @@ class Clasificador:
 
 class ClasificadorNaiveBayes(Clasificador):
 
-    def __init__(self, laplace=False):
+    def __init__(self, laplace=0):
         self.priori = {}
         self.verosimilitud = {}
         self.laplace = laplace
@@ -134,9 +135,9 @@ class ClasificadorNaiveBayes(Clasificador):
                         count = ((atributos == valor) & (clases == clase)).sum()
 
                         # Aplicamos Laplace si esta activado
-                        if self.laplace:
-                            count += 1
-                            denominador = count_clases[idx_clase] + num_valores_unicos
+                        if self.laplace != 0:
+                            count += self.laplace 
+                            denominador = count_clases[idx_clase] + (num_valores_unicos * self.laplace)
                         else:
                             denominador = count_clases[idx_clase]
                             if denominador == 0:  # Evitamos división por cero

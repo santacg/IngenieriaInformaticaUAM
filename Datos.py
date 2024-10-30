@@ -57,11 +57,11 @@ class Datos:
                 std_vals[column] = col_std
 
                 # Estandarizamos la columna
-                if col_std != 0:  # Evitamos dividir por cero
+                if col_std != 0: 
                     datos_estandarizados[column] = (
                         self.datos[column] - col_media) / col_std
                 else:
-                    # Si desviación es 0, asigna un valor constante
+                    # Si la desviación es 0 asignamos un valor constante
                     datos_estandarizados[column] = 0
             else:
                 datos_estandarizados[column] = self.datos[column]
