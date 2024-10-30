@@ -97,15 +97,15 @@ class Clasificador:
 class ClasificadorNaiveBayes(Clasificador):
 
     def __init__(self, laplace=False):
-        self.priori = {}  # Aquí guardamos las probabilidades a priori de cada clase
-        self.verosimilitud = {}  # Aquí almacenamos las probabilidades condicionales (verosimilitud)
-        self.laplace = laplace  # Indicamos si aplicaremos la suavización de Laplace
+        self.priori = {}
+        self.verosimilitud = {}
+        self.laplace = laplace
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         filas = datosTrain.shape[0]
         columnas = datosTrain.shape[1] - 1
 
-        # Obtenemos las clases únicas y calculamos sus probabilidades a priori
+        # Obtenemos las clases únicas         
         clases = datosTrain.loc[:, 'Class']
         clases_unicas, count_clases = np.unique(clases, return_counts=True)
 
@@ -133,7 +133,7 @@ class ClasificadorNaiveBayes(Clasificador):
                         # Contamos las ocurrencias del valor dado en la clase actual
                         count = ((atributos == valor) & (clases == clase)).sum()
 
-                        # Aplicamos Laplace si está activado
+                        # Aplicamos Laplace si esta activado
                         if self.laplace:
                             count += 1
                             denominador = count_clases[idx_clase] + num_valores_unicos
@@ -145,7 +145,7 @@ class ClasificadorNaiveBayes(Clasificador):
                         # Guardamos la probabilidad condicional de cada valor para cada clase
                         self.verosimilitud[nombre_atributo][valor][clase] = count / denominador
             else:
-                # Si el atributo es numérico, calculamos media y desviación estándar para cada clase
+                # Si el atributo es numerico calculamos media y desviación estandar para cada clase
                 if nombre_atributo not in self.verosimilitud:
                     self.verosimilitud[nombre_atributo] = {}
                 for idx_clase, clase in enumerate(clases_unicas):
@@ -153,11 +153,11 @@ class ClasificadorNaiveBayes(Clasificador):
                     media = np.mean(valores_clase)
                     std_dev = np.std(valores_clase)
                     
-                    # Evitamos una desviación estándar cero que pueda causar errores
+                    # Evitamos una desviación estandar cero que pueda causar errores
                     if std_dev == 0:
                         std_dev = 1e-6
 
-                    # Guardamos la media y desviación estándar para el valor de la clase
+                    # Guardamos la media y desviación estandar para el valor de la clase
                     self.verosimilitud[nombre_atributo][clase] = {
                         "media": media, "std_dev": std_dev}
 
@@ -188,13 +188,9 @@ class ClasificadorNaiveBayes(Clasificador):
                             posteriori *= prob_atributo
                         else:
                             # Manejamos los valores no vistos en el entrenamiento
-                            if self.laplace:
-                                num_valores_unicos = len(self.verosimilitud[nombre_atributo]) + 1
-                                posteriori *= 1 / num_valores_unicos
-                            else:
-                                posteriori *= 0
+                            posteriori *= 0
                     else:
-                        # Para atributos numéricos, calculamos la probabilidad usando distribución normal
+                        # Para atributos numericos calculamos la probabilidad usando distribución normal
                         media = self.verosimilitud[nombre_atributo][clase]['media']
                         std_dev = self.verosimilitud[nombre_atributo][clase]['std_dev']
                         prob_atributo = st.norm.pdf(valor, loc=media, scale=std_dev)
