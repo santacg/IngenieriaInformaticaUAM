@@ -222,48 +222,45 @@ class ClasificadorNaiveBayes(Clasificador):
 class ClasificadorKNN(Clasificador):
     def __init__(self, K=3, normalize=True):
         self.K = K
-        self.training_data = None
         self.normalize = normalize
         self.media_vals = -1
         self.std_vals = -1
 
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionarios):
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         # Empleamos el diccionario para pasar los atributos categoricos a numericos
-        # Hacemos un mapeado según los valores del diccionario
         for i, column in enumerate(datosTrain.columns):
             if nominalAtributos[i] and column != 'Class':
-                mapping = diccionarios[column]
+                mapping = diccionario[column]
                 datosTrain.loc[:, column] = datosTrain[column].map(
                     mapping)
 
         # Estandarizamos o asignamos directamente los datos de entrenamiento
         if self.normalize:
             self.training_data, self.media_vals, self.std_vals = Datos.estandarizarDatos(
-                datosTrain, nominalAtributos, diccionarios)
+                datosTrain, nominalAtributos, diccionario)
         else:
             self.training_data = datosTrain
 
         return
 
-    def clasifica(self, datosTest, nominalAtributos, diccionarios):
-        # Mapeamos los atributos nominales en datosTest
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Empleamos el diccionario para pasar los atributos categoricos a numericos
         for i, column in enumerate(datosTest.columns):
             if nominalAtributos[i] and column != 'Class':
-                mapping = diccionarios[column]
+                mapping = diccionario[column]
                 datosTest.loc[:, column] = datosTest[column].map(mapping)
 
         # Aplicamos la misma transformación que en entrenamiento
         if self.normalize:
             datosTest, _, _ = Datos.estandarizarDatos(
-                datosTest, nominalAtributos, diccionarios, self.media_vals, self.std_vals)
+                datosTest, nominalAtributos, diccionario, self.media_vals, self.std_vals)
 
         # Extraemos las características y etiquetas
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = datosTest.drop(columns=['Class']).values
 
         # Mapeamos las etiquetas de clase a enteros
-        training_labels = self.training_data['Class'].map(
-            diccionarios['Class']).astype(int).values
+        training_labels = self.training_data['Class'].map(diccionario['Class']).astype(int).values
 
         predictions = []
         # Recorremos cada instancia de prueba
@@ -288,7 +285,7 @@ class ClasificadorKNN(Clasificador):
 
             # Convertimos a etiqueta si el mapeo está disponible
             class_label = next(
-                key for key, value in diccionarios['Class'].items() if value == prediction)
+                key for key, value in diccionario['Class'].items() if value == prediction)
             predictions.append(class_label)
 
         return np.array(predictions)
