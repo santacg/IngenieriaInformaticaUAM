@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import numpy as np
-from numpy.random import laplace
 from scipy import stats as st
+import Datos
 from EstrategiaParticionado import ValidacionCruzada
 
 
@@ -226,28 +226,46 @@ class ClasificadorKNN(Clasificador):
         self.normalize = normalize
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionarios):
+        # Normalizamos o asignamos directamente los datos de entrenamiento
         if self.normalize:
-            self.training_data = datosTrain.estandarizarDatos()
+            self.training_data = Datos.estandarizarDatos(
+                datosTrain, nominalAtributos, diccionarios)
         else:
             self.training_data = datosTrain
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionarios):
-        predictions = []
-        # distancias euclidianas
+        # Aplicamos la misma transformación que en entrenamiento
+        if self.normalize:
+            datosTest = Datos.estandarizarDatos(
+                datosTest, nominalAtributos, diccionarios)
+
+        # Extraemos las características y etiquetas
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = datosTest.drop(columns=['Class']).values
         training_labels = self.training_data['Class'].values.astype(int)
 
+        predictions = []
+
+        # Recorremos cada instancia de prueba
         for test_instance in test_features:
+            # Calculamos distancias euclidianas a todas las instancias de entrenamiento
             distances = np.sqrt(
                 np.sum((training_features - test_instance) ** 2, axis=1))
+
+            # Seleccionamos los índices de los K vecinos más cercanos
             neighbor_indices = distances.argsort()[:self.K]
+
+            # Obtenemos las clases de los vecinos
             neighbor_classes = training_labels[neighbor_indices]
 
+            # Contamos las ocurrencias de cada clase entre los vecinos
             counts = np.bincount(neighbor_classes)
-            prediction = counts.argmax()
-            prediction_label = self.class_mapping.get(prediction, prediction)
-            predictions.append(prediction_label)
+            prediction = counts.argmax()  # Clase con más ocurrencias
+
+            # Convertimos a etiqueta si el mapeo está disponible
+            class_label = next(
+                key for key, value in diccionarios['Class'].items() if value == prediction)
+            predictions.append(class_label)
 
         return np.array(predictions)

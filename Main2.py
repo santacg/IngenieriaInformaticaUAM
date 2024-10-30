@@ -1,6 +1,6 @@
 from Datos import Datos
 import EstrategiaParticionado
-from Clasificador2 import ClasificadorKNN
+from Clasificador import ClasificadorKNN
 import numpy as np
 import os
 
@@ -14,7 +14,6 @@ print(dataset.diccionarios)
 print("MATRIZ DE DATOS")
 print(dataset.datos.head(10))
 
-K_values = [1, 5, 15, 25]
 n_folds = 5
 n_ejecuciones = 5
 
@@ -22,26 +21,8 @@ n_ejecuciones = 5
 estrategia_simple = EstrategiaParticionado.ValidacionSimple(n_ejecuciones, 0.2)
 estrategia_cruzada = EstrategiaParticionado.ValidacionCruzada(n_folds)
 
-for normalizado in [False, True]:
-    if normalizado:
-        normalizacion = 'Normalizado'
-    else:
-        normalizacion = 'No Normalizado'
+clasificador_knn = ClasificadorKNN(21)
 
-    print(f"\nEstrategia: Validación Cruzada - {normalizacion}")
-
-    for K in K_values:
-        print(f"\n--- K = {K} ---")
-
-        clasificador_knn = ClasificadorKNN(K=K, normalize=normalizado)
-
-        error = clasificador_knn.validacion(estrategia_cruzada, dataset, clasificador_knn)
-
-        # Calcular el error promedio
-        if isinstance(error, list):
-            error_promedio = np.mean(error)
-        else:
-            error_promedio = error
-
-        print(f"Error promedio con nuestro clasificador KNN (K={K}, {normalizacion}): {error_promedio}")
-
+error = clasificador_knn.validacion(
+    estrategia_cruzada, dataset, clasificador_knn)
+print(f"Ratio de error: {error}")
