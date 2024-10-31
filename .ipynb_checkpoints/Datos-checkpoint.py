@@ -42,7 +42,7 @@ class Datos:
     # Constructor: procesar el fichero para asignar correctamente las variables
     # nominalAtributos, datos y diccionarios
     def __init__(self, nombreFichero):
-        self.datos = pd.read_csv(nombreFichero)
+        self.datos = pd.read_csv(nombreFichero, dtype={'Class': 'object'})
         self.nominalAtributos = []
         self.diccionarios = {}
 
@@ -66,13 +66,16 @@ class Datos:
 
             self.diccionarios[cols[i]] = diccionario
 
+        # Mapeo de valores nominales usando los diccionarios creados
         for i, column in enumerate(cols):
             if self.nominalAtributos[i]:
                 mapping = self.diccionarios[column]
-                self.datos[column] = self.datos[column].map(mapping)
-                self.datos[column] = self.datos[column].astype(int)
+                self.datos.loc[:, column] = self.datos[column].map(mapping)
+        
+        # Convertir a array de NumPy
+        self.datos = self.datos.to_numpy()
 
     # Devuelve el subconjunto de los datos cuyos �ndices se pasan como
     # argumento
     def extraeDatos(self, idx):
-        return self.datos.iloc[idx]
+        return self.datos[idx]

@@ -227,13 +227,6 @@ class ClasificadorKNN(Clasificador):
         self.std_vals = -1
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        # Empleamos el diccionario para pasar los atributos categoricos a numericos
-        for i, column in enumerate(datosTrain.columns):
-            if nominalAtributos[i] and column != 'Class':
-                mapping = diccionario[column]
-                datosTrain.loc[:, column] = datosTrain[column].map(
-                    mapping)
-
         # Estandarizamos o asignamos directamente los datos de entrenamiento
         if self.normalize:
             self.training_data, self.media_vals, self.std_vals = Datos.estandarizarDatos(
@@ -244,12 +237,6 @@ class ClasificadorKNN(Clasificador):
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        # Empleamos el diccionario para pasar los atributos categoricos a numericos
-        for i, column in enumerate(datosTest.columns):
-            if nominalAtributos[i] and column != 'Class':
-                mapping = diccionario[column]
-                datosTest.loc[:, column] = datosTest[column].map(mapping)
-
         # Aplicamos la misma transformación que en entrenamiento
         if self.normalize:
             datosTest, _, _ = Datos.estandarizarDatos(
@@ -258,9 +245,7 @@ class ClasificadorKNN(Clasificador):
         # Extraemos las características y etiquetas
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = datosTest.drop(columns=['Class']).values
-
-        # Mapeamos las etiquetas de clase a enteros
-        training_labels = self.training_data['Class'].map(diccionario['Class']).astype(int).values
+        training_labels = self.training_data['Class'].values
 
         predictions = []
         # Recorremos cada instancia de prueba
@@ -283,9 +268,6 @@ class ClasificadorKNN(Clasificador):
             counts = np.bincount(neighbor_classes)
             prediction = counts.argmax()  # Clase con más ocurrencias
 
-            # Convertimos a etiqueta si el mapeo está disponible
-            class_label = next(
-                key for key, value in diccionario['Class'].items() if value == prediction)
-            predictions.append(class_label)
+            predictions.append(prediction)
 
         return np.array(predictions)
