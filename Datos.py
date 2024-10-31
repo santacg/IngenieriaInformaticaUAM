@@ -42,7 +42,7 @@ class Datos:
     # Constructor: procesar el fichero para asignar correctamente las variables
     # nominalAtributos, datos y diccionarios
     def __init__(self, nombreFichero):
-        self.datos = pd.read_csv(nombreFichero)
+        self.datos = pd.read_csv(nombreFichero, dtype={'Class': 'object'})
         self.nominalAtributos = []
         self.diccionarios = {}
 
@@ -55,7 +55,8 @@ class Datos:
             elif tipo_columna in ['int64', 'float64']:
                 self.nominalAtributos.append(False)
             else:
-                raise ValueError(f"El tipo de dato en la columna {cols[i]} no es válido.")
+                raise ValueError(f"El tipo de dato en la columna {
+                                 cols[i]} no es válido.")
 
             diccionario = {}
             if self.nominalAtributos[i] is True:
