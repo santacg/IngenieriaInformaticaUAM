@@ -98,8 +98,6 @@ class Clasificador:
 class ClasificadorNaiveBayes(Clasificador):
 
     def __init__(self, laplace=0):
-        self.priori = {}
-        self.verosimilitud = {}
         self.laplace = laplace
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
@@ -109,6 +107,9 @@ class ClasificadorNaiveBayes(Clasificador):
         # Obtenemos las clases únicas
         clases = datosTrain.loc[:, 'Class']
         clases_unicas, count_clases = np.unique(clases, return_counts=True)
+
+        self.priori = {}
+        self.verosimilitud = {}
 
         # Calculamos y guardamos la probabilidad a priori de cada clase
         for idx, clase in enumerate(clases_unicas):
@@ -223,10 +224,11 @@ class ClasificadorKNN(Clasificador):
     def __init__(self, K=3, normalize=True):
         self.K = K
         self.normalize = normalize
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         self.media_vals = -1
         self.std_vals = -1
 
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         # Estandarizamos o asignamos directamente los datos de entrenamiento
         if self.normalize:
             self.training_data, self.media_vals, self.std_vals = Datos.estandarizarDatos(
@@ -271,3 +273,63 @@ class ClasificadorKNN(Clasificador):
             predictions.append(prediction)
 
         return np.array(predictions)
+
+class ClasificadorRegresionLogistica(Clasificador):
+    def __init__(self, epocas=1, aprendizaje=1.0):
+        self.epocas = epocas
+        self.aprendizaje = aprendizaje
+
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
+        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
+
+        filas = datosTrain.shape[0]
+        columnas = datosTrain.shape[1]
+        # Inicializamos el vector de pesos a 0 con la dimension de las columnas
+        self.vector_pesos = np.zeros((1, columnas))
+
+        # Para cada fila de datos realizamos el ajuste de pesos
+        for _ in range(self.epocas):
+            for i in range(filas):
+                # Obtención del vector de datos y su transpuesta
+                vector_datos = datosTrain.iloc[i:i+1]
+                vector_datos_t = np.transpose(vector_datos)
+                # Multiplicacion escalar entre vector de pesos y vector de datos
+                z = np.dot(self.vector_pesos, vector_datos_t)
+                # Calculo de función sigmoide
+                sigma = float(1 / (1 + np.exp(-z)))
+                # Actualización de vector de pesos
+                self.vector_pesos = np.array(self.vector_pesos - (self.aprendizaje * (vector_datos * (sigma - target.iloc[i]))))
+
+        return
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Clases unicas 
+        clases_unicas = np.unique(datosTest['Class'])
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            # Obtención del vector de la transpuesta del vector datos
+            vector_datos = np.transpose(datosTest.iloc[i:i+1])
+            # Multiplicacion escalar entre vector de pesos y vector de datos
+            z = np.dot(self.vector_pesos, vector_datos)
+            # Calculo de función sigmoide
+            sigma = float(1 / (1 + np.exp(-z)))
+            # Clasificación según menor o mayor que 0.5
+            if sigma < 0.5:
+                clasificaciones[i] = clases_unicas[0]
+            else:
+                clasificaciones[i] = clases_unicas[1]
+
+        return clasificaciones
+

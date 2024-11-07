@@ -37,7 +37,7 @@ class ValidacionSimple(EstrategiaParticionado):
     # Devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
-    def __init__(self, n_executions, percentage):
+    def __init__(self, n_executions=5, percentage=0.25):
         self.particiones = []
         self.executions = n_executions
         self.percentage = percentage
@@ -69,7 +69,7 @@ class ValidacionCruzada(EstrategiaParticionado):
     # Esta funcion devuelve una lista de particiones (clase Particion)
     # TODO: implementar
 
-    def __init__(self, n_folds):
+    def __init__(self, n_folds=5):
         self.particiones = []
         self.folds = n_folds
 
