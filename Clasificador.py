@@ -3,6 +3,7 @@ import numpy as np
 from scipy import stats as st
 import Datos
 from EstrategiaParticionado import ValidacionCruzada
+from sklearn.linear_model import LogisticRegression, SGDClassifier
 
 
 class Clasificador:
@@ -333,3 +334,58 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         return clasificaciones
 
+class ClasificadorRegresionLogisticaSK(Clasificador):
+    def __init__(self, maxiter=100):
+       self.modelo = LogisticRegression(max_iter=maxiter) 
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
+        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
+
+        self.modelo.fit(datosTrain, target)
+        return
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
+
+        return clasificaciones
+
+class ClasificadorSGD(Clasificador):
+    def __init__(self, maxiter=100, aprendizaje="optimal"):
+       self.modelo = SGDClassifier(max_iter=maxiter, learning_rate=aprendizaje) 
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
+        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
+
+        self.modelo.fit(datosTrain, target)
+        return
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
+
+        return clasificaciones

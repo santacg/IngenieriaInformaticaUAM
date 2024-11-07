@@ -1,7 +1,7 @@
 import Datos
 import numpy as np
 from EstrategiaParticionado import ValidacionSimple, ValidacionCruzada
-from Clasificador import ClasificadorRegresionLogistica
+from Clasificador import Clasificador, ClasificadorRegresionLogistica, ClasificadorRegresionLogisticaSK, ClasificadorSGD
 
 datasets = ['Datasets/heart.csv', 'Datasets/iris.csv', 'Datasets/wdbc.csv']
 
@@ -16,7 +16,14 @@ print(data)
 print(nominalAtributos)
 print(diccionarios)
 
-validacion_cruzada = ValidacionSimple(5, 0.25)
-clasificador = ClasificadorRegresionLogistica()
-print(np.mean(clasificador.validacion(validacion_cruzada, dataset, clasificador)))
+validacion_cruzada = ValidacionCruzada(5)
+clasificador = Clasificador()
+
+cl_rl = ClasificadorRegresionLogistica(15, 2)
+cl_rl_sk = ClasificadorRegresionLogisticaSK()
+cl_sgd_sk = ClasificadorSGD()
+
+print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl)))
+print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl_sk)))
+print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
 
