@@ -48,51 +48,34 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     # NOTA: no modificar los valores por defecto de las variables de entrada vtam y nbins, 
     #       pues se utilizan para verificar el correcto funciomaniento de esta funcion
     """
-    new_coords_esquinas = coords_esquinas
 
-    # Pasamos la imagen a float
-    imagen = imagen.astype(np.float64)
+    # Normalización de la imagen
+    imagen = imagen.astype(np.float64) / 255.0
+    
+    # Tamaño de la imagen
+    borde_x, borde_y = imagen.shape[1], imagen.shape[0]
 
-    # Normalizamos la imagen
-    imagen = imagen / 255.0 
+    coordenadas_validas = []
+    for coord in coords_esquinas:
+        x, y = coord[1], coord[0]
+        if x >= vtam // 2 and x < borde_x - vtam // 2 and y >= vtam // 2 and y < borde_y - vtam // 2:
+            coordenadas_validas.append(coord)
+    new_coords_esquinas = np.array(coordenadas_validas)
+    
+    # Inicializar descriptores
+    descriptores = np.zeros((len(new_coords_esquinas), nbins))
 
-    borde_x = imagen.shape[1]
-    borde_y = imagen.shape[0]
-
-    for new_coords_esquina in new_coords_esquinas:
-        if new_coords_esquina[1] == 0 or new_coords_esquina[1] == borde_x:
-            np.delete(new_coords_esquinas, new_coords_esquina)
-        elif new_coords_esquina[0] == 0 or new_coords_esquina[0] == borde_y:
-            np.delete(new_coords_esquinas, new_coords_esquina)
-
-    descriptores = np.zeros(shape=(len(new_coords_esquinas), nbins))
-    # Calculamos los histogramas para cada punto de interes
-    for idx, new_coords_esquina in enumerate(new_coords_esquinas):
-        coord_x = new_coords_esquina[1]
-        coord_y = new_coords_esquina[0]
+    # Cálculo de histogramas para cada punto de interés
+    for idx, coord in enumerate(new_coords_esquinas):
+        x, y = coord[1], coord[0]
         
-        array_histograma = []
-        for i in range(coord_y - (vtam // 2), (coord_y + (vtam // 2)) + 1):
-            for j in range(coord_x - (vtam // 2), (coord_x + (vtam // 2)) + 1):
-                array_histograma.append(imagen[i, j])
-        j=0
-        print("\n")
-        for i in range(len(array_histograma)):
-            print(array_histograma[i], end=" ")
-            j+=1
-            if j == 9:
-                print("")
-                j=0
-            
-        array_histograma = np.array(array_histograma)
-        print(f"ARRAY HISTOGRAMA:\n {array_histograma}")
-        histograma = np.histogram(np.ndarray.flatten(array_histograma), bins=np.arange(nbins))
+        # Extraer el vecindario
+        vecindario = imagen[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
         
-        print(f"HISTOGRAMA: {histograma[0]}")
-        for bin, value in enumerate(histograma[0]):
-            descriptores[idx][bin] = value 
+        # Calcular histograma
+        histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
+        descriptores[idx, :] = histograma
 
-    print(f"DESCRIPTORES: {descriptores}")
     return descriptores, new_coords_esquinas
 
 if __name__ == "__main__":    

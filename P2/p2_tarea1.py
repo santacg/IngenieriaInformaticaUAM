@@ -33,11 +33,8 @@ def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, th
     """
     coords_esquinas = np.empty(shape=[0,0]) # iniciamos la variable de salida (numpy array)
 
-    # Convertimos la imagen a float
-    imagen = imagen.astype(np.float64)
-
     # Normalizamos la imagen
-    imagen /= np.sum(imagen)
+    imagen = imagen.astype(np.float64) / 255.0
 
     # Obtenemos las derivadas parciales con respecto de x e y
     imagen_h = ndi.sobel(imagen, 0, mode="constant")
