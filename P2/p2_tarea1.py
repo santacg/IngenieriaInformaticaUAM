@@ -9,12 +9,10 @@
 # librerias y paquetes por defecto
 import numpy as np
 from p2_tests import test_p2_tarea1
-import scipy as sc
-from scipy import signal as sg
-from scipy import ndimage as ndi
-# Incluya aqui las librerias que necesite en su codigo
-# ...
 
+# Incluya aqui las librerias que necesite en su codigo
+from scipy import ndimage as ndi
+from skimage.feature import corner_peaks 
 
 def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, threshold_rel = 0.2):
     """
@@ -42,26 +40,27 @@ def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, th
     imagen /= np.sum(imagen)
 
     # Obtenemos las derivadas parciales con respecto de x e y
-    imagen_h = ndi.sobel(imagen, 0)
-    imagen_v = ndi.sobel(imagen, 1)
-    imagen_hv = imagen_h * imagen_v
+    imagen_h = ndi.sobel(imagen, 0, mode="constant")
+    imagen_v = ndi.sobel(imagen, 1, mode="constant")
 
-    imagen_h = imagen_h * imagen_h
-    imagen_v = imagen_v * imagen_v
+    # Calculamos los elementos de la matriz Hessiana
+    imagen_hv = imagen_h * imagen_v
+    imagen_h = imagen_h ** 2
+    imagen_v = imagen_v ** 2
 
     # Suavizamos aplicando una convolucion Gaussiana
     imagen_h = ndi.gaussian_filter(imagen_h, sigma, mode='constant')
     imagen_v = ndi.gaussian_filter(imagen_v, sigma, mode='constant')
     imagen_hv = ndi.gaussian_filter(imagen_hv, sigma, mode='constant')
 
-    # Calculamos la matrix Hessiana
-    hessiana = np.array([imagen_h, imagen_hv], [imagen_hv, imagen_v])
+    # Calculamos el coeficiente R con la traza de la Hessiana y su determinante
+    hessiana_det = imagen_h * imagen_v - (imagen_hv ** 2)
+    traza = imagen_h + imagen_v
 
-    # Calculamos los autovalores de la matriz Hessiana
-    eig_values = np.linalg.eig(hessiana)
+    coeficiente_r = hessiana_det - k * (traza **2)
 
-    # Calculamos el coeficiente R
-    r_coeficiente = eig_values[0] * eig_values[1] - k * pow(eig_values[0] + eig_values[1])
+    # Usamos corner peaks para obtener las coordenadas de los valores mayores que el threshold
+    coords_esquinas = corner_peaks(coeficiente_r, min_distance=5, threshold_rel=threshold_rel)
 
     return coords_esquinas
 
