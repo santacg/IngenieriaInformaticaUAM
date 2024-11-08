@@ -54,7 +54,7 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     imagen = imagen.astype(np.float64)
 
     # Normalizamos la imagen
-    # imagen = imagen / 255.0 
+    imagen = imagen / 255.0 
 
     borde_x = imagen.shape[1]
     borde_y = imagen.shape[0]
@@ -75,16 +75,19 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
         for i in range(coord_y - (vtam // 2), (coord_y + (vtam // 2)) + 1):
             for j in range(coord_x - (vtam // 2), (coord_x + (vtam // 2)) + 1):
                 array_histograma.append(imagen[i, j])
-
+        j=0
         print("\n")
         for i in range(len(array_histograma)):
             print(array_histograma[i], end=" ")
-            if ((i) % vtam == 0) and i != 0:
+            j+=1
+            if j == 9:
                 print("")
-
+                j=0
+            
         array_histograma = np.array(array_histograma)
         print(f"ARRAY HISTOGRAMA:\n {array_histograma}")
-        histograma = np.histogram(array_histograma, bins=np.arange(nbins))
+        histograma = np.histogram(np.ndarray.flatten(array_histograma), bins=np.arange(nbins))
+        
         print(f"HISTOGRAMA: {histograma[0]}")
         for bin, value in enumerate(histograma[0]):
             descriptores[idx][bin] = value 
