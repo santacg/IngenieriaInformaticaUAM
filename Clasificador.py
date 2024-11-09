@@ -3,7 +3,6 @@ import numpy as np
 from scipy import stats as st
 import Datos
 from EstrategiaParticionado import ValidacionCruzada
-from sklearn.linear_model import LogisticRegression, SGDClassifier
 
 
 class Clasificador:
@@ -22,11 +21,21 @@ class Clasificador:
 
     @abstractmethod
     # TODO: esta funcion debe ser implementada en cada clasificador concreto. Devuelve un numpy array con las predicciones
-    # datosTest: matriz numpy con los datos de validación
+    # datosTest: matriz numpy con los datos de validaciï¿½n
     # nominalAtributos: array bool con la indicatriz de los atributos nominales
     # diccionario: array de diccionarios de la estructura Datos utilizados para la codificacion de variables discretas
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         return np.array(None)
+    
+    def matriz_confusion(self, datos, pred):
+        clases_reales = datos['Class'].values
+        clases_predichas = pred
+        TPR = ((clases_reales == 1) & (clases_predichas == 1)).sum()
+        TNR = ((clases_reales == 0) & (clases_predichas == 0)).sum()
+        FPR = ((clases_reales == 0) & (clases_predichas == 1)).sum()
+        FNR = ((clases_reales == 1) & (clases_predichas == 0)).sum()
+        return TPR, FPR, TNR, FNR
+
 
     # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
     def error(self, datos, pred):
@@ -55,8 +64,8 @@ class Clasificador:
         # - Para validacion cruzada: en el bucle hasta nv entrenamos el clasificador con la particion de train i
         # y obtenemos el error en la particion de test i
         # - Para validacion simple (hold-out): entrenamos el clasificador con la particion de train
-        # y obtenemos el error en la particion test. Otra opción es repetir la validación simple un número especificado de veces, obteniendo en cada una un error. Finalmente se calcularía la media.
-        # devuelve el vector con los errores por cada partición
+        # y obtenemos el error en la particion test. Otra opciï¿½n es repetir la validaciï¿½n simple un nï¿½mero especificado de veces, obteniendo en cada una un error. Finalmente se calcularï¿½a la media.
+        # devuelve el vector con los errores por cada particiï¿½n
 
         error = []
         particiones = particionado.creaParticiones(dataset.datos, seed)
@@ -105,7 +114,7 @@ class ClasificadorNaiveBayes(Clasificador):
         filas = datosTrain.shape[0]
         columnas = datosTrain.shape[1] - 1
 
-        # Obtenemos las clases únicas
+        # Obtenemos las clases ï¿½nicas
         clases = datosTrain.loc[:, 'Class']
         clases_unicas, count_clases = np.unique(clases, return_counts=True)
 
@@ -121,14 +130,14 @@ class ClasificadorNaiveBayes(Clasificador):
             atributos = datosTrain.iloc[:, i]
             nombre_atributo = datosTrain.columns[i]
 
-            # Si el atributo es categórico
+            # Si el atributo es categï¿½rico
             if nominalAtributos[i]:
                 valores_unicos = np.unique(atributos)
                 num_valores_unicos = len(valores_unicos)
                 if nombre_atributo not in self.verosimilitud:
                     self.verosimilitud[nombre_atributo] = {}
 
-                # Calculamos la verosimilitud de cada valor categórico para cada clase
+                # Calculamos la verosimilitud de cada valor categï¿½rico para cada clase
                 for valor in valores_unicos:
                     if valor not in self.verosimilitud[nombre_atributo]:
                         self.verosimilitud[nombre_atributo][valor] = {}
@@ -144,13 +153,13 @@ class ClasificadorNaiveBayes(Clasificador):
                                 (num_valores_unicos * self.laplace)
                         else:
                             denominador = count_clases[idx_clase]
-                            if denominador == 0:  # Evitamos división por cero
+                            if denominador == 0:  # Evitamos divisiï¿½n por cero
                                 denominador = 1e-6
 
                         # Guardamos la probabilidad condicional de cada valor para cada clase
                         self.verosimilitud[nombre_atributo][valor][clase] = count / denominador
             else:
-                # Si el atributo es numerico calculamos media y desviación estandar para cada clase
+                # Si el atributo es numerico calculamos media y desviaciï¿½n estandar para cada clase
                 if nombre_atributo not in self.verosimilitud:
                     self.verosimilitud[nombre_atributo] = {}
                 for idx_clase, clase in enumerate(clases_unicas):
@@ -158,11 +167,11 @@ class ClasificadorNaiveBayes(Clasificador):
                     media = np.mean(valores_clase)
                     std_dev = np.std(valores_clase)
 
-                    # Evitamos una desviación estandar cero que pueda causar errores
+                    # Evitamos una desviaciï¿½n estandar cero que pueda causar errores
                     if std_dev == 0:
                         std_dev = 1e-6
 
-                    # Guardamos la media y desviación estandar para el valor de la clase
+                    # Guardamos la media y desviaciï¿½n estandar para el valor de la clase
                     self.verosimilitud[nombre_atributo][clase] = {
                         "media": media, "std_dev": std_dev}
 
@@ -188,7 +197,7 @@ class ClasificadorNaiveBayes(Clasificador):
                     nombre_atributo = datosTest.columns[j]
                     valor = fila_datos.iloc[j]
 
-                    # Para atributos categóricos
+                    # Para atributos categï¿½ricos
                     if nominalAtributos[j]:
                         if valor in self.verosimilitud[nombre_atributo]:
                             prob_atributo = self.verosimilitud[nombre_atributo][valor].get(
@@ -198,7 +207,7 @@ class ClasificadorNaiveBayes(Clasificador):
                             # Manejamos los valores no vistos en el entrenamiento
                             posteriori *= 0
                     else:
-                        # Para atributos numericos calculamos la probabilidad usando distribución normal
+                        # Para atributos numericos calculamos la probabilidad usando distribuciï¿½n normal
                         media = self.verosimilitud[nombre_atributo][clase]['media']
                         std_dev = self.verosimilitud[nombre_atributo][clase]['std_dev']
                         prob_atributo = st.norm.pdf(
@@ -240,12 +249,12 @@ class ClasificadorKNN(Clasificador):
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        # Aplicamos la misma transformación que en entrenamiento
+        # Aplicamos la misma transformaciï¿½n que en entrenamiento
         if self.normalize:
             datosTest, _, _ = Datos.estandarizarDatos(
                 datosTest, nominalAtributos, diccionario, self.media_vals, self.std_vals)
 
-        # Extraemos las características y etiquetas
+        # Extraemos las caracterï¿½sticas y etiquetas
         training_features = self.training_data.drop(columns=['Class']).values
         test_features = datosTest.drop(columns=['Class']).values
         training_labels = self.training_data['Class'].values
@@ -261,7 +270,7 @@ class ClasificadorKNN(Clasificador):
                 distances.append(raiz)
 
             distances = np.array(distances)
-            # Seleccionamos los índices de los K vecinos más cercanos
+            # Seleccionamos los ï¿½ndices de los K vecinos mï¿½s cercanos
             neighbor_indices = distances.argsort()[:self.K]
 
             # Obtenemos las clases de los vecinos
@@ -269,7 +278,7 @@ class ClasificadorKNN(Clasificador):
 
             # Contamos las ocurrencias de cada clase entre los vecinos
             counts = np.bincount(neighbor_classes)
-            prediction = counts.argmax()  # Clase con más ocurrencias
+            prediction = counts.argmax()  # Clase con mï¿½s ocurrencias
 
             predictions.append(prediction)
 
@@ -296,14 +305,14 @@ class ClasificadorRegresionLogistica(Clasificador):
         # Para cada fila de datos realizamos el ajuste de pesos
         for _ in range(self.epocas):
             for i in range(filas):
-                # Obtención del vector de datos y su transpuesta
+                # Obtenciï¿½n del vector de datos y su transpuesta
                 vector_datos = datosTrain.iloc[i:i+1]
                 vector_datos_t = np.transpose(vector_datos)
                 # Multiplicacion escalar entre vector de pesos y vector de datos
                 z = np.dot(self.vector_pesos, vector_datos_t)
-                # Calculo de función sigmoide
+                # Calculo de funciï¿½n sigmoide
                 sigma = float(1 / (1 + np.exp(-z)))
-                # Actualización de vector de pesos
+                # Actualizaciï¿½n de vector de pesos
                 self.vector_pesos = np.array(self.vector_pesos - (self.aprendizaje * (vector_datos * (sigma - target.iloc[i]))))
 
         return
@@ -320,13 +329,13 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         clasificaciones = np.empty(filas, dtype=int) 
         for i in range(filas):
-            # Obtención del vector de la transpuesta del vector datos
+            # Obtenciï¿½n del vector de la transpuesta del vector datos
             vector_datos = np.transpose(datosTest.iloc[i:i+1])
             # Multiplicacion escalar entre vector de pesos y vector de datos
             z = np.dot(self.vector_pesos, vector_datos)
-            # Calculo de función sigmoide
+            # Calculo de funciï¿½n sigmoide
             sigma = float(1 / (1 + np.exp(-z)))
-            # Clasificación según menor o mayor que 0.5
+            # Clasificaciï¿½n segï¿½n menor o mayor que 0.5
             if sigma < 0.5:
                 clasificaciones[i] = clases_unicas[0]
             else:
@@ -334,58 +343,3 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         return clasificaciones
 
-class ClasificadorRegresionLogisticaSK(Clasificador):
-    def __init__(self, maxiter=100):
-       self.modelo = LogisticRegression(max_iter=maxiter) 
-
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        # Obtenemos el target de los datos de entrenamiento
-        target = datosTrain['Class']
-        # Estandarizamos los datos
-        datosTrain = datosTrain.drop(columns='Class')
-        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
-
-        self.modelo.fit(datosTrain, target)
-        return
-
-
-    def clasifica(self, datosTest, nominalAtributos, diccionario):
-        # Estandarizamos los datos
-        datosTest = datosTest.drop(columns='Class')
-        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
-
-        filas = datosTest.shape[0]
-
-        clasificaciones = np.empty(filas, dtype=int) 
-        for i in range(filas):
-            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
-
-        return clasificaciones
-
-class ClasificadorSGD(Clasificador):
-    def __init__(self, maxiter=100, aprendizaje="optimal"):
-       self.modelo = SGDClassifier(max_iter=maxiter, learning_rate=aprendizaje) 
-
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        # Obtenemos el target de los datos de entrenamiento
-        target = datosTrain['Class']
-        # Estandarizamos los datos
-        datosTrain = datosTrain.drop(columns='Class')
-        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
-
-        self.modelo.fit(datosTrain, target)
-        return
-
-
-    def clasifica(self, datosTest, nominalAtributos, diccionario):
-        # Estandarizamos los datos
-        datosTest = datosTest.drop(columns='Class')
-        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
-
-        filas = datosTest.shape[0]
-
-        clasificaciones = np.empty(filas, dtype=int) 
-        for i in range(filas):
-            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
-
-        return clasificaciones
