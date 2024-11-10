@@ -49,35 +49,51 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     #       pues se utilizan para verificar el correcto funciomaniento de esta funcion
     """
 
-    # Normalización de la imagen
-    imagen = imagen.astype(np.float64) / 255.0
-    
+# Normalizar la imagen
+    imagen = imagen.astype(np.float64) / np.max(imagen)  # Normalización a [0, 1]
+
     # Tamaño de la imagen
     borde_x, borde_y = imagen.shape[1], imagen.shape[0]
 
+    # Filtrar puntos de interés que están en los bordes
     coordenadas_validas = []
-    for coord in coords_esquinas:
-        x, y = coord[1], coord[0]
-        if x >= vtam // 2 and x < borde_x - vtam // 2 and y >= vtam // 2 and y < borde_y - vtam // 2:
-            coordenadas_validas.append(coord)
-    new_coords_esquinas = np.array(coordenadas_validas)
     
-    # Inicializar descriptores
-    descriptores = np.zeros((len(new_coords_esquinas), nbins))
+    for coord in coords_esquinas:
+        x, y = coord[1], coord[0]  # [columna, fila]
+        if x >= vtam / 2 and x < borde_x - vtam / 2 and y >= vtam / 2 and y < borde_y - vtam / 2:
+            coordenadas_validas.append(coord)
 
-    # Cálculo de histogramas para cada punto de interés
-    for idx, coord in enumerate(new_coords_esquinas):
-        x, y = coord[1], coord[0]
+    # Lista de coordenadas válidas
+    new_coords_esquinas = np.array(coordenadas_validas)
+
+    # Inicializar descriptores
+    descriptores = []
+
+    # Para cada punto de interés
+    for coord in new_coords_esquinas:
+        x, y = coord[1], coord[0]  # [columna, fila]
         
-        # Extraer el vecindario
+        # Extraer el vecindario de tamaño (vtam+1)x(vtam+1)
         vecindario = imagen[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
         
-        # Calcular histograma
-        histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
-        descriptores[idx, :] = histograma
+        if tipoDesc == 'hist':
+            # Para el tipo 'hist', calcular un histograma de los valores de gris
+            histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
+            
+            # Normalizar el histograma
+            histograma = histograma / np.sum(histograma)
+        
+            # Añadir el descriptor
+            descriptores.append(histograma)
+            
+        elif tipoDesc == 'mag-ori':
+           
+            pass  # Implementación pendiente del 2b
+
+    # Convertir descriptores a numpy array
+    descriptores = np.array(descriptores)
 
     return descriptores, new_coords_esquinas
-
 if __name__ == "__main__":    
     print("Practica 2 - Tarea 2 - Test autoevaluación\n")                
 
