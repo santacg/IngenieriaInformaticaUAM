@@ -98,14 +98,22 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
 
             # Convertimos el gradiente de radianes a grados
             orientacion_gradiente = np.rad2deg(orientacion_gradiente)
+            
+            # Cuantificamos bins en el rango [0, 360)
+            bins = np.linspace(0,360, nbins+1, False) # Pongo False ya que en 360 es abierto el intervalo
+            np.digitize(orientacion_gradiente.flatten(), bins)
+
+            # Iniciamos el histograma con 0's
+            histograma_grad = np.zeros(nbins)
 
             # Multiplicamos de forma escalar las magnitudes y las orientaciones del gradiente
-            histograma_grad = magnitud_gradiente*orientacion_gradiente
+            #histograma_grad = magnitud_gradiente*orientacion_gradiente
+            
+            
+            # print("Magnitud gradiente", magnitud_gradiente)
+            # print("Orientacion: ", orientacion_gradiente)
 
-            print("Magnitud gradiente", magnitud_gradiente)
-            print("Orientacion: ", orientacion_gradiente)
-
-            print("Histograma mult: ", histograma_grad)
+            # print("Histograma mult: ", histograma_grad)
             
 
            
