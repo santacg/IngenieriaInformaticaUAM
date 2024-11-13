@@ -87,40 +87,37 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
             
         elif tipoDesc == 'mag-ori':
             
-            gradiente_h = ndi.sobel(vecindario, axis=0, mode="constant")
-            gradiente_v = ndi.sobel(vecindario, axis=1, mode="constant")
+            gradiente_h = ndi.sobel(imagen, axis=0, mode="constant")
+            gradiente_v = ndi.sobel(imagen, axis=1, mode="constant")
 
             # Cálculo de magnitud de gradiente
             magnitud_gradiente = np.sqrt(gradiente_h**2 + gradiente_v**2)
 
-            # Cálculo de la orientacion del gradiente
-            orientacion_gradiente = np.arctan2(gradiente_v, gradiente_h)
 
             # Convertimos el gradiente de radianes a grados
-            orientacion_gradiente = np.rad2deg(orientacion_gradiente)
-            
+            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_v, gradiente_h)) % 360  # Ajustar rango a [0, 360)
+
             # Cuantificamos bins en el rango [0, 360)
-            bins = np.linspace(0,360, nbins+1, False) # Pongo False ya que en 360 es abierto el intervalo
-            np.digitize(orientacion_gradiente.flatten(), bins)
+            bins = np.linspace(0,360, nbins+1) # Pongo False ya que en 360 es abierto el intervalo
+            # Para cada punto de interés
+        for coord in new_coords_esquinas:
+            x, y = coord[1], coord[0]  # [columna, fila]
+            
+            # Extraer el vecindario de tamaño (vtam+1)x(vtam+1)
+            vec_magnitud = magnitud_gradiente[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
+            vec_orientacion = orientacion_gradiente[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
 
-            # Iniciamos el histograma con 0's
+            # Cuantificar orientaciones y acumular magnitudes en bins correspondientes
             histograma_grad = np.zeros(nbins)
+            bin_indices = np.digitize(vec_orientacion.flatten(), bins) - 1  # Para índices de 0 a nbins-1
+            for idx, magnitud in zip(bin_indices, vec_magnitud.flatten()):
+                if 0 <= idx < nbins:
+                    histograma_grad[idx] += magnitud
+            # Añadir el histograma a los descriptores sin normalizar
+            descriptores.append(histograma_grad)
 
-            # Multiplicamos de forma escalar las magnitudes y las orientaciones del gradiente
-            #histograma_grad = magnitud_gradiente*orientacion_gradiente
-            
-            
-            # print("Magnitud gradiente", magnitud_gradiente)
-            # print("Orientacion: ", orientacion_gradiente)
-
-            # print("Histograma mult: ", histograma_grad)
-            
-
-           
-    
-    # Convertir descriptores a numpy array
+    # Convertir descriptores a array de numpy
     descriptores = np.array(descriptores)
-
     return descriptores, new_coords_esquinas
 
 if __name__ == "__main__":    
@@ -135,12 +132,12 @@ if __name__ == "__main__":
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
-    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
+    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           
    
 
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
-    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
+    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           

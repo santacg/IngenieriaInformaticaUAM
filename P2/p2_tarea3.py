@@ -53,11 +53,21 @@ def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, 
     #    indice/posicion menor. Por ejemplo, si las correspondencias [5,22] y [5,23] tienen la misma
     #    distancia minima, seleccione [5,22] al ser el indice 22 menor que 23
     """    
-    correspondencias = np.empty(shape=[0,2]) # iniciamos la variable de salida (numpy array)        
-   
-    #incluya su codigo aqui
-    #...
+    #correspondencias = np.empty(shape=[0,2]) # iniciamos la variable de salida (numpy array)        
+    correspondencias = []
+    
+    for idx, descriptor in enumerate(descriptores_imagen1):
+         # Calculamos la distancia euclidea de descriptor1 con todos los desriptores
+        distancias = np.linalg.norm(descriptores_imagen2 -descriptor, axis = 1)
 
+        idx_min = np.argmin(distancias)
+        distancia_min = distancias[idx_min]
+
+        if distancia_min < max_distancia:
+
+            correspondencias.append([idx, idx_min])
+    
+    correspondencias = np.array(correspondencias, dtype = np.int64)
     return correspondencias
 
 if __name__ == "__main__":
