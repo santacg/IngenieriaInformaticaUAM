@@ -2,9 +2,9 @@
 # Practica 2: Extraccion, descripcion y correspondencia de caracteristicas locales
 # Tarea 3:  Similitud y correspondencia de puntos de interes
 
-# AUTOR1: APELLIDO1 APELLIDO1, NOMBRE1
-# AUTOR2: APELLIDO2 APELLIDO2, NOMBRE2
-# PAREJA/TURNO: NUMERO_PAREJA/NUMERO_TURNO
+# AUTOR1: GARCÍA SANTA, CARLOS
+# AUTOR2: GONZÁLEZ GALLEGO, MIGUEL ÁNGEL
+# PAREJA/TURNO: 02/NUMERO_TURNO
 
 # librerias y paquetes por defecto
 import numpy as np
