@@ -23,27 +23,36 @@ def mostrar_puntos_interes(imagen, coords_esquinas, titulo):
     plt.show()
 
 def visualizar_correspondencias(imagen1, imagen2, coords1, coords2, correspondencias):
-    imagen_concat = np.concatenate((imagen1, imagen2), axis=1)
-    
-    coords2_adj = coords2.copy()
-    coords2_adj[:, 1] += imagen1.shape[1]
-    
+    h1, w1 = imagen1.shape
+    h2, w2 = imagen2.shape
+
+    max_height = max(h1, h2)
+
     plt.figure(figsize=(15, 8))
-    plt.imshow(imagen_concat, cmap='gray')
-    
-    plt.scatter(coords1[:, 1], coords1[:, 0], c='r', marker='o')
-    plt.scatter(coords2_adj[:, 1], coords2_adj[:, 0], c='b', marker='o')
-    
+    ax = plt.gca()
+
+    ax.imshow(imagen1, cmap='gray', extent=(0, w1, max_height, max_height - h1))
+    ax.imshow(imagen2, cmap='gray', extent=(w1, w1 + w2, max_height, max_height - h2))
+
+    coords1_adj = coords1.copy()
+    coords1_adj[:, 0] = max_height - coords1[:, 0]  # Invertir eje Y para imágenes
+    coords2_adj = coords2.copy()
+    coords2_adj[:, 0] = max_height - coords2[:, 0]  # Invertir eje Y
+    coords2_adj[:, 1] += w1  # Desplazar en X
+
+    ax.scatter(coords1_adj[:, 1], coords1_adj[:, 0], c='r', marker='o')
+    ax.scatter(coords2_adj[:, 1], coords2_adj[:, 0], c='b', marker='o')
+
     for idx1, idx2 in correspondencias:
-        y1, x1 = coords1[idx1]
-        y2, x2 = coords2_adj[idx2]
-        plt.plot([x1, x2], [y1, y2], 'y-', linewidth=1)
-    
+        x1, y1 = coords1_adj[idx1, 1], coords1_adj[idx1, 0]
+        x2, y2 = coords2_adj[idx2, 1], coords2_adj[idx2, 0]
+        ax.plot([x1, x2], [y1, y2], 'y-', linewidth=1)
+
     plt.axis('off')
     plt.show()
 
-lista_imagen1 = ['img/EGaudi1.jpg', 'img/Mount_Rushmore1.jpg', 'img/NotreDame1.jpg']
-lista_imagen2 = ['img/EGaudi2.jpg', 'img/Mount_Rushmore2.jpg', 'img/NotreDame2.jpg']
+lista_imagen1 = ['img/EGaudi_1.jpg', 'img/Mount_Rushmore_1.jpg', 'img/NotreDame_1.jpg']
+lista_imagen2 = ['img/EGaudi_2.jpg', 'img/Mount_Rushmore_2.jpg', 'img/NotreDame_2.jpg']
 
 for img1, img2 in zip(lista_imagen1, lista_imagen2):
     imagen1 = io.imread(img1, as_gray=True)
