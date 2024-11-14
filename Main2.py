@@ -4,12 +4,12 @@ from EstrategiaParticionado import ValidacionSimple
 from Clasificador import ClasificadorNaiveBayes, ClasificadorKNN, ClasificadorRegresionLogistica
 import matplotlib.pyplot as plt
 
-datasets = ['Datasets/heart.csv']
-nombres_datasets = ['HEART']
+datasets = ['Datasets/heart.csv', 'Datasets/wdbc.csv']
+nombres_datasets = ['HEART', 'WDBC']
 
 clasificadores = {
     'Naive Bayes': ClasificadorNaiveBayes(),
-    'KNN': ClasificadorKNN(K=5),
+    'KNN': ClasificadorKNN(K=11),
     'Regresión Logística': ClasificadorRegresionLogistica(epocas=100, aprendizaje=0.1)
 }
 
@@ -51,8 +51,15 @@ for idx_dataset, dataset_name in enumerate(datasets):
         print(f"TP: {TP}, FP: {FP}, TN: {TN}, FN: {FN}")
         
         #Calcular TPR y FPR
-        TPR = TP / (TP + FN) if (TP + FN) > 0 else 0
-        FPR = FP / (FP + TN) if (FP + TN) > 0 else 0
+        if (TP + FN) > 0:
+            TPR = TP / (TP + FN)
+        else:
+            TPR = 0 #Asignar 0 si el denominador es 0  
+
+        if (FP + TN) > 0:
+            FPR = FP / (FP + TN)
+        else:
+            FPR = 0 
         print(f"TPR: {TPR}, FPR: {FPR}")
         
         TPRs.append(TPR)
@@ -95,7 +102,9 @@ for idx_dataset, dataset_name in enumerate(datasets):
             TPR_list.append(1)
 
             FPR_list.insert(0, 0)
-            FPR_list.append(1) 
+            FPR_list.append(1)
+            print(FPR_list) 
+            print(TPR_list)
 
             sorted_indices = np.argsort(FPR_list)
 
