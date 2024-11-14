@@ -55,26 +55,41 @@ def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, 
     """    
     #correspondencias = np.empty(shape=[0,2]) # iniciamos la variable de salida (numpy array)        
     correspondencias = []
+    # Indices de la imagen 2 que ya han sido asignados
+    matched_indices_imagen2 = set()
     
-    for idx, descriptor in enumerate(descriptores_imagen1):
+    for idx1, descriptor1 in enumerate(descriptores_imagen1):
+        # Obtener los índices de los descriptores de la imagen 2 no han sido asignados
+        available_indices = [idx for idx in range(len(descriptores_imagen2)) if idx not in matched_indices_imagen2]
         
-        # Calculamos la distancia euclidea de descriptor1 con todos los desriptores
-        distancias = np.linalg.norm(descriptores_imagen2 -descriptor, axis = 1)
-
+        if not available_indices:
+            # Si no hay descriptores disponibles en la imagen 2 salimos
+            break
+        
+        # Seleccionamos los descriptores disponibles de la imagen 2
+        descriptors2_available = descriptores_imagen2[available_indices]
+        
+        # Calculamos la distancia euclidea entre el descriptor de la imagen 1 y los disponibles de la imagen 2
+        distancias = np.linalg.norm(descriptors2_available - descriptor1, axis=1)
+        
+        # Encontramos el indice del descriptor de la imagen 2 con la distancia mínima
         idx_min = np.argmin(distancias)
         distancia_min = distancias[idx_min]
-
+        idx2 = available_indices[idx_min]
+        
+        # Verificamos si la distancia mínima es menor que el umbral máximo
         if distancia_min < max_distancia:
-
-            correspondencias.append([idx, idx_min])
+            correspondencias.append([idx1, idx2])
+            # Marcamos el descriptor de la imagen 2 como asignado
+            matched_indices_imagen2.add(idx2)
     
-    correspondencias = np.array(correspondencias, dtype = np.int64)
+    correspondencias = np.array(correspondencias, dtype=np.int64)
     return correspondencias
 
 if __name__ == "__main__":
     print("Practica 2 - Tarea 3 - Test autoevaluación\n")                
 
     ## tests correspondencias tipo 'minDist' (tarea 3a)
-    print("Tests completados = " + str(test_p2_tarea3(disptime=-1,stop_at_error=True,debug=True,tipoDesc='hist',tipoCorr='mindist'))) #analizar todas las imagenes con descriptor 'hist' y ver errores
+    #print("Tests completados = " + str(test_p2_tarea3(disptime=-1,stop_at_error=True,debug=True,tipoDesc='hist',tipoCorr='mindist'))) #analizar todas las imagenes con descriptor 'hist' y ver errores
     #print("Tests completados = " + str(test_p2_tarea3(disptime=-1,stop_at_error=False,debug=False,tipoDesc='hist',tipoCorr='mindist'))) #analizar todas las imagenes con descriptor 'hist'
-    #print("Tests completados = " + str(test_p2_tarea3(disptime=1,stop_at_error=False,debug=False,tipoDesc='mag-ori',tipoCorr='mindist'))) #analizar todas las imagenes con descriptor 'mag-ori'
+    print("Tests completados = " + str(test_p2_tarea3(disptime=1,stop_at_error=False,debug=False,tipoDesc='mag-ori',tipoCorr='mindist'))) #analizar todas las imagenes con descriptor 'mag-ori'
