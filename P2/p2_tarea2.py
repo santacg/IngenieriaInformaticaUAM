@@ -48,13 +48,13 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     #       pues se utilizan para verificar el correcto funciomaniento de esta funcion
     """
 
-     # Convertir la imagen a float y normalizar al rango [0,1]
+
+    # Convertimos la imagen a float y normalizamos al rango [0,1]
     imagen = imagen.astype(np.float64) # / 255.0
 
-    # Tamaño de la imagen
     borde_y, borde_x = imagen.shape
 
-    # Filtrar puntos de interés que están en los bordes
+    # Filtrar puntos de interés que están cerca de los bordes
     half_vtam = vtam // 2
     new_coords_esquinas = np.array([
         coord for coord in coords_esquinas
@@ -65,40 +65,44 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     descriptores = []
 
     if tipoDesc == 'mag-ori':
-        # Cálculo correcto de los gradientes
+        # Calcula los gradientes de la imagen en los ejes x e y
         gradiente_v = ndi.sobel(imagen, axis=0, mode="constant")  # Derivada respecto a y
         gradiente_h = ndi.sobel(imagen, axis=1, mode="constant")  # Derivada respecto a x
 
+        # Calcula la magnitud y orientación del gradiente en cada píxel
         magnitud_gradiente = np.sqrt(gradiente_h**2 + gradiente_v**2)
         orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_v, gradiente_h)) % 360
 
-        bins = np.linspace(0, 360, nbins + 1)  # Definición correcta de bins
+        # Definimos los límites de los bins para las orientaciones en el histograma
+        bins = np.linspace(0, 360, nbins + 1)
 
+    # Iterar sobre cada punto de interes
     for coord in new_coords_esquinas:
         y, x = coord[0], coord[1]
 
-        # Extraer el vecindario
+        # Extraemos el vecindario en torno al punto de interes según el vtam dado 
         vecindario = imagen[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
 
         if tipoDesc == 'hist':
-            # Calcular el histograma de valores de gris
+            # Calcula el histograma de intensidad de los valores de gris en el vecindario
             histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
-            descriptores.append(histograma / np.sum(histograma))
+            descriptores.append(histograma / np.sum(histograma))  # Normalizar el histograma
 
         elif tipoDesc == 'mag-ori':
             vec_magnitud = magnitud_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
             vec_orientacion = orientacion_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
 
-            # Cuantificar orientaciones y acumular magnitudes en bins correspondientes
+            # Inicializa histograma para acumular magnitudes según las orientaciones
             histograma_grad = np.zeros(nbins)
             bin_indices = np.digitize(vec_orientacion.flatten(), bins) - 1
             for idx, magnitud in zip(bin_indices, vec_magnitud.flatten()):
                 if 0 <= idx < nbins:
-                    histograma_grad[idx] += magnitud
+                    histograma_grad[idx] += magnitud 
             descriptores.append(histograma_grad)
 
     descriptores = np.array(descriptores)
     return descriptores, new_coords_esquinas
+
 
 if __name__ == "__main__":    
     print("Practica 2 - Tarea 2 - Test autoevaluación\n")                
