@@ -10,9 +10,6 @@
 import numpy as np
 from p2_tests import test_p2_tarea3
 
-# Incluya aqui las librerias que necesite en su codigo
-# ...
-
 def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, tipoCorr='mindist',max_distancia=25):
     """
     # Esta funcion determina la correspondencias entre dos conjuntos de descriptores mediante
