@@ -100,8 +100,8 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
             # Calcular magnitud y orientación del gradiente 
             # np.hypot hace la funcion de np.sqrt(gradiente_x**2 + gradiente_y**2)
             magnitud_gradiente = np.hypot(gradiente_x, gradiente_y)
-            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_y, gradiente_x)) % 360
-
+            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_y, gradiente_x)) % 360.0
+        
             # Cuantificamos bins en el rango [0, 360)
             bins = np.linspace(0, 360, nbins + 1)
 
