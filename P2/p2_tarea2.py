@@ -48,75 +48,55 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
     #       pues se utilizan para verificar el correcto funciomaniento de esta funcion
     """
 
-# Normalizar la imagen
-    imagen = imagen.astype(np.float64) #/ np.max(imagen)  # Normalización a [0, 1]
+     # Convertir la imagen a float y normalizar al rango [0,1]
+    imagen = imagen.astype(np.float64) # / 255.0
 
     # Tamaño de la imagen
-    borde_x, borde_y = imagen.shape[1], imagen.shape[0]
+    borde_y, borde_x = imagen.shape
 
     # Filtrar puntos de interés que están en los bordes
-    coordenadas_validas = []
-    
-    for coord in coords_esquinas:
-        x, y = coord[1], coord[0]  # [columna, fila]
-        if x >= vtam / 2 and x < borde_x - vtam / 2 and y >= vtam / 2 and y < borde_y - vtam / 2:
-            coordenadas_validas.append(coord)
+    half_vtam = vtam // 2
+    new_coords_esquinas = np.array([
+        coord for coord in coords_esquinas
+        if (coord[1] >= half_vtam and coord[1] < borde_x - half_vtam and
+            coord[0] >= half_vtam and coord[0] < borde_y - half_vtam)
+    ])
 
-    # Lista de coordenadas válidas
-    new_coords_esquinas = np.array(coordenadas_validas)
-
-    # Inicializar descriptores
     descriptores = []
 
-    # Para cada punto de interés
+    if tipoDesc == 'mag-ori':
+        # Cálculo correcto de los gradientes
+        gradiente_v = ndi.sobel(imagen, axis=0, mode="constant")  # Derivada respecto a y
+        gradiente_h = ndi.sobel(imagen, axis=1, mode="constant")  # Derivada respecto a x
+
+        magnitud_gradiente = np.sqrt(gradiente_h**2 + gradiente_v**2)
+        orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_v, gradiente_h)) % 360
+
+        bins = np.linspace(0, 360, nbins + 1)  # Definición correcta de bins
+
     for coord in new_coords_esquinas:
-        x, y = coord[1], coord[0]  # [columna, fila]
-        
-        # Extraer el vecindario de tamaño (vtam+1)x(vtam+1)
-        vecindario = imagen[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
-        vecindario = vecindario.flatten()
+        y, x = coord[0], coord[1]
+
+        # Extraer el vecindario
+        vecindario = imagen[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
+
         if tipoDesc == 'hist':
-            # Para el tipo 'hist', calcular un histograma de los valores de gris
-            histograma, _ = np.histogram(vecindario, bins=nbins, range=(0, 1), density=True)
-            
-            # Normalizar el histograma
-            histograma = histograma / np.sum(histograma)
-            
-            # Añadir el descriptor
-            descriptores.append(histograma)
-            
+            # Calcular el histograma de valores de gris
+            histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
+            descriptores.append(histograma / np.sum(histograma))
+
         elif tipoDesc == 'mag-ori':
-            
-            # Calcular los gradientes horizontal y vertical
-            
-            gradiente_x = ndi.sobel(imagen, axis=1, mode="constant")
-            gradiente_y = ndi.sobel(imagen, axis=0, mode="constant")
-            
+            vec_magnitud = magnitud_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
+            vec_orientacion = orientacion_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
 
-            # Extraer el vecindario de gradientes
-            gradiente_x = gradiente_x[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
-            gradiente_y = gradiente_y[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
+            # Cuantificar orientaciones y acumular magnitudes en bins correspondientes
+            histograma_grad = np.zeros(nbins)
+            bin_indices = np.digitize(vec_orientacion.flatten(), bins) - 1
+            for idx, magnitud in zip(bin_indices, vec_magnitud.flatten()):
+                if 0 <= idx < nbins:
+                    histograma_grad[idx] += magnitud
+            descriptores.append(histograma_grad)
 
-            # Calcular magnitud y orientación del gradiente 
-            # np.hypot hace la funcion de np.sqrt(gradiente_x**2 + gradiente_y**2)
-            magnitud_gradiente = np.hypot(gradiente_x, gradiente_y)
-            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_y, gradiente_x)) % 360.0
-        
-            # Cuantificamos bins en el rango [0, 360)
-            bins = np.linspace(0, 360, nbins + 1)
-
-            # Aplanar para cálculo de histograma
-            magnitud = magnitud_gradiente.flatten()
-            orientacion = orientacion_gradiente.flatten()
-
-            # Histograma de orientaciones, ponderado por magnitudes
-            histograma, _ = np.histogram(orientacion, bins=bins,range=(0,360), weights=magnitud, density=False)
-            
-
-            # Añadir el histograma como descriptor
-            descriptores.append(histograma)
-
-    # Convertir descriptores a array de numpy
     descriptores = np.array(descriptores)
     return descriptores, new_coords_esquinas
 
@@ -130,14 +110,14 @@ if __name__ == "__main__":
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='hist',imgIdx = 3, poiIdx = 7))) #analizar solamente imagen #2 y esquina #7    
 
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
-    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False, tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
+    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           
    
 
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
-    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
+    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           
