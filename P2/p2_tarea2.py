@@ -92,7 +92,7 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
             vec_magnitud = magnitud_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
             vec_orientacion = orientacion_gradiente[y - half_vtam: y + half_vtam + 1, x - half_vtam: x + half_vtam + 1]
 
-            # Inicializa histograma para acumular magnitudes según las orientaciones
+            # Inicializamos histograma para acumular magnitudes según las orientaciones
             histograma_grad = np.zeros(nbins)
             bin_indices = np.digitize(vec_orientacion.flatten(), bins) - 1
             for idx, magnitud in zip(bin_indices, vec_magnitud.flatten()):
