@@ -51,8 +51,8 @@ def visualizar_correspondencias(imagen1, imagen2, coords1, coords2, corresponden
     plt.axis('off')
     plt.show()
 
-lista_imagen1 = ['img/EGaudi_1.jpg', 'img/Mount_Rushmore_1.jpg', 'img/NotreDame_1.jpg']
-lista_imagen2 = ['img/EGaudi_2.jpg', 'img/Mount_Rushmore_2.jpg', 'img/NotreDame_2.jpg']
+lista_imagen1 = ['img/EGaudi_1.jpg', 'img/Mount_Rushmore1.jpg', 'img/NotreDame1.jpg']
+lista_imagen2 = ['img/EGaudi_2.jpg', 'img/Mount_Rushmore2.jpg', 'img/NotreDame2.jpg']
 
 for img1, img2 in zip(lista_imagen1, lista_imagen2):
     imagen1 = io.imread(img1, as_gray=True)
