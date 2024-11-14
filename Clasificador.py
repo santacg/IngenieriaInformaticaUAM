@@ -26,15 +26,40 @@ class Clasificador:
     # diccionario: array de diccionarios de la estructura Datos utilizados para la codificacion de variables discretas
     def clasifica(self, datosTest, nominalAtributos, diccionario):
         return np.array(None)
-    
+
     def matriz_confusion(self, datos, pred):
         clases_reales = datos['Class'].values
         clases_predichas = pred
-        TPR = ((clases_reales == 1) & (clases_predichas == 1)).sum()
-        TNR = ((clases_reales == 0) & (clases_predichas == 0)).sum()
-        FPR = ((clases_reales == 0) & (clases_predichas == 1)).sum()
-        FNR = ((clases_reales == 1) & (clases_predichas == 0)).sum()
-        return TPR, FPR, TNR, FNR
+        TP = ((clases_reales == 1) & (clases_predichas == 1)).sum()
+        TN = ((clases_reales == 0) & (clases_predichas == 0)).sum()
+        FP = ((clases_reales == 0) & (clases_predichas == 1)).sum()
+        FN = ((clases_reales == 1) & (clases_predichas == 0)).sum()
+        return TP, FP, TN, FN
+
+    
+    def clasifica(self, datosTest, nominalAtributos, diccionario, return_scores=False):
+        # Estandarizar los datos
+        datosTest = datosTest.drop(columns='Class')
+        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
+        
+        filas = datosTest.shape[0]
+        scores = np.zeros(filas)
+        clasificaciones = np.zeros(filas, dtype=int)
+        
+        for i in range(filas):
+            # Cálculo del score (probabilidad)
+            z = np.dot(self.vector_pesos, datosTest.iloc[i])
+            sigma = 1 / (1 + np.exp(-z))
+            scores[i] = sigma
+            
+            # Clasificación binaria
+            clasificaciones[i] = 1 if sigma >= 0.5 else 0
+        
+        if return_scores:
+            return scores
+        else:
+            return clasificaciones
+
 
 
     # Obtiene el numero de aciertos y errores para calcular la tasa de fallo
@@ -317,29 +342,35 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         return
 
-
-    def clasifica(self, datosTest, nominalAtributos, diccionario):
-        # Clases unicas 
-        clases_unicas = np.unique(datosTest['Class'])
+    def clasifica(self, datosTest, nominalAtributos, diccionario, return_scores=False):
         # Estandarizamos los datos
+        clases_unicas = np.unique(datosTest['Class'])
+
         datosTest = datosTest.drop(columns='Class')
         datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
 
         filas = datosTest.shape[0]
 
-        clasificaciones = np.empty(filas, dtype=int) 
+        scores = np.zeros(filas)
+        clasificaciones = np.zeros(filas, dtype=int)
+
         for i in range(filas):
-            # Obtenci�n del vector de la transpuesta del vector datos
-            vector_datos = np.transpose(datosTest.iloc[i:i+1])
-            # Multiplicacion escalar entre vector de pesos y vector de datos
+            # Vector de datos de la instancia i
+            vector_datos = datosTest.iloc[i].values
+            # Producto punto entre vector de pesos y vector de datos
             z = np.dot(self.vector_pesos, vector_datos)
-            # Calculo de funci�n sigmoide
+            # Cálculo de la función sigmoide
             sigma = float(1 / (1 + np.exp(-z)))
-            # Clasificaci�n seg�n menor o mayor que 0.5
+            scores[i] = sigma
+
             if sigma < 0.5:
                 clasificaciones[i] = clases_unicas[0]
             else:
                 clasificaciones[i] = clases_unicas[1]
 
-        return clasificaciones
+        if return_scores:
+            return scores
+        else:
+            return clasificaciones
+
 
