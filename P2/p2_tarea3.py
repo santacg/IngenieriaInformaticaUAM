@@ -57,7 +57,8 @@ def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, 
     correspondencias = []
     
     for idx, descriptor in enumerate(descriptores_imagen1):
-         # Calculamos la distancia euclidea de descriptor1 con todos los desriptores
+        
+        # Calculamos la distancia euclidea de descriptor1 con todos los desriptores
         distancias = np.linalg.norm(descriptores_imagen2 -descriptor, axis = 1)
 
         idx_min = np.argmin(distancias)

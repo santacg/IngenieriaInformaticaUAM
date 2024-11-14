@@ -74,10 +74,10 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
         
         # Extraer el vecindario de tamaño (vtam+1)x(vtam+1)
         vecindario = imagen[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
-        
+        vecindario = vecindario.flatten()
         if tipoDesc == 'hist':
             # Para el tipo 'hist', calcular un histograma de los valores de gris
-            histograma, _ = np.histogram(vecindario.flatten(), bins=nbins, range=(0, 1), density=True)
+            histograma, _ = np.histogram(vecindario, bins=nbins, range=(0, 1), density=True)
             
             # Normalizar el histograma
             histograma = histograma / np.sum(histograma)
@@ -87,34 +87,34 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
             
         elif tipoDesc == 'mag-ori':
             
-            gradiente_h = ndi.sobel(imagen, axis=0, mode="constant")
-            gradiente_v = ndi.sobel(imagen, axis=1, mode="constant")
+            # Calcular los gradientes horizontal y vertical
+            
+            gradiente_x = ndi.sobel(imagen, axis=1, mode="constant")
+            gradiente_y = ndi.sobel(imagen, axis=0, mode="constant")
+            
 
-            # Cálculo de magnitud de gradiente
-            magnitud_gradiente = np.sqrt(gradiente_h**2 + gradiente_v**2)
+            # Extraer el vecindario de gradientes
+            gradiente_x = gradiente_x[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
+            gradiente_y = gradiente_y[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
 
-
-            # Convertimos el gradiente de radianes a grados
-            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_v, gradiente_h)) % 360  # Ajustar rango a [0, 360)
+            # Calcular magnitud y orientación del gradiente 
+            # np.hypot hace la funcion de np.sqrt(gradiente_x**2 + gradiente_y**2)
+            magnitud_gradiente = np.hypot(gradiente_x, gradiente_y)
+            orientacion_gradiente = np.rad2deg(np.arctan2(gradiente_y, gradiente_x)) % 360
 
             # Cuantificamos bins en el rango [0, 360)
-            bins = np.linspace(0,360, nbins+1) # Pongo False ya que en 360 es abierto el intervalo
-            # Para cada punto de interés
-        for coord in new_coords_esquinas:
-            x, y = coord[1], coord[0]  # [columna, fila]
-            
-            # Extraer el vecindario de tamaño (vtam+1)x(vtam+1)
-            vec_magnitud = magnitud_gradiente[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
-            vec_orientacion = orientacion_gradiente[y - vtam // 2 : y + vtam // 2 + 1, x - vtam // 2 : x + vtam // 2 + 1]
+            bins = np.linspace(0, 360, nbins + 1)
 
-            # Cuantificar orientaciones y acumular magnitudes en bins correspondientes
-            histograma_grad = np.zeros(nbins)
-            bin_indices = np.digitize(vec_orientacion.flatten(), bins) - 1  # Para índices de 0 a nbins-1
-            for idx, magnitud in zip(bin_indices, vec_magnitud.flatten()):
-                if 0 <= idx < nbins:
-                    histograma_grad[idx] += magnitud
-            # Añadir el histograma a los descriptores sin normalizar
-            descriptores.append(histograma_grad)
+            # Aplanar para cálculo de histograma
+            magnitud = magnitud_gradiente.flatten()
+            orientacion = orientacion_gradiente.flatten()
+
+            # Histograma de orientaciones, ponderado por magnitudes
+            histograma, _ = np.histogram(orientacion, bins=bins,range=(0,360), weights=magnitud, density=False)
+            
+
+            # Añadir el histograma como descriptor
+            descriptores.append(histograma)
 
     # Convertir descriptores a array de numpy
     descriptores = np.array(descriptores)
@@ -130,14 +130,14 @@ if __name__ == "__main__":
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='hist',imgIdx = 3, poiIdx = 7))) #analizar solamente imagen #2 y esquina #7    
 
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
-    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
+    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False, tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           
    
 
     ## tests descriptor tipo 'mag-ori' (tarea 2b)
-    print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
+    #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test
     #print("Tests completados = " + str(test_p2_tarea2(disptime=0.1,stop_at_error=False,debug=False,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, mostrar imagenes con resultados (1 segundo)
     #print("Tests completados = " + str(test_p2_tarea2(disptime=-1,stop_at_error=True,debug=True,tipoDesc='mag-ori'))) #analizar todas las imagenes y esquinas del test, pararse en errores y mostrar datos
     #print("Tests completados = " + str(test_p2_tarea2(disptime=1,stop_at_error=True,debug=True,tipoDesc='mag-ori',imgIdx = 3,poiIdx = 7))) #analizar solamente imagen #1 y esquina #7           
