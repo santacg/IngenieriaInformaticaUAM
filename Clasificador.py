@@ -3,6 +3,8 @@ import numpy as np
 from scipy import stats as st
 import Datos
 from EstrategiaParticionado import ValidacionCruzada
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+import math
 
 
 class Clasificador:
@@ -310,45 +312,43 @@ class ClasificadorKNN(Clasificador):
         return np.array(predictions)
 
 class ClasificadorRegresionLogistica(Clasificador):
-    def __init__(self, epocas=1, aprendizaje=1.0):
+    def __init__(self, epocas=100, aprendizaje=1.0):
         self.epocas = epocas
         self.aprendizaje = aprendizaje
 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         # Obtenemos el target de los datos de entrenamiento
-        target = datosTrain['Class']
-        # Estandarizamos los datos
-        datosTrain = datosTrain.drop(columns='Class')
-        datosTrain, _, _ = Datos.estandarizarDatos(datosTrain, nominalAtributos, diccionario)
+        target = datosTrain['Class'].values.reshape(-1, 1)
+        datosTrain = datosTrain.drop(columns='Class').values
 
-        filas = datosTrain.shape[0]
-        columnas = datosTrain.shape[1]
         # Inicializamos el vector de pesos a 0 con la dimension de las columnas
+        columnas = datosTrain.shape[1]
         self.vector_pesos = np.zeros((1, columnas))
 
         # Para cada fila de datos realizamos el ajuste de pesos
         for _ in range(self.epocas):
-            for i in range(filas):
-                # Obtenci�n del vector de datos y su transpuesta
-                vector_datos = datosTrain.iloc[i:i+1]
-                vector_datos_t = np.transpose(vector_datos)
-                # Multiplicacion escalar entre vector de pesos y vector de datos
-                z = np.dot(self.vector_pesos, vector_datos_t)
-                # Calculo de funci�n sigmoide
-                sigma = float(1 / (1 + np.exp(-z)))
-                # Actualizaci�n de vector de pesos
-                self.vector_pesos = np.array(self.vector_pesos - (self.aprendizaje * (vector_datos * (sigma - target.iloc[i]))))
+            # Obtenci�n del vector de datos y su transpuesta
+            # Multiplicacion escalar entre vector de pesos y vector de datos
+            z = np.dot(datosTrain, self.vector_pesos.T)
+
+            try:
+                exp = np.exp(-z)
+            except OverflowError: 
+                exp = 0.0
+
+            # Calculo de funci�n sigmoide
+            sigma = (1 / (1 + exp))
+            # Actualizaci�n de vector de pesos
+            error = sigma - target
+            gradiente = np.dot(datosTrain.T, error) / datosTrain.shape[0]
+            self.vector_pesos -= self.aprendizaje * gradiente.T
 
         return
 
     def clasifica(self, datosTest, nominalAtributos, diccionario, return_scores=False):
-        # Estandarizamos los datos
         clases_unicas = np.unique(datosTest['Class'])
-
         datosTest = datosTest.drop(columns='Class')
-        datosTest, _, _ = Datos.estandarizarDatos(datosTest, nominalAtributos, diccionario)
-
         filas = datosTest.shape[0]
 
         scores = np.zeros(filas)
@@ -359,8 +359,14 @@ class ClasificadorRegresionLogistica(Clasificador):
             vector_datos = datosTest.iloc[i].values
             # Producto punto entre vector de pesos y vector de datos
             z = np.dot(self.vector_pesos, vector_datos)
+
+            try:
+                exp = math.exp(-z)
+            except OverflowError: 
+                exp = 0.0
+
             # Cálculo de la función sigmoide
-            sigma = float(1 / (1 + np.exp(-z)))
+            sigma = (1 / (1 + exp))
             scores[i] = sigma
 
             if sigma < 0.5:
@@ -374,3 +380,54 @@ class ClasificadorRegresionLogistica(Clasificador):
             return clasificaciones
 
 
+class ClasificadorRegresionLogisticaSK(Clasificador):
+    def __init__(self, maxiter=100):
+       self.modelo = LogisticRegression(max_iter=maxiter) 
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
+
+        self.modelo.fit(datosTrain, target)
+        return
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
+
+        return clasificaciones
+
+class ClasificadorSGD(Clasificador):
+    def __init__(self, maxiter=100, aprendizaje="optimal"):
+       self.modelo = SGDClassifier(max_iter=maxiter, learning_rate=aprendizaje) 
+
+    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
+
+        self.modelo.fit(datosTrain, target)
+        return
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
+
+        return clasificaciones
