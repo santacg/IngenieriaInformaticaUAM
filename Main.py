@@ -27,28 +27,14 @@ for dataset_name in datasets:
     cl_rl_sk = ClasificadorRegresionLogisticaSK()
     cl_sgd_sk = ClasificadorSGD()
 
-    # print("Ejecutando KNN:")
-    # print(np.mean(clasificador.validacion(validacion_cruzada, dataset, knn)))
-    # print("Ejecutando regresión logística:")
-    # print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl)))
-    # print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl_sk)))
-    # print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
-    #
+    print("Ejecutando KNN:")
+    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, knn)))
+    print("Ejecutando regresión logística:")
+    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl)))
+    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl_sk)))
+    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
+
+    print("Ejecutando K-means:")
     kmeans = ClusteringKMeans()
     centroides, asignaciones = kmeans.kmeans(dataset.datos)
-
-    dataset.datos = dataset.datos.drop(columns='Class').values
-    plt.figure(figsize=(8, 6))
-    for cluster_id in range(len(centroides)):
-        cluster_points = dataset.datos[asignaciones == cluster_id]
-        print(cluster_points.shape)
-        plt.scatter(cluster_points[:, 0], cluster_points[:, 1], label=f'Cluster {cluster_id}')
-
-    plt.scatter(centroides[:, 0], centroides[:, 1], color='red', marker='x', s=200, label='Centroids')
-
-    plt.xlabel('Feature 1')
-    plt.ylabel('Feature 2')
-    plt.title('K-Means Clustering Results')
-    plt.legend()
-    plt.show()
-
+    print("Centroides ", centroides)
