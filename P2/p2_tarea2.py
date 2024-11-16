@@ -12,7 +12,6 @@ from p2_tests import test_p2_tarea2
 
 # Incluya aqui las librerias que necesite en su codigo
 import scipy.ndimage as ndi
-from matplotlib import pyplot as plt
 
 def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, tipoDesc='hist'):
     """
@@ -50,7 +49,10 @@ def descripcion_puntos_interes(imagen, coords_esquinas, vtam = 8, nbins = 16, ti
 
 
     # Convertimos la imagen a float y normalizamos al rango [0,1]
-    imagen = imagen.astype(np.float64) # / 255.0
+    max = np.max(imagen)
+    min = np.min(imagen)
+    if not (min >= 0.0 and max <= 1.0):
+        imagen = imagen.astype(np.float64) / 255.0
 
     borde_y, borde_x = imagen.shape
 

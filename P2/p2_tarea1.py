@@ -12,7 +12,7 @@ from p2_tests import test_p2_tarea1
 
 # Incluya aqui las librerias que necesite en su codigo
 from scipy import ndimage as ndi
-from skimage.feature import corner_peaks 
+from skimage import feature
 
 def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, threshold_rel = 0.2):
     """
@@ -34,7 +34,10 @@ def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, th
     coords_esquinas = np.empty(shape=[0,0]) # iniciamos la variable de salida (numpy array)
 
     # Normalizamos la imagen
-    imagen = imagen.astype(np.float64) / 255.0
+    max = np.max(imagen)
+    min = np.min(imagen)
+    if not (min >= 0.0 and max <= 1.0):
+        imagen = imagen.astype(np.float64) / 255.0
 
     # Obtenemos las derivadas parciales con respecto de x e y
     imagen_h = ndi.sobel(imagen, 0, mode="constant")
@@ -57,7 +60,7 @@ def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, th
     coeficiente_r = hessiana_det - k * (traza **2)
 
     # Usamos corner peaks para obtener las coordenadas de los valores mayores que el threshold
-    coords_esquinas = corner_peaks(coeficiente_r, min_distance=5, threshold_rel=threshold_rel)
+    coords_esquinas = feature.peak_local_max(coeficiente_r, min_distance=5, threshold_rel=threshold_rel)
 
     return coords_esquinas
 

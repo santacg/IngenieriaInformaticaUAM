@@ -6,9 +6,13 @@
 # AUTOR2: GONZÁLEZ GALLEGO, MIGUEL ÁNGEL
 # PAREJA/TURNO: 02/NUMERO_TURNO
 
-# librerias y paquetes por defecto
 import numpy as np
-from p2_tests import test_p2_tarea3
+import matplotlib.pyplot as plt
+from skimage import io, color, feature
+
+from p2_tarea1 import detectar_puntos_interes_harris
+from p2_tarea2 import descripcion_puntos_interes
+from p2_tarea3 import correspondencias_puntos_interes
 
 def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, tipoCorr='mindist',max_distancia=25):
     """
@@ -119,7 +123,39 @@ def correspondencias_puntos_interes(descriptores_imagen1, descriptores_imagen2, 
     correspondencias = np.array(correspondencias, dtype=np.int64)
     return correspondencias
 
-if __name__ == "__main__":
-    print("Tests completados = " + str(test_p2_tarea3(disptime=-1,stop_at_error=False,debug=False,tipoDesc='hist',tipoCorr='nndr'))) #analizar todas las imágenes con descriptor 'hist' y criterio 'nndr'
-    print("Tests completados = " + str(test_p2_tarea3(disptime=1,stop_at_error=False,debug=False,tipoDesc='mag-ori',tipoCorr='nndr'))) #analizar todas las imágenes con descriptor 'mag-ori' y criterio 'nndr'
+img_list_1 = ['img/EGaudi_1.jpg', 'img/Mount_Rushmore1.jpg', 'img/NotreDame1.jpg']
+img_list_2 = ['img/EGaudi_2.jpg', 'img/Mount_Rushmore2.jpg', 'img/NotreDame2.jpg']
+
+for img1_title, img2_title in zip(img_list_1, img_list_2):
+    img1 = io.imread(img1_title)
+    img2 = io.imread(img2_title)
+
+    img1 = img1.astype(np.float64) / 255.0
+    img2 = img2.astype(np.float64) / 255.0
+
+    img1_gray = color.rgb2gray(img1)
+    img2_gray = color.rgb2gray(img2)
+
+    ptos_interes_harris_img1 = detectar_puntos_interes_harris(img1_gray)
+    ptos_interes_harris_img2 = detectar_puntos_interes_harris(img2_gray)
+    desc_1, new_coords_1 = descripcion_puntos_interes(img1_gray, ptos_interes_harris_img1, tipoDesc="hist")
+    desc_2, new_coords_2 = descripcion_puntos_interes(img2_gray, ptos_interes_harris_img2, tipoDesc="hist")
+
+    corr = correspondencias_puntos_interes(desc_1, desc_2, tipoCorr='nndr')
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(18, 10)) 
+
+    feature.plot_matches(
+        ax,
+        img1_gray,
+        img2_gray,
+        new_coords_1,
+        new_coords_2,
+        matches=corr,
+        only_matches=True,
+    )
+
+    ax.set_title("Correspondencias")
+
+    plt.tight_layout()
+    plt.show()
 
