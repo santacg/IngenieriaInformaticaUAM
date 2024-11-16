@@ -287,16 +287,13 @@ class ClasificadorKNN(Clasificador):
         training_labels = self.training_data['Class'].values
 
         predictions = []
+
         # Recorremos cada instancia de prueba
         for test_instance in test_features:
-            # Calculamos distancias euclidianas a todas las instancias de entrenamiento
-            distances = []
-            for train_feature in training_features:
-                diferencia = np.sum((train_feature - test_instance) ** 2)
-                raiz = np.sqrt(diferencia)
-                distances.append(raiz)
+            test_instance = test_instance.reshape(1, -1)
+            # Calculamos distancias euclidias a todas las instancias de entrenamiento
+            distances = np.linalg.norm(training_features - test_instance, axis=1)
 
-            distances = np.array(distances)
             # Seleccionamos los �ndices de los K vecinos m�s cercanos
             neighbor_indices = distances.argsort()[:self.K]
 
@@ -305,7 +302,7 @@ class ClasificadorKNN(Clasificador):
 
             # Contamos las ocurrencias de cada clase entre los vecinos
             counts = np.bincount(neighbor_classes)
-            prediction = counts.argmax()  # Clase con m�s ocurrencias
+            prediction = np.argmax(counts)  # Clase con m�s ocurrencias
 
             predictions.append(prediction)
 
@@ -329,7 +326,7 @@ class ClasificadorRegresionLogistica(Clasificador):
 
             try:
                 exp = np.exp(-z)
-            except OverflowError: 
+            except RuntimeError: 
                 exp = 0.0
 
             sigma = (1 / (1 + exp))
@@ -347,7 +344,7 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         try:
             exp = np.exp(-z)
-        except OverflowError:
+        except RuntimeError:
             exp = 0.0
 
         scores = 1 / (1 + exp)
