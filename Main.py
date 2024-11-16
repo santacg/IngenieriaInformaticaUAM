@@ -20,7 +20,7 @@ validacion_simple = ValidacionSimple(1)
 validacion_cruzada = ValidacionCruzada(5)
 clasificador = Clasificador()
 
-cl_rl = ClasificadorRegresionLogistica(epocas=100)
+cl_rl = ClasificadorRegresionLogistica(epocas=1000)
 cl_rl_sk = ClasificadorRegresionLogisticaSK()
 cl_sgd_sk = ClasificadorSGD()
 

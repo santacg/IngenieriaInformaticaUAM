@@ -318,18 +318,13 @@ class ClasificadorRegresionLogistica(Clasificador):
 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        # Obtenemos el target de los datos de entrenamiento
         target = datosTrain['Class'].values.reshape(-1, 1)
         datosTrain = datosTrain.drop(columns='Class').values
 
-        # Inicializamos el vector de pesos a 0 con la dimension de las columnas
         columnas = datosTrain.shape[1]
         self.vector_pesos = np.zeros((1, columnas))
 
-        # Para cada fila de datos realizamos el ajuste de pesos
         for _ in range(self.epocas):
-            # Obtenci�n del vector de datos y su transpuesta
-            # Multiplicacion escalar entre vector de pesos y vector de datos
             z = np.dot(datosTrain, self.vector_pesos.T)
 
             try:
@@ -337,9 +332,7 @@ class ClasificadorRegresionLogistica(Clasificador):
             except OverflowError: 
                 exp = 0.0
 
-            # Calculo de funci�n sigmoide
             sigma = (1 / (1 + exp))
-            # Actualizaci�n de vector de pesos
             error = sigma - target
             gradiente = np.dot(datosTrain.T, error) / datosTrain.shape[0]
             self.vector_pesos -= self.aprendizaje * gradiente.T
@@ -348,36 +341,20 @@ class ClasificadorRegresionLogistica(Clasificador):
 
     def clasifica(self, datosTest, nominalAtributos, diccionario, return_scores=False):
         clases_unicas = np.unique(datosTest['Class'])
-        datosTest = datosTest.drop(columns='Class')
-        filas = datosTest.shape[0]
+        datosTest = datosTest.drop(columns='Class').values
 
-        scores = np.zeros(filas)
-        clasificaciones = np.zeros(filas, dtype=int)
+        z = np.dot(datosTest, self.vector_pesos.T)
 
-        for i in range(filas):
-            # Vector de datos de la instancia i
-            vector_datos = datosTest.iloc[i].values
-            # Producto punto entre vector de pesos y vector de datos
-            z = np.dot(self.vector_pesos, vector_datos)
+        try:
+            exp = np.exp(-z)
+        except OverflowError:
+            exp = 0.0
 
-            try:
-                exp = math.exp(-z)
-            except OverflowError: 
-                exp = 0.0
+        scores = 1 / (1 + exp)
 
-            # Cálculo de la función sigmoide
-            sigma = (1 / (1 + exp))
-            scores[i] = sigma
+        clasificaciones = np.where(scores < 0.5, clases_unicas[0], clases_unicas[1])
 
-            if sigma < 0.5:
-                clasificaciones[i] = clases_unicas[0]
-            else:
-                clasificaciones[i] = clases_unicas[1]
-
-        if return_scores:
-            return scores
-        else:
-            return clasificaciones
+        return (scores, clasificaciones) if return_scores else clasificaciones
 
 
 class ClasificadorRegresionLogisticaSK(Clasificador):
