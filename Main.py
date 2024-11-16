@@ -29,10 +29,11 @@ for dataset_name in datasets:
 
     print("Ejecutando KNN:")
     print(np.mean(clasificador.validacion(validacion_cruzada, dataset, knn)))
-    print("Ejecutando regresión logística:")
-    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl)))
-    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl_sk)))
-    print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
+    if dataset_name != "Datasets/iris.csv":
+        print("Ejecutando regresión logística:")
+        print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl)))
+        print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_rl_sk)))
+        print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
 
     print("Ejecutando K-means:")
     kmeans = ClusteringKMeans()
