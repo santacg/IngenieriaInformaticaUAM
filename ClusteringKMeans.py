@@ -7,16 +7,6 @@ class ClusteringKMeans:
         self.k = k
         self.max_iter = max_iter
 
-    def asignar_centroides(self, data, k_centroides):
-        # Obtenemos las distancias de cada vector a cada k_inicial
-        centroides_dist = np.empty(shape=(data.shape[0], self.k))
-        for idx, k_centroide in enumerate(k_centroides):
-            centroides_dist[::, idx] = np.linalg.norm(k_centroide - data, axis=1)
-
-        # Asignamos cada vector a su centroide más cercano 
-        centroides_asignados = np.argmin(centroides_dist, axis=1)
-        return centroides_asignados
-
 
     def kmeans(self, data):
         # Eliminamos la columna de la clase y tranfarmamos a array de numpy
@@ -29,7 +19,13 @@ class ClusteringKMeans:
         # Iteramos un máximo número de iteraciones
         for _ in range(self.max_iter): 
             # Asignamos los centroides a los vectores de datos
-            centroides_asignados = self.asignar_centroides(data, k_centroides) 
+            # Obtenemos las distancias de cada vector a cada k_inicial
+            centroides_dist = np.empty(shape=(data.shape[0], self.k))
+            for idx, k_centroide in enumerate(k_centroides):
+                centroides_dist[::, idx] = np.linalg.norm(k_centroide - data, axis=1)
+
+            # Asignamos cada vector a su centroide más cercano 
+            centroides_asignados = np.argmin(centroides_dist, axis=1) 
 
             # Calculamos los nuevos centroides con la media
             for idx in range(self.k):
