@@ -18,6 +18,7 @@ class ClusteringKMeans:
         centroides_asignados = None 
         # Iteramos un máximo número de iteraciones
         for _ in range(self.max_iter): 
+            k_centroides_prev = k_centroides.copy()
             # Asignamos los centroides a los vectores de datos
             # Obtenemos las distancias de cada vector a cada k_inicial
             centroides_dist = np.empty(shape=(data.shape[0], self.k))
@@ -35,14 +36,11 @@ class ClusteringKMeans:
                 if len(cluster) > 0:
                     k_centroides[idx] = np.mean(cluster, axis=0)
                 else:
-                    k_centroides[idx] = data[np.random.choice(data.shape[0], self.k)]
+                    k_centroides[idx] = data[np.random.choice(data.shape[0])]
 
             # Aplicamos el criterio de convergencia de movimiento minimo de centroides
-            convergencia = []
-            for k_centroide in k_centroides:
-                convergencia.append(np.linalg.norm(k_centroide - k_centroides))
-
-            if max(convergencia) < 10 ** -4:
+            convergencia = np.linalg.norm(k_centroides - k_centroides_prev, axis=1)
+            if np.max(convergencia) < 1e-8:
                 break
 
         return k_centroides, centroides_asignados

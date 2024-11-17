@@ -1,3 +1,4 @@
+from scipy.sparse import data
 import Datos
 import numpy as np
 from EstrategiaParticionado import ValidacionSimple, ValidacionCruzada
@@ -5,9 +6,10 @@ from Clasificador import Clasificador, ClasificadorRegresionLogistica, Clasifica
 from ClusteringKMeans import ClusteringKMeans
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 import matplotlib.pyplot as plt
 
-datasets = ['Datasets/heart.csv', 'Datasets/iris.csv', 'Datasets/wdbc.csv']
+datasets = ['Datasets/iris.csv']
 
 for dataset_name in datasets:
     dataset = Datos.Datos(dataset_name)
@@ -38,11 +40,17 @@ for dataset_name in datasets:
     #     print(np.mean(clasificador.validacion(validacion_cruzada, dataset, cl_sgd_sk)))
 
     print("Ejecutando K-means propio:")
-    kmeans_sk = KMeans(5)
-    kmeans = ClusteringKMeans(5, 1000)
+    kmeans = ClusteringKMeans(3, 100000)
 
     centroides, asignaciones = kmeans.kmeans(dataset.datos)
-    print("Centroides ", centroides)
+    clases = np.unique(dataset.datos['Class'].values)
+    print(clases)
+    print(dataset.datos['Class'].values)
+    print(asignaciones)
+    matriz_confusion = confusion_matrix(dataset.datos['Class'].values, asignaciones, labels=clases)
+    disp = ConfusionMatrixDisplay(matriz_confusion)
+    disp.plot()
+    plt.show()
 
     pca = PCA(n_components=2)
     data_reducida = pca.fit_transform(dataset.datos.drop(columns='Class').values)
@@ -90,12 +98,17 @@ for dataset_name in datasets:
     plt.yticks(())
     plt.show()
 
-    print("Ejecutando K-means skleanr:")
+
+
+    print("Ejecutando K-means sklearn:")
 
 
     reduced_data = PCA(n_components=2).fit_transform(dataset.datos.values)
-    kmeans = KMeans(init="k-means++", n_clusters=5)
+    kmeans = KMeans(init="k-means++", n_clusters=3)
     kmeans.fit(reduced_data)
+    disp = ConfusionMatrixDisplay.from_predictions(dataset.datos['Class'].values, kmeans.labels_)
+    disp.plot()
+    plt.show()
 
 # Step size of the mesh. Decrease to increase the quality of the VQ.
     h = 0.02  # point in the mesh [x_min, x_max]x[y_min, y_max].
@@ -107,7 +120,6 @@ for dataset_name in datasets:
 
 # Obtain labels for each point in mesh. Use last trained model.
     Z = kmeans.predict(np.c_[xx.ravel(), yy.ravel()])
-    print(Z)
 
 # Put the result into a color plot
     Z = Z.reshape(xx.shape)
