@@ -309,7 +309,7 @@ class ClasificadorKNN(Clasificador):
         return np.array(predictions)
 
 class ClasificadorRegresionLogistica(Clasificador):
-    def __init__(self, epocas=100, aprendizaje=0.1):
+    def __init__(self, epocas=100, aprendizaje=1.0):
         self.epocas = epocas
         self.aprendizaje = aprendizaje
 
@@ -319,14 +319,14 @@ class ClasificadorRegresionLogistica(Clasificador):
         datosTrain = datosTrain.drop(columns='Class').values
 
         columnas = datosTrain.shape[1]
-        self.vector_pesos = np.random.uniform(-0.5, 0.5, size=(1, columnas))
+        self.vector_pesos = np.zeros((1, columnas))
 
         for _ in range(self.epocas):
             z = np.dot(datosTrain, self.vector_pesos.T)
 
             try:
                 exp = np.exp(-z)
-            except OverflowError: 
+            except RuntimeWarning: 
                 exp = 0.0
 
             sigma = (1 / (1 + exp))
@@ -344,7 +344,7 @@ class ClasificadorRegresionLogistica(Clasificador):
 
         try:
             exp = np.exp(-z)
-        except OverflowError:
+        except RuntimeWarning:
             exp = 0.0
 
         scores = 1 / (1 + exp)
@@ -355,37 +355,49 @@ class ClasificadorRegresionLogistica(Clasificador):
 
 
 class ClasificadorRegresionLogisticaSK(Clasificador):
-    def __init__(self, maxiter=100, aprendizaje=0.01):
-       self.modelo = LogisticRegression(max_iter=maxiter, solver='liblinear', C=aprendizaje) 
+    def __init__(self, maxiter=100):
+       self.modelo = LogisticRegression(max_iter=maxiter) 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        target = datosTrain['Class'].values
-        datosTrain = datosTrain.drop(columns='Class').values
+        target = datosTrain['Class']
+        datosTrain = datosTrain.drop(columns='Class')
 
         self.modelo.fit(datosTrain, target)
         return
 
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        datosTest = datosTest.drop(columns='Class').values
-        clasificaciones = self.modelo.predict(datosTest)
+        datosTest = datosTest.drop(columns='Class')
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
 
         return clasificaciones
 
 class ClasificadorSGD(Clasificador):
-    def __init__(self, maxiter=100, aprendizaje=0.0001):
-        self.modelo = SGDClassifier(max_iter=maxiter, alpha=aprendizaje) 
+    def __init__(self, maxiter=100, aprendizaje="optimal"):
+       self.modelo = SGDClassifier(max_iter=maxiter, learning_rate=aprendizaje) 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        target = datosTrain['Class'].values
-        datosTrain = datosTrain.drop(columns='Class').values
+        # Obtenemos el target de los datos de entrenamiento
+        target = datosTrain['Class']
+        # Estandarizamos los datos
+        datosTrain = datosTrain.drop(columns='Class')
 
         self.modelo.fit(datosTrain, target)
         return
 
 
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        datosTest = datosTest.drop(columns='Class').values
-        clasificaciones = self.modelo.predict(datosTest)
+        # Estandarizamos los datos
+        datosTest = datosTest.drop(columns='Class')
+
+        filas = datosTest.shape[0]
+
+        clasificaciones = np.empty(filas, dtype=int) 
+        for i in range(filas):
+            clasificaciones[i] = self.modelo.predict(datosTest.iloc[i:i+1])
 
         return clasificaciones
