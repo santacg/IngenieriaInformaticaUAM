@@ -324,34 +324,42 @@ class ClasificadorRegresionLogistica(Clasificador):
         for _ in range(self.epocas):
             z = np.dot(datosTrain, self.vector_pesos.T)
 
-            try:
-                exp = np.exp(-z)
-            except OverflowError: 
-                exp = 0.0
+            sigma = np.zeros_like(z)
+            for i, valor in enumerate(z.flatten()):
+                if valor >= 0:
+                    sigma[i] = 1 / (1 + np.exp(-valor))
+                else:
+                    sigma[i] = np.exp(valor) / (1 + np.exp(valor)) #e^-z = 1/e^z, por tanto, sigma = e^z/1+e^z
 
-            sigma = (1 / (1 + exp))
+            sigma = sigma.reshape(-1, 1) 
+
             error = sigma - target
             gradiente = np.dot(datosTrain.T, error) / datosTrain.shape[0]
             self.vector_pesos -= self.aprendizaje * gradiente.T
 
         return
-
+    
     def clasifica(self, datosTest, nominalAtributos, diccionario, return_scores=False):
         clases_unicas = np.unique(datosTest['Class'])
         datosTest = datosTest.drop(columns='Class').values
 
         z = np.dot(datosTest, self.vector_pesos.T)
+        scores = []
+        for valor in z.flatten(): #Para converstir en un array unidimensional
+            if valor >= 0:
+                score = 1 / (1 + np.exp(-valor))
+            else:
+                score = np.exp(valor) / (1 + np.exp(valor))
+            scores.append(score)
 
-        try:
-            exp = np.exp(-z)
-        except OverflowError:
-            exp = 0.0
+        scores = np.array(scores)
 
-        scores = 1 / (1 + exp)
-
-        clasificaciones = np.where(scores < 0.5, clases_unicas[0], clases_unicas[1])
+        # Mapear scores a clases 0 y 1
+        clasificaciones = np.where(scores >= 0.5, 1, 0)
 
         return (scores, clasificaciones) if return_scores else clasificaciones
+    
+
 
 
 class ClasificadorRegresionLogisticaSK(Clasificador):
