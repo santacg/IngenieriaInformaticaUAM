@@ -46,7 +46,7 @@ class ClasificadorRegresionLogistica(Clasificador):
 
 class ClasificadorRegresionLogisticaSK(Clasificador):
     def __init__(self, maxiter=100, aprendizaje=0.01):
-       self.modelo = LogisticRegression(max_iter=maxiter, solver='liblinear', C=aprendizaje) 
+       self.modelo = LogisticRegression(max_iter=maxiter, C=aprendizaje) 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         target = datosTrain['Class'].values
