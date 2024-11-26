@@ -37,10 +37,8 @@ def construir_vocabulario(list_img_desc, vocab_size=5, max_iter=300):
 
     # Creamos kmeans
     kmeans = KMeans(n_clusters=vocab_size, max_iter = max_iter, random_state=0)
-    
     # Concatenamos la lista list_img_desc
     concatenate = np.concatenate(list_img_desc)
-
     # Ajustamos kmeans a la concatenacion de descriptores
     kmeans.fit(concatenate)
 
@@ -70,9 +68,16 @@ def obtener_bags_of_words(list_img_desc, vocab):
     # iniciamos la variable de salida (numpy array)
     list_img_bow = np.empty(shape=[len(list_img_desc),len(vocab)]) 
     
-    for descriptores in list_img_desc:
+    for idx, descriptor in enumerate(list_img_desc):
 
-        distancias = cdist(vocab, descriptores)
+        distancias = cdist(vocab, descriptor)
+        # print("Hola",distancias)
+        # print("Dscriptor", descriptor)
+        # print("Vocab", vocab)
+        histograma, _ = np.histogram(distancias, len(vocab))
+        print(histograma)
+        #histograma = histograma
+        list_img_bow[idx] = histograma
         
     
     return list_img_bow
@@ -80,5 +85,5 @@ def obtener_bags_of_words(list_img_desc, vocab):
 if __name__ == "__main__":    
     dataset_path = './datasets/scenes15/'
     print("Practica 3 - Tarea 1 - Test autoevaluación\n")                    
-    print("Tests completados = " + str(test_p3_tarea1(dataset_path,stop_at_error=False,debug=False))) #analizar todos los casos sin pararse en errores ni mostrar datos
-    #print("Tests completados = " + str(test_p3_tarea1(dataset_path,stop_at_error=True,debug=True))) #analizar todos los casos, pararse en errores y mostrar datos
+    #print("Tests completados = " + str(test_p3_tarea1(dataset_path,stop_at_error=False,debug=False))) #analizar todos los casos sin pararse en errores ni mostrar datos
+    print("Tests completados = " + str(test_p3_tarea1(dataset_path,stop_at_error=True,debug=True))) #analizar todos los casos, pararse en errores y mostrar datos
