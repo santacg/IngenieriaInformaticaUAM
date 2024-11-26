@@ -36,15 +36,15 @@ def construir_vocabulario(list_img_desc, vocab_size=5, max_iter=300):
 
     # Creamos kmeans
     kmeans = KMeans(n_clusters=vocab_size, max_iter = max_iter, random_state=0)
-
-    # Obtenemos los centros de los clusters por K-Means
-    vocabulario = kmeans.cluster_centers_
     
     # Concatenamos la lista list_img_desc
     concatenate = np.concatenate(list_img_desc)
 
     # Ajustamos kmeans a la concatenacion de descriptores
     kmeans.fit(concatenate)
+
+    # Obtenemos los centros de los clusters por K-Means
+    vocabulario = kmeans.cluster_centers_
 
     return vocabulario
 
