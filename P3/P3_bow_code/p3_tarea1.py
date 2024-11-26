@@ -9,6 +9,7 @@
 # librerias y paquetes por defecto
 from p3_tests import test_p3_tarea1
 from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
 import numpy as np
 
 def construir_vocabulario(list_img_desc, vocab_size=5, max_iter=300):
@@ -68,8 +69,11 @@ def obtener_bags_of_words(list_img_desc, vocab):
     """
     # iniciamos la variable de salida (numpy array)
     list_img_bow = np.empty(shape=[len(list_img_desc),len(vocab)]) 
-  
     
+    for descriptores in list_img_desc:
+
+        distancias = cdist(vocab, descriptores)
+        
     
     return list_img_bow
 
