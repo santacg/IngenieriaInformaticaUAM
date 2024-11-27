@@ -36,7 +36,7 @@ def construir_vocabulario(list_img_desc, vocab_size=5, max_iter=300):
     vocabulario = np.empty(shape=[vocab_size,list_img_desc[0].shape[1]]) # iniciamos la variable de salida (numpy array)
 
     # Creamos kmeans
-    kmeans = KMeans(n_clusters=vocab_size, max_iter = max_iter, random_state=0)
+    kmeans = KMeans(n_clusters=vocab_size, max_iter=max_iter, random_state=0)
     # Concatenamos la lista list_img_desc
     concatenate = np.concatenate(list_img_desc)
     # Ajustamos kmeans a la concatenacion de descriptores
@@ -67,16 +67,20 @@ def obtener_bags_of_words(list_img_desc, vocab):
     """
     # iniciamos la variable de salida (numpy array)
     list_img_bow = np.empty(shape=[len(list_img_desc),len(vocab)]) 
+    # Longitud del vocabulario
+    vocab_tam = len(vocab)
     
+    # Para cada descriptor calculamos el histograma bag-of-words
     for idx, descriptor in enumerate(list_img_desc):
-
+        # Distancias entre cada palabra del vocabulario y cada descriptor
         distancias = cdist(vocab, descriptor)
-        # print("Hola",distancias)
-        # print("Dscriptor", descriptor)
-        # print("Vocab", vocab)
-        histograma, _ = np.histogram(distancias, len(vocab))
-        print(histograma)
-        #histograma = histograma
+
+        # Seleccionamos las distancias mínimas
+        palabras_min = np.argmin(distancias, axis=1)
+
+        # Contamos las palabras con menor distancia a cada descriptor para hacer el histograma
+        histograma = np.bincount(palabras_min, minlength=vocab_tam)
+
         list_img_bow[idx] = histograma
         
     

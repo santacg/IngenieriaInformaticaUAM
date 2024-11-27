@@ -60,14 +60,14 @@ def detectar_puntos_interes_harris(imagen: np.ndarray, sigma = 1.0, k = 0.05, th
     coeficiente_r = hessiana_det - k * (traza **2)
 
     # Usamos corner peaks para obtener las coordenadas de los valores mayores que el threshold
-    coords_esquinas = feature.peak_local_max(coeficiente_r, min_distance=5, threshold_rel=threshold_rel)
+    coords_esquinas = feature.corner_peaks(coeficiente_r, min_distance=5, threshold_rel=threshold_rel)
 
     return coords_esquinas
 
 if __name__ == "__main__":    
     print("Practica 2 - Tarea 1 - Test autoevaluación\n")                
     
-    print("Tests completados = " + str(test_p2_tarea1(disptime=-1,stop_at_error=False,debug=False))) #analizar todos los casos sin pararse en errores
-    #print("Tests completados = " + str(test_p2_tarea1(disptime=1,stop_at_error=False,debug=False))) #analizar y visualizar todos los casos sin pararse en errores
+    #print("Tests completados = " + str(test_p2_tarea1(disptime=0.5,stop_at_error=False,debug=False))) #analizar todos los casos sin pararse en errores
+    print("Tests completados = " + str(test_p2_tarea1(disptime=1,stop_at_error=False,debug=False))) #analizar y visualizar todos los casos sin pararse en errores
     #print("Tests completados = " + str(test_p2_tarea1(disptime=-1,stop_at_error=True,debug=False))) #analizar todos los casos y pararse en errores 
     #print("Tests completados = " + str(test_p2_tarea1(disptime=-1,stop_at_error=True,debug=True))) #analizar todos los casos, pararse en errores y mostrar informacion

@@ -11,7 +11,6 @@ from skimage.data import camera
 import matplotlib.pyplot as plt
 from p2_tarea1 import *
 from p2_tarea2 import *
-from p2_tests import test_p2_tarea2
 
 # Calculo de bins en el intervalo [0, 255]
 def calculo_bins(nbins):
