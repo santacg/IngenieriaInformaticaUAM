@@ -8,6 +8,9 @@
 
 # librerias y paquetes por defecto
 from p3_tests import test_p3_tarea2
+from skimage.color import rgb2gray
+from skimage.transform import resize
+from skimage.io import imread
 import numpy as np
 
 # Incluya aqui las librerias que necesite en su codigo
@@ -35,8 +38,27 @@ def obtener_features_tiny(path_imagenes, tamano = 16):
     # Iniciamos variable de salida
     list_img_desc_tiny = list()
 
-    #...     
-    
+    for path in path_imagenes:
+
+        # Convertimos las imagenes a escala de gris
+        img_gray = rgb2gray(imread(path))
+        
+        # Damos el formato float en el rango [0,1]
+        max = np.max(img_gray)
+        min = np.min(img_gray)
+        
+        if not (min >= 0.0 and max <= 1.0):
+            img_gray = img_gray.astype(np.float64)/255.0
+        
+        # Redimensionar la imagen al tamaño deseado
+        resized_img = resize(img_gray, (tamano, tamano))
+
+        # Aplanar la imagen redimensionada y convertir a formato 1xD
+        descriptor = resized_img.flatten().reshape(1, -1)
+
+        # Añadir los descriptores a la lista 1xN
+        list_img_desc_tiny.append(descriptor)
+       
     return list_img_desc_tiny
 
 def obtener_features_hog(path_imagenes, tamano=100, orientaciones=9,pixeles_por_celda=(8, 8),celdas_bloque=(2,2)):
