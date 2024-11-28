@@ -72,16 +72,18 @@ def obtener_bags_of_words(list_img_desc, vocab):
     
     # Para cada descriptor calculamos el histograma bag-of-words
     for idx, descriptor in enumerate(list_img_desc):
+        
         # Distancias entre cada palabra del vocabulario y cada descriptor
-        distancias = cdist(vocab, descriptor)
-
+        distancias = cdist(descriptor, vocab)
+        
         # Seleccionamos las distancias mínimas
         palabras_min = np.argmin(distancias, axis=1)
 
         # Contamos las palabras con menor distancia a cada descriptor para hacer el histograma
         histograma = np.bincount(palabras_min, minlength=vocab_tam)
 
-        list_img_bow[idx] = histograma
+        # Añadimos los valores de histograma BOW normalizado 
+        list_img_bow[idx] = histograma/histograma.sum()
         
     
     return list_img_bow
