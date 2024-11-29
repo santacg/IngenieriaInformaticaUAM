@@ -11,6 +11,7 @@ from p3_tests import test_p3_tarea2
 from skimage.color import rgb2gray
 from skimage.transform import resize
 from skimage.io import imread
+from skimage.feature import hog
 import numpy as np
 
 # Incluya aqui las librerias que necesite en su codigo
@@ -44,11 +45,7 @@ def obtener_features_tiny(path_imagenes, tamano = 16):
         img_gray = rgb2gray(imread(path))
         
         # Damos el formato float en el rango [0,1]
-        max = np.max(img_gray)
-        min = np.min(img_gray)
-        
-        if not (min >= 0.0 and max <= 1.0):
-            img_gray = img_gray.astype(np.float64)/255.0
+        img_gray = img_gray.astype(np.float64)/255.0
         
         # Redimensionar la imagen al tamaño deseado
         resized_img = resize(img_gray, (tamano, tamano))
@@ -97,7 +94,23 @@ def obtener_features_hog(path_imagenes, tamano=100, orientaciones=9,pixeles_por_
     # Iniciamos variable de salida
     list_img_desc_hog = list()
 
-    #...
+    # Recorremos la lista de imagenes 
+    for img_path in path_imagenes:
+        # Leemos la imagen y la pasamos a escala de grises
+        img = rgb2gray(imread(img_path))
+
+        # Convertimos a float y pasamos al rango 0 - 1
+        img = img.astype(np.float64) / 255.0
+
+        # Redimensionamos la imagen
+        img = resize(img, (tamano, tamano))
+
+        # Empleamos la funcion HOG
+        img_hog = hog(img, orientaciones, pixeles_por_celda, celdas_bloque, feature_vector=False)
+
+        # Lo convertimos a vector fila
+        list_img_desc_hog.append(img_hog.reshape(np.prod(img_hog.shape[:2]), np.prod(img_hog.shape[2:5])))
+
 
     return list_img_desc_hog
     
