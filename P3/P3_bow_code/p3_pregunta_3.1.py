@@ -6,7 +6,7 @@
 # AUTOR2: GARCÍA SANTA, CARLOS
 # PAREJA/TURNO: 02/NUMERO_TURNO
 
-
+# librerias y paquetes por defecto
 from p3_tarea2 import obtener_features_hog, obtener_features_tiny
 from p3_tarea1 import obtener_bags_of_words, construir_vocabulario
 from sklearn.neighbors import KNeighborsClassifier
@@ -25,11 +25,11 @@ data = load_image_dataset(dataset_path, load_content = False, max_per_category=2
 X_train, X_test, y_train, y_test = train_test_split(data['filenames'], data['target'], test_size=0.20, random_state=42)
 
 # Apartado 3.1.1
-# Características: HOG con parámetro tam=100
+# Características: HOG con parámetro tam = 100
 hog_features_train = obtener_features_hog(X_train, tamano = 100)
 hog_features_test = obtener_features_hog(X_test, tamano = 100)
 
-# Características: Tiny con parámetro tam=64
+# Características: Tiny con parámetro tam = 64
 tiny_features_train = obtener_features_tiny(X_train, tamano = 64)
 tiny_features_test = obtener_features_tiny(X_test, tamano = 64)
 
@@ -53,11 +53,13 @@ y_pred_test_hog = knn.predict(bow_test_hog)
 # Evaluar precisión
 train_acc_hog = accuracy_score(y_train, y_pred_train_hog)
 test_acc_hog = accuracy_score(y_test, y_pred_test_hog)
+
+# Imprimimos los rendimientos de HOG
 print(f"HOG -> Train Rendimiento: {train_acc_hog:.3f}, Test Rendimiento: {test_acc_hog:.3f}")
 
 ## Valores al utilizar las características de Tiny
 
-# Repetir para Tiny
+# Repetir para Tiny manteniendo el formato correcto bidimensional
 bow_train_tiny = np.array(tiny_features_train).squeeze()
 bow_test_tiny = np.array(tiny_features_test).squeeze()
 
@@ -72,10 +74,12 @@ y_pred_test_tiny = knn.predict(bow_test_tiny)
 # Evaluar rendimiento
 train_acc_tiny = accuracy_score(y_train, y_pred_train_tiny)
 test_acc_tiny = accuracy_score(y_test, y_pred_test_tiny)
+
+# Imprimimos los rendimientos de Tiny
 print(f"Tiny -> Train Rendimiento: {train_acc_tiny:.3f}, Test Rendimiento: {test_acc_tiny:.3f}")
 
 # Apartado 3.1.2
-# Variamos el tamaño del diccionario BOW
+# Variamos el tamaño del diccionario BOW y obtenemos los valores de rendimiento
 vocab_sizes = [50, 100, 150, 200]
 
 trains = []
@@ -109,13 +113,13 @@ for neig in neighbors:
     test_acc_knn.append(accuracy_score(y_test, knn.predict(bow_test_hog)))
 
 # Imprimimos los valores utilizados y generados
-print("Valores de k", list(neighbors))
-print("Rendimiento (train)", train_acc_knn)
-print("Rendimiento (test)", test_acc_knn)
+print(f"Valores de k {list(neighbors)}")
+print(f"Rendimiento (train) {train_acc_knn}")
+print(f"Rendimiento (test) {test_acc_knn}")
 
-# Tomamos el valor máximo de K
+# Tomamos el valor óptimo de K
 best_k = neighbors[test_acc_knn.index(max(test_acc_knn))]
-print("Valor máximo de K: ", best_k)
+print(f"Valor optimo de K: {best_k}")
 
 # Entrenamos y predecimos con KNN con el mayor valor de K
 knn = KNeighborsClassifier(n_neighbors=best_k)
@@ -123,11 +127,11 @@ knn.fit(bow_train_hog, y_train)
 predicted_categories = knn.predict(bow_test_hog)
 
 # Creamos una página web mostrando los resultados visuales de aciertos/errores
-create_results_webpage (train_image_paths= X_train, test_image_paths= X_test,train_labels=y_train, test_labels=y_test,
-                                           categories=['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
+create_results_webpage (train_image_paths = X_train, test_image_paths = X_test,train_labels = y_train, test_labels=y_test,
+                                           categories = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
                                             'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
                                             'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding'], 
                                             abbr_categories= ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
-                                            'Off','OC','Sto','St','Sub','Bld'], predicted_categories = predicted_categories ,
+                                            'Off','OC','Sto','St','Sub','Bld'], predicted_categories = predicted_categories,
                                             name_experiment = 'HOG_BOW_KNN')
 
