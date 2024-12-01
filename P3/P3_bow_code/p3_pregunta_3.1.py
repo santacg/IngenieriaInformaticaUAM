@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from p3_utils import load_image_dataset, create_results_webpage
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Cargamos datos del directorio de imagenes
 dataset_path = './datasets/scenes15/' 
@@ -96,6 +97,15 @@ for size in vocab_sizes:
 
 print(f"Valores obtenidos para los valores {vocab} -> Train {trains}, Test {tests}")
 
+plt.figure(figsize=(10, 6))
+plt.plot(vocab_sizes, trains, label='Train Accuracy', marker='o')
+plt.plot(vocab_sizes, tests, label='Test Accuracy', marker='o')
+plt.title("Rendimiento de Clasificación vs Tamaño del Vocabulario BOW")
+plt.xlabel("Tamaño del Vocabulario BOW")
+plt.ylabel("Precisión")
+plt.legend()
+plt.grid()
+plt.show()
 
 # Apartado 3.1.3
 # Variamos el número de vecinos del clasificador KNN con valores impares de 1 a 21
@@ -135,3 +145,12 @@ create_results_webpage (train_image_paths = X_train, test_image_paths = X_test,t
                                             'Off','OC','Sto','St','Sub','Bld'], predicted_categories = predicted_categories,
                                             name_experiment = 'HOG_BOW_KNN')
 
+plt.figure(figsize=(10, 6))
+plt.plot(vocab_sizes, train_acc_knn, label='Train Accuracy', marker='o')
+plt.plot(vocab_sizes, test_acc_knn, label='Test Accuracy', marker='o')
+plt.title("Rendimiento de Clasificación vs Tamaño del Vocabulario BOW")
+plt.xlabel("Tamaño del Vocabulario BOW")
+plt.ylabel("Precisión")
+plt.legend()
+plt.grid()
+plt.show()
