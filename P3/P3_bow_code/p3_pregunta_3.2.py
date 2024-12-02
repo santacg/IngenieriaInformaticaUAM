@@ -20,20 +20,23 @@ max_images_per_category = 200
 test_ratio = 0.20
 vocab_sizes = [50, 100, 150, 200]
 
-dataset_path = "ruta/del/dataset/scene15"  # Ajustar esta ruta según la ubicación del dataset
-images, labels, image_paths, categories = load_image_dataset(
+dataset_path = "./datasets/scenes15/"  # Ajustar esta ruta según la ubicación del dataset
+images = load_image_dataset(
     container_path=dataset_path,
     resize_shape=(tam_hog, tam_hog),
     max_per_category=max_images_per_category,
-    random_state=42
+
 )
+categories =  ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
+                                            'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
+                                            'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding']
 
 # Extraer características HOG
 hog_features = [obtener_features_hog(image, tam_hog) for image in images]
 
 # Dividir datos en entrenamiento y prueba
 X_train, X_test, y_train, y_test, train_image_paths, test_image_paths = train_test_split(
-    hog_features, labels, image_paths, test_size=test_ratio, random_state=42
+    hog_features, test_size=test_ratio, random_state=42
 )
 
 train_accuracies = []
@@ -64,14 +67,14 @@ for vocab_size in vocab_sizes:
     print(f"Tamaño vocab: {vocab_size} - Train Acc: {train_acc:.2f}, Test Acc: {test_acc:.2f}")
 
     # Crear página de resultados y matriz de confusión
-    abbr_categories = [cat[:3] for cat in categories]
     confusion = create_results_webpage(
         train_image_paths=train_image_paths,
         test_image_paths=test_image_paths,
         train_labels=y_train,
         test_labels=y_test,
         categories=categories,
-        abbr_categories=abbr_categories,
+        abbr_categories= ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
+                                            'Off','OC','Sto','St','Sub','Bld'],
         predicted_categories=test_predictions,
         name_experiment=f"BOW_vocab{vocab_size}"
     )

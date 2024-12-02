@@ -15,7 +15,7 @@ from sklearn.metrics import accuracy_score
 from p3_utils import load_image_dataset, create_results_webpage
 import numpy as np
 import matplotlib.pyplot as plt
-
+import os
 # Cargamos datos del directorio de imagenes
 dataset_path = './datasets/scenes15/' 
 
@@ -127,6 +127,16 @@ print(f"Valores de k {list(neighbors)}")
 print(f"Rendimiento (train) {train_acc_knn}")
 print(f"Rendimiento (test) {test_acc_knn}")
 
+
+plt.plot(list(neighbors), train_acc_knn, label='Train Accuracy', marker='o')
+plt.plot(list(neighbors), test_acc_knn, label='Test Accuracy', marker='o')
+plt.title("Rendimiento de Clasificación vs Número de vecinos del clasificador KNN")
+plt.xlabel("Número de vecinos del clasificador KNN")
+plt.ylabel("Precisión")
+plt.legend()
+plt.grid()
+plt.show()
+
 # Tomamos el valor óptimo de K
 best_k = neighbors[test_acc_knn.index(max(test_acc_knn))]
 print(f"Valor optimo de K: {best_k}")
@@ -136,8 +146,13 @@ knn = KNeighborsClassifier(n_neighbors=best_k)
 knn.fit(bow_train_hog, y_train)
 predicted_categories = knn.predict(bow_test_hog)
 
+
+# Crear rutas absolutas para las imágenes
+train_image_paths = [os.path.join(dataset_path, path) for path in X_train]
+test_image_paths = [os.path.join(dataset_path, path) for path in X_test]
+
 # Creamos una página web mostrando los resultados visuales de aciertos/errores
-create_results_webpage (train_image_paths = X_train, test_image_paths = X_test,train_labels = y_train, test_labels=y_test,
+create_results_webpage (train_image_paths = train_image_paths, test_image_paths = test_image_paths,train_labels = y_train, test_labels=y_test,
                                            categories = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
                                             'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
                                             'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding'], 
