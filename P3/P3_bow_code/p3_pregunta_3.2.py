@@ -1,6 +1,6 @@
 # Tratamiento de Señales Visuales/Tratamiento de Señales Multimedia I @ EPS-UAM
 # Practica 3: Reconocimiento de escenas con modelos BOW
-# Memoria - Pregunta 3.1
+# Memoria - Pregunta 3.2
 
 # AUTOR1: GONZÁLEZ GALLEGO, MIGUEL ÁNGEL
 # AUTOR2: GARCÍA SANTA, CARLOS
@@ -9,83 +9,85 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 from p3_tarea1 import obtener_bags_of_words, construir_vocabulario
-from p3_tarea2 import obtener_features_hog 
+from p3_tarea2 import obtener_features_hog
 from p3_utils import load_image_dataset, create_results_webpage
 
-tam_hog = 100
-max_images_per_category = 200
-test_ratio = 0.20
-vocab_sizes = [50, 100, 150, 200]
+categorias = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
+              'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
+              'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding']
 
-dataset_path = "ruta/del/dataset/scene15"  # Ajustar esta ruta según la ubicación del dataset
-images, labels, image_paths, categories = load_image_dataset(
+abbr_categorias = ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
+                   'Off','OC','Sto','St','Sub','Bld']
+
+# Leer el dataset
+dataset_path = "./datasets/scenes15"
+datos = load_image_dataset(
     container_path=dataset_path,
-    resize_shape=(tam_hog, tam_hog),
-    max_per_category=max_images_per_category,
-    random_state=42
+    load_content=False,
+    shuffle=False,
+    max_per_category=200
 )
-
-# Extraer características HOG
-hog_features = [obtener_features_hog(image, tam_hog) for image in images]
 
 # Dividir datos en entrenamiento y prueba
-X_train, X_test, y_train, y_test, train_image_paths, test_image_paths = train_test_split(
-    hog_features, labels, image_paths, test_size=test_ratio, random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(datos['filenames'], datos['target'], test_size=0.20, random_state=42)
 
-train_accuracies = []
-test_accuracies = []
+# Extraer características HOG de los datos de entrenamiento
+hog_features_train = obtener_features_hog(X_train, tamano=100)
 
-# Experimento con diferentes tamaños de vocabulario
+# Extraer características HOG de los datos de prueba
+hog_features_test = obtener_features_hog(X_test, tamano=100)
+
+scores = {} 
+
+# Mapeo de etiquetas numéricas a nombres de categoría
+y_train_names = [categorias[label] for label in y_train]
+y_test_names = [categorias[label] for label in y_test]
+
+# Tamaños de vocabulario
+vocab_sizes = [5, 10, 25, 50, 100, 200]
+
+# Tipos de kernel a probar
+kernels = ["linear", "poly", "rbf"]
+
 for vocab_size in vocab_sizes:
-    print(f"Procesando tamaño del vocabulario: {vocab_size}")
+    print("Procesando tamaño del vocabulario:", vocab_size)
 
-    # Construir vocabulario BOW
-    vocabulario = construir_vocabulario(X_train, vocab_size)
+    # Construir vocabulario BOW con datos train
+    vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
 
-    # Convertir características HOG a BOW
-    X_train_bow = obtener_bags_of_words(X_train, vocabulario)
-    X_test_bow = obtener_bags_of_words(X_test, vocabulario)
+    # Obtener descriptores BOW para train y test
+    train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
+    test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
 
-    # Entrenar SVM 
-    clf = SVC(kernel="linear", max_iter=10)
-    clf.fit(X_train_bow, y_train)
+    for kernel in kernels:
+        # Entrenar SVM
+        svm = SVC(kernel=kernel)
+        svm.fit(train_bow, y_train)
 
-    train_acc = accuracy_score(y_train, clf.predict(X_train_bow))
-    test_predictions = clf.predict(X_test_bow)
-    test_acc = accuracy_score(y_test, test_predictions)
+        # Score de la clasificación
+        score = svm.score(test_bow, y_test)
+        if kernel not in scores:
+            scores[kernel] = []
+        scores[kernel].append(score)
 
-    train_accuracies.append(train_acc)
-    test_accuracies.append(test_acc)
+        # Predicciones de la clasificación
+        predicciones = svm.predict(test_bow)
 
-    print(f"Tamaño vocab: {vocab_size} - Train Acc: {train_acc:.2f}, Test Acc: {test_acc:.2f}")
+        # Convertir predicciones a nombres de categoría
+        predicciones_nombres = [categorias[pred] for pred in predicciones]
 
-    # Crear página de resultados y matriz de confusión
-    abbr_categories = [cat[:3] for cat in categories]
-    confusion = create_results_webpage(
-        train_image_paths=train_image_paths,
-        test_image_paths=test_image_paths,
-        train_labels=y_train,
-        test_labels=y_test,
-        categories=categories,
-        abbr_categories=abbr_categories,
-        predicted_categories=test_predictions,
-        name_experiment=f"BOW_vocab{vocab_size}"
-    )
+        # Crear página de resultados y matriz de confusión
+        confusion = create_results_webpage(
+            train_image_paths=X_train, 
+            test_image_paths=X_test, 
+            train_labels=y_train_names, 
+            test_labels=y_test_names,
+            categories=categorias, 
+            abbr_categories=abbr_categorias, 
+            predicted_categories=predicciones_nombres,
+            name_experiment='HOG_BOW_SVM'
+        )
 
-    print(f"Matriz de confusión para vocab_size={vocab_size}:")
-    print(confusion)
-
-plt.figure(figsize=(10, 6))
-plt.plot(vocab_sizes, train_accuracies, label='Train Accuracy', marker='o')
-plt.plot(vocab_sizes, test_accuracies, label='Test Accuracy', marker='o')
-plt.title("Rendimiento de Clasificación vs Tamaño del Vocabulario BOW")
-plt.xlabel("Tamaño del Vocabulario BOW")
-plt.ylabel("Precisión")
-plt.legend()
-plt.grid()
-plt.show()
-
+print(scores)
