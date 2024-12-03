@@ -44,7 +44,7 @@ y_train_names = [categorias[label] for label in y_train]
 y_test_names = [categorias[label] for label in y_test]
 
 # Tamaños de vocabulario
-vocab_sizes = [5, 10, 25, 50, 100, 200]
+vocab_sizes = [5, 10, 25, 50, 100]
 # Tipos de kernel a probar
 kernels = ["linear", "poly", "rbf"]
 
@@ -121,6 +121,15 @@ plt.grid()
 plt.legend()
 plt.show()
 
+for item_train, item_test in zip(scores_train.items(), scores_test.items()):
+    plt.plot(vocab_sizes, item_train[1], label="SVM train "+item_train[0])
+    plt.plot(vocab_sizes, item_test[1], label="SVM test "+item_test[0])
+    plt.xlabel("Tamaño de Vocabulario")
+    plt.ylabel("Precisión de la Clasificación con Train")
+    plt.title("Precisión Clasificación Train SVMs vs Tamaño de Vocabulario")
+    plt.grid()
+    plt.legend()
+    plt.show()
 
 predicciones = predicciones[best_kernel][best_vocab_size_idx]
 
