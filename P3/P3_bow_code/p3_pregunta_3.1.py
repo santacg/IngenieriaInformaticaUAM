@@ -15,7 +15,15 @@ from sklearn.metrics import accuracy_score
 from p3_utils import load_image_dataset, create_results_webpage
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+
+
+categorias = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
+              'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
+              'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding']
+
+abbr_categorias = ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
+                   'Off','OC','Sto','St','Sub','Bld']
+
 # Cargamos datos del directorio de imagenes
 dataset_path = './datasets/scenes15/' 
 
@@ -24,6 +32,10 @@ data = load_image_dataset(dataset_path, load_content = False, max_per_category=2
 
 # Usamos el test de train_test_split  
 X_train, X_test, y_train, y_test = train_test_split(data['filenames'], data['target'], test_size=0.20, random_state=42)
+
+# Mapeo de etiquetas numéricas a nombres de categoría
+y_train_names = [categorias[label] for label in y_train]
+y_test_names = [categorias[label] for label in y_test]
 
 # Apartado 3.1.1
 # Características: HOG con parámetro tam = 100
@@ -87,6 +99,7 @@ trains = []
 tests = []
 
 for size in vocab_sizes:
+    print(f"{size} de 200")
     vocab = construir_vocabulario(hog_features_train, vocab_size = size)
     bow_train_hog = obtener_bags_of_words(hog_features_train, vocab = vocab)
     bow_test_hog = obtener_bags_of_words(hog_features_test, vocab = vocab)
@@ -115,6 +128,7 @@ train_acc_knn = []
 test_acc_knn = []
 
 for neig in neighbors:
+    print(f"{neig} vecinos")
     knn = KNeighborsClassifier(n_neighbors=neig)
     knn.fit(bow_train_hog, y_train)
 
@@ -147,25 +161,9 @@ knn.fit(bow_train_hog, y_train)
 predicted_categories = knn.predict(bow_test_hog)
 
 
-# Crear rutas absolutas para las imágenes
-train_image_paths = [os.path.join(dataset_path, path) for path in X_train]
-test_image_paths = [os.path.join(dataset_path, path) for path in X_test]
-
+# Convertir predicciones a nombres de categoría
+predicciones_nombres = [categorias[pred] for pred in predicted_categories]
 # Creamos una página web mostrando los resultados visuales de aciertos/errores
-create_results_webpage (train_image_paths = train_image_paths, test_image_paths = test_image_paths,train_labels = y_train, test_labels=y_test,
-                                           categories = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
-                                            'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
-                                            'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding'], 
-                                            abbr_categories= ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
-                                            'Off','OC','Sto','St','Sub','Bld'], predicted_categories = predicted_categories,
+create_results_webpage (train_image_paths = X_train, test_image_paths = X_test,train_labels = y_train_names, test_labels=y_test_names,
+                                           categories = categorias, abbr_categories=abbr_categorias, predicted_categories = predicciones_nombres,
                                             name_experiment = 'HOG_BOW_KNN')
-
-plt.figure(figsize=(10, 6))
-plt.plot(vocab_sizes, train_acc_knn, label='Train Accuracy', marker='o')
-plt.plot(vocab_sizes, test_acc_knn, label='Test Accuracy', marker='o')
-plt.title("Rendimiento de Clasificación vs Tamaño del Vocabulario BOW")
-plt.xlabel("Tamaño del Vocabulario BOW")
-plt.ylabel("Precisión")
-plt.legend()
-plt.grid()
-plt.show()
