@@ -46,7 +46,7 @@ y_train_names = [categorias[label] for label in y_train]
 y_test_names = [categorias[label] for label in y_test]
 
 # Tamaños de vocabulario
-vocab_sizes = [5, 10, 25, 50, 100, 200]
+vocab_sizes = [5, 10]
 # 3.2.1
 for vocab_size in vocab_sizes:
     print("Procesando tamaño del vocabulario:", vocab_size)
@@ -62,24 +62,8 @@ for vocab_size in vocab_sizes:
     svm = SVC(kernel="linear")
     svm.fit(train_bow, y_train)
 
-    # Score y predicciones de la clasificación
-    score_linear = svm.score(test_bow, y_test)
-    predicciones = svm.predict(test_bow)
-
-    # Convertir predicciones a nombres de categoría
-    predicciones_nombres = [categorias[pred] for pred in predicciones]
-
-    # Crear página de resultados y matriz de confusión
-    confusion = create_results_webpage(
-        train_image_paths=X_train, 
-        test_image_paths=X_test, 
-        train_labels=y_train_names, 
-        test_labels=y_test_names,
-        categories=categorias, 
-        abbr_categories=abbr_categorias, 
-        predicted_categories=predicciones_nombres,
-        name_experiment='HOG_BOW_SVM'
-    )
+    # Score de la clasificación
+    scores_linear.append(svm.score(test_bow, y_test))
 
 print(scores_linear)
 plt.plot(vocab_sizes, scores_linear, marker="o", label="Clasificación SVM Lineal")
@@ -96,53 +80,46 @@ plt.show()
 kernels = ["poly", "rbf"]
 
 scores = {}
-scores["linear"] = []
+scores["linear"] = scores_linear
 
-vocab_size = 25
-score = scores_linear[scores_linear.index(vocab_size)]
-scores["linear"].append(scores_linear)
+for vocab_size in vocab_sizes:
 
-for kernel in kernels:
-    print("Procesando tamaño del vocabulario:", vocab_size)
+    for kernel in kernels:
+        print("Procesando tamaño del vocabulario:", vocab_size)
 
-    # Construir vocabulario BOW con datos train
-    vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
+        # Construir vocabulario BOW con datos train
+        vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
 
-    # Obtener descriptores BOW para train y test
-    train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
-    test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
+        # Obtener descriptores BOW para train y test
+        train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
+        test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
 
-    # Entrenar SVM
-    svm = SVC(kernel=kernel)
-    svm.fit(train_bow, y_train)
+        # Entrenar SVM
+        svm = SVC(kernel=kernel)
+        svm.fit(train_bow, y_train)
 
-    # Score y predicciones de la clasificación
-    score = svm.score(test_bow, y_test)
-    if kernel not in scores:
-        scores[kernel] = []
-    scores[kernel].append(score)
+        # Score de la clasificación
+        score = svm.score(test_bow, y_test)
+        if kernel not in scores:
+            scores[kernel] = []
+        scores[kernel].append(score)
 
-    predicciones = svm.predict(test_bow)
-
-
-    # Convertir predicciones a nombres de categoría
-    predicciones_nombres = [categorias[pred] for pred in predicciones]
-
-    # Crear página de resultados y matriz de confusión
-    confusion = create_results_webpage(
-        train_image_paths=X_train, 
-        test_image_paths=X_test, 
-        train_labels=y_train_names, 
-        test_labels=y_test_names,
-        categories=categorias, 
-        abbr_categories=abbr_categorias, 
-        predicted_categories=predicciones_nombres,
-        name_experiment='HOG_BOW_SVM'
-    )
 
 print(scores)
 
+best_key = None
+best_vocab_size = float('-inf')
+best_vocab_size_index = None
+
+
 for item in scores.items():
+    if max(item[1]) > best_vocab_size:
+        best_vocab_size_index = np.argmax(item[1])
+        best_vocab_size = max(item[1])
+        best_key = item[0]
+    
+    print("item:",item[1])
+    print("Vocabsizes", vocab_sizes)
     plt.plot(vocab_sizes, item[1], marker="o", label=("Clasificación SVM"+item[0]))
 
 plt.xlabel("Tamaño de Vocabulario")
@@ -152,8 +129,37 @@ plt.grid()
 plt.legend()
 plt.show()
 
+print("Procesando tamaño del vocabulario:", vocab_size)
 
+vocab_size = vocab_sizes[best_vocab_size_index]
+print("Vocab_sizes ", vocab_size)
+print("Best key", best_key)
+# Construir vocabulario BOW con datos train
+vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
 
+# Obtener descriptores BOW para train y test
+train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
+test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
+
+# Entrenar SVM
+svm = SVC(kernel=best_key)
+svm.fit(train_bow, y_train)
+
+predicciones = svm.predict(test_bow)
+
+# Convertir predicciones a nombres de categoría
+predicciones_nombres = [categorias[pred] for pred in predicciones]
+# Crear página de resultados y matriz de confusión
+confusion = create_results_webpage(
+    train_image_paths=X_train, 
+    test_image_paths=X_test, 
+    train_labels=y_train_names, 
+    test_labels=y_test_names,
+    categories=categorias, 
+    abbr_categories=abbr_categorias, 
+    predicted_categories=predicciones_nombres,
+    name_experiment='HOG_BOW_SVM'
+)
 
 
 

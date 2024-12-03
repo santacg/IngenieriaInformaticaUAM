@@ -47,7 +47,7 @@ tiny_features_train = obtener_features_tiny(X_train, tamano = 64)
 tiny_features_test = obtener_features_tiny(X_test, tamano = 64)
 
 # Construir vocabulario BOW con tamaño de diccionario de 50
-vocab = construir_vocabulario(hog_features_train, vocab_size = 50)
+vocab = construir_vocabulario(hog_features_train, vocab_size = 50, max_iter = 10)
 
 # Convertir a Bag-of-Words
 bow_train_hog = obtener_bags_of_words(hog_features_train, vocab = vocab)
@@ -100,7 +100,7 @@ tests = []
 
 for size in vocab_sizes:
     print(f"{size} de 200")
-    vocab = construir_vocabulario(hog_features_train, vocab_size = size)
+    vocab = construir_vocabulario(hog_features_train, vocab_size = size, max_iter = 10)
     bow_train_hog = obtener_bags_of_words(hog_features_train, vocab = vocab)
     bow_test_hog = obtener_bags_of_words(hog_features_test, vocab = vocab)
 
