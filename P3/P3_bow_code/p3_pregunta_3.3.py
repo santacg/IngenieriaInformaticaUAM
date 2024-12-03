@@ -1,6 +1,6 @@
 # Tratamiento de Señales Visuales/Tratamiento de Señales Multimedia I @ EPS-UAM
 # Practica 3: Reconocimiento de escenas con modelos BOW
-# Memoria - Pregunta 3.3
+# Memoria - Pregunta 3.2
 
 # AUTOR1: GONZÁLEZ GALLEGO, MIGUEL ÁNGEL
 # AUTOR2: GARCÍA SANTA, CARLOS
@@ -8,7 +8,7 @@
 
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 from p3_tarea1 import obtener_bags_of_words, construir_vocabulario
 from p3_tarea2 import obtener_features_hog
@@ -43,52 +43,98 @@ hog_features_test = obtener_features_hog(X_test, tamano=100)
 y_train_names = [categorias[label] for label in y_train]
 y_test_names = [categorias[label] for label in y_test]
 
-# Mejor tamaño de vocabulario cálculado anteriormente 
-vocab_size = 25
+# Tamaños de vocabulario
+vocab_sizes = [5, 10, 25, 50, 100]
+# Tipos de kernel a probar
+kernels = ["linear", "poly", "rbf"]
 
-# Construir vocabulario BOW con datos train
-vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
+scores_train = {}
+scores_test = {}
+predicciones = {}
 
-# Obtener descriptores BOW para train y test
-train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
-test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
+for vocab_size in vocab_sizes:
+    # Construir vocabulario BOW con datos train
+    vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
 
-scores_test = []
-predicciones = []
+    # Obtener descriptores BOW para train y test
+    train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
+    test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
 
-# Elegimos n_estimators como parametro
-n_estimators = [10, 20, 50, 100, 200, 500, 1000]
+    for kernel in kernels:
+        print("Procesando tamaño del vocabulario con kernel:", vocab_size, kernel)
+        # Entrenar SVM
+        svm = SVC(kernel=kernel)
+        svm.fit(train_bow, y_train)
 
-for n_estimator in n_estimators:
-    print("Procesando para n_estimators:", n_estimator)
-    rf = RandomForestClassifier(n_estimators=n_estimator)
-    rf.fit(train_bow, y_train)
+        # Score de la clasificación sobre train 
+        score = svm.score(train_bow, y_train)
+        if kernel not in scores_train:
+            scores_train[kernel] = []
+        scores_train[kernel].append(score)
 
-    # Score de la clasificación sobre test
-    score = rf.score(test_bow, y_test)
-    scores_test.append(score)
+        # Score de la clasificación sobre test
+        score = svm.score(test_bow, y_test)
+        if kernel not in scores_test:
+            scores_test[kernel] = []
+        scores_test[kernel].append(score)
 
-    # Predicciones 
-    prediccion = rf.predict(test_bow)
-    predicciones.append(prediccion)
+        # Predicciones 
+        prediccion = svm.predict(test_bow)
+        if kernel not in predicciones:
+            predicciones[kernel] = []
+        predicciones[kernel].append(prediccion)
 
+print("Scores train:", scores_train)
 print("Scores test:", scores_test)
 
+# Seleccionamos el tamaño de vocabulario más óptimo dado por el kernel "linear"
+best_vocab_size = vocab_sizes[np.argmax(scores_test["linear"])]
+best_vocab_size_idx = vocab_sizes.index(best_vocab_size)
+
+# Seleccionamos el mejor kernel dado el tamaño de vocabulario
+values = []
+for value in scores_test.values():
+    values.append(value[best_vocab_size_idx])
+
+best_value_idx = np.argmax(values)
+best_kernel = kernels[best_value_idx]
+
 # Ploteamos los scores de test
-plt.plot(n_estimators, scores_test, label="Clasificador RF")
+for item in scores_test.items():
+    plt.plot(vocab_sizes, item[1], label="SVM test "+item[0])
 
 plt.xlabel("Tamaño de Vocabulario")
-plt.ylabel("Precisión de la Clasificación en Test")
-plt.title("Precisión Clasificación Test RF vs Parámetro N_estimators")
+plt.ylabel("Precisión de la Clasificación con Test")
+plt.title("Precisión Clasificación Test SVMs vs Tamaño de Vocabulario")
 plt.grid()
 plt.legend()
 plt.show()
 
-best_n_estimators_idx = np.argmax(scores_test)
-predicciones = predicciones[best_n_estimators_idx]
+# Ploteamos los scores de train
+for item in scores_train.items():
+    plt.plot(vocab_sizes, item[1], label="SVM train "+item[0])
+
+plt.xlabel("Tamaño de Vocabulario")
+plt.ylabel("Precisión de la Clasificación con Train")
+plt.title("Precisión Clasificación Train SVMs vs Tamaño de Vocabulario")
+plt.grid()
+plt.legend()
+plt.show()
+
+for item_train, item_test in zip(scores_train.items(), scores_test.items()):
+    plt.plot(vocab_sizes, item_train[1], label="SVM train "+item_train[0])
+    plt.plot(vocab_sizes, item_test[1], label="SVM test "+item_test[0])
+    plt.xlabel("Tamaño de Vocabulario")
+    plt.ylabel("Precisión de la Clasificación con Train")
+    plt.title("Precisión Clasificación Train SVMs vs Tamaño de Vocabulario")
+    plt.grid()
+    plt.legend()
+    plt.show()
+
+predicciones = predicciones[best_kernel][best_vocab_size_idx]
+
 # Convertir predicciones a nombres de categoría
 predicciones_nombres = [categorias[pred] for pred in predicciones]
-
 # Crear página de resultados y matriz de confusión
 confusion = create_results_webpage(
     train_image_paths=X_train, 
@@ -98,5 +144,5 @@ confusion = create_results_webpage(
     categories=categorias, 
     abbr_categories=abbr_categorias, 
     predicted_categories=predicciones_nombres,
-    name_experiment='HOG_BOW_RF'
+    name_experiment='HOG_BOW_SVM'
 )
