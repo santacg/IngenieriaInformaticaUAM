@@ -28,7 +28,7 @@ abbr_categorias = ['Bed','Cst','For','HWy', 'Ind','Cty','Kit','Liv','Mnt',
 dataset_path = './datasets/scenes15/' 
 
 # Cargar datos mediante la funcion laod_image_dataset
-data = load_image_dataset(dataset_path, load_content = False, max_per_category=200)
+data = load_image_dataset(dataset_path, shuffle=False, load_content = False, max_per_category=200)
 
 # Usamos el test de train_test_split  
 X_train, X_test, y_train, y_test = train_test_split(data['filenames'], data['target'], test_size=0.20, random_state=42)
@@ -59,13 +59,9 @@ bow_test_hog = obtener_bags_of_words(hog_features_test, vocab = vocab)
 knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(bow_train_hog, y_train)
 
-# Predicciones
-y_pred_train_hog = knn.predict(bow_train_hog)
-y_pred_test_hog = knn.predict(bow_test_hog)
-
 # Evaluar precisión
-train_acc_hog = accuracy_score(y_train, y_pred_train_hog)
-test_acc_hog = accuracy_score(y_test, y_pred_test_hog)
+train_acc_hog = knn.score(bow_train_hog, y_train)
+test_acc_hog = knn.score(bow_test_hog, y_test)
 
 # Imprimimos los rendimientos de HOG
 print(f"HOG -> Train Rendimiento: {train_acc_hog:.3f}, Test Rendimiento: {test_acc_hog:.3f}")
@@ -80,13 +76,9 @@ bow_test_tiny = np.array(tiny_features_test).squeeze()
 knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(bow_train_tiny, y_train)
 
-# Predicciones
-y_pred_train_tiny = knn.predict(bow_train_tiny)
-y_pred_test_tiny = knn.predict(bow_test_tiny)
-
 # Evaluar rendimiento
-train_acc_tiny = accuracy_score(y_train, y_pred_train_tiny)
-test_acc_tiny = accuracy_score(y_test, y_pred_test_tiny)
+train_acc_tiny = knn.score(bow_train_tiny, y_train)
+test_acc_tiny = knn.score(bow_test_tiny, y_test)
 
 # Imprimimos los rendimientos de Tiny
 print(f"Tiny -> Train Rendimiento: {train_acc_tiny:.3f}, Test Rendimiento: {test_acc_tiny:.3f}")
@@ -105,8 +97,8 @@ for size in vocab_sizes:
     bow_test_hog = obtener_bags_of_words(hog_features_test, vocab = vocab)
 
     knn.fit(bow_train_hog, y_train)
-    trains.append(accuracy_score(y_train, knn.predict(bow_train_hog)))
-    tests.append(accuracy_score(y_test, knn.predict(bow_test_hog)))
+    trains.append(knn.score(bow_train_hog, y_train))
+    tests.append(knn.score(bow_test_hog, y_test))
 
 print(f"Valores obtenidos para los valores {vocab} -> Train {trains}, Test {tests}")
 
@@ -123,9 +115,15 @@ plt.show()
 # Apartado 3.1.3
 # Variamos el número de vecinos del clasificador KNN con valores impares de 1 a 21
 neighbors = range(1, 22, 2)
-
+best_vocab_size = vocab_sizes[np.argmax(tests)]
 train_acc_knn = []
 test_acc_knn = []
+
+
+print("Valor optimo de tamaño de vocabulario", best_vocab_size)
+vocab = construir_vocabulario(hog_features_train, vocab_size = best_vocab_size, max_iter = 10)
+bow_train_hog = obtener_bags_of_words(hog_features_train, vocab = vocab)
+bow_test_hog = obtener_bags_of_words(hog_features_test, vocab = vocab)
 
 for neig in neighbors:
     print(f"{neig} vecinos")
@@ -133,8 +131,8 @@ for neig in neighbors:
     knn.fit(bow_train_hog, y_train)
 
     # Calculamos la precisión
-    train_acc_knn.append(accuracy_score(y_train, knn.predict(bow_train_hog)))
-    test_acc_knn.append(accuracy_score(y_test, knn.predict(bow_test_hog)))
+    train_acc_knn.append(knn.score(bow_train_hog, y_train))
+    test_acc_knn.append(knn.score(bow_test_hog, y_test))
 
 # Imprimimos los valores utilizados y generados
 print(f"Valores de k {list(neighbors)}")

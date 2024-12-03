@@ -44,7 +44,7 @@ y_train_names = [categorias[label] for label in y_train]
 y_test_names = [categorias[label] for label in y_test]
 
 # Tamaños de vocabulario
-vocab_sizes = [5, 10, 25, 50, 100]
+vocab_sizes = [5, 10, 25, 50, 100, 150, 200]
 # Tipos de kernel a probar
 kernels = ["linear", "poly", "rbf"]
 
