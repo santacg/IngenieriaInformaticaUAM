@@ -16,7 +16,6 @@ from p3_utils import load_image_dataset, create_results_webpage
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 categorias = ['Bedroom', 'Coast', 'Forest', 'Highway', 'Industrial',
               'InsideCity', 'Kitchen', 'LivingRoom', 'Mountain', 'Office',
               'OpenCountry', 'Store', 'Street', 'Suburb', 'TallBuilding']
@@ -119,7 +118,6 @@ best_vocab_size = vocab_sizes[np.argmax(tests)]
 train_acc_knn = []
 test_acc_knn = []
 
-
 print("Valor optimo de tamaño de vocabulario", best_vocab_size)
 vocab = construir_vocabulario(hog_features_train, vocab_size = best_vocab_size, max_iter = 10)
 bow_train_hog = obtener_bags_of_words(hog_features_train, vocab = vocab)
@@ -139,7 +137,6 @@ print(f"Valores de k {list(neighbors)}")
 print(f"Rendimiento (train) {train_acc_knn}")
 print(f"Rendimiento (test) {test_acc_knn}")
 
-
 plt.plot(list(neighbors), train_acc_knn, label='Train Accuracy', marker='o')
 plt.plot(list(neighbors), test_acc_knn, label='Test Accuracy', marker='o')
 plt.title("Rendimiento de Clasificación vs Número de vecinos del clasificador KNN")
@@ -158,9 +155,9 @@ knn = KNeighborsClassifier(n_neighbors=best_k)
 knn.fit(bow_train_hog, y_train)
 predicted_categories = knn.predict(bow_test_hog)
 
-
 # Convertir predicciones a nombres de categoría
 predicciones_nombres = [categorias[pred] for pred in predicted_categories]
+
 # Creamos una página web mostrando los resultados visuales de aciertos/errores
 create_results_webpage (train_image_paths = X_train, test_image_paths = X_test,train_labels = y_train_names, test_labels=y_test_names,
                                            categories = categorias, abbr_categories=abbr_categorias, predicted_categories = predicciones_nombres,
