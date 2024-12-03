@@ -39,18 +39,20 @@ hog_features_train = obtener_features_hog(X_train, tamano=100)
 # Extraer características HOG de los datos de prueba
 hog_features_test = obtener_features_hog(X_test, tamano=100)
 
-scores_linear = []
-
 # Mapeo de etiquetas numéricas a nombres de categoría
 y_train_names = [categorias[label] for label in y_train]
 y_test_names = [categorias[label] for label in y_test]
 
 # Tamaños de vocabulario
-vocab_sizes = [5, 10]
-# 3.2.1
-for vocab_size in vocab_sizes:
-    print("Procesando tamaño del vocabulario:", vocab_size)
+vocab_sizes = [5, 10, 25, 50, 100, 200]
+# Tipos de kernel a probar
+kernels = ["linear", "poly", "rbf"]
 
+scores_train = {}
+scores_test = {}
+predicciones = {}
+
+for vocab_size in vocab_sizes:
     # Construir vocabulario BOW con datos train
     vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
 
@@ -58,94 +60,69 @@ for vocab_size in vocab_sizes:
     train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
     test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
 
-    # Entrenar SVM
-    svm = SVC(kernel="linear")
-    svm.fit(train_bow, y_train)
-
-    # Score de la clasificación
-    scores_linear.append(svm.score(test_bow, y_test))
-
-print(scores_linear)
-plt.plot(vocab_sizes, scores_linear, marker="o", label="Clasificación SVM Lineal")
-plt.xlabel("Tamaño de Vocabulario")
-plt.ylabel("Precisión de la Clasificación")
-plt.title("Precisión Clasificación SVM Lineal vs Tamaño de Vocabulario")
-plt.grid()
-plt.legend()
-plt.show()
-
-# 3.2.2 
-
-# Tipos de kernel a probar
-kernels = ["poly", "rbf"]
-
-scores = {}
-scores["linear"] = scores_linear
-
-for vocab_size in vocab_sizes:
-
     for kernel in kernels:
-        print("Procesando tamaño del vocabulario:", vocab_size)
-
-        # Construir vocabulario BOW con datos train
-        vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
-
-        # Obtener descriptores BOW para train y test
-        train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
-        test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
-
+        print("Procesando tamaño del vocabulario con kernel:", vocab_size, kernel)
         # Entrenar SVM
         svm = SVC(kernel=kernel)
         svm.fit(train_bow, y_train)
 
-        # Score de la clasificación
+        # Score de la clasificación sobre train 
+        score = svm.score(train_bow, y_train)
+        if kernel not in scores_train:
+            scores_train[kernel] = []
+        scores_train[kernel].append(score)
+
+        # Score de la clasificación sobre test
         score = svm.score(test_bow, y_test)
-        if kernel not in scores:
-            scores[kernel] = []
-        scores[kernel].append(score)
+        if kernel not in scores_test:
+            scores_test[kernel] = []
+        scores_test[kernel].append(score)
 
+        # Predicciones 
+        prediccion = svm.predict(test_bow)
+        if kernel not in predicciones:
+            predicciones[kernel] = []
+        predicciones[kernel].append(prediccion)
 
-print(scores)
+print("Scores train:", scores_train)
+print("Scores test:", scores_test)
 
-best_key = None
-best_vocab_size = float('-inf')
-best_vocab_size_index = None
+# Seleccionamos el tamaño de vocabulario más óptimo dado por el kernel "linear"
+best_vocab_size = vocab_sizes[np.argmax(scores_test["linear"])]
+best_vocab_size_idx = vocab_sizes.index(best_vocab_size)
 
+# Seleccionamos el mejor kernel dado el tamaño de vocabulario
+values = []
+for value in scores_test.values():
+    values.append(value[best_vocab_size_idx])
 
-for item in scores.items():
-    if max(item[1]) > best_vocab_size:
-        best_vocab_size_index = np.argmax(item[1])
-        best_vocab_size = max(item[1])
-        best_key = item[0]
-    
-    print("item:",item[1])
-    print("Vocabsizes", vocab_sizes)
-    plt.plot(vocab_sizes, item[1], marker="o", label=("Clasificación SVM"+item[0]))
+best_value_idx = np.argmax(values)
+best_kernel = kernels[best_value_idx]
+
+# Ploteamos los scores de test
+for item in scores_test.items():
+    plt.plot(vocab_sizes, item[1], label="SVM test "+item[0])
 
 plt.xlabel("Tamaño de Vocabulario")
-plt.ylabel("Precisión de la Clasificación")
-plt.title("Precisión Clasificación SVMs vs Tamaño de Vocabulario")
+plt.ylabel("Precisión de la Clasificación con Test")
+plt.title("Precisión Clasificación Test SVMs vs Tamaño de Vocabulario")
 plt.grid()
 plt.legend()
 plt.show()
 
-print("Procesando tamaño del vocabulario:", vocab_size)
+# Ploteamos los scores de train
+for item in scores_train.items():
+    plt.plot(vocab_sizes, item[1], label="SVM train "+item[0])
 
-vocab_size = vocab_sizes[best_vocab_size_index]
-print("Vocab_sizes ", vocab_size)
-print("Best key", best_key)
-# Construir vocabulario BOW con datos train
-vocabulario = construir_vocabulario(hog_features_train, vocab_size, max_iter=10)
+plt.xlabel("Tamaño de Vocabulario")
+plt.ylabel("Precisión de la Clasificación con Train")
+plt.title("Precisión Clasificación Train SVMs vs Tamaño de Vocabulario")
+plt.grid()
+plt.legend()
+plt.show()
 
-# Obtener descriptores BOW para train y test
-train_bow = obtener_bags_of_words(hog_features_train, vocabulario)
-test_bow = obtener_bags_of_words(hog_features_test, vocabulario)
 
-# Entrenar SVM
-svm = SVC(kernel=best_key)
-svm.fit(train_bow, y_train)
-
-predicciones = svm.predict(test_bow)
+predicciones = predicciones[best_kernel][best_vocab_size_idx]
 
 # Convertir predicciones a nombres de categoría
 predicciones_nombres = [categorias[pred] for pred in predicciones]
@@ -160,7 +137,3 @@ confusion = create_results_webpage(
     predicted_categories=predicciones_nombres,
     name_experiment='HOG_BOW_SVM'
 )
-
-
-
-
