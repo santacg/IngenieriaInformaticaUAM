@@ -75,10 +75,10 @@ for n_estimator in n_estimators:
 print("Scores test:", scores_test)
 
 # Ploteamos los scores de test
-plt.plot(n_estimators, scores_test, label="Clasificador RF")
+plt.plot(n_estimators, scores_test, label="Clasificador RF", marker="o")
 
-plt.xlabel("Tamaño de Vocabulario")
-plt.ylabel("Precisión de la Clasificación en Test")
+plt.xlabel("N_estimators")
+plt.ylabel("Precisión de la Clasificación RF en Test")
 plt.title("Precisión Clasificación Test RF vs Parámetro N_estimators")
 plt.grid()
 plt.legend()

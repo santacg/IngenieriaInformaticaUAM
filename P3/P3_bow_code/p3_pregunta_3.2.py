@@ -101,7 +101,7 @@ best_kernel = kernels[best_value_idx]
 
 # Ploteamos los scores de test
 for item in scores_test.items():
-    plt.plot(vocab_sizes, item[1], label="SVM test "+item[0])
+    plt.plot(vocab_sizes, item[1], label="SVM test "+item[0], marker="o")
 
 plt.xlabel("Tamaño de Vocabulario")
 plt.ylabel("Precisión de la Clasificación con Test")
@@ -112,7 +112,7 @@ plt.show()
 
 # Ploteamos los scores de train
 for item in scores_train.items():
-    plt.plot(vocab_sizes, item[1], label="SVM train "+item[0])
+    plt.plot(vocab_sizes, item[1], label="SVM train "+item[0], marker="o")
 
 plt.xlabel("Tamaño de Vocabulario")
 plt.ylabel("Precisión de la Clasificación con Train")
@@ -122,8 +122,8 @@ plt.legend()
 plt.show()
 
 for item_train, item_test in zip(scores_train.items(), scores_test.items()):
-    plt.plot(vocab_sizes, item_train[1], label="SVM train "+item_train[0])
-    plt.plot(vocab_sizes, item_test[1], label="SVM test "+item_test[0])
+    plt.plot(vocab_sizes, item_train[1], label="SVM train "+item_train[0], marker="o")
+    plt.plot(vocab_sizes, item_test[1], label="SVM test "+item_test[0], marker="o")
     plt.xlabel("Tamaño de Vocabulario")
     plt.ylabel("Precisión de la Clasificación con Train")
     plt.title("Precisión Clasificación Train SVMs vs Tamaño de Vocabulario")
