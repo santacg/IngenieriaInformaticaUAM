@@ -11,27 +11,41 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         self.elitismo = elitismo
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        # Generamos la poblacion
         poblacion = []
 
         # Obtenemos el número de columnas
         cols_size = datosTrain.shape[1]
 
-        # Para cada columna obtenemos el número de valores únicos
+        valores_unicos = []
+        # Calculamos el número de valores únicos para cada atributo
         for i in range(cols_size):
             serie = datosTrain.iloc[:, i]
-            # Contamos el número de valores únicos
-            valores_unicos = np.unique(serie)
-            n_valores_unicos = len(valores_unicos)
+            valores_unicos.append(len(np.unique(serie)))
 
-            # Añadimos n reglas a cada individuo según el número de valores únicos del atributo
-            for individuo in range(self.poblacion_size):
-                 
-                n_reglas = np.random.randint(0, self.max_reglas)
-                for n_regla in range(n_reglas):
-                    # Utilizamos un bitarray para representar cada regla
-                    regla = bitarray(n_valores_unicos)
-                    # Generamos un bit aleatorio
+        print("Valores únicos para cada atributo:", valores_unicos)
+        # Para cada individuo obtenemos sus reglas 
+        for _ in range(self.poblacion_size):
+            # Establecemos aleatoriamente el número de reglas para el individuo
+            n_reglas = np.random.randint(1, self.max_reglas)
+            individuo = []
+            for n_regla in range(n_reglas):
+                reglas = []
+                # Para cada atributo generamos una regla
+                for i in range(cols_size):
+                    # Elegimos un bit aleatoriamente
+                    bit_aleatorio = np.random.randint(0, valores_unicos[i])
+                    # Construimos el bitarray
+                    
+                    bits = bitarray(valores_unicos[i])
+                    bits[bit_aleatorio] = 1
 
-                    poblacion[individuo].append()
+                    diccionario = {datosTrain.columns[i]: bits}
+                    reglas.append(diccionario)
 
+                individuo.append({n_regla: reglas})
+
+            poblacion.append(individuo)
+                
+        print(poblacion)
 
