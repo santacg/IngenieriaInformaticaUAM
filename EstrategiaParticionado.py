@@ -43,7 +43,7 @@ class ValidacionSimple(EstrategiaParticionado):
         self.percentage = percentage
 
     def creaParticiones(self, datos, seed=None):
-        random.seed(seed)
+        np.random.seed(seed)
 
         data_len = datos.shape[0]
         test_len = round(data_len * self.percentage)

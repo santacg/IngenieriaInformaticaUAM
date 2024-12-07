@@ -16,78 +16,103 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
 
     def generar_poblacion(self, datosTrain):
-        np.random.seed(self.seed)
-
         # Generamos la poblacion
         poblacion = []
 
-        # Obtenemos el número de columnas menos la clase
+        # Obtenemos el número de columnas
         cols_size = datosTrain.shape[1]
 
-        valores_unicos = []
-        # Calculamos el número de valores únicos para cada atributo
-        for i in range(cols_size):
-            serie = datosTrain.iloc[:, i]
-            valores_unicos.append(len(np.unique(serie)))
-
-        print("Valores únicos para cada atributo:", valores_unicos)
+        print("Numero de columnas:", cols_size)
         # Para cada individuo obtenemos sus reglas 
         for _ in range(self.poblacion_size):
             # Establecemos aleatoriamente el número de reglas para el individuo
             n_reglas = np.random.randint(1, self.max_reglas + 1)
             individuo = []
             for _ in range(n_reglas):
-                reglas = []
+                regla = bitarray()
                 # Para cada atributo generamos una regla
-                for i in range(cols_size):
+                for _ in range(cols_size):
                     # Elegimos un bit aleatoriamente
-                    bit_aleatorio = np.random.randint(0, valores_unicos[i])
-                    # Construimos el bitarray
-                    bits = bitarray(valores_unicos[i])
-                    bits[bit_aleatorio] = 1
+                    bit_aleatorio = np.random.choice([0, 1])
+                    # Añadimos el bit al bitarray
+                    regla.append(bit_aleatorio)
 
-                    reglas.append(bits)
+                # Añadimos la regla al conjunto de reglas del inidividuo
+                individuo.append(regla)
 
-                individuo.append(reglas)
-
+            # Añadimos el individuo a la población
             poblacion.append(individuo)
-                
+            
         return poblacion
 
     
     def fitness(self, datosTrain, poblacion):
         rows = datosTrain.shape[0]
 
-        fitness = []
+        fitness_list = []
         for individuo in poblacion:
             n_aciertos = 0
-            n_errores = 0
-            for regla in individuo:
-                for i in range(rows):
-                    instancia = datosTrain.iloc[i, :].values
-                    flag = True
-                    for atributo_idx, atributo in enumerate(regla):
+            # Para cada instancia del conjunto de entrenamiento se prueban las reglas de cada individuo
+            for i in range(rows):
+                instancia = bitarray(datosTrain.iloc[i, :].values.tolist())
+                # Comprobamos las reglas del individuo que se activan
+                predicciones = []
+                for regla in individuo:
+                    if (instancia[:-1] & regla[:-1]) == instancia[:-1]:
+                        # Si se activa la regla introducimos la predicción
+                        predicciones.append(regla[-1])
 
-                        atributo_value = atributo.find(1)
-
-                        if atributo_idx == 0:
-                            atributo_value += 1
-
-                        if atributo_value != instancia[atributo_idx]:
-                            flag = False
-                            break
-
-                    if flag == True:
+                if len(predicciones) > 1:
+                    # Contamos la predicción más común de las reglas que se han activado
+                    prediccion = np.bincount(predicciones).argmax()
+                else:
+                    prediccion = predicciones[0] if predicciones else None
+                   
+                # Si se han activado una o más reglas comprobamos la predicción
+                if prediccion is not None:
+                    if prediccion == instancia[-1]:
                         n_aciertos += 1
 
+            fitness = n_aciertos / rows 
+            fitness_list.append(fitness)
 
-            fitness.append(n_aciertos / rows)
+        return fitness_list
 
-        return fitness
+
+    def seleccion(self, poblacion, fitness):
+        progenitores = []
+
+        # Se calcula el fitness total
+        fitness_total = np.sum(fitness)
+
+        # Se calcula la probabilidad de selección proporcional al fitness de cada individuo
+        prob_seleccion = [f / fitness_total for f in fitness]
+        
+        # Calculamos la probabilidad de seleccion acumulada
+        prob_acumulada = np.cumsum(prob_seleccion)
+
+        for i in range(len(poblacion)):
+            seleccion = np.random.random()
+            for i, prob in enumerate(prob_acumulada):
+                if seleccion <= prob:
+                    progenitores.append(i)
+                    break
+
+        return progenitores
     
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        print(datosTrain)
+        np.random.seed(self.seed)
 
+        # Creación de la primera generación
         poblacion = self.generar_poblacion(datosTrain)
+
+        # Cálculo del fitness 
         fitness = self.fitness(datosTrain, poblacion)
-        print(fitness)
+
+        # Selección de individuos a recombinarse
+        seleccion = self.seleccion(poblacion, fitness)
+        print(seleccion)
+    
+
+
+

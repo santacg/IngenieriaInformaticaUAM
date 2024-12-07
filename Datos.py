@@ -37,6 +37,23 @@ def estandarizarDatos(datos, nominalAtributos, diccionarios, media=None, std=Non
     return datos, media_vals, std_vals
 
 
+def codificacion_one_hot(datos):
+    datos = datos.copy()
+
+    columnas_excluir = ['Class']
+
+    cols = datos.columns
+    for col in cols:
+        datos[col] = datos[col].astype('object')
+
+    datos_sin_excluir = datos.drop(columns=columnas_excluir)
+
+    one_hot = pd.get_dummies(datos_sin_excluir)
+    one_hot['Class'] = datos['Class']
+
+    return one_hot
+
+
 class Datos:
 
     # Constructor: procesar el fichero para asignar correctamente las variables
