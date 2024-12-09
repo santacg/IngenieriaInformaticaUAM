@@ -13,6 +13,8 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         self.max_reglas = max_reglas
         self.elitismo = elitismo
         self.seed = seed
+        self.poblacion = []
+        self.longitud_regla = -1
 
 
     def generar_poblacion(self, datosTrain):
@@ -21,6 +23,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
         # Obtenemos el número de columnas
         cols_size = datosTrain.shape[1]
+        self.longitud_regla = cols_size
 
         print("Numero de columnas:", cols_size)
         # Para cada individuo obtenemos sus reglas 
@@ -43,6 +46,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
             # Añadimos el individuo a la población
             poblacion.append(individuo)
             
+        self.poblacion = poblacion
         return poblacion
 
     
@@ -99,6 +103,64 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
                     break
 
         return progenitores
+
+    
+    def cruce(self, progenitores_idx):
+        descendencia = []
+        # para cada progenitor se busca una pareja para el cruce
+        for progenitor_idx in progenitores_idx:
+            parejas_disp_idx = progenitores_idx[progenitores_idx != progenitor_idx]
+            pareja_idx = np.random.choice(parejas_disp_idx)
+
+            # cruzamos los inidividuos
+            progenitor = self.poblacion[progenitor_idx]
+            pareja = self.poblacion[pareja_idx]
+
+            # se elige una regla de cada individuo
+            regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
+            regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
+
+            # se elige un punto de cruce
+            pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
+
+            # realizamos el cruce
+            regla_progenitor = progenitor[regla_progenitor_idx]
+            regla_pareja = pareja[regla_pareja_idx]
+
+            regla_progenitor[pto_cruce:], regla_pareja[pto_cruce:] = regla_pareja[pto_cruce:], regla_progenitor[pto_cruce:]
+            
+            progenitor[regla_progenitor_idx] = regla_progenitor
+            pareja[regla_pareja_idx] = regla_pareja
+
+            # generamos la descendencia
+            descendencia.append(progenitor)
+            descendencia.append(pareja)
+
+        return descendencia
+
+    
+    def mutacion(self, seleccion, pmut):
+        descendencia = []
+        # para cada individuo aplicamos la mutación 
+        for individuo in seleccion:
+            print(individuo)
+            # se elige una regla a mutar
+            regla_idx = np.random.randint(low=0, high=len(individuo))
+
+            # realizamos la mutación
+            regla = individuo[regla_idx]
+            for i in range(self.longitud_regla):
+                if np.random.random() < pmut:
+                    regla[i] = not regla[i]
+                
+
+            descendencia.append(individuo)
+
+        return descendencia
+
+
+
+
     
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         np.random.seed(self.seed)
@@ -106,13 +168,17 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         # Creación de la primera generación
         poblacion = self.generar_poblacion(datosTrain)
 
-        # Cálculo del fitness 
-        fitness = self.fitness(datosTrain, poblacion)
+        for _ in range(self.epochs):
+            # Cálculo del fitness 
+            fitness = self.fitness(datosTrain, poblacion)
 
-        # Selección de individuos a recombinarse
-        seleccion = self.seleccion(poblacion, fitness)
-        print(seleccion)
-    
+            # Selección de individuos a recombinarse
+            seleccion = self.seleccion(poblacion, fitness)
 
+            # Cruce de progenitores 
+            seleccion = self.cruce(seleccion)
+
+            # Mutacion de la seleccion
+            seleccion = self.mutacion(seleccion, 0.05)
 
 
