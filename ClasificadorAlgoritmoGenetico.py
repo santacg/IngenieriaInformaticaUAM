@@ -202,24 +202,29 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         for i in range(self.epochs):
             # Cálculo del fitness 
             fitness = self.fitness(datosTrain, poblacion)
+            print(f"Fitness en iteracion {i}: {fitness}")
+
+            # Elitismo
+            elite = np.argsort(fitness)[::-1]
+            proporcion_elite = self.poblacion_size
+            print(proporcion_elite)
+            print("Elite", elite)
 
             # Selección de individuos a recombinarse
-            seleccion_idx = self.seleccion_progenitores(poblacion, fitness)
+            #seleccion_idx = self.seleccion_progenitores(poblacion, fitness)
 
             # Cruce de progenitores 
-            seleccion = self.recombinacion(poblacion, seleccion_idx)
+            #seleccion = self.recombinacion(poblacion, seleccion_idx)
 
             # Mutacion de la seleccion
-            seleccion = self.mutacion(seleccion, 0.50)
+            #seleccion = self.mutacion(seleccion, 0.50)
 
             # Selección de supervivientes
-            poblacion = self.seleccion_supervivientes(datosTrain, poblacion, seleccion) 
+            #poblacion = self.seleccion_supervivientes(datosTrain, poblacion, seleccion) 
 
-            print(f"Iteracion {i}")
-
-        fitness = self.fitness(datosTrain, poblacion)
+        #fitness = self.fitness(datosTrain, poblacion)
         print(poblacion)
-        print("Fitness final", fitness)
+        #print("Fitness final", fitness)
         return 
 
 
