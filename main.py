@@ -19,5 +19,5 @@ indices_test = indices[0].indicesTest
 datosTrain = datos.extraeDatos(indices_train)
 datosTest = datos.extraeDatos(indices_test)
 
-clf = ClasificadorAlgoritmoGenetico(seed=42)
+clf = ClasificadorAlgoritmoGenetico(poblacion_size=10, epochs=50, seed=42)
 clf.entrenamiento(datosTrain, nom_atributos, dic)

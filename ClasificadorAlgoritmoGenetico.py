@@ -13,7 +13,6 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         self.max_reglas = max_reglas
         self.elitismo = elitismo
         self.seed = seed
-        self.poblacion = []
         self.longitud_regla = -1
 
 
@@ -46,7 +45,6 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
             # Añadimos el individuo a la población
             poblacion.append(individuo)
             
-        self.poblacion = poblacion
         return poblacion
 
     
@@ -83,7 +81,8 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return fitness_list
 
 
-    def seleccion(self, poblacion, fitness):
+    def seleccion_progenitores(self, poblacion, fitness):
+        # Método ruleta
         progenitores = []
 
         # Se calcula el fitness total
@@ -105,16 +104,19 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return progenitores
 
     
-    def cruce(self, progenitores_idx):
+    def recombinacion(self, poblacion, progenitores_idx):
         descendencia = []
+
+        np.random.shuffle(progenitores_idx)
+
         # para cada progenitor se busca una pareja para el cruce
-        for progenitor_idx in progenitores_idx:
-            parejas_disp_idx = progenitores_idx[progenitores_idx != progenitor_idx]
-            pareja_idx = np.random.choice(parejas_disp_idx)
+        while len(progenitores_idx) > 1: 
+            progenitor_idx = progenitores_idx.pop()
+            pareja_idx = progenitores_idx.pop()
 
             # cruzamos los inidividuos
-            progenitor = self.poblacion[progenitor_idx]
-            pareja = self.poblacion[pareja_idx]
+            progenitor = poblacion[progenitor_idx]
+            pareja = poblacion[pareja_idx]
 
             # se elige una regla de cada individuo
             regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
@@ -143,7 +145,6 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         descendencia = []
         # para cada individuo aplicamos la mutación 
         for individuo in seleccion:
-            print(individuo)
             # se elige una regla a mutar
             regla_idx = np.random.randint(low=0, high=len(individuo))
 
@@ -159,9 +160,6 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return descendencia
 
 
-
-
-    
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         np.random.seed(self.seed)
 
@@ -171,14 +169,25 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         for _ in range(self.epochs):
             # Cálculo del fitness 
             fitness = self.fitness(datosTrain, poblacion)
+            print(sorted(fitness))
 
             # Selección de individuos a recombinarse
-            seleccion = self.seleccion(poblacion, fitness)
+            seleccion_idx = self.seleccion_progenitores(poblacion, fitness)
 
             # Cruce de progenitores 
-            seleccion = self.cruce(seleccion)
+            seleccion = self.recombinacion(poblacion, seleccion_idx)
 
             # Mutacion de la seleccion
             seleccion = self.mutacion(seleccion, 0.05)
+            print(len(seleccion))
+
+            # Selección de supervivientes
+            poblacion = seleccion
+
+        fitness = self.fitness(datosTrain, poblacion)
+        print("Fitness final", sorted(fitness, reverse=True))
+        return 
+
+
 
 
