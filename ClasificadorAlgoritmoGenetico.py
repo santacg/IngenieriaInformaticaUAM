@@ -89,56 +89,64 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         fitness_total = np.sum(fitness)
 
         # Se calcula la probabilidad de selección proporcional al fitness de cada individuo
-        prob_seleccion = [f / fitness_total for f in fitness]
-        
+        if fitness_total == 0:
+            # Asignamos probabilidades iguales si todo el fitness es cero
+            prob_seleccion = [1 / len(fitness)] * len(fitness)
+        else:
+            # Calculamos la probabilidad de selección proporcional al fitness de cada individuo
+            prob_seleccion = [f / fitness_total for f in fitness]
+            prob_seleccion = [f / fitness_total for f in fitness]
+            
         # Calculamos la probabilidad de seleccion acumulada
         prob_acumulada = np.cumsum(prob_seleccion)
 
-        for i in range(len(poblacion)):
+        while len(progenitores) < len(poblacion) // 2:
             seleccion = np.random.random()
-            for i, prob in enumerate(prob_acumulada):
+            
+            # Buscamos el individuo seleccionado según la probabilidad acumulada
+            for j, prob in enumerate(prob_acumulada):
                 if seleccion <= prob:
-                    progenitores.append(i)
+                    progenitores.append(j)
                     break
 
         return progenitores
 
-    
+
     def recombinacion(self, poblacion, progenitores_idx):
-        descendencia = []
+            descendencia = []
 
-        np.random.shuffle(progenitores_idx)
+            np.random.shuffle(progenitores_idx)
 
-        # para cada progenitor se busca una pareja para el cruce
-        while len(progenitores_idx) > 1: 
-            progenitor_idx = progenitores_idx.pop()
-            pareja_idx = progenitores_idx.pop()
+            # para cada progenitor se busca una pareja para el cruce
+            while len(progenitores_idx) > 1: 
+                progenitor_idx = progenitores_idx.pop()
+                pareja_idx = progenitores_idx.pop()
 
-            # cruzamos los inidividuos
-            progenitor = poblacion[progenitor_idx]
-            pareja = poblacion[pareja_idx]
+                # cruzamos los inidividuos
+                progenitor = poblacion[progenitor_idx]
+                pareja = poblacion[pareja_idx]
 
-            # se elige una regla de cada individuo
-            regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
-            regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
+                # se elige una regla de cada individuo
+                regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
+                regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
 
-            # se elige un punto de cruce
-            pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
+                # se elige un punto de cruce
+                pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
 
-            # realizamos el cruce
-            regla_progenitor = progenitor[regla_progenitor_idx]
-            regla_pareja = pareja[regla_pareja_idx]
+                # realizamos el cruce
+                regla_progenitor = progenitor[regla_progenitor_idx]
+                regla_pareja = pareja[regla_pareja_idx]
 
-            regla_progenitor[pto_cruce:], regla_pareja[pto_cruce:] = regla_pareja[pto_cruce:], regla_progenitor[pto_cruce:]
-            
-            progenitor[regla_progenitor_idx] = regla_progenitor
-            pareja[regla_pareja_idx] = regla_pareja
+                regla_progenitor[pto_cruce:], regla_pareja[pto_cruce:] = regla_pareja[pto_cruce:], regla_progenitor[pto_cruce:]
+                
+                progenitor[regla_progenitor_idx] = regla_progenitor
+                pareja[regla_pareja_idx] = regla_pareja
 
-            # generamos la descendencia
-            descendencia.append(progenitor)
-            descendencia.append(pareja)
+                # generamos la descendencia
+                descendencia.append(progenitor)
+                descendencia.append(pareja)
 
-        return descendencia
+            return descendencia
 
     
     def mutacion(self, seleccion, pmut):
@@ -160,16 +168,40 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return descendencia
 
 
+    def seleccion_supervivientes(self, datosTrain, poblacion, seleccion):
+        # Concatenamos la población y la descendencia
+        poblacion_completa = poblacion + seleccion
+
+        # Calculamos el fitness de cada individuo
+        fitness = self.fitness(datosTrain, poblacion_completa)
+        
+        # Ordenamos los individuos según su fitness (descendente)
+        indices_ordenados = np.argsort(fitness)[::-1]
+        
+        # Seleccionamos los mejores, pero mantenemos algo de diversidad con aleatorización
+        num_elitismo = self.poblacion_size // 2  # Por ejemplo, mantener el 50% de los mejores
+        indices_mejores = indices_ordenados[:num_elitismo]
+        
+        # Selección aleatoria de la mitad restante
+        indices_aleatorios = np.random.choice(indices_ordenados[num_elitismo:], size=self.poblacion_size - num_elitismo, replace=False)
+        
+        # Combinamos ambas selecciones
+        indices_seleccionados = np.concatenate([indices_mejores, indices_aleatorios])
+        
+        nueva_poblacion = [poblacion_completa[i] for i in indices_seleccionados]
+        
+        return nueva_poblacion
+
+
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
         np.random.seed(self.seed)
 
         # Creación de la primera generación
         poblacion = self.generar_poblacion(datosTrain)
 
-        for _ in range(self.epochs):
+        for i in range(self.epochs):
             # Cálculo del fitness 
             fitness = self.fitness(datosTrain, poblacion)
-            print(sorted(fitness))
 
             # Selección de individuos a recombinarse
             seleccion_idx = self.seleccion_progenitores(poblacion, fitness)
@@ -178,14 +210,16 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
             seleccion = self.recombinacion(poblacion, seleccion_idx)
 
             # Mutacion de la seleccion
-            seleccion = self.mutacion(seleccion, 0.05)
-            print(len(seleccion))
+            seleccion = self.mutacion(seleccion, 0.50)
 
             # Selección de supervivientes
-            poblacion = seleccion
+            poblacion = self.seleccion_supervivientes(datosTrain, poblacion, seleccion) 
+
+            print(f"Iteracion {i}")
 
         fitness = self.fitness(datosTrain, poblacion)
-        print("Fitness final", sorted(fitness, reverse=True))
+        print(poblacion)
+        print("Fitness final", fitness)
         return 
 
 
