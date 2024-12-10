@@ -2,17 +2,18 @@ import enum
 import numpy as np
 import pandas as pd
 from bitarray.util import ba2int
-from bitarray import bitarray
+from bitarray import bitarray, bits2bytes
 from Clasificador import Clasificador
 
 class ClasificadorAlgoritmoGenetico(Clasificador):
 
-    def __init__(self, poblacion_size=100, epochs=100, max_reglas=5, elitismo=0.05, seed=None):
+    def __init__(self, poblacion_size=100, epochs=100, max_reglas=5, elitismo=0.05, atributos_unicos=[], seed=None):
         self.poblacion_size = poblacion_size
         self.epochs = epochs
         self.max_reglas = max_reglas
         self.elitismo = elitismo
         self.seed = seed
+        self.atributos_unicos = atributos_unicos
         self.longitud_regla = -1
 
 
@@ -47,18 +48,19 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
             
         return poblacion
 
-    
-    def fitness(self, datosTrain, poblacion):
-        rows = datosTrain.shape[0]
+
+    def fitness(self, datos, poblacion):
+        rows = datos.shape[0]
 
         fitness_list = []
+        # Para cada individuo calculamos su fitness
         for individuo in poblacion:
             n_aciertos = 0
-            # Para cada instancia del conjunto de entrenamiento se prueban las reglas de cada individuo
+            # Para cada instancia del conjunto de entrenamiento se prueban las reglas del individuo
             for i in range(rows):
-                instancia = bitarray(datosTrain.iloc[i, :].values.tolist())
-                # Comprobamos las reglas del individuo que se activan
+                instancia = bitarray(datos.iloc[i, :].values.tolist())
                 predicciones = []
+                # Comprobamos las reglas del individuo que se activan
                 for regla in individuo:
                     if (instancia[:-1] & regla[:-1]) == instancia[:-1]:
                         # Si se activa la regla introducimos la predicción
@@ -81,7 +83,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return fitness_list
 
 
-    def seleccion_progenitores(self, poblacion, fitness):
+    def seleccion_ruleta_progenitores(self, poblacion, fitness):
         # Método ruleta
         progenitores = []
 
@@ -95,137 +97,169 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         else:
             # Calculamos la probabilidad de selección proporcional al fitness de cada individuo
             prob_seleccion = [f / fitness_total for f in fitness]
-            prob_seleccion = [f / fitness_total for f in fitness]
             
         # Calculamos la probabilidad de seleccion acumulada
         prob_acumulada = np.cumsum(prob_seleccion)
 
-        while len(progenitores) < len(poblacion) // 2:
+        # Seleccionamos la mitad de individuos de la poblacion como progenitores
+        while len(progenitores) < len(poblacion):
             seleccion = np.random.random()
             
             # Buscamos el individuo seleccionado según la probabilidad acumulada
             for j, prob in enumerate(prob_acumulada):
                 if seleccion <= prob:
-                    progenitores.append(j)
+                    reglas = []
+                    for regla in poblacion[j]:
+                        reglas.append(regla.copy())
+                    progenitores.append(reglas)
                     break
 
         return progenitores
 
 
-    def recombinacion(self, poblacion, progenitores_idx):
-            descendencia = []
+    def recombinacion(self, progenitores):
+        descendencia = []
 
-            np.random.shuffle(progenitores_idx)
+        np.random.shuffle(progenitores)
 
-            # para cada progenitor se busca una pareja para el cruce
-            while len(progenitores_idx) > 1: 
-                progenitor_idx = progenitores_idx.pop()
-                pareja_idx = progenitores_idx.pop()
+        # para cada progenitor se busca una pareja para el cruce
+        while len(progenitores) > 1: 
+            progenitor = progenitores.pop()
+            pareja = progenitores.pop()
 
-                # cruzamos los inidividuos
-                progenitor = poblacion[progenitor_idx]
-                pareja = poblacion[pareja_idx]
+            # Se elige una de las reglas para cada individuo 
+            regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
+            regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
 
-                # se elige una regla de cada individuo
-                regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
-                regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
+            # se elige un punto de cruce
+            pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
 
-                # se elige un punto de cruce
-                pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
+            # realizamos el cruce
+            regla_progenitor = progenitor[regla_progenitor_idx]
+            regla_pareja = pareja[regla_pareja_idx]
 
-                # realizamos el cruce
-                regla_progenitor = progenitor[regla_progenitor_idx]
-                regla_pareja = pareja[regla_pareja_idx]
+            regla_progenitor[pto_cruce:], regla_pareja[pto_cruce:] = regla_pareja[pto_cruce:], regla_progenitor[pto_cruce:]
+            
+            progenitor[regla_progenitor_idx] = regla_progenitor
+            pareja[regla_pareja_idx] = regla_pareja
 
-                regla_progenitor[pto_cruce:], regla_pareja[pto_cruce:] = regla_pareja[pto_cruce:], regla_progenitor[pto_cruce:]
-                
-                progenitor[regla_progenitor_idx] = regla_progenitor
-                pareja[regla_pareja_idx] = regla_pareja
+            # generamos la descendencia
+            descendencia.append(progenitor)
+            descendencia.append(pareja)
 
-                # generamos la descendencia
-                descendencia.append(progenitor)
-                descendencia.append(pareja)
-
-            return descendencia
+        return descendencia
 
     
     def mutacion(self, seleccion, pmut):
         descendencia = []
         # para cada individuo aplicamos la mutación 
         for individuo in seleccion:
-            # se elige una regla a mutar
-            regla_idx = np.random.randint(low=0, high=len(individuo))
+            descendiente = []
+            # Mutamos todas las reglas
+            for regla in individuo:
+                # realizamos la mutación
+                regla_mutada = bitarray() 
+                for i in range(self.longitud_regla):
+                    if np.random.random() < pmut:
+                        regla_mutada.append(not regla[i])
+                    else:
+                        regla_mutada.append(regla[i])
 
-            # realizamos la mutación
-            regla = individuo[regla_idx]
-            for i in range(self.longitud_regla):
-                if np.random.random() < pmut:
-                    regla[i] = not regla[i]
-                
+                descendiente.append(regla_mutada)
 
-            descendencia.append(individuo)
+            descendencia.append(descendiente)
 
         return descendencia
 
 
-    def seleccion_supervivientes(self, datosTrain, poblacion, seleccion):
+    def seleccion_supervivientes(self, datosTrain, poblacion, seleccion, proporcion_elite):
         # Concatenamos la población y la descendencia
         poblacion_completa = poblacion + seleccion
 
         # Calculamos el fitness de cada individuo
         fitness = self.fitness(datosTrain, poblacion_completa)
         
-        # Ordenamos los individuos según su fitness (descendente)
-        indices_ordenados = np.argsort(fitness)[::-1]
+        # Seleccionamos los mejores individuos de la poblacion y su descendencia
+        indices_mejores = (np.argsort(fitness)[::-1])[:self.poblacion_size - proporcion_elite]
         
-        # Seleccionamos los mejores, pero mantenemos algo de diversidad con aleatorización
-        num_elitismo = self.poblacion_size // 2  # Por ejemplo, mantener el 50% de los mejores
-        indices_mejores = indices_ordenados[:num_elitismo]
-        
-        # Selección aleatoria de la mitad restante
-        indices_aleatorios = np.random.choice(indices_ordenados[num_elitismo:], size=self.poblacion_size - num_elitismo, replace=False)
-        
-        # Combinamos ambas selecciones
-        indices_seleccionados = np.concatenate([indices_mejores, indices_aleatorios])
-        
-        nueva_poblacion = [poblacion_completa[i] for i in indices_seleccionados]
+        nueva_poblacion = [poblacion_completa[i] for i in indices_mejores]
         
         return nueva_poblacion
 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+        print("DatosTrain\n", datosTrain)
         np.random.seed(self.seed)
 
         # Creación de la primera generación
         poblacion = self.generar_poblacion(datosTrain)
 
+        proporcion_elite = int(self.poblacion_size * self.elitismo)
+        if proporcion_elite == 0:
+            proporcion_elite = 1
+
+
+        fitness_list = []
+        fitness_medio_list = []
+        mejor_fitness_list = []
+
         for i in range(self.epochs):
             # Cálculo del fitness 
             fitness = self.fitness(datosTrain, poblacion)
-            print(f"Fitness en iteracion {i}: {fitness}")
 
-            # Elitismo
-            elite = np.argsort(fitness)[::-1]
-            proporcion_elite = self.poblacion_size
-            print(proporcion_elite)
-            print("Elite", elite)
+            fitness_medio = np.mean(fitness)
+            mejor_fitness = fitness[np.argmax(fitness)]
+
+            fitness_list.append(fitness)
+            fitness_medio_list.append(fitness_medio)
+            mejor_fitness_list.append(mejor_fitness)
+
+            print(f"Iteración {i}: Mejor fitness: {mejor_fitness}, Fitness promedio: {fitness_medio}")
+
+            indices_elite = (np.argsort(fitness)[::-1])[:proporcion_elite]
+            elite = [poblacion[i] for i in indices_elite]
 
             # Selección de individuos a recombinarse
-            #seleccion_idx = self.seleccion_progenitores(poblacion, fitness)
+            seleccion = self.seleccion_ruleta_progenitores(poblacion, fitness)
 
             # Cruce de progenitores 
-            #seleccion = self.recombinacion(poblacion, seleccion_idx)
+            seleccion = self.recombinacion(seleccion)
 
             # Mutacion de la seleccion
-            #seleccion = self.mutacion(seleccion, 0.50)
+            seleccion = self.mutacion(seleccion, pmut=0.02)
 
             # Selección de supervivientes
-            #poblacion = self.seleccion_supervivientes(datosTrain, poblacion, seleccion) 
+            poblacion = seleccion
+            poblacion.extend(elite)
 
-        #fitness = self.fitness(datosTrain, poblacion)
-        print(poblacion)
-        #print("Fitness final", fitness)
-        return 
+            np.random.shuffle(poblacion)
+
+        # Cálculo del fitness 
+        fitness = self.fitness(datosTrain, poblacion)
+        # Fitness medio
+        fitness_medio = np.mean(fitness)
+        # Mejor fitness
+        mejor_fitness = fitness[np.argmax(fitness)]
+
+        print(f"Mejor Fitness: {mejor_fitness}")
+        print(f"Fitness Promedio Final: {fitness_medio}")
+
+        fitness_list.append(fitness)
+        fitness_medio_list.append(fitness_medio)
+        mejor_fitness_list.append(mejor_fitness)
+
+        mejor_individuo = poblacion[np.argmax(fitness)]
+        print(f"Mejor Individuo: {mejor_individuo}")
+
+        self.mejor_individuo = mejor_individuo
+        return mejor_individuo
+
+
+    def clasifica(self, datosTest, nominalAtributos, diccionario):
+        print(datosTest)
+        fitness = self.fitness(datosTest, [self.mejor_individuo])
+        print(f"Fitness en Test: {fitness}")
+        return np.array(fitness)
 
 
 
