@@ -107,7 +107,6 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         # Seleccionamos la mitad de individuos de la poblacion como progenitores
         while len(progenitores) < len(poblacion):
             seleccion = np.random.random()
-            
             # Buscamos el individuo seleccionado según la probabilidad acumulada
             for j, prob in enumerate(prob_acumulada):
                 if seleccion <= prob:
@@ -121,25 +120,23 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
 
     def recombinacion(self, progenitores):
+        np.random.shuffle(progenitores)
         descendencia = []
 
-        np.random.shuffle(progenitores)
-
-        # para cada progenitor se busca una pareja para el cruce
+        # Para cada progenitor se busca una pareja para el cruce
         while len(progenitores) > 1: 
-            progenitor = progenitores.pop()
-            pareja = progenitores.pop()
+            progenitor, pareja = progenitores.pop(), progenitores.pop()
 
             # Probabilidad de cruce
             if np.random.random() <= self.p_cruce:
                 # Se elige una de las reglas para cada individuo 
-                regla_progenitor_idx = np.random.randint(low=0, high=len(progenitor))
-                regla_pareja_idx = np.random.randint(low=0, high=len(pareja))
+                regla_progenitor_idx = np.random.randint(len(progenitor))
+                regla_pareja_idx = np.random.randint(len(pareja))
 
-                # se elige un punto de cruce
-                pto_cruce = np.random.randint(low=0, high=self.longitud_regla+1)
+                # Se elige un punto de cruce
+                pto_cruce = np.random.randint(self.longitud_regla + 1)
 
-                # realizamos el cruce
+                # Realizamos el cruce
                 regla_progenitor = progenitor[regla_progenitor_idx]
                 regla_pareja = pareja[regla_pareja_idx]
 
@@ -148,7 +145,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
                 progenitor[regla_progenitor_idx] = regla_progenitor
                 pareja[regla_pareja_idx] = regla_pareja
 
-            # generamos la descendencia
+            # Añadimos la descendencia
             descendencia.append(progenitor)
             descendencia.append(pareja)
 
@@ -157,12 +154,12 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
     
     def mutacion(self, seleccion, pmut):
         descendencia = []
-        # para cada individuo aplicamos la mutación 
+        # Para cada individuo aplicamos la mutación 
         for individuo in seleccion:
             descendiente = []
             # Mutamos todas las reglas
             for regla in individuo:
-                # realizamos la mutación
+                # Realizamos la mutación
                 regla_mutada = bitarray() 
                 for i in range(self.longitud_regla):
                     if np.random.random() < pmut:
@@ -193,36 +190,24 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
 
     def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
-        print("DatosTrain\n", datosTrain)
         np.random.seed(self.seed)
 
         # Creación de la primera generación
         poblacion = self.generar_poblacion(datosTrain)
 
-        proporcion_elite = int(self.poblacion_size * self.elitismo)
-        if proporcion_elite == 0:
-            proporcion_elite = 1
-
-
-        fitness_list = []
-        fitness_medio_list = []
-        mejor_fitness_list = []
+        fitness_medio_list, mejor_fitness_list = [], []
 
         for i in range(self.epochs):
             # Cálculo del fitness 
             fitness = self.fitness(datosTrain, poblacion)
-
-            fitness_medio = np.mean(fitness)
-            mejor_fitness = fitness[np.argmax(fitness)]
-
-            fitness_list.append(fitness)
-            fitness_medio_list.append(fitness_medio)
+            fitness_medio_list.append(np.mean(fitness))
+            mejor_fitness = max(fitness)
             mejor_fitness_list.append(mejor_fitness)
 
-            print(f"Iteración {i}: Mejor fitness: {mejor_fitness}, Fitness promedio: {fitness_medio}")
+            print(f"Iteración {i}: Mejor fitness: {mejor_fitness_list[-1]}, Fitness promedio: {fitness_medio_list[-1]}")
 
-            indices_elite = (np.argsort(fitness)[::-1])[:proporcion_elite]
-            elite = [poblacion[i] for i in indices_elite]
+            # Selección de la elite
+            elite = [poblacion[i] for i in np.argsort(fitness)[::-1][:max(1, int(self.poblacion_size * self.elitismo))]]
 
             # Selección de individuos a recombinarse
             seleccion = self.seleccion_ruleta_progenitores(poblacion, fitness)
@@ -239,27 +224,18 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
             np.random.shuffle(poblacion)
 
-        # Cálculo del fitness 
         fitness = self.fitness(datosTrain, poblacion)
-        fitness_medio = np.mean(fitness)
-        mejor_fitness = fitness[np.argmax(fitness)]
+        mejor_fitness = max(fitness)
 
         print(f"Mejor Fitness: {mejor_fitness}")
-        print(f"Fitness Promedio Final: {fitness_medio}")
+        # Obtención del individuo con más fitness
+        self.mejor_individuo = poblacion[np.argmax(fitness)]
+        print(f"Mejor Individuo: {self.mejor_individuo}")
 
-        fitness_list.append(fitness)
-        fitness_medio_list.append(fitness_medio)
-        mejor_fitness_list.append(mejor_fitness)
-
-        mejor_individuo = poblacion[np.argmax(fitness)]
-        print(f"Mejor Individuo: {mejor_individuo}")
-
-        self.mejor_individuo = mejor_individuo
         return fitness_medio_list, mejor_fitness_list
 
     
     def clasifica(self, datosTest, nominalAtributos, diccionario):
-        print(datosTest)
         fitness = self.fitness(datosTest, [self.mejor_individuo])
         print(f"Fitness en Test: {fitness}")
         return np.array(fitness)
