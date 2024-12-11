@@ -19,6 +19,13 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         self.atributos_unicos = atributos_unicos
         self.longitud_regla = -1
 
+    
+    def corregir_regla(self, regla):
+        if regla.all():
+            regla[np.random.randint(self.longitud_regla)] = 0
+        elif not regla.any():
+            regla[np.random.randint(self.longitud_regla)] = 1
+
 
     def generar_poblacion(self, datosTrain):
         # Generamos la poblacion
@@ -48,7 +55,11 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
             # Añadimos el individuo a la población
             poblacion.append(individuo)
-            
+
+        for individuo in poblacion:
+            for regla in individuo:
+                self.corregir_regla(regla)
+                
         return poblacion
 
 
@@ -134,7 +145,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
                 regla_pareja_idx = np.random.randint(len(pareja))
 
                 # Se elige un punto de cruce
-                pto_cruce = np.random.randint(self.longitud_regla + 1)
+                pto_cruce = np.random.randint(self.longitud_regla)
 
                 # Realizamos el cruce
                 regla_progenitor = progenitor[regla_progenitor_idx]
@@ -148,6 +159,10 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
             # Añadimos la descendencia
             descendencia.append(progenitor)
             descendencia.append(pareja)
+
+        for individuo in descendencia:
+            for regla in individuo:
+                self.corregir_regla(regla)
 
         return descendencia
 
@@ -170,7 +185,11 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
                 descendiente.append(regla_mutada)
 
             descendencia.append(descendiente)
-
+            
+        for individuo in descendencia:
+            for regla in individuo:
+                self.corregir_regla(regla)
+                
         return descendencia
 
 
