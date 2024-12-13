@@ -1,11 +1,8 @@
-import enum
 import numpy as np
-import pandas as pd
-from bitarray.util import ba2int
-from bitarray import bitarray, bits2bytes
-from Clasificador import Clasificador
+from bitarray import bitarray
 
-class ClasificadorAlgoritmoGenetico(Clasificador):
+
+class ClasificadorAlgoritmoGenetico():
 
     def __init__(self, poblacion_size=100, epochs=100, max_reglas=5, pmut=0.02, 
                  p_cruce=0.8, elitismo=0.05, atributos_unicos=[], seed=None):
@@ -21,9 +18,9 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
     
     def corregir_regla(self, regla):
-        if regla.all():
+        if regla[:-1].all():
             regla[np.random.randint(self.longitud_regla)] = 0
-        elif not regla.any():
+        elif not regla[:-1].any():
             regla[np.random.randint(self.longitud_regla)] = 1
 
 
@@ -208,7 +205,7 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         return nueva_poblacion
 
 
-    def entrenamiento(self, datosTrain, nominalAtributos, diccionario):
+    def entrenamiento(self, datosTrain):
         np.random.seed(self.seed)
 
         # Creación de la primera generación
@@ -247,14 +244,13 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
         mejor_fitness = max(fitness)
 
         print(f"Mejor Fitness: {mejor_fitness}")
-        # Obtención del individuo con más fitness
         self.mejor_individuo = poblacion[np.argmax(fitness)]
         print(f"Mejor Individuo: {self.mejor_individuo}")
 
         return fitness_medio_list, mejor_fitness_list
 
     
-    def clasifica(self, datosTest, nominalAtributos, diccionario):
+    def clasifica(self, datosTest):
         fitness = self.fitness(datosTest, [self.mejor_individuo])
         print(f"Fitness en Test: {fitness}")
         return np.array(fitness)

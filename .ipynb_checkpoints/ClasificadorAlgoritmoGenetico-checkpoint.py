@@ -21,9 +21,9 @@ class ClasificadorAlgoritmoGenetico(Clasificador):
 
     
     def corregir_regla(self, regla):
-        if regla.all():
+        if regla[:-1].all():
             regla[np.random.randint(self.longitud_regla)] = 0
-        elif not regla.any():
+        elif not regla[:-1].any():
             regla[np.random.randint(self.longitud_regla)] = 1
 
 
