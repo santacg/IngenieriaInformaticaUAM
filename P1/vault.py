@@ -1,6 +1,6 @@
 from container import Container
+from criptography_manager import CryptoManager
 import json
-import os
 import curses
 import curses.textpad
 
@@ -13,36 +13,79 @@ class Vault:
         containers (dict): Lista de objetos tipo Container
     """
 
-    def __init__(self, storage_file: str):
+    _instance = None
+
+    def __new__(cls, hash):
+        """
+        Método que controla la creación de instancias de Vault.
+        Si ya existe una instancia, devuelve esa misma.
+        """
+        if cls._instance is None:
+            cls._instance = super(Vault, cls).__new__(cls)
+            cls._instance._initialized = False
+
+        return cls._instance
+
+    def __init__(self, hash):
         """
         Inicializa una objeto Vault
 
         Args:
+            storage_file (str): Ruta al archivo en el que se almacenarán los contenedores con los secretos.
         """
-        self.storage_file = storage_file
+        if self._initialized:
+            return
+
+        self.STORAGE_FILE = ".vault.sec" 
+        self.cryptography = CryptoManager(hash)
+        self.cryptography.load_from_file()
+
         self.containers = {}
+
+        self._initialized = True
+
+
+    def open_vault(self, hash):
+        """
+        Abre el Vault utilizando la contraseña proporcionada.
+        Se encarga de:
+          - Verificar la contraseña usando UserAuth.
+          - Derivar la KEK (clave derivada del usuario).
+          - Cargar el archivo que contiene la DEK envuelta (o generarlo si no existe).
+          - Inicializar el CryptoManager para cifrar y descifrar los datos.
+        """
+        self.cryptography = CryptoManager(hash)
+        self.cryptography.load_from_file()
+
+        self.load_from_file()
 
 
     def load_from_file(self) -> None:
         """
         Carga los contenedores desde un archivo JSON si existe.
         """
-        if os.path.isfile(self.storage_file):
-            try:
-                with open(self.storage_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
+        try:
+            with open(self.STORAGE_FILE, "rb") as f:
+                encrypted_data = f.read()
 
-                self.containers = {}
+            decrypted_data = self.cryptography.decrypt_data(encrypted_data)
+            print(decrypted_data)
+            if not decrypted_data:
+                print("Error descifrando los datos del vault")
+                return
 
-                for id, info in data.items():
-                    self.containers[id] = Container(
-                        id=id,
-                        name=info["name"],
-                        secrets=info["secrets"]
-                    )
+            data = json.loads(decrypted_data)
+            self.containers = {}
 
-            except (json.JSONDecodeError, KeyError):
-                print("Error")
+            for id, info in data.items():
+                self.containers[id] = Container(
+                    id=id,
+                    name=info["name"],
+                    secrets=info["secrets"]
+                )
+
+        except Exception as e:
+            print("Error al leer o descifrar el Vault", e)
 
 
     def save_to_file(self) -> None:
@@ -51,12 +94,25 @@ class Vault:
         """
         data_to_save = {}
         for id, container in self.containers.items():
+            if container is None:
+                continue
+
+            print(container)
             data_to_save[id] = {
                 "name": container.name,
                 "secrets": container.secrets
             }
 
-        encrypted_data = 
+        data_to_save = json.dumps(data_to_save, indent=2)
+
+        print(data_to_save)
+        encrypted_data = self.cryptography.encrypt_data(data_to_save)
+        print(encrypted_data)
+
+        with open(self.STORAGE_FILE, "wb") as f:
+            f.write(encrypted_data)
+
+        self.cryptography.save_to_file()
 
 
     def get_container_by_id(self, id: str):
@@ -71,7 +127,7 @@ class Vault:
         Retorna un contenedor segun el nombre
         """
         for container in self.containers.values():
-            if container.name == name:
+            if container is not None and container.name == name:
                 return container
 
         return None
@@ -84,23 +140,27 @@ class Vault:
             id (int): El id del Container a añadir.
             name (str): El nombre del Container a añadir.
         """
+        if self.get_container_by_id(id) is not None:
+            print(f"Ya existe un contenedor con ID {id}.")
+            return False
 
-        if self.get_container_by_id(id) is not None or self.get_container_by_name(name) is not None:
+        if self.get_container_by_name(name) is not None:
+            print(f"Ya existe un contenedor con nombre '{name}'.")
             return False
 
         container = Container(id, name, "")
         self.containers[id] = container
 
-        return True 
+        return True
 
 
-    def update_container_secrets(self, id) -> bool:
+    def update_container_secrets(self, id: str) -> bool:
         container = self.get_container_by_id(id)
         if not container:
+            print(f"No se encontró contenedor con ID {id}.")
             return False
 
         initial_secrets = str(container.secrets) if container.secrets else ""
-
         updated_secrets = self._edit_text(initial_secrets)
 
         container.secrets = updated_secrets
@@ -124,12 +184,21 @@ class Vault:
             print("No encontrado")
             return
 
+        if self.get_container_by_id(new_id) is not None:
+            print(f"Ya existe un contenedor con ID {new_id}.")
+            return
+
         container.id = new_id 
+        self.containers[new_id] = container
+        
+        self.containers[id] = None
+
         return
 
 
     def delete_container(self, id):
-        self.containers[id] = None
+        if id in self.containers:
+            self.containers[id] = None
 
 
     def list_containers(self):
@@ -140,8 +209,10 @@ class Vault:
             print("No hay contenedores almacenados.")
             return
         print("\nContenedores en el Vault:")
+
         for container in self.containers.values():
-            print(container)
+            if container is not None:
+                print(container)
 
 
     def _edit_text(self, initial_text) -> str:
