@@ -2,6 +2,7 @@ from container import Container
 from cryptography_manager import CryptoManager
 import os
 import json
+import hashlib
 import curses
 import curses.textpad
 
@@ -40,57 +41,85 @@ class Vault:
 
         self.STORAGE_FILE = "vault.json" 
         self.containers = {}
-
         self._initialized = True
 
 
-    def open_vault(self):
-        """
-        Abre el Vault utilizando la contraseña proporcionada.
-        """
-        key = os.urandom(32)
-        self.cryptography = CryptoManager(key)
+    def generate_dek(self, password):
+        self.dek = os.urandom(32)
+        self.salt = os.urandom(64)
+
+        print(self.dek.hex())
+        hash = hashlib.scrypt(
+            password=password.encode("utf-8"),
+            salt=self.salt,
+            n=2**14,
+            r=8,
+            p=1,
+            dklen=32
+        )
+
+        self.cryptography = CryptoManager()
+        self.cyphered_dek = self.cryptography._aes_encrypt(self.dek, hash)
 
 
-    def load_from_file(self) -> None:
+    def load_from_file(self, password) -> None:
         """
         Carga los contenedores desde un archivo JSON si existe.
         """
-        try:
-            with open(self.STORAGE_FILE, "r") as f:
-                data = json.load(f)
+        self.cryptography = CryptoManager()
+        
+        with open(self.STORAGE_FILE, "r") as f:
+            data = json.load(f)
 
-            self.containers = {}
+        self.cyphered_dek = bytes.fromhex(data["key"])
+        self.salt = bytes.fromhex(data["salt"])
 
-            for id, info in data.items():
-                self.containers[id] = Container(
-                    id=id,
-                    name=info["name"],
-                    secrets=self.cryptography.decrypt_data(info["secrets"])
-                )
+        hash = hashlib.scrypt(
+            password=password.encode("utf-8"),
+            salt=self.salt,
+            n=2**14,
+            r=8,
+            p=1,
+            dklen=32
+        )
 
-        except Exception as e:
-            print("Error al leer o descifrar el Vault", e)
+        self.dek = self.cryptography._aes_decrypt(self.cyphered_dek, hash)
+        self.containers = {}
 
+        for info in data.get("containers", []):
+            container_id = info["id"]
+            self.containers[container_id] = Container(
+                id=container_id,
+                name=info["name"],
+                secrets=self.cryptography.decrypt_data(self.dek, bytes.fromhex(info["secrets"]))
+            )
 
     def save_to_file(self) -> None:
         """
         Guarda los contenedores y la clave generada en un archivo JSON.
         """
-        data_to_save = {}
+        data_to_save = {
+            "key": self.cyphered_dek.hex(),
+            "salt": self.salt.hex(),
+            "containers": []
+        }
+
         for id, container in self.containers.items():
             if container is None:
                 continue
 
-            data_to_save[id] = {
+            encrypted_secret = self.cryptography.encrypt_data(self.dek, container.secrets).hex()
+            data_to_save["containers"].append({
+                "id": id,
                 "name": container.name,
-                "secrets": self.cryptography.encrypt_data(container.secrets).hex() # Para que sea serializable
-            }
+                "secrets": encrypted_secret
+            })
+
 
         with open(self.STORAGE_FILE, "w") as f:
             json.dump(data_to_save, f, indent=2)
 
-            os.chmod(self.STORAGE_FILE, 0o600)
+        os.chmod(self.STORAGE_FILE, 0o600)
 
 
     def get_container_by_id(self, id: str):

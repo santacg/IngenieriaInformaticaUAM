@@ -6,12 +6,9 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 
 class CryptoManager:
-    def __init__(self):
-        """
+    def __init__(self): """
         Inicializa el CryptoManager con la clave KEK y define el archivo de almacenamiento.
         """
-        pass
-
 
     def _aes_encrypt(self, data: bytes, key: bytes) -> bytes:
         """

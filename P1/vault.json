@@ -1,0 +1,16 @@
+{
+  "key": "6db2c74f151709b46026b7dcf518225f6d7ebcc71afdd959640bd06b4582b0bb72f75b8de36e0b96829b0ff3be68a1cbe06e03af5b328922b5dd04fc12e36b70",
+  "salt": "2cf95ee2119b17ff876dae370408650489426f68ad4177f09bd899b676ced325d055f3c38bc5e702342b9b0176099b288605c5232c0eba9c348a1be0dab3b84f",
+  "containers": [
+    {
+      "id": "0",
+      "name": "hola0",
+      "secrets": "3fde88b801f37ccbef4373115484993c7b4da4d16d12bb22c4003eadfe56668c"
+    },
+    {
+      "id": "1",
+      "name": "hola1",
+      "secrets": "a1f38810a7b56e10557a20d2ded19576660b8377effac20bc804e0adc89735ae"
+    }
+  ]
+}
