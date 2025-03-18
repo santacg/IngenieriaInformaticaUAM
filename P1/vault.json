@@ -1,16 +1,12 @@
 {
-  "key": "6db2c74f151709b46026b7dcf518225f6d7ebcc71afdd959640bd06b4582b0bb72f75b8de36e0b96829b0ff3be68a1cbe06e03af5b328922b5dd04fc12e36b70",
-  "salt": "2cf95ee2119b17ff876dae370408650489426f68ad4177f09bd899b676ced325d055f3c38bc5e702342b9b0176099b288605c5232c0eba9c348a1be0dab3b84f",
+  "key": "d44af7abee5196059ee824d2fc8a7173f74e815bdf726e16575ed0ff6f4f591df4ed2cbf128d87a73a9d6aa7f0b00dca096c6eb73a2618df6b75b9acf8c7497c",
+  "salt": "c4661dff1a4f45022cb8c283d70dac4bd678981b5a4e600c7720b516da972f28b7e1b4db824723149e2aee670cac99187ce86f1d67139fd693077e2c38077802",
   "containers": [
     {
       "id": "0",
-      "name": "hola0",
-      "secrets": "3fde88b801f37ccbef4373115484993c7b4da4d16d12bb22c4003eadfe56668c"
-    },
-    {
-      "id": "1",
-      "name": "hola1",
-      "secrets": "a1f38810a7b56e10557a20d2ded19576660b8377effac20bc804e0adc89735ae"
+      "name": "carlos0",
+      "secrets": "0a2474c2a7a771ac50dc076b0984e829fdf1cfb2f76f1970fcf42d71755aa61f"
     }
-  ]
+  ],
+  "hmac": "718e974774d5699728e6b0cdf4a75d607b1f4fa46593ecb8045f623f5741effc"
 }

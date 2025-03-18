@@ -8,6 +8,10 @@ from vault import Vault
 class SecureBoxCLI:
     def __init__(self):
         self.user_auth = UserAuth()
+
+        if os.path.isfile(self.user_auth.STORAGE_FILE):
+            self.user_auth.load_from_file()
+
         self.vault = None
 
     def run(self):
@@ -20,10 +24,12 @@ class SecureBoxCLI:
                 "3": self.open_vault,
                 "4": self.exit_cli
             }
+
             action = options.get(option)
             if action:
                 try:
                     action()
+
                 except Exception as e:
                     print(f"Error: {e}")
             else:
@@ -36,14 +42,18 @@ class SecureBoxCLI:
         print("3. Abrir Vault")
         print("4. Salir")
 
+
     def generate_key(self):
         if os.path.isfile(self.user_auth.STORAGE_FILE):
             print("Ya existe una clave generada.")
         else:
             password = getpass.getpass("Introduce la contraseña: ")
-            salt, key_hash = self.user_auth.generate_key(password)
-            self.user_auth.save_to_file(salt, key_hash)
-            print("Clave generada exitosamente.")
+            self.user_auth.generate_key(password)
+            if self.user_auth.save_to_file():
+                print("Clave generada exitosamente.")
+            else:
+                print("Clave no generada.")
+
 
     def remove_key(self):
         if os.path.isfile(self.user_auth.STORAGE_FILE):
@@ -61,43 +71,46 @@ class SecureBoxCLI:
         else:
             print("No existe clave para eliminar.")
 
+            
     def open_vault(self):
         if not os.path.isfile(self.user_auth.STORAGE_FILE):
-            print("No existe la clave del usuario. Primero crea una clave con la opción 1.")
+            print("No existe clave")
             return
 
-        while not self.user_auth.authenticated:
+        while True:
             password = getpass.getpass("Introduce la contraseña del Vault: ")
             if self.user_auth.verify_key(password):
                 print("Clave correcta, acceso permitido.")
-                self.user_auth.authenticated = True
-                print("He salido")
+                break
             else:
                 print("Clave incorrecta. Inténtalo de nuevo.")
 
         self.vault_menu(password)
 
+
     def exit_cli(self):
         print("Saliendo... ¡Adiós!")
         sys.exit(0)
+
 
     def vault_menu(self, password):
         self.vault = Vault()
 
         if os.path.isfile(self.vault.STORAGE_FILE):
             print("Vault detectado. Cargando desde archivo.")
-            try:
-                self.vault.load_from_file(password)
-            except Exception as e:
-                print(f"Error al cargar Vault: {e}")
-                return
+            if self.vault.load_from_file(password):
+                print("Vault cargado correctamente")
+            else:
+                exit(1)
+
         else:
             print("Creando Vault.")
-            self.vault.generate_dek(password)
+            self.vault.generate_keys(password)
 
         while True:
             self.show_vault_menu()
             option = input("Elige una opción: ").strip()
+
             options = {
                 "1": self.vault.list_containers,
                 "2": self.create_container,
@@ -107,6 +120,7 @@ class SecureBoxCLI:
                 "6": self.delete_container,
                 "7": self.exit_vault_menu
             }
+
             action = options.get(option)
             if action:
                 try:
@@ -118,6 +132,7 @@ class SecureBoxCLI:
             else:
                 print("Opción no válida. Inténtalo de nuevo.")
 
+
     def show_vault_menu(self):
         print("\n--- Menú del Vault ---")
         print("1. Listar contenedores")
@@ -128,6 +143,7 @@ class SecureBoxCLI:
         print("6. Eliminar contenedor")
         print("7. Salir del Vault")
 
+
     def create_container(self):
         cont_id = input("Introduce el ID del nuevo contenedor: ").strip()
         name = input("Introduce el nombre del nuevo contenedor: ").strip()
@@ -136,12 +152,14 @@ class SecureBoxCLI:
         else:
             print("Error al crear contenedor.")
 
+
     def update_container_secrets(self):
         cont_id = input("Introduce el ID del contenedor a actualizar secretos: ").strip()
         if self.vault.update_container_secrets(cont_id):
             print("Secretos actualizados.")
         else:
             print("Error al actualizar secretos.")
+
 
     def update_container_name(self):
         cont_id = input("Introduce el ID del contenedor a actualizar nombre: ").strip()
@@ -151,6 +169,7 @@ class SecureBoxCLI:
         else:
             print("Error al actualizar el nombre.")
 
+
     def update_container_id(self):
         cont_id = input("Introduce el ID del contenedor a actualizar: ").strip()
         new_id = input("Introduce el nuevo ID: ").strip()
@@ -159,6 +178,7 @@ class SecureBoxCLI:
         else:
             print("Error al actualizar el ID.")
 
+
     def delete_container(self):
         cont_id = input("Introduce el ID del contenedor a eliminar: ").strip()
         if self.vault.delete_container(cont_id):
@@ -166,13 +186,13 @@ class SecureBoxCLI:
         else:
             print("Error al eliminar el contenedor.")
 
+
     def exit_vault_menu(self):
         print("Saliendo del Vault...")
-        try:
-            self.vault.save_to_file()
+        if self.vault.save_to_file():
             print("Vault guardado exitosamente.")
-        except Exception as e:
-            print(f"Error al guardar Vault: {e}")
+        else:
+            exit(1)
 
 
 if __name__ == '__main__':

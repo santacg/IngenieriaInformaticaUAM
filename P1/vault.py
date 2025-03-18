@@ -41,65 +41,71 @@ class Vault:
 
         self.STORAGE_FILE = "vault.json" 
         self.containers = {}
+        self.salt = None
+        self.kek = None
+        self.dek = None
+        self.cryptography = CryptoManager()
         self._initialized = True
 
 
-    def generate_dek(self, password):
+    def generate_keys(self, password):
         self.dek = os.urandom(32)
-        self.salt = os.urandom(64)
-
-        print(self.dek.hex())
-        hash = hashlib.scrypt(
-            password=password.encode("utf-8"),
-            salt=self.salt,
-            n=2**14,
-            r=8,
-            p=1,
-            dklen=32
-        )
-
-        self.cryptography = CryptoManager()
-        self.cyphered_dek = self.cryptography._aes_encrypt(self.dek, hash)
+        # Encriptamos la DEK con una KEK que es una DK de la contraseña
+        self.salt, self.kek = self.cryptography.generate_key(password, key_len=32)
 
 
-    def load_from_file(self, password) -> None:
+    def load_from_file(self, password) -> bool:
         """
         Carga los contenedores desde un archivo JSON si existe.
         """
-        self.cryptography = CryptoManager()
-        
-        with open(self.STORAGE_FILE, "r") as f:
-            data = json.load(f)
+        try:
+            with open(self.STORAGE_FILE, "r") as f:
+                data = json.load(f)
 
-        self.cyphered_dek = bytes.fromhex(data["key"])
-        self.salt = bytes.fromhex(data["salt"])
+            stored_hmac = bytes.fromhex(data.pop("hmac"))
 
-        hash = hashlib.scrypt(
-            password=password.encode("utf-8"),
-            salt=self.salt,
-            n=2**14,
-            r=8,
-            p=1,
-            dklen=32
-        )
+            json_data = json.dumps(data).encode("utf-8")
 
-        self.dek = self.cryptography._aes_decrypt(self.cyphered_dek, hash)
-        self.containers = {}
+            self.salt = bytes.fromhex(data["salt"])
+            self.kek = self.cryptography.get_dk(self.salt, password, key_len=32)
 
-        for info in data.get("containers", []):
-            container_id = info["id"]
-            self.containers[container_id] = Container(
-                id=container_id,
-                name=info["name"],
-                secrets=self.cryptography.decrypt_data(self.dek, bytes.fromhex(info["secrets"]))
-            )
+            if not self.cryptography.verify_hmac(self.kek, json_data, stored_hmac):
+                print("Error de integridad. El archivo ha sido modificado.")
+                return False
 
-    def save_to_file(self) -> None:
+            encrypted_dek = bytes.fromhex(data["key"])
+            self.dek = self.cryptography.aes_decrypt(encrypted_dek, self.kek)
+
+            if self.salt is None or self.kek is None or self.dek is None:
+                print("Error leyendo datos")
+                return False
+
+            self.containers = {}
+
+            for info in data.get("containers", []):
+                container_id = info["id"]
+                self.containers[container_id] = Container(
+                    id=container_id,
+                    name=info["name"],
+                    secrets=self.cryptography.decrypt_data(self.dek, bytes.fromhex(info["secrets"]))
+                )
+
+            return True
+
+        except Exception as e:
+            print("Error al cargar desde el archivo:", e)
+            return False
+
+    def save_to_file(self) -> bool:
         """
         Guarda los contenedores y la clave generada en un archivo JSON.
         """
+        if self.salt is None or self.dek is None or self.kek is None:
+            return False
+
+        encrypted_dek = self.cryptography.aes_encrypt(self.dek, self.kek)
         data_to_save = {
-            "key": self.cyphered_dek.hex(),
+            "key": encrypted_dek.hex(),
             "salt": self.salt.hex(),
             "containers": []
         }
@@ -115,11 +121,17 @@ class Vault:
                 "secrets": encrypted_secret
             })
 
+        json_data = json.dumps(data_to_save).encode("utf-8")
+
+        hmac_key = self.kek
+        data_to_save["hmac"] = self.cryptography.generate_hmac(hmac_key, json_data).hex()
 
         with open(self.STORAGE_FILE, "w") as f:
             json.dump(data_to_save, f, indent=2)
 
         os.chmod(self.STORAGE_FILE, 0o600)
+
+        return True
 
 
     def get_container_by_id(self, id: str):
