@@ -2,10 +2,12 @@ import os
 from userauth import UserAuth
 from vault import Vault
 
+
 class SecureBoxCLI:
     def __init__(self):
         self.user_auth = UserAuth()
         self.vault = None
+
 
     def run(self):
         while True:
@@ -14,8 +16,7 @@ class SecureBoxCLI:
             opciones = {
                 "1": self.create_user,
                 "2": self.authenticate_and_open_vault,
-                "3": self.change_password,
-                "4": self.exit_cli
+                "3": self.exit_cli
             }
             accion = opciones.get(opcion, None)
             if accion:
@@ -23,58 +24,62 @@ class SecureBoxCLI:
             else:
                 print("Opción no válida. Intenta de nuevo.")
 
+
     def show_main_menu(self):
         print("\n--- Menú Principal ---")
         print("1. Crear usuario (generar clave)")
         print("2. Autenticarse y abrir Vault")
-        print("3. Cambiar contraseña")
-        print("4. Salir")
+        print("3. Salir")
+
 
     def create_user(self):
         if os.path.isfile(self.user_auth.STORAGE_FILE):
-            print("Ya existen datos del usuario. Usa la opción 3 para cambiar la contraseña.")
+            print("Ya existen datos del usuario")
         else:
-            password = input("Introduce una contraseña para el usuario: ")
-            self.user_auth.generate_key(password)
+            password = input("Introduce la contraseña: ")
+            salt, hash = self.user_auth.generate_key(password)
+            self.user_auth.save_to_file(salt, hash)
             print("Usuario creado y clave generada.")
+
 
     def authenticate_and_open_vault(self):
         if not os.path.isfile(self.user_auth.STORAGE_FILE):
             print("No existen datos del usuario. Primero crea un usuario con la opción 1.")
             return
 
-        authenticated = False
-        while not authenticated:
+        while not self.user_auth.authenticated:
             password = input("Introduce la contraseña del Vault: ")
-            if self.user_auth.verify_key(password):
-                authenticated = True
+            salt, hash = self.user_auth.load_from_file()
+            if self.user_auth.verify_key(salt, hash, password):
                 print("Clave correcta, acceso permitido.")
             else:
                 print("Clave incorrecta, intenta de nuevo.")
 
-        kek = self.user_auth.get_key()
-        if kek:
-            self.vault = Vault(kek)
-            self.vault_menu()
-        else:
-            print("Error al obtener la clave.")
+        self.vault_menu()
 
-    def change_password(self):
-        old_password = input("Introduce tu contraseña actual: ")
-        new_password = input("Introduce la nueva contraseña: ")
-        if self.user_auth.change_key(old_password, new_password):
-            print("Contraseña cambiada con éxito.")
-        else:
-            print("No se pudo cambiar la contraseña. Verifica que la contraseña actual sea correcta.")
 
+    # def change_password(self):
+    #     old_password = input("Introduce tu contraseña actual: ")
+    #     new_password = input("Introduce la nueva contraseña: ")
+    #     if self.user_auth.change_key(old_password, new_password):
+    #         print("Contraseña cambiada con éxito.")
+    #     else:
+    #         print("No se pudo cambiar la contraseña. Verifica que la contraseña actual sea correcta.")
+    #
     def exit_cli(self):
         print("Saliendo... Adiós!")
         exit()
 
     def vault_menu(self):
+        self.vault = Vault()
+
         # Cargar Vault si el archivo existe
         if os.path.isfile(self.vault.STORAGE_FILE):
+            print("Vault detectado. Cargando desde archivo.")
             self.vault.load_from_file()
+        else:
+            print("Creando Vault.")
+            self.vault.open_vault()
 
         while True:
             print("\n--- Menú del Vault ---")

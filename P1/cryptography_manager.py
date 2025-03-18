@@ -6,11 +6,11 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 
 class CryptoManager:
-    def __init__(self, key: bytes):
+    def __init__(self):
         """
         Inicializa el CryptoManager con la clave KEK y define el archivo de almacenamiento.
         """
-        self.key = key 
+        pass
 
 
     def _aes_encrypt(self, data: bytes, key: bytes) -> bytes:
@@ -52,24 +52,18 @@ class CryptoManager:
         return data
 
 
-    def encrypt_data(self, plaintext: str) -> bytes:
+    def encrypt_data(self, key: bytes, plaintext: str) -> bytes:
         """
         Cifra el texto plano utilizando la DEK a través del método auxiliar.
         """
-        if self.key is None:
-            raise ValueError("La DEK no ha sido cargada o definida.")
- 
-        return self._aes_encrypt(plaintext.encode("utf-8"), self.key)
+        return self._aes_encrypt(plaintext.encode("utf-8"), key)
 
 
-    def decrypt_data(self, ciphered_data: bytes) -> str:
+    def decrypt_data(self, key, encryptedtext: bytes) -> str:
         """
         Descifra los datos cifrados utilizando la DEK a través del método auxiliar.
         """
-        if self.key is None:
-            raise ValueError("La DEK no ha sido cargada o definida.")
-
-        plaintext_bytes = self._aes_decrypt(ciphered_data, self.key)
+        plaintext_bytes = self._aes_decrypt(encryptedtext, key)
 
         return plaintext_bytes.decode("utf-8")
 

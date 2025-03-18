@@ -1,4 +1,5 @@
 import os
+from os.path import isfile
 import time
 import json
 import hashlib
@@ -23,92 +24,77 @@ class UserAuth:
         self.authenticated = False
         self.n_tries = 0
         self.SALT_LENGTH = 64 
-        self.N = 2**14
+        self.N = 2**20
         self.R = 8
         self.P = 1
-        self.STORAGE_FILE = ".auth.sec"
+        self.STORAGE_FILE = "auth.json"
 
+    
+    # def verify_file(self, salt: bytes, hash: bytes, hmac_file: bytes, password: str) -> bool:
+    #     hmac_calc = hmac.new(bytes(password.encode()), salt + hash, hashlib.sha256).digest()
+    #
+    #     res = hmac.compare_digest(hmac_file, hmac_calc)
+    #
+    #     return res
 
-    def save_to_file(self, salt: bytes, hash: bytes):
+    def save_to_file(self, salt_hash: bytes, salt_key: bytes, hash: bytes):
         """
         Guarda el salt, la clave derivada, la clave de encriptación y el hmac en el storage_file.
 
         Args:
-            salt (bytes): Salt generado.
+            salt_hash (bytes): Salt generado.
+            salt_key (bytes): Salt generado.
             hash (bytes): Clave derivada.
         """
-        dek = os.urandom(32)
-
-        h = hmac.new(salt + hash + dek, )
-
         # En hex para que sean serializables
         data = {
-            "salt": salt.hex(),
+            "salt_hash": salt_hash.hex(),
+            "salt_key": salt_key.hex(),
             "hash": hash.hex(),
-            "dek": os.urandom(32).hex(),
-            "hmac": "miau"
         }
 
         try:
             with open(self.STORAGE_FILE, "w") as f:
-                json.dump(data, f)
+                json.dump(data, f, indent=2)
 
                 # Permisos lectura y escritura para solamente el usuario que ejecute
                 os.chmod(self.STORAGE_FILE, 0o600)
 
         except Exception as e:
             print("Error al guardar los datos de seguridad en el archivo:", e)
-            raise
 
 
     def load_from_file(self):
         """
         Carga el salt y la clave derivada desde el archivo de autenticación.
-        """
-        if not os.path.isfile(self.STORAGE_FILE):
-            raise FileNotFoundError("Error: No existen datos del usuario")
-
-        try:
-            with open(self.STORAGE_FILE, "r") as f:
-                data = json.load(f)
-
-            salt = bytes.fromhex(data["salt"])
-            hash = bytes.fromhex(data["hash"])
-
-            return salt, hash 
-
-        except Exception as e:
-            print("Error al cargar los datos de seguridad en el archivo:", e)
-            raise
-
-
-    def get_key(self):
-        """
-        Retorna la clave derivada si el usuario está autenticado.
 
         Returns:
-            La clave derivada. None si hay un error
+            salt (bytes): Salt generado.
+            hash (bytes): Clave derivada.
         """
-        if self.authenticated is True:
-            try:
-                _, hash = self.load_from_file()
-                return hash
-            except Exception as e:
-                print("No se pudo obtener la clave de autenticación:", e)
-                return None
-        else:
-            return None
+        with open(self.STORAGE_FILE, "r") as f:
+            data = json.load(f)
+
+        salt_hash = bytes.fromhex(data["salt_hash"])
+        salt_key = bytes.fromhex(data["salt_key"])
+        hash = bytes.fromhex(data["hash"])
+
+        return salt, hash
 
 
     def generate_key(self, password: str):
         """
-        Genera y almacena la clave derivada a partir de la contraseña proporcionada.
+        Genera un salt aleatorio y una clave derivada a partir de la contraseña proporcionada.
 
         Args:
             password (str): Contraseña del usuario.
+
+        Returns:
+            salt (bytes): Salt aleatorio de longitud SALT_LENGTH.
+            hash (bytes): Clave derivada de la contraseña.
         """
         salt = os.urandom(self.SALT_LENGTH)
-        dk = hashlib.scrypt(
+        hash = hashlib.scrypt(
             password=password.encode("utf-8"),
             salt=salt,
             n=self.N,
@@ -116,25 +102,21 @@ class UserAuth:
             p=self.P,
         )
 
-        self.save_to_file(salt, dk)
+        return salt, hash
 
 
-    def verify_key(self, password: str) -> bool:
+    def verify_key(self, salt: bytes, hash: bytes, password: str) -> bool:
         """
         Verifica la contraseña proporcionada comparando con la clave derivada.
 
         Args:
+            salt (bytes): Contraseña del usuario.
+            hash (bytes): Contraseña del usuario.
             password (str): Contraseña del usuario.
 
         Returns:
             True si se ha verificado correctamente, False si la verificacion falla
         """
-        try: 
-            salt, hash = self.load_from_file()
-        except Exception as e:
-            print("Erorr verificando clave: ", e)
-            return False
-
         dk = hashlib.scrypt(
             password=password.encode("utf-8"),
             salt=salt,
@@ -160,13 +142,13 @@ class UserAuth:
             return False
 
 
-    def change_key(self, old_password: str, new_password: str):
-        res = self.verify_key(password=old_password)
-
-        if res is True:
-            self.generate_key(new_password)
-            return True
-        else:
-            return False
+    # def change_key(self, old_password: str, new_password: str):
+    #     res = True
+    #
+    #     if res is True:
+    #         self.generate_key(new_password)
+    #         return True
+    #     else:
+    #         return False
 
 
