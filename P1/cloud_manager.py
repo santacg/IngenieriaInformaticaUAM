@@ -56,7 +56,7 @@ class GoogleDriveManager:
         Si la carpeta no exist se crea automáticamente.
         """
 
-        folder_id = self.get_or_create_folder("SecureBox_Backup")
+        folder_id = self.get_folder("SecureBox_Backup")
 
         query = f"name='{self.storage_file}' and parents in '{folder_id}' and trashed=false"
         results = self.service.files().list(q=query, fields="files(id)").execute()
@@ -82,7 +82,7 @@ class GoogleDriveManager:
         Returns:
             True si la descarga fue exitosa, False si el archivo no se encontro.
         """
-        folder_id = self.get_or_create_folder("SecureBox_Backup")
+        folder_id = self.get_folder("SecureBox_Backup")
         query = f"name='{self.storage_file}' and parents in '{folder_id}' and trashed=false"
         results = self.service.files().list(q=query, fields="files(id)").execute()
         files = results.get("files", [])
@@ -100,7 +100,7 @@ class GoogleDriveManager:
         return True
 
 
-    def get_or_create_folder(self, folder_name: str) -> str:
+    def get_folder(self, folder_name: str) -> str:
         """
         Busca una carpeta en Google Drive por su nombre. Si no existe, la crea.
 
