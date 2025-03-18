@@ -2,7 +2,6 @@ from container import Container
 from cryptography_manager import CryptoManager
 import os
 import json
-import hashlib
 import curses
 import curses.textpad
 
@@ -48,15 +47,27 @@ class Vault:
         self._initialized = True
 
 
-    def generate_keys(self, password):
+    def generate_keys(self, password: str):
+        """
+        Genera claves de cifrado a partir de una contraseña.
+
+        Args:
+            password (str): La contraseña con la que se generarán las claves.
+        """
         self.dek = os.urandom(32)
         # Encriptamos la DEK con una KEK que es una DK de la contraseña
         self.salt, self.kek = self.cryptography.generate_key(password, key_len=32)
 
 
-    def load_from_file(self, password) -> bool:
+    def load_from_file(self, password: str) -> bool:
         """
-        Carga los contenedores desde un archivo JSON si existe.
+        Carga los contenedores desde un archivo JSON y verifica su integridad.
+
+        Args:
+            password (str): Contraseña para descifrar los datos.
+
+        Returns:
+            bool: True si la carga fue exitosa, False si hubo un error.
         """
         try:
             with open(self.STORAGE_FILE, "r") as f:
@@ -96,9 +107,13 @@ class Vault:
             print("Error al cargar desde el archivo:", e)
             return False
 
+
     def save_to_file(self) -> bool:
         """
-        Guarda los contenedores y la clave generada en un archivo JSON.
+        Guarda los contenedores y las claves en un archivo JSON cifrado.
+
+        Returns:
+            True si la operación fue exitosa, False en caso contrario.
         """
         if self.salt is None or self.dek is None or self.kek is None:
             return False
@@ -136,14 +151,26 @@ class Vault:
 
     def get_container_by_id(self, id: str):
         """
-        Retorna un contenedor segun el id.
+        Busca un contenedor por su ID.
+
+        Args:
+            id (str): ID del contenedor.
+
+        Returns:
+            Container | None: Contenedor encontrado o None si no existe.
         """
         return self.containers.get(id)
 
 
     def get_container_by_name(self, name: str):
         """
-        Retorna un contenedor segun el nombre
+        Busca un contenedor por su nombre.
+
+        Args:
+            name (str): Nombre del contenedor.
+
+        Returns:
+            Container | None: Contenedor encontrado o None si no existe.
         """
         for container in self.containers.values():
             if container is not None and container.name == name:
@@ -151,13 +178,17 @@ class Vault:
 
         return None
 
+
     def create_container(self, id: str, name: str) -> bool:
         """
-        Añade un objeto Container a la lista de Containers del Vault
+        Crea y añade un nuevo contenedor al Vault.
 
         Args:
-            id (int): El id del Container a añadir.
-            name (str): El nombre del Container a añadir.
+            id (str): Identificador del contenedor.
+            name (str): Nombre del contenedor.
+
+        Returns:
+            True si el contenedor se creó con éxito, False si ya existe.
         """
         if self.get_container_by_id(id) is not None:
             print(f"Ya existe un contenedor con ID {id}.")
@@ -174,6 +205,15 @@ class Vault:
 
 
     def update_container_secrets(self, id: str) -> bool:
+        """
+        Actualiza los secretos almacenados en un contenedor.
+
+        Args:
+            id (str): ID del contenedor a actualizar.
+
+        Returns:
+            True si la actualización fue exitosa, False si no se encontró el contenedor.
+        """
         container = self.get_container_by_id(id)
         if not container:
             print(f"No se encontró contenedor con ID {id}.")
@@ -188,6 +228,13 @@ class Vault:
 
 
     def update_container_name(self, id, name):
+        """
+        Actualiza el nombre de un contenedor.
+
+        Args:
+            id (str): ID del contenedor.
+            name (str): Nuevo nombre del contenedor.
+        """
         container = self.get_container_by_id(id)
         if not container:
             print("No encontrado")
@@ -198,6 +245,13 @@ class Vault:
 
 
     def update_container_id(self, id, new_id):
+        """
+        Actualiza el ID de un contenedor.
+
+        Args:
+            id (str): ID actual del contenedor.
+            new_id (str): Nuevo ID del contenedor.
+        """
         container = self.get_container_by_id(id)
         if not container:
             print("No encontrado")
@@ -216,17 +270,24 @@ class Vault:
 
 
     def delete_container(self, id):
+        """
+        Elimina un contenedor del Vault.
+
+        Args:
+            id (str): ID del contenedor a eliminar.
+        """
         if id in self.containers:
             self.containers[id] = None
 
 
     def list_containers(self):
         """
-        Lista todos los contenedores (por ID y nombre).
+        Muestra la lista de contenedores almacenados.
         """
         if not self.containers:
             print("No hay contenedores almacenados.")
             return
+
         print("\nContenedores en el Vault:")
 
         for container in self.containers.values():
@@ -234,36 +295,47 @@ class Vault:
                 print(container)
 
 
-    def _edit_text(self, initial_text) -> str:
+    def _edit_text(self, initial_text: str) -> str:
+        """
+        Abre un editor de texto que usa Curses en la terminal para modificar un secreto.
+
+        Args:
+            initial_text (str): Texto inicial del secreto.
+
+        Returns:
+            str: Texto editado por el usuario.
+        """
         def _curses_main(stdscr):
             curses.cbreak()
             curses.noecho()
-            stdscr.keypad(True)
+            stdscr.clear()
 
-            # Obtenemos el tamaño de la pantalla
             max_y, max_x = stdscr.getmaxyx()
 
-            # Creamos una ventana "edit_win" un poco más pequeña que la pantalla
-            edit_height = max_y - 4
-            edit_width = max_x - 4
+            edit_height = max_y - 2
+            edit_width = max_x - 2
             edit_win = curses.newwin(edit_height, edit_width, 2, 2)
 
-            # Creamos el Textbox a partir de la ventana
-            text_box = curses.textpad.Textbox(edit_win)
+            edit_win.border()
 
-            # Mostramos un mensaje de instrucciones en la parte superior
-            stdscr.addstr(0, 0, "Edita los secretos. Pulsa Ctrl-G para guardar y salir.")
+            instruction = "Edita los secretos. Pulsa Ctrl-G para guardar y salir."
+            stdscr.addstr(0, max(0, (max_x - len(instruction)) // 2), instruction, curses.A_BOLD)
             stdscr.refresh()
 
-            # Prellenamos la ventana con el texto inicial
+            textbox_win = edit_win.derwin(edit_height - 2, edit_width - 2, 1, 1)
+
+            text_box = curses.textpad.Textbox(textbox_win)
+
             lines = initial_text.split('\n')
-            for idx, line in enumerate(lines):
-                edit_win.addstr(idx, 0, line)
+            for idx, line in enumerate(lines[:edit_height - 3]):
+                textbox_win.addstr(idx, 0, line[:edit_width - 3])
 
-            # Activamos el modo edición: el usuario escribe hasta pulsar Ctrl-G
-            edited_text = text_box.edit()
+            textbox_win.move(0, 0)
+
+            edited_text = text_box.edit().strip()
+
             return edited_text
-
-        # curses.wrapper se encarga de iniciar y finalizar adecuadamente curses
-        result = curses.wrapper(_curses_main)
-        return result
+        try:
+            return curses.wrapper(_curses_main)
+        except Exception as e:
+            return f"Error al editar: {str(e)}"

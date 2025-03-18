@@ -6,13 +6,13 @@ from cryptography_manager import CryptoManager
 
 class UserAuth:
     """
-    Clase que representa la autenticación del usuario.
+    Clase para gestionar la autenticación del usuario mediante una clave derivada segura.
 
-    Attributes:
-        n_tries (int): Número de intentos de autenticacion.
-        STORAGE_FILE (str): Ruta del archivo donde se almacenan el salt y la clave derivada de la contraseña usuario.
-        salt (bytes): Salt generado aleatoriamente.
-        dk (bytes): Clave derivada con la función scrypt, empleando el salt y una contraseña.
+    Atributos:
+        n_tries (int): Número de intentos fallidos de autenticación.
+        STORAGE_FILE (str): Ruta del archivo donde se almacenan el salt y la clave derivada del usuario.
+        salt (bytes): Salt generado aleatoriamente para la derivación de la clave.
+        dk (bytes): Clave derivada a partir de la contraseña usando scrypt.
     """
 
     def __init__(self):
@@ -22,17 +22,16 @@ class UserAuth:
         self.salt = None
         self.dk = None
 
-    
+
     def save_to_file(self) -> bool:
         """
-        Guarda un salt y una clave derivada en el archivo de datos del usuario.
+        Guarda el salt y la clave derivada en un archivo JSON.
 
-        Args:
-            salt (bytes): Salt generado.
-            hash (bytes): Clave derivada de la contraseña.
+        Returns:
+            True si la operación fue exitosa, False en caso de error.
         """
         if self.salt is None or self.dk is None:
-            print("No se han leido los datos del usuario")
+            print("No se han leído los datos del usuario.")
             return False
 
         data = {
@@ -44,7 +43,7 @@ class UserAuth:
             with open(self.STORAGE_FILE, "w") as f:
                 json.dump(data, f, indent=2)
 
-            # Permisos lectura y escritura para solamente el usuario que ejecute
+            # Permisos de solo lectura y escritura para el usuario que ejecuta
             os.chmod(self.STORAGE_FILE, 0o600)
             return True
 
@@ -58,8 +57,7 @@ class UserAuth:
         Carga el salt y la clave derivada desde el archivo de datos del usuario.
 
         Returns:
-            salt (bytes): Salt generado.
-            hash (bytes): Clave derivada de la contraseña.
+            True si los datos se cargaron correctamente, False en caso contrario.
         """
         try:
             with open(self.STORAGE_FILE, "r") as f:
@@ -71,12 +69,12 @@ class UserAuth:
 
         except Exception as e:
             print(f"Error al cargar los datos de autenticación: {e}")
-            return False 
+            return False
 
 
     def generate_key(self, password: str):
         """
-        Genera un salt aleatorio y una clave derivada a partir de la contraseña proporcionada.
+        Genera un nuevo salt y una clave derivada a partir de la contraseña del usuario.
 
         Args:
             password (str): Contraseña del usuario.
@@ -86,25 +84,32 @@ class UserAuth:
 
     def verify_key(self, password: str) -> bool:
         """
-        Verifica la contraseña proporcionada comparando con la clave derivada almacenada.
+        Verifica si la contraseña ingresada es correcta comparándola con la clave derivada almacenada.
+
+        Implementa un mecanismo de retraso exponencial en caso de múltiples intentos fallidos.
 
         Args:
             password (str): Contraseña del usuario.
+
+        Returns:
+            True si la contraseña es correcta, False si es incorrecta.
         """
         if self.salt is None or self.dk is None:
-            print("No se han leido los datos del usuario")
+            print("No se han leído los datos del usuario.")
             return False
 
         res = self.cryptography.verify_key(self.salt, self.dk, password)
 
-        if res is True:
-            self.n_tries = 0
+        if res:
+            self.n_tries = 0  # Reiniciamos el contador de intentos fallidos si hay exito
         else:
             self.n_tries += 1
-            # Si se han hecho más de 3 intentos fallidos hacemos una espera que incrementa exponencialmente 
+
+            # Retraso exponencial si hay 3 o más intentos fallidos
             if self.n_tries >= 3:
                 delay = 2 ** (self.n_tries - 3)
-                print(f"Demasiados intentos fallidos, espera {delay} segundos")
+                print(f"Demasiados intentos fallidos, espera {delay} segundos.")
                 time.sleep(delay)
 
         return res
+

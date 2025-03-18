@@ -8,18 +8,18 @@ from cryptography.hazmat.backends import default_backend
 
 class CryptoManager:
     """
-    Clase que representa los métodos criptográficos del sistema.
+    Clase para gestionar operaciones criptográficas, incluyendo cifrado AES, generación de claves 
+    con scrypt y verificacon de integridad mediante HMAC.
 
-    Attributes:
-        salt_length (int): Tamaño del salt.
-        N (int): Factor de coste computacional de scrypt.
-        R (int): Factor de uso de memoria de scrypt.
-        P (int): Factor de paralelismo de scrypt.
+    Atributos:
+        SALT_LENGTH (int): Longitud del salt utilizado en la derivación de claves.
+        N (int): Factor de coste computacional para scrypt.
+        R (int): Factor de uso de memoria para scrypt.
+        P (int): Factor de paralelismo para scrypt.
     """
 
-
-    def __init__(self, salt_length=64, N=2**14, R=8, P=1): 
-        self.SALT_LENGTH = salt_length 
+    def __init__(self, salt_length=64, N=2**14, R=8, P=1):
+        self.SALT_LENGTH = salt_length
         self.N = N
         self.R = R
         self.P = P
@@ -27,14 +27,14 @@ class CryptoManager:
 
     def aes_encrypt(self, data: bytes, key: bytes) -> bytes:
         """
-        Método para cifrar bytes utilizando AES en modo CBC con padding PKCS7.
+        Cifra datos utilizando AES en modo CBC con padding PKCS7.
 
         Args:
-            data (bytes): Datos a ser cifrados.
-            key (bytes): Clave para cifrar los datos.
+            data (bytes): Datos a cifrar.
+            key (bytes): Clave de cifrado AES (debe ser de 16, 24 o 32 bytes).
 
         Returns:
-            iv de 16 bytes y datos cifrados con la clave
+            bytes: Datos cifrados con un IV de 16 bytes prepended.
         """
         iv = os.urandom(16)
 
@@ -43,7 +43,6 @@ class CryptoManager:
 
         cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
         encryptor = cipher.encryptor()
-
         ciphertext = encryptor.update(padded_data) + encryptor.finalize()
 
         return iv + ciphertext
@@ -51,28 +50,26 @@ class CryptoManager:
 
     def aes_decrypt(self, encrypted_data: bytes, key: bytes) -> bytes:
         """
-        Método para descifrar bytes que fueron cifrados con aes_encrypt.
+        Descifra datos previamente cifrados con AES en modo CBC.
 
         Args:
-            encrypted_data (bytes): Datos a ser descifrados.
-            key (bytes): Clave para desencriptar los datos.
+            encrypted_data (bytes): Datos cifrados con un IV prepended.
+            key (bytes): Clave AES utilizada para el descifrado.
 
         Returns:
-            Datos (bytes) desencriptados con la clave 
+            bytes: Datos descifrados en su formato original.
         """
         if len(encrypted_data) < 16:
             raise ValueError("Datos insuficientes para extraer el IV.")
 
         iv = encrypted_data[:16]
-
         ciphertext = encrypted_data[16:]
-        cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
 
+        cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
         decryptor = cipher.decryptor()
 
         padded_data = decryptor.update(ciphertext) + decryptor.finalize()
         unpadder = padding.PKCS7(128).unpadder()
-
         data = unpadder.update(padded_data) + unpadder.finalize()
 
         return data
@@ -80,33 +77,47 @@ class CryptoManager:
 
     def encrypt_data(self, key: bytes, plaintext: str) -> bytes:
         """
-        Cifra texto plano utilizando la DEK.
+        Cifra una cadena de texto utilizando AES.
+
+        Args:
+            key (bytes): Clave AES para cifrar los datos.
+            plaintext (str): Texto a cifrar.
+
+        Returns:
+            bytes: Datos cifrados.
         """
         return self.aes_encrypt(plaintext.encode("utf-8"), key)
 
 
     def decrypt_data(self, key: bytes, encryptedtext: bytes) -> str:
         """
-        Descifra los datos cifrados utilizando la DEK.
+        Descifra una cadena de texto cifrada con AES.
+
+        Args:
+            key (bytes): Clave AES para descifrar los datos.
+            encryptedtext (bytes): Datos cifrados.
+
+        Returns:
+            str: Texto descifrado.
         """
         plaintext_bytes = self.aes_decrypt(encryptedtext, key)
-
         return plaintext_bytes.decode("utf-8")
 
 
     def generate_key(self, password: str, key_len=64):
         """
-        Genera un salt aleatorio y una clave derivada a partir de la contraseña proporcionada.
+        Genera un salt aleatorio y una clave derivada a partir de la contraseña usando scrypt.
 
         Args:
-            password (str): Contraseña.
+            password (str): Contraseña del usuario.
+            key_len (int, opcional): Longitud de la clave derivada (por defecto 64 bytes).
 
         Returns:
-            salt (bytes): Salt aleatorio de longitud SALT_LENGTH.
-            hash (bytes): Clave derivada de la contraseña.
+            salt (bytes): Salt aleatorio generado.
+            dk (bytes): Clave derivada a partir de la contraseña y el salt.
         """
         salt = os.urandom(self.SALT_LENGTH)
-        hash = hashlib.scrypt(
+        dk = hashlib.scrypt(
             password=password.encode("utf-8"),
             salt=salt,
             n=self.N,
@@ -115,76 +126,72 @@ class CryptoManager:
             dklen=key_len
         )
 
-        return salt, hash
+        return salt, dk
 
 
-    def get_dk(self, salt: bytes, password: str, key_len=64):
+    def get_dk(self, salt: bytes, password: str, key_len=64) -> bytes:
         """
-        Devuelve una clave derivada obtenida con un salt y una contraseña.
+        Deriva una clave a partir de un salt y una contraseña usando scrypt.
 
         Args:
-            salt (bytes): Salt para generar la clave derivada.
-            password (str): Contraseña.
+            salt (bytes): Salt utilizado en la derivación de clave.
+            password (str): Contraseña del usuario.
+            key_len (int, opcional): Longitud de la clave derivada (por defecto 64 bytes).
 
         Returns:
-            La clave derivada obtenida con el salt y la password dadas
+            bytes: Clave derivada a partir del salt y la contraseña.
         """
-
-        dk = hashlib.scrypt(
+        return hashlib.scrypt(
             password=password.encode("utf-8"),
             salt=salt,
-            n=self.N, 
+            n=self.N,
             r=self.R,
             p=self.P,
             dklen=key_len
         )
 
-        return dk
-
 
     def verify_key(self, salt: bytes, hash: bytes, password: str) -> bool:
         """
-        Verifica la contraseña proporcionada comparando con la clave derivada almacenada.
+        Verifica la contrasea comparándola con la clave derivada almacenada.
 
         Args:
-            salt (bytes): Salt para generar la clave derivada.
-            hash (bytes): Clave derivada a ser comprobada.
-            password (str): Contraseña.
+            salt (bytes): Salt utilizado para derivar la clave.
+            hash (bytes): Clave derivada almacenada.
+            password (str): Contraseña ingresada por el usuario.
 
         Returns:
-            True si hash y la clave calculada son iguales, False si no lo son 
+            True si la contraseña es válida, False en caso contrario.
         """
-
-        dk = hashlib.scrypt(
-            password=password.encode("utf-8"),
-            salt=salt,
-            n=self.N, 
-            r=self.R,
-            p=self.P,
-        )
-
-        # Con compare_digest no se puede inferir nada de la comparación
+        dk = self.get_dk(salt, password, len(hash))
         return hmac.compare_digest(hash, dk)
 
 
     def generate_hmac(self, key: bytes, data: bytes) -> bytes:
         """
-        Genera un HMAC usando SHA-256.
-        
+        Genera un HMAC-SHA256 para verificar la integridad de los datos.
+
         Args:
             key (bytes): Clave para el HMAC.
-            data (bytes): Datos a verificar.
-            
+            data (bytes): Datos sobre los que se calculará el HMAC.
+
         Returns:
-            HMAC en bytes.
+            bytes: HMAC calculado.
         """
-        h = hmac.new(key, data, hashlib.sha256)
-        return h.digest()
+        return hmac.new(key, data, hashlib.sha256).digest()
 
 
     def verify_hmac(self, key: bytes, data: bytes, expected_hmac: bytes) -> bool:
         """
         Verifica si el HMAC de los datos coincide con el esperado.
+
+        Args:
+            key (bytes): Clave HMAC utilizada para la verificación.
+            data (bytes): Datos sobre los que se verificará el HMAC.
+            expected_hmac (bytes): HMAC esperado.
+
+        Returns:
+            True si los HMAC coinciden, False en caso contrario.
         """
         actual_hmac = self.generate_hmac(key, data)
         return hmac.compare_digest(actual_hmac, expected_hmac)
