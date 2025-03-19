@@ -17,9 +17,8 @@ class GoogleDriveManager:
         service: Cliente autenticado para interactuar con Google Drive.
     """
 
-    def __init__(self, credentials_file="client_secret.json", storage_file="vault.json"):
+    def __init__(self, credentials_file="client_secret.json"):
         self.credentials_file = credentials_file
-        self.storage_file = storage_file
         self.scopes = ['https://www.googleapis.com/auth/drive']
         self.service = self.authenticate()
 
@@ -50,40 +49,55 @@ class GoogleDriveManager:
         return build("drive", "v3", credentials=creds)
 
 
-    def upload_vault(self) -> bool:
+    def upload_vault(self, folder_path: str, file_path: str) -> bool:
         """
         Sube el archivo del vault a Google Drive dentro de la carpeta SecureBox_Backup.
         Si la carpeta no exist se crea automáticamente.
+
+        Args:
+            folder_path (str): Path donde se creará o usara un fichero.
+            file_path (str): Path donde se almacenará el archivo del Vault.
+
+        Returns:
+            True si la carga fue exitosa, False si el archivo ya existe.
         """
 
-        folder_id = self.get_folder("SecureBox_Backup")
+        folder_id = self.get_folder(folder_path)
 
-        query = f"name='{self.storage_file}' and parents in '{folder_id}' and trashed=false"
+        query = f"name='{file_path}' and parents in '{folder_id}' and trashed=false"
         results = self.service.files().list(q=query, fields="files(id)").execute()
         files = results.get("files", [])
 
         if files:
-            print(f"\nEl archivo '{self.storage_file}' ya existe en Google Drive.")
+            print(f"\nEl archivo '{file_path}' ya existe en Google Drive.")
             return False
 
         file_metadata = {
-            "name": self.storage_file,
+            "name": file_path,
             "parents": [folder_id]
         }
-        media = MediaFileUpload(self.storage_file, mimetype="application/json")
+
+        media = MediaFileUpload(file_path, mimetype="application/json")
         self.service.files().create(body=file_metadata, media_body=media, fields="id").execute()
         return True
 
-    def download_vault(self) -> bool:
+
+    def download_vault(self, folder_path: str, file_path: str) -> bool:
         """
         Descarga el archivo del vault desde Google Drive.
         Busca el archivo en la carpeta SecureBox_Backup y lo guarda localmente.
 
+        Args:
+            folder_path (str): Path donde buscará el arhcivo. 
+            file_path (str): Path donde se almacenará el archivo del Vault
+
+
         Returns:
             True si la descarga fue exitosa, False si el archivo no se encontro.
         """
-        folder_id = self.get_folder("SecureBox_Backup")
-        query = f"name='{self.storage_file}' and parents in '{folder_id}' and trashed=false"
+        folder_id = self.get_folder(folder_path)
+
+        query = f"name='{file_path}' and parents in '{folder_id}' and trashed=false"
         results = self.service.files().list(q=query, fields="files(id)").execute()
         files = results.get("files", [])
 
@@ -94,7 +108,7 @@ class GoogleDriveManager:
         file_id = files[0]["id"]
         request = self.service.files().get_media(fileId=file_id)
 
-        with open(self.storage_file, "wb") as f:
+        with open(file_path, "wb") as f:
             f.write(request.execute())
 
         return True

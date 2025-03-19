@@ -49,19 +49,41 @@ class Vault:
 
     def generate_keys(self, password: str):
         """
-        Genera claves de cifrado a partir de una contraseña.
+        Genera una nueva clave de cifrado que se encripta con una clave 
+        derivada a partir de una contraseña.
 
         Args:
             password (str): La contraseña con la que se generarán las claves.
         """
         self.dek = os.urandom(32)
-        # Encriptamos la DEK con una KEK que es una DK de la contraseña
         self.salt, self.kek = self.cryptography.generate_key(password, key_len=32)
+
+
+    def change_keys(self, old_password: str, new_password: str):
+        """
+        Cambia la clave derivada de la contaseña con la que se cifra la 
+        clave de cifrado.
+
+        Args:
+            old_password (str): Contraseña anterior con la que se genero la KEK que cifra la DEK.
+            new_password (str): Contraseña nueva con la que se generará una nueva KEK para cifrar la DEK.
+
+        Returns:
+            True si se ha podido cambiar la clave KEK, False en caso de fallo.
+        """
+        if self.load_from_file(old_password):
+            self.salt, self.kek = self.cryptography.generate_key(new_password, key_len=32)
+
+            self.save_to_file()
+            return True
+        else:
+            print("Error cargando archivo")
+            return False
 
 
     def load_from_file(self, password: str) -> bool:
         """
-        Carga los contenedores desde un archivo JSON y verifica su integridad.
+        Carga los contenedores y la claves desde un archivo JSON y verifica su integridad.
 
         Args:
             password (str): Contraseña para descifrar los datos.
@@ -227,7 +249,7 @@ class Vault:
         return True
 
 
-    def update_container_name(self, id, name):
+    def update_container_name(self, id, name) -> bool:
         """
         Actualiza el nombre de un contenedor.
 
@@ -237,14 +259,13 @@ class Vault:
         """
         container = self.get_container_by_id(id)
         if not container:
-            print("No encontrado")
-            return
+            return False
 
         container.name = name 
-        return
+        return True
 
 
-    def update_container_id(self, id, new_id):
+    def update_container_id(self, id, new_id) -> bool:
         """
         Actualiza el ID de un contenedor.
 
@@ -254,22 +275,21 @@ class Vault:
         """
         container = self.get_container_by_id(id)
         if not container:
-            print("No encontrado")
-            return
+            return False
 
         if self.get_container_by_id(new_id) is not None:
             print(f"Ya existe un contenedor con ID {new_id}.")
-            return
+            return False
 
         container.id = new_id 
         self.containers[new_id] = container
         
         self.containers[id] = None
 
-        return
+        return True
 
 
-    def delete_container(self, id):
+    def delete_container(self, id) -> bool:
         """
         Elimina un contenedor del Vault.
 
@@ -278,6 +298,21 @@ class Vault:
         """
         if id in self.containers:
             self.containers[id] = None
+            return True
+        else:
+            return False
+
+
+    def show_container(self, id) -> bool:
+        """
+        Muesta un contenedor específico.
+        """
+        if not self.get_container_by_id(id):
+            return False
+
+        print(self.containers[id])
+
+        return True
 
 
     def list_containers(self):
@@ -285,7 +320,7 @@ class Vault:
         Muestra la lista de contenedores almacenados.
         """
         if not self.containers:
-            print("No hay contenedores almacenados.")
+            print("\nNo hay contenedores almacenados.")
             return
 
         print("\nContenedores en el Vault:")
