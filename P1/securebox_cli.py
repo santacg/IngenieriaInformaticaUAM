@@ -50,7 +50,12 @@ class SecureBoxCLI:
         if os.path.isfile(self.user_auth.STORAGE_FILE):
             print("\nYa existe una clave generada.")
         else:
-            password = getpass.getpass("Introduce la contraseña: ")
+            while True:
+                password = getpass.getpass("Introduce la contraseña (mínimo 8 caracteres): ")
+                if len(password) >= 8:
+                    break
+                print("\nLa contraseña tiene menos de 8 caracteres.")
+
             self.user_auth.generate_key(password)
             if self.user_auth.save_to_file():
                 print("\nClave generada.")
@@ -70,7 +75,11 @@ class SecureBoxCLI:
                 else:
                     print("\nContraseña incorrecta. Intentalo de nuevo.")
 
-            new_password = getpass.getpass("Introduce la nueva contraseña: ")
+            while True:
+                new_password = getpass.getpass("Introduce la nueva contraseña: ")
+                if len(new_password) >= 8:
+                    break
+                print("\nLa contraseña tiene menos de 8 caracteres.")
 
             self.user_auth.generate_key(new_password)
             if self.user_auth.save_to_file():
@@ -105,7 +114,7 @@ class SecureBoxCLI:
         else:
             print("\nNo existe clave para eliminar.")
 
-            
+
     def open_vault(self):
         if not os.path.isfile(self.user_auth.STORAGE_FILE):
             print("\nNo existe clave. Genera una clave para acceder al Vault.")
