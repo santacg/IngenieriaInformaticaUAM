@@ -12,7 +12,6 @@ class GoogleDriveManager:
 
     Atributos:
         credentials_file (str): Nombre del archivo de credenciales de Google.
-        storage_file (str): Nombre del archivo que se subira o descargará.
         scopes (list): Lista de permisos requeridos para la API de Google Drive.
         service: Cliente autenticado para interactuar con Google Drive.
     """
@@ -51,7 +50,7 @@ class GoogleDriveManager:
 
     def upload_vault(self, folder_path: str, file_path: str) -> bool:
         """
-        Sube el archivo del vault a Google Drive dentro de la carpeta SecureBox_Backup.
+        Sube el archivo del vault a Google Drive dentro de la carpeta.
         Si la carpeta no exist se crea automáticamente.
 
         Args:
@@ -85,12 +84,11 @@ class GoogleDriveManager:
     def download_vault(self, folder_path: str, file_path: str) -> bool:
         """
         Descarga el archivo del vault desde Google Drive.
-        Busca el archivo en la carpeta SecureBox_Backup y lo guarda localmente.
+        Busca el archivo en la carpeta y lo guarda localmente.
 
         Args:
             folder_path (str): Path donde buscará el arhcivo. 
             file_path (str): Path donde se almacenará el archivo del Vault
-
 
         Returns:
             True si la descarga fue exitosa, False si el archivo no se encontro.
