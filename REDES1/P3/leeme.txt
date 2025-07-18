@@ -1,0 +1,42 @@
+ESTUDIANTES:
+    Carlos García Santa
+    Eduardo Junoy Ortega
+
+FICHEROS A ENTREGAR:
+    leeme.txt
+    practica3.py
+    ethernet.py
+    arp.py
+    ip.py
+    udp.py
+    icmp.py
+
+ENTREGA:
+    - Normativa de entrega cumplida en su totalidad
+        Realizado: Varias relecturas del enunciado.
+
+    - Fichero leeme.txt bien explicado 
+        Realizado.
+
+    - Recibir y enviar datagramas UDP sin opciones IP ni fragmentación
+        Realizado: Comprobado utilizando Wireshark. Se han enviado paquetes UDP desde las terminales creadas con mininet y se ha confirmado con Wireshark la recepción correcta sin fragmentación.
+
+    - Recibir y enviar mensajes ICMP sin opciones IP ni fragmentación (incluyendo pruebas con ping estándar)
+        Parcialmente-Realizado: Validación mediante el envío de pings a h2 desde h1 y observación en Wireshark de que los mensajes ICMP se envían y reciben correctamente y sin fragmentación, pero no se ha comprobado exhaustivamente el ping estandar.
+
+    - Enviar y recibir correctamente mensajes ICMP con opciones IP 
+        Realizado: Se ha implementado el envío de mensajes ICMP con opciones IP, como en UDP.
+
+    - Enviar y recibir mensajes ICMP con un tamaño determinado
+        Realizado: Se implementó en practica3 un comando --icmpsize que permite especificar el tamaño de los mensajes ICMP y se ha validado su funcionamiento con Wireshark observando el tamaño de los datos enviados en ICMP.
+
+    - Enviar datagramas UDP con fragmentación
+        Realizado: Funcionalidad comprobada enviando datagramas UDP que exceden el tamaño de MTU (modificando el MTU con ifconfig h1-eth0 mtu 658), observando la fragmentación en Wireshark y con la herramienta de debug pdb.
+
+    - Enviar datagramas UDP con fragmentación y opciones IP
+        Realizado: La implementación se ha comprobado de la misma forma que en los anteriores apartados.
+
+    - Enviar datagramas UDP fuera de la subred actual 
+        Realizado: Se han enviado datagramas UDP a direcciones fuera de la subred local y se ha verificado el tráfico mediante Wireshark.
+
+En todos los casos, se utilizó logging.debug para confirmar que los datos enviados eran correctos y Wireshark.
