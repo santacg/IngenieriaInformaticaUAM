@@ -1,3 +1,5 @@
+# Nota media: 8.5
+
 
 IMPORTANTE, Tareas.java: Se han implementado tareas automáticas que se ejecutan al abrir la aplicación. 
 Estas verifican las fechas de inicio y fin de las exposiciones. 
