@@ -1,0 +1,14 @@
+{
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.sourcePaths": [
+        "."
+    ],
+    "java.project.referencedLibraries": [
+        "./gui/resources/ServicioTicket/TicketSystem.jar",
+        "./gui/resources/ServicioPago/TeleChargeAndPaySystem8.jar",
+        "test-lib/**/*.jar"
+    ],
+    "java.debug.settings.showHex": true,
+    "java.debug.settings.showQualifiedNames": true,
+    "java.debug.settings.showLogicalStructure": true,
+}

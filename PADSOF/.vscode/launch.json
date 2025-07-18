@@ -1,0 +1,63 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "gui.main.Main",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
+            "name": "MainVisual",
+            "request": "launch",
+            "mainClass": "gui.modelo.MainVisual",
+            "projectName": "PADSOF_b3f2e3ae"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "gui.main.Main",
+            "projectName": "PADSOF_b95ff5e7"
+        },
+        {
+            "type": "java",
+            "name": "Main(1)",
+            "request": "launch",
+            "mainClass": "gui.modelo.Main",
+            "projectName": "PADSOF_b95ff5e7"
+        },
+        {
+            "type": "java",
+            "name": "MainVisual",
+            "request": "launch",
+            "mainClass": "gui.modelo.MainVisual",
+            "projectName": "PADSOF_b95ff5e7"
+        },
+        {
+            "type": "java",
+            "name": "Persistencia",
+            "request": "launch",
+            "mainClass": "gui.modelo.Persistencia",
+            "projectName": "PADSOF_b95ff5e7"
+        },
+        {
+            "type": "java",
+            "name": "TareasDiarias",
+            "request": "launch",
+            "mainClass": "gui.modelo.utils.TareasDiarias",
+            "projectName": "PADSOF_b95ff5e7"
+        }
+    ]
+}
