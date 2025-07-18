@@ -1,7 +1,19 @@
-# Criptografia
-- Para todas las ejecuciones que vayan a cifrar, se ha implementado un procesador sencillo que transforma todo el texto a caracteres en mayuscula de la 'A' a la 'Z', eliminando espacios, saltos 
-y caracteres en miniscula, aún así los algoritmos comprueban que los caracteres leidos esten dentro de dicha restricción
-- Kasiski es computacionalmente muy costoso, además se ha implementado con GLIB2 para el uso de hashes, no está fuera de lo normal que tarde ~1 minuto en ejecutarse para textos grandes, ya que 
-obtiene todos los n-gramas posibles del tamaño deseado del texto. Otro detalle es que al usar GLIB2 hay algunas fugas de memoria que no provocan errores, es decir se dejan punteros de los 
-cuales todavía se tiene la referencia.
-- Para el cifrado afin se puede emplear la entrada y salida estandar 
+# Cripto
+
+Para probar los algoritmos se proporcionan varios textos.
+Asimismo, se proporciona un script procesar_archivo.py para formatear
+los archivos de texto.
+
+Al haber realizado la implementación en python con bitarray, el DES y el TDES,
+tienen tiempos de ejecución elevados. De manera similar, dada la implementación en python,
+la generación de números primos con el método Miller-Rabbin también tiene tiempos de ejecución
+elevados, esto es especialmente notable cuando se buscan números con una cantidad superior a ~ 6000 bits.
+Por esto último, se recomienda usar no más de 4096 bits para el RSA.
+
+# Notas
+
+Nota P1: 9.5
+
+Nota P2: 9
+
+Nota P3: 9
