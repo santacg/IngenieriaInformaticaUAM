@@ -1,0 +1,35 @@
+Address     Code        Basic                        Line Source
+
+0x00400000  0x0fc10297  auipc x5,0x0000fc10          14   main:        lw    t0, argument     # n = 8
+0x00400004  0x0002a283  lw x5,0(x5)                       
+0x00400008  0x04c000ef  jal x1,0x0000004c            15                jal   printHeader      # imprime string
+0x0040000c  0x0073c3b3  xor x7,x7,x7                 17                xor   t2, t2, t2       # t1 indice posici�n
+0x00400010  0x0fc10317  auipc x6,0x0000fc10          18                la    t1, fib_seq      # apuntador a seq fib mem datos
+0x00400014  0xff430313  addi x6,x6,0xfffffff4             
+0x00400018  0x00732023  sw x7,0(x6)                  19                sw    t2, (t1)         # fib[0] = 0
+0x0040001c  0x00138393  addi x7,x7,1                 20                addi  t2, t2, 1
+0x00400020  0x00732223  sw x7,4(x6)                  21                sw    t2, 4(t1)        # fib[1] = 2
+0x00400024  0x00430313  addi x6,x6,4                 22                addi  t1, t1, 4        # t1 apunta a fib[1]
+0x00400028  0x00430313  addi x6,x6,4                 24   f_loop:      addi  t1, t1, 4        # t1 apunta a fib[n+1]    
+0x0040002c  0x00138393  addi x7,x7,1                 25                addi  t2, t2, 1        # indice de iteraci�n
+0x00400030  0xff832e03  lw x28,0xfffffff8(x6)        26                lw    t3, -8(t1)       # load fib[n-2]
+0x00400034  0xffc32e83  lw x29,0xfffffffc(x6)        27                lw    t4, -4(t1)       # load fib[n-1]
+0x00400038  0x01ce8f33  add x30,x29,x28              28                add   t5, t4, t3
+0x0040003c  0x01e32023  sw x30,0(x6)                 29                sw    t5, (t1)
+0x00400040  0x028000ef  jal x1,0x00000028            30                jal   print_num
+0x00400044  0xfe5392e3  bne x7,x5,0xffffffe4         31                bne   t2, t0, f_loop
+0x00400048  0x00a00893  addi x17,x0,10               33   exit:        li   a7, 10
+0x0040004c  0x00000073  ecall                        34                ecall                  # exit
+0x00400050  0xfe000ce3  beq x0,x0,0xfffffff8         35                beq x0, x0, exit       # solo funcionar� en RTL donde ecall es ignorado
+0x00400054  0x0fc10517  auipc x10,0x0000fc10         37   printHeader: la    a0, str1         # Fibonacci: 0 1
+0x00400058  0xff050513  addi x10,x10,0xfffffff0           
+0x0040005c  0x00400893  addi x17,x0,4                38                li    a7, 4
+0x00400060  0x00000073  ecall                        39                ecall                  # print string str1
+0x00400064  0x00008067  jalr x0,x1,0                 40                ret
+0x00400068  0x02000513  addi x10,x0,0x00000020       42   print_num:   li    a0, 32           # space char
+0x0040006c  0x00b00893  addi x17,x0,11               43                li    a7, 11
+0x00400070  0x00000073  ecall                        44                ecall                  # print space
+0x00400074  0x01e00533  add x10,x0,x30               45                mv    a0, t5
+0x00400078  0x00100893  addi x17,x0,1                46                li    a7, 1
+0x0040007c  0x00000073  ecall                        47                ecall                  # print int result   
+0x00400080  0x00008067  jalr x0,x1,0                 48                ret
