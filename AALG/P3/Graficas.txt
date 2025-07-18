@@ -1,0 +1,52 @@
+set title "Binary Search Time Complexity"
+set title "Linear Search Time Complexity"
+
+set title "Binary Search OB count"
+set title "Linear Search OB count"
+
+set title "Linear Search vs Binary Search Time Complexity"
+set title "Linear Search avgOB vs Binary Search avgOB"
+
+set title "lin auto search1 vs binary search1 time complexity"
+set title "lin auto search100 vs binary search100 time complexity"
+set title "lin auto search10000 vs binary search10000 time complexity"
+
+set title "lin auto search1 avgOB vs binary search1 avgOB"
+set title "lin auto search100 avgOB vs binary search100 avgOB"
+set title "lin auto search10000 avgOB vs binary search10000 avgOB"
+
+set title "lin auto search1 minOB vs binary search1 minOB"
+set title "lin auto search100 minOB vs binary search100 minOB"
+set title "lin auto search10000 minOB vs binary search10000 minOB"
+
+set title "lin auto search1 maxOB vs binary search1 maxOB"
+set title "lin auto search100 maxOB vs binary search100 maxOB"
+set title "lin auto search10000 maxOB vs binary search10000 maxOB"
+
+
+set xlabel "Size"
+
+set ylabel "Time(s)"
+set ylabel "OB count"
+
+set key top left
+set key at screen 0.1, 0.9
+
+logn
+f(x) = a * log(b * x + c) + d
+fit f(x) 'datos.dat' using 1:2 via a, b, c, d
+
+nlogn
+g(x) = a * x * log(b * x + c) + d
+fit g(x) 'datos.dat' using 1:2 via a, b, c, d
+
+n^2
+h(x) = a * x**2 + b * x + c
+fit h(x) 'datos.dat' using 1:2 via a, b, c
+
+n
+i(x) = a * x + b
+fit i(x) 'datos.dat' using 1:2 via a, b
+
+
+p "bin_search_1.txt" u 1:2 title "bin search 1" w l, "lin_auto_search_1.txt" u 1:2 title "lin auto search 1" w l, "bin_search_100.txt" u 1:2 title "bin search 100" w l, "lin_auto_search_100.txt" u 1:2 title "lin auto search 100" w l, "bin_search_10000.txt" u 1:2 title "bin search 10000" w l, "lin_auto_search_10000.txt" u 1:2 title "lin auto search 10000" w l
