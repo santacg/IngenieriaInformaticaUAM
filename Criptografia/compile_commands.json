@@ -1,0 +1,18 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-I/usr/include/glib-2.0",
+      "-I/usr/lib/glib-2.0/include",
+      "-I/usr/include/sysprof-6",
+      "-pthread",
+      "-o",
+      "Vigenere/kasiski",
+      "Vigenere/kasiski.c"
+    ],
+    "directory": "/home/santacg/Code/Criptografia",
+    "file": "/home/santacg/Code/Criptografia/Vigenere/kasiski.c",
+    "output": "/home/santacg/Code/Criptografia/Vigenere/kasiski"
+  }
+]
