@@ -1,0 +1,5 @@
+RABBITMQ_SERVER = 'localhost' 
+P_ALMACEN = 95
+P_ENTREGA = 90
+
+

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista de Dispositivos IoT</title>
+    </head>
+    <body>
+        <h1>Dispositivos IoT</h1>
+
+        <h2>Switches</h2>
+        {% if switches %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for switch in switches %}
+                <tr>
+                    <td>{{ switch.id }}</td>
+                    <td>{{ switch.nombre }}</td>
+                    <td>{{ switch.state }}</td>
+                    <td>
+                        <a href="{% url 'switch_update' switch.id %}">Editar</a>
+                        |
+                        <a
+                            href="{% url 'switch_delete' switch.id %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No hay switches disponibles</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay switches disponibles</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'switch_create' %}">Crear un nuevo switch</a>
+        <br><br>
+
+        <h2>Sensores</h2>
+        {% if sensores %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Valor</th>
+                    <th>Unidad de medida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sensor in sensores %}
+                <tr>
+                    <td>{{ sensor.id }}</td>
+                    <td>{{ sensor.nombre }}</td>
+                    <td>{{ sensor.valor }}</td>
+                    <td>{{ sensor.unidad_de_medida }}</td>
+                    <td>
+                        <a href="{% url 'sensor_update' sensor.id %}">Editar</a>
+                        |
+                        <a
+                            href="{% url 'sensor_delete' sensor.id %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No hay sensores disponibles</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay sensores disponibles</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'sensor_create' %}">Crear un nuevo sensor</a>
+        <br><br>
+
+        <h2>Relojes</h2>
+        {% if relojes %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Tiempo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reloj in relojes %}
+                <tr>
+                    <td>{{ reloj.id }}</td>
+                    <td>{{ reloj.nombre }}</td>
+                    <td>{{ reloj.tiempo }}</td>
+                    <td>
+                        <a href="{% url 'reloj_update' reloj.id %}">Editar</a> |
+                        <a href="{% url 'reloj_delete' reloj.id %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No hay relojes disponibles</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay relojes disponibles</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'reloj_create' %}">Crear un nuevo reloj</a>
+    </body>
+    <br><br>
+    <a href="{% url 'base' %}">Volver al menú principal</a>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editar Regla</title>
+    </head>
+    <body>
+        <h1>Editar Regla</h1>
+        <form method="post" action="{% url 'regla_update' regla.id %}">
+            {% csrf_token %}
+            <label for="nombre">Nombre de la regla:</label>
+            <input type="text" id="nombre" name="nombre"
+                value="{{ regla.nombre }}" required><br><br>
+
+            <label for="condicion">Condición:</label>
+            <input type="text" id="condicion" name="condicion"
+                value="{{ regla.condicion }}" required><br><br>
+
+            <label for="sensor_asociado">Sensor Asociado:</label>
+            <select id="sensor_asociado" name="sensor_asociado" required>
+                {% for sensor in sensores %}
+                <option value="{{ sensor.id }}" {% if sensor.id == regla.sensor_asociado.id %} selected {% endif %}>
+                    {{ sensor.nombre }}
+                </option>
+                {% endfor %}
+            </select><br><br>
+
+            <label for="accion">Acción:</label>
+            <input type="text" id="accion" name="accion"
+                value="{{ regla.accion }}" required><br><br>
+
+            <label for="switch_asociado">Switch Asociado:</label>
+            <select id="switch_asociado" name="switch_asociado"
+                required>
+                {% for switch in switches %}
+                <option value="{{ switch.id }}" {% if switch.id == regla.switch_asociado.id %} selected {% endif %}>
+                    {{ switch.nombre }}
+                </option>
+                {% endfor %}
+            </select><br><br>
+
+            <button type="submit">Actualizar Regla</button>
+        </form>
+    </body>
+</html>

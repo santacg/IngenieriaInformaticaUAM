@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lista de Eventos</title>
+    </head>
+    <body>
+        <h1>Eventos del Sistema Domótico</h1>
+
+        {% if eventos %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca de tiempo</th>
+                    <th>Sensor</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evento in eventos %}
+                <tr>
+                    <td>{{ evento.id }}</td>
+                    <td>{{ evento.marca_de_tiempo }}</td>
+                    <td>{{ evento.sensor.nombre }}</td>
+                    <td>{{ evento.valor }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">No hay eventos</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay eventos disponibles</p>
+        {% endif %}
+        <br><br>
+        <a href="{% url 'base' %}">Volver al menú principal</a>
+    </body>
+</html>
